@@ -65,6 +65,26 @@ define([
                         name: 'thing',
                         value: 'hello'
                     }
+                },
+                // Whitespace delimiter
+                {
+                    grammarSpec: {
+                        ignore: 'whitespace',
+                        rules: {
+                            'add': /\+/,
+                            'expression': [{name: 'left', what: 'number'}, {name: 'operator', what: 'add'}, {name: 'right', what: 'number'}],
+                            'number': /\d+/,
+                            'whitespace': /\s+/
+                        },
+                        start: 'expression'
+                    },
+                    text: '321 + 89',
+                    expectedAST: {
+                        name: 'expression',
+                        left: '321',
+                        operator: '+',
+                        right: '89'
+                    }
                 }
             ], function (scenario) {
                 var grammarSpecString = JSON.stringify(scenario.grammarSpec, function (key, value) {
@@ -99,12 +119,13 @@ define([
                      * EX5  => id | number | '(' EX1 ')'
                      */
                     grammarSpec = {
-                        ignore: ['whitespace'],
+                        ignore: 'whitespace',
                         rules: {
-                            'assign': /^:=/,
-                            'character': /^[;*\/^+-]/,
-                            'id': /^[\w$][\w\d$]*/,
-                            'number': /^\d(?:\.\d+)?/,
+                            'assign': /:=/,
+                            'character': /[;*\/^+-]/,
+                            'id': /[\w$][\w\d$]*/,
+                            'number': /\d(?:\.\d+)?/,
+                            'whitespace': /\s+/,
                             'AEXP': {
                                 components: {name: 'assignment', oneOrMoreOf: 'AS'}
                             },
@@ -172,8 +193,8 @@ define([
                         }
                     },
                     {
-                        // Precedence is equivalent to "waldo:=(fern+(alpha/((-beta)^gamma)));"
-                        text: 'waldo:=fern+alpha/-beta^gamma;',
+                        // Precedence is equivalent to "waldo := (fern + (alpha / ((-beta) ^ gamma)));"
+                        text: 'waldo := fern + alpha / -beta ^ gamma;',
                         expectedAST: {
                             name: 'AEXP',
                             assignment: [{

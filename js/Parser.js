@@ -29,12 +29,13 @@ define([
         (function (parser) {
             var qualifiers = {
                     // Like "(...)" grouping - 'arg' is an array of components that must all match
-                    'allOf': function (text, arg) {
+                    'allOf': function (text, offset, arg, args, options) {
                         var matches = [],
-                            textLength = 0;
+                            textLength = 0,
+                            textOffset = null;
 
                         util.each(arg, function (component) {
-                            var componentMatch = component.match(text.substr(textLength));
+                            var componentMatch = component.match(text, offset + (textOffset || 0) + textLength, options);
 
                             if (componentMatch === null) {
                                 matches = null;
@@ -43,19 +44,26 @@ define([
 
                             textLength += componentMatch.textLength;
                             matches.push(componentMatch.components);
+
+                            if (textOffset === null) {
+                                textOffset = componentMatch.textOffset;
+                            } else {
+                                textLength += componentMatch.textOffset;
+                            }
                         });
 
                         return matches ? {
                             components: matches,
-                            textLength: textLength
+                            textLength: textLength,
+                            textOffset: textOffset || 0
                         } : null;
                     },
                     // Like "|" (alternation) - 'arg' is an array of components, one of which must match
-                    'oneOf': function (text, arg) {
+                    'oneOf': function (text, offset, arg, args, options) {
                         var match = null;
 
                         util.each(arg, function (component) {
-                            var componentMatch = component.match(text);
+                            var componentMatch = component.match(text, offset, options);
 
                             if (componentMatch !== null) {
                                 match = componentMatch;
@@ -66,60 +74,85 @@ define([
                         return match;
                     },
                     // Like "+" - 'arg' is an array of components, one or more of which must match consecutively
-                    'oneOrMoreOf': function (text, arg) {
+                    'oneOrMoreOf': function (text, offset, arg, args, options) {
                         var componentMatch,
                             matches = [],
-                            textLength = 0;
+                            textLength = 0,
+                            textOffset = null;
 
-                        while ((componentMatch = arg.match(text.substr(textLength))) !== null) {
+                        while ((componentMatch = arg.match(text, offset + (textOffset || 0) + textLength, options)) !== null) {
                             textLength += componentMatch.textLength;
                             matches.push(componentMatch.components);
+
+                            if (textOffset === null) {
+                                textOffset = componentMatch.textOffset;
+                            } else {
+                                textLength += componentMatch.textOffset;
+                            }
                         }
 
                         return matches.length > 0 ? {
                             components: matches,
-                            textLength: textLength
+                            textLength: textLength,
+                            textOffset: textOffset || 0
                         } : null;
                     },
                     // Like "?" - 'arg' is a component which may or may not match
-                    'optionally': function (text, arg) {
-                        return arg.match(text) || {
+                    'optionally': function (text, offset, arg, args, options) {
+                        return arg.match(text, offset, options) || {
                             components: '',
-                            textLength: 0
+                            textLength: 0,
+                            textOffset: 0
                         };
                     },
                     // Refers to another rule
-                    'rule': function (text, arg, args) {
+                    'rule': function (text, offset, arg, args, options) {
                         var expectedText = hasOwn.call(args, 'text') ? args.text : null,
-                            match = arg.match(text);
+                            match = arg.match(text, offset, options);
 
                         if (match === null) {
                             return null;
                         }
 
-                        return (expectedText === null || text.substr(0, match.textLength) === expectedText) ? match : null;
+                        return (expectedText === null || text.substr(offset + match.textOffset, match.textLength) === expectedText) ? match : null;
                     },
-                    'what': function (text, arg) {
-                        var match;
+                    'what': function (text, offset, arg, args, options) {
+                        var match,
+                            whitespaceLength = 0;
+
+                        function skipWhitespace() {
+                            var match;
+                            if (parser.ignoreRule && options.ignoreWhitespace !== false) {
+                                while ((match = parser.ignoreRule.match(text, offset + whitespaceLength, {ignoreWhitespace: false}))) {
+                                    whitespaceLength += match.textLength;
+                                }
+                            }
+                        }
 
                         if (util.isString(arg)) {
-                            if (text.substr(0, arg.length) === arg) {
+                            skipWhitespace();
+
+                            if (text.substr(offset + whitespaceLength, arg.length) === arg) {
                                 return {
                                     components: arg,
-                                    textLength: arg.length
+                                    textLength: arg.length,
+                                    textOffset: whitespaceLength
                                 };
                             }
                         } else if (arg instanceof RegExp) {
-                            match = text.match(arg);
+                            skipWhitespace();
+
+                            match = text.substr(offset + whitespaceLength).match(arg);
 
                             if (match) {
                                 return {
                                     components: match[0],
-                                    textLength: match[0].length
+                                    textLength: match[0].length,
+                                    textOffset: whitespaceLength
                                 };
                             }
                         } else if (arg instanceof Component) {
-                            return arg.match(text);
+                            return arg.match(text, offset, options);
                         } else {
                             throw new Exception('Parser "what" qualifier :: Invalid argument "' + arg + '"');
                         }
@@ -127,19 +160,27 @@ define([
                         return null;
                     },
                     // Like "*"
-                    'zeroOrMoreOf': function (text, arg) {
+                    'zeroOrMoreOf': function (text, offset, arg, args, options) {
                         var componentMatch,
                             matches = [],
-                            textLength = 0;
+                            textLength = 0,
+                            textOffset = null;
 
-                        while ((componentMatch = arg.match(text.substr(textLength)))) {
+                        while ((componentMatch = arg.match(text, offset + (textOffset || 0) + textLength, options))) {
                             textLength += componentMatch.textLength;
                             matches.push(componentMatch.components);
+
+                            if (textOffset === null) {
+                                textOffset = componentMatch.textOffset;
+                            } else {
+                                textLength += componentMatch.textOffset;
+                            }
                         }
 
                         return {
                             components: matches,
-                            textLength: textLength
+                            textLength: textLength,
+                            textOffset: textOffset || 0
                         };
                     }
                 },
@@ -243,14 +284,15 @@ define([
                 rules[name].setComponent(createComponent(ruleSpec.components || ruleSpec));
             });
 
+            parser.ignoreRule = rules[grammarSpec.ignore] || null;
             parser.startRule = rules[grammarSpec.start];
         }(this));
     }
 
     util.extend(Parser.prototype, {
-        parse: function (text) {
+        parse: function (text, options) {
             var rule = this.startRule,
-                match = rule.match(text);
+                match = rule.match(text, 0, options);
 
             return match !== null ? match.components : null;
         }

@@ -24,11 +24,11 @@ define([
     }
 
     util.extend(Component.prototype, {
-        match: function (text) {
+        match: function (text, offset, options) {
             var component = this,
                 joinedText,
                 match,
-                subMatch = component.qualifier(text, component.arg, component.args);
+                subMatch = component.qualifier(text, offset, component.arg, component.args, options);
 
             if (subMatch === null) {
                 return null;
@@ -38,7 +38,8 @@ define([
                 // Component is named: don't attempt to merge an array in
                 match = {
                     components: {},
-                    textLength: subMatch.textLength
+                    textLength: subMatch.textLength,
+                    textOffset: subMatch.textOffset
                 };
                 if (subMatch.name) {
                     match.components.name = subMatch.name;
@@ -68,6 +69,8 @@ define([
                     if (subMatch.name) {
                         match.components.name = subMatch.name;
                     }
+
+                    match.textOffset = subMatch.textOffset;
                 } else {
                     match = subMatch;
                 }

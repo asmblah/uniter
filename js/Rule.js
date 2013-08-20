@@ -23,9 +23,13 @@ define([
     }
 
     util.extend(Rule.prototype, {
-        match: function (text) {
+        match: function (text, offset, options) {
             var rule = this,
-                match = rule.component.match(text);
+                match;
+
+            options = options || {};
+
+            match = rule.component.match(text, offset, options);
 
             if (match === null) {
                 return null;
@@ -34,10 +38,11 @@ define([
             if (rule.ifNoMatch && match.components[rule.ifNoMatch.component].length === 0) {
                 match = {
                     components: match.components[rule.ifNoMatch.capture],
+                    textOffset: match.textOffset,
                     textLength: match.textLength
                 };
             } else {
-                if (!util.isString(match.components)) {
+                if (!util.isString(match.components) && !match.components.name) {
                     match.components.name = rule.captureName || rule.name;
                 }
             }
