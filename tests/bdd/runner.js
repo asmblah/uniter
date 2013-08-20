@@ -58,8 +58,9 @@ define({
         mocha.suite.emit('pre-require', global, null, mocha);
 
         require([
-            /*'bdd/integration/languages/PHP/tokens/programs/smallTest',
-            'bdd/integration/languages/PHP/tokens/programs/largeTest',*/
+            'bdd/integration/languages/PHP/engine/smallTest',
+            'bdd/integration/languages/PHP/grammar/programs/smallTest',
+            'bdd/integration/languages/PHP/interpreter/programs/smallTest',
             'bdd/unit/js/InterpreterTest',
             'bdd/unit/js/ParserTest'
         ], function () {

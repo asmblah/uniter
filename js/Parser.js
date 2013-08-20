@@ -153,6 +153,8 @@ define([
                             }
                         } else if (arg instanceof Component) {
                             return arg.match(text, offset, options);
+                        } else if (util.isFunction(arg)) {
+                            return arg(text, offset, options);
                         } else {
                             throw new Exception('Parser "what" qualifier :: Invalid argument "' + arg + '"');
                         }
@@ -186,6 +188,26 @@ define([
                 },
                 rules = {};
 
+            // Special BeginningOfFile rule
+            rules['<BOF>'] = new Rule('<BOF>', null, null);
+            rules['<BOF>'].setComponent(new Component('what', qualifiers.what, function (text, offset) {
+                return offset === 0 ? {
+                    components: '',
+                    textLength: 0,
+                    textOffset: 0
+                } : null;
+            }, {}, null));
+
+            // Special EndOfFile rule
+            rules['<EOF>'] = new Rule('<EOF>', null, null);
+            rules['<EOF>'].setComponent(new Component('what', qualifiers.what, function (text, offset) {
+                return offset === text.length ? {
+                    components: '',
+                    textLength: 0,
+                    textOffset: 0
+                } : null;
+            }, {}, null));
+
             // Go through and create objects for all rules in this grammar first so we can set up circular references
             util.each(grammarSpec.rules, function (ruleSpec, name) {
                 var rule;
@@ -195,6 +217,15 @@ define([
             });
 
             util.each(grammarSpec.rules, function (ruleSpec, name) {
+                // Ensure the regex is anchored to the start of the string so it matches the very next characters
+                function anchorRegex(regex) {
+                    if (regex.source.charAt(0) !== '^') {
+                        regex = new RegExp('^(?:' + regex.source + ')', regex.toString().match(/[^\/]*$/)[0]);
+                    }
+
+                    return regex;
+                }
+
                 function createComponent(componentSpec) {
                     var arg,
                         args = {},
@@ -218,6 +249,8 @@ define([
                         }
                     // Component is a regex terminal
                     } else if (componentSpec instanceof RegExp) {
+                        componentSpec = anchorRegex(componentSpec);
+
                         qualifierName = 'what';
                         arg = componentSpec;
                     } else if (util.isPlainObject(componentSpec)) {
@@ -233,7 +266,7 @@ define([
                                         arg[index] = createComponent(value);
                                     });
                                 } else {
-                                    arg = (value instanceof RegExp) ? value : createComponent(value);
+                                    arg = (value instanceof RegExp) ? anchorRegex(value) : createComponent(value);
                                 }
 
                                 // Qualifier found, stop searching
@@ -253,7 +286,7 @@ define([
                                 arg = rules[name];
 
                                 if (!arg) {
-                                    throw new Exception('Parser :: Invalid component - no rule with name "' + componentSpec + '" exists');
+                                    throw new Exception('Parser :: Invalid component - no rule with name "' + name + '" exists');
                                 }
                                 args.text = componentSpec[name];
                             }());

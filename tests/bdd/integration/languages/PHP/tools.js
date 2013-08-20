@@ -10,38 +10,42 @@
 /*global define */
 define([
     'languages/PHP/grammar',
-    'languages/PHP/recompiler',
-    'languages/PHP/tokens',
+    'languages/PHP/interpreter',
     'js/Engine',
-    'js/LexicalAnalyzer',
-    'js/Recompiler',
-    'js/Tokenizer'
+    'js/Interpreter',
+    'js/Parser',
+    'js/Stream'
 ], function (
     phpGrammarSpec,
-    phpRecompilerSpec,
-    phpTokenSpec,
+    phpInterpreterSpec,
     Engine,
-    LexicalAnalyzer,
-    Recompiler,
-    Tokenizer
+    Interpreter,
+    Parser,
+    Stream
 ) {
     'use strict';
 
     return {
-        createEngine: function () {
-            var recompiler = new Recompiler(phpRecompilerSpec),
-                tokenizer = this.createTokenizer(),
-                lexicalAnalyzer = new LexicalAnalyzer(phpTokenSpec, phpGrammarSpec);
+        createEngine: function (options) {
+            var stderr = new Stream(),
+                stdin = new Stream(),
+                stdout = new Stream(),
+                interpreter = new Interpreter(phpInterpreterSpec, stdin, stdout, stderr),
+                parser = new Parser(phpGrammarSpec);
 
-            return new Engine(tokenizer, lexicalAnalyzer, recompiler);
+            return new Engine(parser, interpreter, options);
         },
 
-        createTokenizer: function () {
-            return new Tokenizer(phpTokenSpec);
+        createInterpreter: function (stdin, stdout, stderr) {
+            return new Interpreter(phpInterpreterSpec, stdin, stdout, stderr);
         },
 
-        getTokenSpec: function () {
-            return phpTokenSpec;
+        createParser: function () {
+            return new Parser(phpGrammarSpec);
+        },
+
+        getGrammarSpec: function () {
+            return phpGrammarSpec;
         }
     };
 });

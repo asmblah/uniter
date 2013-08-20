@@ -19,15 +19,21 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Interpreter(spec) {
+    function Interpreter(spec, stdin, stdout, stderr) {
         this.spec = spec;
+        this.stderr = stderr;
+        this.stdin = stdin;
+        this.stdout = stdout;
     }
 
     util.extend(Interpreter.prototype, {
         interpret: function (node) {
             var interpreter = this,
                 nodeName,
-                spec = interpreter.spec;
+                spec = interpreter.spec,
+                stderr = interpreter.stderr,
+                stdin = interpreter.stdin,
+                stdout = interpreter.stdout;
 
             if (!hasOwn.call(node, 'name')) {
                 throw new Exception('Interpreter.interpret() :: Invalid AST node provided');
@@ -40,8 +46,12 @@ define([
             }
 
             return spec.nodes[nodeName].call(interpreter, node, function (node) {
-                return interpreter.interpret(node);
-            });
+                if (util.isString(node)) {
+                    return node;
+                } else {
+                    return interpreter.interpret(node, stdin, stdout, stderr);
+                }
+            }, stdin, stdout, stderr);
         }
     });
 

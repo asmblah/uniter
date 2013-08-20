@@ -11,33 +11,34 @@
 define([
     'js/util',
     'js/Engine',
-    'js/LexicalAnalyzer',
-    'js/Recompiler',
-    'js/Tokenizer'
+    'js/Interpreter',
+    'js/Parser',
+    'js/Stream'
 ], function (
     util,
     Engine,
-    LexicalAnalyzer,
-    Recompiler,
-    Tokenizer
+    Interpreter,
+    Parser,
+    Stream
 ) {
     'use strict';
 
-    function Language(name, tokenSpec, grammarSpec, recompilerSpec) {
+    function Language(name, grammarSpec, interpreterSpec) {
         this.name = name;
         this.grammarSpec = grammarSpec;
-        this.recompilerSpec = recompilerSpec;
-        this.tokenSpec = tokenSpec;
+        this.interpreterSpec = interpreterSpec;
     }
 
     util.extend(Language.prototype, {
         createEngine: function (options) {
             var language = this,
-                recompiler = new Recompiler(language.recompilerSpec),
-                tokenizer = new Tokenizer(language.tokenSpec),
-                lexicalAnalyzer = new LexicalAnalyzer(language.tokenSpec, language.grammarSpec);
+                stderr = new Stream(),
+                stdin = new Stream(),
+                stdout = new Stream(),
+                interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr),
+                parser = new Parser(language.grammarSpec);
 
-            return new Engine(tokenizer, lexicalAnalyzer, recompiler, options);
+            return new Engine(parser, interpreter, options);
         },
 
         getName: function () {

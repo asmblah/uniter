@@ -24,7 +24,7 @@ define([
                 {
                     grammarSpec: {
                         rules: {
-                            'number': {name: 'value', what: /^\d+/}
+                            'number': {name: 'value', what: /\d+/}
                         },
                         start: 'number'
                     },
@@ -38,9 +38,9 @@ define([
                 {
                     grammarSpec: {
                         rules: {
-                            'add': /^\+/,
+                            'add': /\+/,
                             'expression': [{name: 'left', what: 'number'}, {name: 'operator', what: 'add'}, {name: 'right', what: 'number'}],
-                            'number': /^\d+/
+                            'number': /\d+/
                         },
                         start: 'expression'
                     },
@@ -56,7 +56,7 @@ define([
                 {
                     grammarSpec: {
                         rules: {
-                            'thing': [{name: 'value', oneOf: [(/^\d+/), (/^\w+/)]}, (/;/)]
+                            'thing': [{name: 'value', oneOf: [(/\d+/), (/\w+/)]}, (/;/)]
                         },
                         start: 'thing'
                     },
@@ -84,6 +84,24 @@ define([
                         left: '321',
                         operator: '+',
                         right: '89'
+                    }
+                },
+                // Prevent overriding the component's owner rule's name
+                {
+                    grammarSpec: {
+                        rules: {
+                            'name': 'string',
+                            'string': {
+                                components: {name: 'value', what: /\w+/}
+                            }
+                        },
+                        start: 'name'
+                    },
+                    text: 'hello',
+                    expectedAST: {
+                        // Make sure "string" is the capture name, not "name"
+                        name: 'string',
+                        value: 'hello'
                     }
                 }
             ], function (scenario) {

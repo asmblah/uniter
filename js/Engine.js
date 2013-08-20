@@ -17,18 +17,22 @@ define([
 ) {
     'use strict';
 
-    function Engine(tokenizer, lexicalAnalyzer, recompiler, options) {
-        this.lexicalAnalyzer = lexicalAnalyzer;
+    function Engine(parser, interpreter, options) {
+        this.interpreter = interpreter;
         this.options = options;
-        this.recompiler = recompiler;
-        this.tokenizer = tokenizer;
+        this.parser = parser;
     }
 
     util.extend(Engine.prototype, {
-        execute: function () {
-            var promise = new Promise();
+        execute: function (code) {
+            var ast,
+                engine = this,
+                promise = new Promise(),
+                result;
 
-            promise.resolve(null);
+            ast = engine.parser.parse(code);
+            result = engine.interpreter.interpret(ast);
+            promise.resolve(result);
 
             return promise;
         }
