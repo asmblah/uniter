@@ -57,5 +57,34 @@ define([
                 });
             });
         });
+
+        describe('readAll()', function () {
+            util.each([
+                {
+                    writes: [],
+                    expectedData: ''
+                },
+                {
+                    writes: ['test'],
+                    expectedData: 'test'
+                },
+                {
+                    writes: ['world'],
+                    expectedData: 'world'
+                }
+            ], function (scenario) {
+                describe('when the stream has had [' + scenario.writes.join(', ') + '] written to it', function () {
+                    beforeEach(function () {
+                        util.each(scenario.writes, function (data) {
+                            stream.write(data);
+                        });
+                    });
+
+                    it('should return the correct data', function () {
+                        expect(stream.readAll()).to.equal(scenario.expectedData);
+                    });
+                });
+            });
+        });
     });
 });

@@ -35,6 +35,12 @@ define([
             return data;
         },
 
+        readAll: function () {
+            var stream = this;
+
+            return stream.read(stream.data.length);
+        },
+
         write: function (data) {
             this.data += data;
         }
