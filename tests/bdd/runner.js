@@ -62,7 +62,8 @@ define({
             'bdd/integration/languages/PHP/grammar/programs/smallTest',
             'bdd/integration/languages/PHP/interpreter/programs/smallTest',
             'bdd/unit/js/InterpreterTest',
-            'bdd/unit/js/ParserTest'
+            'bdd/unit/js/ParserTest',
+            'bdd/unit/js/StreamTest'
         ], function () {
             mocha.run(callback);
         });
