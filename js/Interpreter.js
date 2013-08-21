@@ -49,7 +49,7 @@ define([
                 if (util.isString(node)) {
                     return node;
                 } else {
-                    return interpreter.interpret(node, stdin, stdout, stderr);
+                    return interpreter.interpret(node);
                 }
             }, stdin, stdout, stderr);
         }
