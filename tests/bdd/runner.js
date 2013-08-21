@@ -59,8 +59,8 @@ define({
 
         require([
             'bdd/integration/languages/PHP/engine/smallTest',
-            'bdd/integration/languages/PHP/grammar/programs/smallTest',
-            'bdd/integration/languages/PHP/interpreter/programs/smallTest',
+            'bdd/integration/languages/PHP/grammar/smallTest',
+            'bdd/integration/languages/PHP/interpreter/smallTest',
             'bdd/unit/js/InterpreterTest',
             'bdd/unit/js/ParserTest',
             'bdd/unit/js/StreamTest'

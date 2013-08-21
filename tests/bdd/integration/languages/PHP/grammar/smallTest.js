@@ -9,7 +9,7 @@
 
 /*global define */
 define([
-    '../../tools',
+    '../tools',
     'js/util'
 ], function (
     tools,
