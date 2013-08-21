@@ -35,6 +35,18 @@ define([
             promise.resolve(result);
 
             return promise;
+        },
+
+        getStderr: function () {
+            return this.interpreter.stderr;
+        },
+
+        getStdin: function () {
+            return this.interpreter.stdin;
+        },
+
+        getStdout: function () {
+            return this.interpreter.stdout;
         }
     });
 
