@@ -57,6 +57,33 @@ define([
                 }
             },
             {
+                code: 'before<?php ?>',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_INLINE_HTML_STATEMENT',
+                        html: 'before'
+                    }]
+                }
+            },
+            {
+                code: '<html><?php $b = 2; ?></html>',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_INLINE_HTML_STATEMENT',
+                        html: '<html>'
+                    }, {
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$b',
+                        expression: '2'
+                    }, {
+                        name: 'N_INLINE_HTML_STATEMENT',
+                        html: '</html>'
+                    }]
+                }
+            },
+            {
                 code: '<?php $a = 7;',
                 expectedAST: {
                     name: 'N_PROGRAM',
