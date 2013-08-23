@@ -103,6 +103,25 @@ define([
                         name: 'string',
                         value: 'hello'
                     }
+                },
+                // Support specifying which capturing group to capture
+                {
+                    grammarSpec: {
+                        rules: {
+                            'expression': [{name: 'left', what: 'string'}, (/\s*\.\s*/), {name: 'right', what: 'string'}],
+                            'string': {
+                                components: [{what: /"([^"]*)"/, captureIndex: 1}]
+                            }
+                        },
+                        start: 'expression'
+                    },
+                    text: '"test" . "world"',
+                    expectedAST: {
+                        // Make sure "string" is the capture name, not "name"
+                        name: 'expression',
+                        left: 'test',
+                        right: 'world'
+                    }
                 }
             ], function (scenario) {
                 var grammarSpecString = JSON.stringify(scenario.grammarSpec, function (key, value) {

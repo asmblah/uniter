@@ -117,7 +117,8 @@ define([
                         return (expectedText === null || text.substr(offset + match.textOffset, match.textLength) === expectedText) ? match : null;
                     },
                     'what': function (text, offset, arg, args, options) {
-                        var match,
+                        var captureIndex,
+                            match,
                             whitespaceLength = 0;
 
                         function skipWhitespace() {
@@ -145,8 +146,10 @@ define([
                             match = text.substr(offset + whitespaceLength).match(arg);
 
                             if (match) {
+                                captureIndex = args.captureIndex || 0;
                                 return {
-                                    components: match[0],
+                                    components: match[captureIndex],
+                                    // Always return the entire match length even though we may have only captured part of it
                                     textLength: match[0].length,
                                     textOffset: whitespaceLength
                                 };

@@ -26,7 +26,6 @@ define([
     util.extend(Component.prototype, {
         match: function (text, offset, options) {
             var component = this,
-                joinedText,
                 match,
                 subMatch = component.qualifier(text, offset, component.arg, component.args, options);
 
@@ -49,10 +48,9 @@ define([
                 // Component is not named: merge its captures in if an array
                 if (util.isArray(subMatch.components)) {
                     if (allElementsAreStrings(subMatch.components)) {
-                        joinedText = subMatch.components.join('');
                         match = {
-                            components: joinedText,
-                            textLength: joinedText.length
+                            components: subMatch.components.join(''),
+                            textLength: subMatch.textLength
                         };
                     } else {
                         match = {
