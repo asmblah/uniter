@@ -41,7 +41,7 @@ define(function () {
             'T_COMMENT': /(?:\/\/|#)(.*?)[\r\n]+|\/\*(?!\*)([\s\S]*?)\*\//,
             'T_CONCAT_EQUAL': /\.=/,
             'T_CONST': /const\b/i,
-            'T_CONSTANT_ENCAPSED_STRING': /(['"])((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!\1)[\s\S]|\\\1))*)\1/,
+            'T_CONSTANT_ENCAPSED_STRING': {what: /(['"])((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!\1)[\s\S]|\\\1))*)\1/, captureIndex: 2},
             'T_CONTINUE': /continue\b/i,
             'T_CURLY_OPEN': /\{(?=\$)/,
             'T_DEC': /--/i,
@@ -226,8 +226,11 @@ define(function () {
             'N_STATEMENT': {
                 components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT']}
             },
+            'N_STRING_LITERAL': {
+                components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
+            },
             'N_TERM': {
-                components: {oneOf: ['T_VARIABLE', 'T_DNUMBER', 'T_LNUMBER', 'T_STRING']}
+                components: {oneOf: ['T_VARIABLE', 'T_DNUMBER', 'T_LNUMBER', 'T_STRING', 'N_STRING_LITERAL']}
             }
         },
         start: 'N_PROGRAM'

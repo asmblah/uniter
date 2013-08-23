@@ -56,6 +56,9 @@ define([
                 var expression = interpret(node.expression);
 
                 return 'return' + (expression ? ' ' + expression : '') + ';';
+            },
+            'N_STRING_LITERAL': function (node) {
+                return '"' + node.string + '"';
             }
         }
     };

@@ -158,6 +158,36 @@ define([
                 },
                 // Checks precedence handling of explicit parentheses, as "1 + (3 * 2)" will be 7 whereas "(1 + 3) * 2" will be 8
                 expectedResult: 8
+            },
+            {
+                originalCode: '<?php return "hello";',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'hello'
+                        }
+                    }]
+                },
+                // Constant string literal, delimited by double quotes
+                expectedResult: 'hello'
+            },
+            {
+                originalCode: '<?php return \'world\';',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'world'
+                        }
+                    }]
+                },
+                // Constant string literal, delimited by single quotes
+                expectedResult: 'world'
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

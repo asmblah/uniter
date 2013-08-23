@@ -138,6 +138,32 @@ define([
                         expression: '$y'
                     }]
                 }
+            },
+            {
+                code: '<?php return \'hello\';',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'hello'
+                        }
+                    }]
+                }
+            },
+            {
+                code: '<?php return "world";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'world'
+                        }
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable
