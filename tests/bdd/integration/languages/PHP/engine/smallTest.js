@@ -98,6 +98,12 @@ define([
                 expectedResult: 'world',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            {
+                code: '<?php return \'hello \' . \'world\';',
+                expectedResult: 'hello world',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {

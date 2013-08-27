@@ -188,6 +188,30 @@ define([
                 },
                 // Constant string literal, delimited by single quotes
                 expectedResult: 'world'
+            },
+            {
+                originalCode: '<?php return \'hello \' . \'world\';',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_STRING_LITERAL',
+                                string: 'hello '
+                            },
+                            right: [{
+                                operator: '.',
+                                operand: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'world'
+                                }
+                            }]
+                        }
+                    }]
+                },
+                expectedResult: 'hello world'
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

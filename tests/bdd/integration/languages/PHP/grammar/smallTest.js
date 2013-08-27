@@ -164,6 +164,29 @@ define([
                         }
                     }]
                 }
+            },
+            {
+                code: '<?php return \'hello \' . \'world\';',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_STRING_LITERAL',
+                                string: 'hello '
+                            },
+                            right: [{
+                                operator: '.',
+                                operand: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'world'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

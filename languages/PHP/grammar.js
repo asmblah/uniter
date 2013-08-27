@@ -185,10 +185,10 @@ define(function () {
             'N_EXPRESSION': {
                 components: 'N_EXPRESSION_LEVEL_1'
             },
-            // Precedence level 1 (lowest) - addition and subtraction
+            // Precedence level 1 (lowest) - addition, subtraction and string concatenation
             'N_EXPRESSION_LEVEL_1': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             // Precedence level 2 - multiplication and division

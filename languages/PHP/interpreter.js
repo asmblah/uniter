@@ -35,7 +35,13 @@ define([
                 var expression = interpret(node.left);
 
                 util.each(node.right, function (operation) {
-                    expression += ' ' + operation.operator + ' ' + interpret(operation.operand);
+                    var operator = operation.operator;
+
+                    if (operator === '.') {
+                        operator = '+';
+                    }
+
+                    expression += ' ' + operator + ' ' + interpret(operation.operand);
                 });
 
                 return '(' + expression + ')';
