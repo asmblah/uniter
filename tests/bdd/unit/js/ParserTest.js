@@ -122,6 +122,34 @@ define([
                         left: 'test',
                         right: 'world'
                     }
+                },
+                // Support specifying to return a particular component as the result if a component does not match
+                {
+                    grammarSpec: {
+                        rules: {
+                            'thing': {
+                                components: [{name: 'name', what: (/\w+/)}, (/=/), {name: 'value', optionally: (/\w+/)}],
+                                ifNoMatch: {component: 'value', capture: 'name'}
+                            }
+                        },
+                        start: 'thing'
+                    },
+                    text: 'abc=',
+                    expectedAST: 'abc'
+                },
+                // Support specifying to return a particular component as the result if a (possibly uncaptured) component does not match
+                {
+                    grammarSpec: {
+                        rules: {
+                            'thing': {
+                                components: [{name: 'name', what: (/\w+/)}, (/=/), {optionally: {name: 'value', what: (/\w+/)}}],
+                                ifNoMatch: {component: 'value', capture: 'name'}
+                            }
+                        },
+                        start: 'thing'
+                    },
+                    text: 'abc=',
+                    expectedAST: 'abc'
                 }
             ], function (scenario) {
                 var grammarSpecString = JSON.stringify(scenario.grammarSpec, function (key, value) {

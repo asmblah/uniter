@@ -24,7 +24,8 @@ define([
 
     util.extend(Rule.prototype, {
         match: function (text, offset, options) {
-            var rule = this,
+            var component,
+                rule = this,
                 match;
 
             options = options || {};
@@ -35,7 +36,7 @@ define([
                 return null;
             }
 
-            if (rule.ifNoMatch && match.components[rule.ifNoMatch.component].length === 0) {
+            if (rule.ifNoMatch && (!(component = match.components[rule.ifNoMatch.component]) || component.length === 0)) {
                 match = {
                     components: match.components[rule.ifNoMatch.capture],
                     textOffset: match.textOffset,
