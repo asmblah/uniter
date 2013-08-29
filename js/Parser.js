@@ -283,6 +283,8 @@ define([
                                     util.each(value, function (value, index) {
                                         arg[index] = createComponent(value);
                                     });
+                                } else if (qualifierName === 'optionally') {
+                                    arg = createComponent(value);
                                 } else {
                                     arg = (value instanceof RegExp) ? anchorRegex(value) : createComponent(value);
                                 }
