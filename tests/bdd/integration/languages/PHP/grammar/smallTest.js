@@ -187,6 +187,122 @@ define([
                         }
                     }]
                 }
+            },
+            // Simple ternary
+            {
+                code: '<?php return 1 ? 4 : 8;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_TERNARY',
+                            condition: '1',
+                            options: [{
+                                consequent: '4',
+                                alternate: '8'
+                            }]
+                        }
+                    }]
+                }
+            },
+            // Ternary with higher precedence "+" operator in condition, consequent and alternate
+            {
+                code: '<?php return 1 + 2 ? 3 + 2 : 7 + 5;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_TERNARY',
+                            condition: {
+                                name: 'N_EXPRESSION',
+                                left: '1',
+                                right: [{
+                                    operator: '+',
+                                    operand: '2'
+                                }]
+                            },
+                            options: [{
+                                consequent: {
+                                    name: 'N_EXPRESSION',
+                                    left: '3',
+                                    right: [{
+                                        operator: '+',
+                                        operand: '2'
+                                    }]
+                                },
+                                alternate: {
+                                    name: 'N_EXPRESSION',
+                                    left: '7',
+                                    right: [{
+                                        operator: '+',
+                                        operand: '5'
+                                    }]
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            // Ternary with nested ternary in condition:
+            // - Common gotcha for developers, as in other languages ?: is right-associative whereas in PHP it's left-associative
+            // - Result would be "Banana", but if right-associative it would be "Orange"
+            {
+                code: '<?php $arg = "A"; return ($arg === "A") ? "Apple" : ($arg === "B") ? "Banana" : "Orange";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$arg',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'A'
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_TERNARY',
+                            condition: {
+                                name: 'N_EXPRESSION',
+                                left: '$arg',
+                                right: [{
+                                    operator: '===',
+                                    operand: {
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'A'
+                                    }
+                                }]
+                            },
+                            options: [{
+                                consequent: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Apple'
+                                },
+                                alternate: {
+                                    name: 'N_EXPRESSION',
+                                    left: '$arg',
+                                    right: [{
+                                        operator: '===',
+                                        operand: {
+                                            name: 'N_STRING_LITERAL',
+                                            string: 'B'
+                                        }
+                                    }]
+                                }
+                            }, {
+                                consequent: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Banana'
+                                },
+                                alternate: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Orange'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

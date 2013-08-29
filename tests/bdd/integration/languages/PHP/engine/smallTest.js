@@ -104,6 +104,15 @@ define([
                 expectedResult: 'hello world',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            // Ternary with nested ternary in condition:
+            // - Common gotcha for developers, as in other languages ?: is right-associative whereas in PHP it's left-associative
+            // - Result would be "Banana", but if right-associative it would be "Orange"
+            {
+                code: '<?php $arg = "A"; return ($arg === "A") ? "Apple" : ($arg === "B") ? "Banana" : "Orange";',
+                expectedResult: 'Banana',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {

@@ -212,6 +212,66 @@ define([
                     }]
                 },
                 expectedResult: 'hello world'
+            },
+            // Ternary with nested ternary in condition:
+            // - Common gotcha for developers, as in other languages ?: is right-associative whereas in PHP it's left-associative
+            // - Result should be "Banana", but if right-associative it would be "Orange"
+            {
+                originalCode: '<?php $arg = "A"; return ($arg === "A") ? "Apple" : ($arg === "B") ? "Banana" : "Orange";',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$arg',
+                        expression: {
+                            name: 'N_STRING_LITERAL',
+                            string: 'A'
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_TERNARY',
+                            condition: {
+                                name: 'N_EXPRESSION',
+                                left: '$arg',
+                                right: [{
+                                    operator: '===',
+                                    operand: {
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'A'
+                                    }
+                                }]
+                            },
+                            options: [{
+                                consequent: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Apple'
+                                },
+                                alternate: {
+                                    name: 'N_EXPRESSION',
+                                    left: '$arg',
+                                    right: [{
+                                        operator: '===',
+                                        operand: {
+                                            name: 'N_STRING_LITERAL',
+                                            string: 'B'
+                                        }
+                                    }]
+                                }
+                            }, {
+                                consequent: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Banana'
+                                },
+                                alternate: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'Orange'
+                                }
+                            }]
+                        }
+                    }]
+                },
+                expectedResult: 'Banana'
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

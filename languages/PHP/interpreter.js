@@ -65,6 +65,15 @@ define([
             },
             'N_STRING_LITERAL': function (node) {
                 return '"' + node.string + '"';
+            },
+            'N_TERNARY': function (node, interpret) {
+                var expression = '(' + interpret(node.condition) + ')';
+
+                util.each(node.options, function (option) {
+                    expression = '(' + expression + ' ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
+                });
+
+                return expression;
             }
         }
     };
