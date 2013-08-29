@@ -15,6 +15,10 @@
 define(function () {
     'use strict';
 
+    /*
+     * Elimination of left-recursion: http://web.cs.wpi.edu/~kal/PLT/PLT4.1.2.html
+     */
+
     return {
         ignore: 'N_IGNORE',
         rules: {
@@ -183,35 +187,110 @@ define(function () {
                 components: (/;/)
             },
             'N_EXPRESSION': {
-                components: 'N_EXPRESSION_LEVEL_1'
+                components: 'N_EXPRESSION_LEVEL_21'
             },
-            // Precedence level 1 (lowest) - addition, subtraction and string concatenation
+
+            /*
+             * Operator precedence: see http://php.net/manual/en/language.operators.precedence.php
+             */
+            // Precedence level 0 (highest) - single terms and bracketed expressions
+            'N_EXPRESSION_LEVEL_0': {
+                components: [{oneOf: ['N_TERM', [(/\(/), 'N_EXPRESSION', (/\)/)]]}]
+            },
             'N_EXPRESSION_LEVEL_1': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
-            },
-            // Precedence level 2 - multiplication and division
-            'N_EXPRESSION_LEVEL_2': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\*/), (/\//)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3'}]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
-            },
-            // Precedence level 3 - binary XOR
-            'N_EXPRESSION_LEVEL_3': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_4'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/\^/)}, {name: 'operand', rule: 'N_EXPRESSION_LEVEL_3'}]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
-            },
-            // Precedence level 4 - unary positive and negative operators
-            'N_EXPRESSION_LEVEL_4': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'operator', optionally: {oneOf: [(/\+/), (/-/)]}}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_5'}],
+                components: [{name: 'operator', optionally: {oneOf: ['T_CLONE', 'T_NEW']}}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_0'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'}
             },
-            // Precedence level 5 (highest) - single terms and bracketed expressions
+            'N_EXPRESSION_LEVEL_2': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_1'}, {name: 'right', zeroOrMoreOf: [(/\[/), {name: 'operand', what: 'N_EXPRESSION'}, (/\]/)]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_3': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'operator', optionally: {oneOf: ['T_INC', 'T_DEC', (/~/), 'T_INT_CAST', 'T_DOUBLE_CAST', 'T_STRING_CAST', 'T_ARRAY_CAST', 'T_OBJECT_CAST', 'T_BOOL_CAST']}}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'}
+            },
+            'N_EXPRESSION_LEVEL_4': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', optionally: 'T_INSTANCEOF'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
             'N_EXPRESSION_LEVEL_5': {
-                components: [{oneOf: ['N_TERM', [(/\(/), 'N_EXPRESSION_LEVEL_1', (/\)/)]]}]
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'operator', optionally: (/!/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_4'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'}
+            },
+            'N_EXPRESSION_LEVEL_6': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_5'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\*/), (/\//), (/%/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_5'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_7': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_6'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_6'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_8': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_7'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: ['T_SL', 'T_SR']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_7'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_9': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_8'}, {name: 'right', optionally: [{name: 'operator', oneOf: [(/</), 'T_IS_SMALLER_OR_EQUAL', (/>/), 'T_IS_GREATER_OR_EQUAL']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_8'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_10': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_9'}, {name: 'right', wrapInArray: true, optionally: [{name: 'operator', oneOf: ['T_IS_EQUAL', 'T_IS_NOT_EQUAL', 'T_IS_IDENTICAL', 'T_IS_NOT_IDENTICAL']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_9'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_11': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_10'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_10'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_12': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_11'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/\^/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_11'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_13': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_12'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/\|/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_12'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_14': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_13'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_13'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_15': {
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_14'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/\|\|/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_14'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
+            },
+            'N_EXPRESSION_LEVEL_16': {
+                captureAs: 'N_TERNARY',
+                components: [{name: 'condition', what: 'N_EXPRESSION_LEVEL_15'}, {name: 'options', zeroOrMoreOf: [(/\?/), {name: 'consequent', what: 'N_EXPRESSION_LEVEL_15'}, (/:/), {name: 'alternate', what: 'N_EXPRESSION_LEVEL_15'}]}],
+                ifNoMatch: {component: 'options', capture: 'condition'}
+            },
+            'N_EXPRESSION_LEVEL_17': {
+                components: 'N_EXPRESSION_LEVEL_16'
+            },
+            'N_EXPRESSION_LEVEL_18': {
+                components: 'N_EXPRESSION_LEVEL_17'
+            },
+            'N_EXPRESSION_LEVEL_19': {
+                components: 'N_EXPRESSION_LEVEL_18'
+            },
+            'N_EXPRESSION_LEVEL_20': {
+                components: 'N_EXPRESSION_LEVEL_19'
+            },
+            'N_EXPRESSION_LEVEL_21': {
+                components: 'N_EXPRESSION_LEVEL_20'
             },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
