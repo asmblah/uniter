@@ -19,9 +19,27 @@ define([
 
     describe('Parser', function () {
         describe('parse()', function () {
-            util.each([
-                // A string with a single token when grammar contains a matching rule
-                {
+            function check(scenario) {
+                checkGrammarAndTextGeneratesAST(scenario.grammarSpec, scenario.text, scenario.expectedAST);
+            }
+
+            function checkGrammarAndTextGeneratesAST(grammarSpec, text, expectedAST) {
+                var grammarSpecString = JSON.stringify(grammarSpec, function (key, value) {
+                    if (value instanceof RegExp) {
+                        return value.toString();
+                    }
+                    return value;
+                });
+
+                it('should return the correct AST when the grammar spec is ' + grammarSpecString, function () {
+                    var parser = new Parser(grammarSpec);
+
+                    expect(parser.parse(text)).to.deep.equal(expectedAST);
+                });
+            }
+
+            describe('when given a single token and grammar contains only a matching rule', function () {
+                check({
                     grammarSpec: {
                         rules: {
                             'number': {name: 'value', what: /\d+/}
@@ -33,9 +51,11 @@ define([
                         name: 'number',
                         value: '128'
                     }
-                },
-                // "allOf" and "what" qualifiers
-                {
+                });
+            });
+
+            describe('"allOf" qualifier', function () {
+                check({
                     grammarSpec: {
                         rules: {
                             'add': /\+/,
@@ -51,9 +71,11 @@ define([
                         operator: '+',
                         right: '67'
                     }
-                },
-                // "oneOf" qualifier w/name
-                {
+                });
+            });
+
+            describe('"oneOf" qualifier', function () {
+                check({
                     grammarSpec: {
                         rules: {
                             'thing': [{name: 'value', oneOf: [(/\d+/), (/\w+/)]}, (/;/)]
@@ -65,9 +87,11 @@ define([
                         name: 'thing',
                         value: 'hello'
                     }
-                },
-                // Whitespace delimiter
-                {
+                });
+            });
+
+            describe('whitespace delimiter: "ignore" option', function () {
+                check({
                     grammarSpec: {
                         ignore: 'whitespace',
                         rules: {
@@ -85,9 +109,11 @@ define([
                         operator: '+',
                         right: '89'
                     }
-                },
-                // Prevent overriding the component's owner rule's name
-                {
+                });
+            });
+
+            describe('to prevent overriding the component\'s owner rule\'s name', function () {
+                check({
                     grammarSpec: {
                         rules: {
                             'name': 'string',
@@ -103,9 +129,11 @@ define([
                         name: 'string',
                         value: 'hello'
                     }
-                },
-                // Support specifying which capturing group to capture
-                {
+                });
+            });
+
+            describe('when the index of the capturing group to capture is specified', function () {
+                check({
                     grammarSpec: {
                         rules: {
                             'expression': [{name: 'left', what: 'string'}, (/\s*\.\s*/), {name: 'right', what: 'string'}],
@@ -122,47 +150,41 @@ define([
                         left: 'test',
                         right: 'world'
                     }
-                },
-                // Support specifying to return a particular component as the result if a component does not match
-                {
-                    grammarSpec: {
-                        rules: {
-                            'thing': {
-                                components: [{name: 'name', what: (/\w+/)}, (/=/), {name: 'value', optionally: (/\w+/)}],
-                                ifNoMatch: {component: 'value', capture: 'name'}
-                            }
+                });
+            });
+
+            // Support specifying
+            describe('"ifNoMatch" option', function () {
+                describe('when specifying to return a particular component as the result if a component does not match', function () {
+                    check({
+                        grammarSpec: {
+                            rules: {
+                                'thing': {
+                                    components: [{name: 'name', what: (/\w+/)}, (/=/), {name: 'value', optionally: (/\w+/)}],
+                                    ifNoMatch: {component: 'value', capture: 'name'}
+                                }
+                            },
+                            start: 'thing'
                         },
-                        start: 'thing'
-                    },
-                    text: 'abc=',
-                    expectedAST: 'abc'
-                },
-                // Support specifying to return a particular component as the result if a (possibly uncaptured) component does not match
-                {
-                    grammarSpec: {
-                        rules: {
-                            'thing': {
-                                components: [{name: 'name', what: (/\w+/)}, (/=/), {optionally: {name: 'value', what: (/\w+/)}}],
-                                ifNoMatch: {component: 'value', capture: 'name'}
-                            }
-                        },
-                        start: 'thing'
-                    },
-                    text: 'abc=',
-                    expectedAST: 'abc'
-                }
-            ], function (scenario) {
-                var grammarSpecString = JSON.stringify(scenario.grammarSpec, function (key, value) {
-                    if (value instanceof RegExp) {
-                        return value.toString();
-                    }
-                    return value;
+                        text: 'abc=',
+                        expectedAST: 'abc'
+                    });
                 });
 
-                it('should return the correct AST when the grammar spec is ' + grammarSpecString, function () {
-                    var parser = new Parser(scenario.grammarSpec);
-
-                    expect(parser.parse(scenario.text)).to.deep.equal(scenario.expectedAST);
+                describe('when specifying to return a particular component as the result if a (possibly uncaptured) component does not match', function () {
+                    check({
+                        grammarSpec: {
+                            rules: {
+                                'thing': {
+                                    components: [{name: 'name', what: (/\w+/)}, (/=/), {optionally: {name: 'value', what: (/\w+/)}}],
+                                    ifNoMatch: {component: 'value', capture: 'name'}
+                                }
+                            },
+                            start: 'thing'
+                        },
+                        text: 'abc=',
+                        expectedAST: 'abc'
+                    });
                 });
             });
 
