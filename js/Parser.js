@@ -99,8 +99,22 @@ define([
                     },
                     // Like "?" - 'arg' is a component which may or may not match
                     'optionally': function (text, offset, arg, args, options) {
-                        return arg.match(text, offset, options) || {
-                            components: '',
+                        var match = arg.match(text, offset, options);
+
+                        if (match) {
+                            if (args.wrapInArray) {
+                                return {
+                                    components: [match.components],
+                                    textLength: match.textLength,
+                                    textOffset: match.textOffset
+                                };
+                            }
+
+                            return match;
+                        }
+
+                        return {
+                            components: args.wrapInArray ? [] : '',
                             textLength: 0,
                             textOffset: 0
                         };

@@ -188,6 +188,83 @@ define([
                 });
             });
 
+            describe('"optionally" qualifier', function () {
+                describe('when "wrapInArray" is not specified and result is empty', function () {
+                    var scenario = {
+                        grammarSpec: {
+                            rules: {
+                                'thing': {
+                                    components: [{name: 'first', what: (/ab/)}, {name: 'second', optionally: (/cd/)}]
+                                }
+                            },
+                            start: 'thing'
+                        },
+                        text: 'ab',
+                        expectedAST: {
+                            name: 'thing',
+                            first: 'ab',
+                            // Note the string instead of empty array
+                            second: ''
+                        }
+                    };
+
+                    check(scenario);
+
+                    it('should return a string for the "second" component instead of an empty array', function () {
+                        var parser = new Parser(scenario.grammarSpec);
+
+                        expect(parser.parse(scenario.text).second).to.equal('');
+                    });
+                });
+
+                describe('when "wrapInArray" is specified and result is empty', function () {
+                    var scenario = {
+                        grammarSpec: {
+                            rules: {
+                                'thing': {
+                                    components: [{name: 'first', what: (/ab/)}, {name: 'second', optionally: (/cd/), wrapInArray: true}]
+                                }
+                            },
+                            start: 'thing'
+                        },
+                        text: 'ab',
+                        expectedAST: {
+                            name: 'thing',
+                            first: 'ab',
+                            // Note the empty array instead of string
+                            second: []
+                        }
+                    };
+
+                    check(scenario);
+
+                    it('should return an array for the "second" component instead of a string', function () {
+                        var parser = new Parser(scenario.grammarSpec);
+
+                        expect(parser.parse(scenario.text).second).to.be.an('array');
+                    });
+                });
+
+                describe('when "wrapInArray" is specified and result is not empty', function () {
+                    check({
+                        grammarSpec: {
+                            rules: {
+                                'thing': {
+                                    components: [{name: 'first', what: (/ab/)}, {name: 'second', optionally: (/cd/), wrapInArray: true}]
+                                }
+                            },
+                            start: 'thing'
+                        },
+                        text: 'abcd',
+                        expectedAST: {
+                            name: 'thing',
+                            first: 'ab',
+                            second: ['cd']
+                        }
+                    });
+                });
+            });
+
             describe('when using grammar spec #1', function () {
                 var grammarSpec,
                     parser;
