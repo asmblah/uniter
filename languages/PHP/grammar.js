@@ -105,7 +105,7 @@ define(function () {
             'T_INT_CAST': /\(\s*int(eger)?\s*\)/i,
             'T_INTERFACE': /interface\b/i,
             'T_ISSET': /isset\b/i,
-            'T_IS_EQUAL': /==/i,
+            'T_IS_EQUAL': /==(?!=)/i,
             'T_IS_GREATER_OR_EQUAL': />=/,
             'T_IS_IDENTICAL': /===/i,
             'T_IS_NOT_EQUAL': /!=|<>/,
