@@ -331,6 +331,62 @@ define([
                     }]
                 },
                 expectedResult: 'Paul'
+            },
+            {
+                originalCode: '<?php $a = 4; $b = $a++; return array($a, $b);',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$a',
+                        expression: '4'
+                    }, {
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$b',
+                        expression: {
+                            name: 'N_UNARY_EXPRESSION',
+                            operand: '$a',
+                            operator: '++',
+                            prefix: false
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_ARRAY_LITERAL',
+                            elements: ['$a', '$b']
+                        }
+                    }]
+                },
+                // Note that the pre-increment value is used
+                expectedResult: [5, 4]
+            },
+            {
+                originalCode: '<?php $a = 4; $b = ++$a; return array($a, $b);',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$a',
+                        expression: '4'
+                    }, {
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$b',
+                        expression: {
+                            name: 'N_UNARY_EXPRESSION',
+                            operand: '$a',
+                            operator: '++',
+                            prefix: true
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_ARRAY_LITERAL',
+                            elements: ['$a', '$b']
+                        }
+                    }]
+                },
+                // Note that the post-increment value is used
+                expectedResult: [5, 5]
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

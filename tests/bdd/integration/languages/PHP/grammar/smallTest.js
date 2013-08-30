@@ -378,6 +378,50 @@ define([
                         }
                     }]
                 }
+            },
+            {
+                code: '<?php $a = 4; ++$a; return $a;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$a',
+                        expression: '4'
+                    }, {
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_UNARY_EXPRESSION',
+                            operand: '$a',
+                            operator: '++',
+                            prefix: true
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: '$a'
+                    }]
+                }
+            },
+            {
+                code: '<?php $a = 4; $a++; return $a;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$a',
+                        expression: '4'
+                    }, {
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_UNARY_EXPRESSION',
+                            operand: '$a',
+                            operator: '++',
+                            prefix: false
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: '$a'
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

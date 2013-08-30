@@ -64,6 +64,9 @@ define([
 
                 return '(' + expression + ')';
             },
+            'N_EXPRESSION_STATEMENT': function (node, interpret) {
+                return interpret(node.expression) + ';';
+            },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
             },
@@ -92,6 +95,13 @@ define([
                 });
 
                 return expression;
+            },
+            'N_UNARY_EXPRESSION': function (node, interpret) {
+                if (node.prefix) {
+                    return '(' + interpret(node.operator) + interpret(node.operand) + ')';
+                } else {
+                    return '(' + interpret(node.operand) + interpret(node.operator) + ')';
+                }
             }
         }
     };

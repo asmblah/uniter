@@ -210,9 +210,19 @@ define(function () {
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_3': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'operator', optionally: {oneOf: ['T_INC', 'T_DEC', (/~/), 'T_INT_CAST', 'T_DOUBLE_CAST', 'T_STRING_CAST', 'T_ARRAY_CAST', 'T_OBJECT_CAST', 'T_BOOL_CAST']}}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
-                ifNoMatch: {component: 'operator', capture: 'operand'}
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2']
+            },
+            'N_UNARY_PREFIX_EXPRESSION': {
+                captureAs: 'N_UNARY_EXPRESSION',
+                components: [{name: 'operator', what: 'T_INC'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'},
+                options: {prefix: true}
+            },
+            'N_UNARY_SUFFIX_EXPRESSION': {
+                captureAs: 'N_UNARY_EXPRESSION',
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'operator', what: 'T_INC'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'},
+                options: {prefix: false}
             },
             'N_EXPRESSION_LEVEL_4': {
                 captureAs: 'N_EXPRESSION',
@@ -294,6 +304,9 @@ define(function () {
             'N_EXPRESSION_LEVEL_21': {
                 components: 'N_EXPRESSION_LEVEL_20'
             },
+            'N_EXPRESSION_STATEMENT': {
+                components: [{name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
+            },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
             },
@@ -305,7 +318,7 @@ define(function () {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]
             },
             'N_STATEMENT': {
-                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT']}
+                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_EXPRESSION_STATEMENT']}
             },
             'N_STRING_LITERAL': {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
