@@ -126,7 +126,7 @@ define([
                 expectedStdout: ''
             },
             {
-                code: '<?php $arr = array(3 + 4, "hello " + "fred"); return $arr;',
+                code: '<?php $arr = array(3 + 4, "hello " . "fred"); return $arr;',
                 expectedResultCallback: function (result) {
                     expect(result).to.be.an('array');
                     expect(result).to.deep.equal([7, 'hello fred']);
