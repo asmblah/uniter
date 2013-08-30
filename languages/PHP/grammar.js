@@ -205,9 +205,9 @@ define(function () {
                 ifNoMatch: {component: 'operator', capture: 'operand'}
             },
             'N_EXPRESSION_LEVEL_2': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_1'}, {name: 'right', zeroOrMoreOf: [(/\[/), {name: 'operand', what: 'N_EXPRESSION'}, (/\]/)]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
+                captureAs: 'N_ARRAY_INDEX',
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_3': {
                 captureAs: 'N_EXPRESSION',

@@ -300,6 +300,37 @@ define([
                     }]
                 },
                 expectedResult: ['hello', 87]
+            },
+            {
+                originalCode: '<?php $names = array("Peter", "Paul", "Bex"); return $names[1];',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$names',
+                        expression: {
+                            name: 'N_ARRAY_LITERAL',
+                            elements: [{
+                                name: 'N_STRING_LITERAL',
+                                string: 'Peter'
+                            }, {
+                                name: 'N_STRING_LITERAL',
+                                string: 'Paul'
+                            }, {
+                                name: 'N_STRING_LITERAL',
+                                string: 'Bex'
+                            }]
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_ARRAY_INDEX',
+                            array: '$names',
+                            indices: [{index: '1'}]
+                        }
+                    }]
+                },
+                expectedResult: 'Paul'
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

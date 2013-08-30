@@ -364,6 +364,20 @@ define([
                         expression: '$arr'
                     }]
                 }
+            },
+            {
+                code: '<?php return $names[2];',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_ARRAY_INDEX',
+                            array: '$names',
+                            indices: [{index: '2'}]
+                        }
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

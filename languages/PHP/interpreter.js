@@ -26,6 +26,15 @@ define([
 
     return {
         nodes: {
+            'N_ARRAY_INDEX': function (node, interpret) {
+                var indexValues = [];
+
+                util.each(node.indices, function (index) {
+                    indexValues.push(interpret(index.index));
+                });
+
+                return node.array + '[' + indexValues.join('][') + ']';
+            },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
 

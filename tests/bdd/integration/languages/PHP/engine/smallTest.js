@@ -133,6 +133,12 @@ define([
                 },
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            {
+                code: '<?php $names = array(array("Barry", "baz"), array("Arthur", "arty"), array("Marge", "madge")); return $names[1][0];',
+                expectedResult: 'Arthur',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {
