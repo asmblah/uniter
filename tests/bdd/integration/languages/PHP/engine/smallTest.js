@@ -17,6 +17,8 @@ define([
 ) {
     'use strict';
 
+    var hasOwn = {}.hasOwnProperty;
+
     describe('PHP Engine small program integration', function () {
         var engine;
 
@@ -113,12 +115,34 @@ define([
                 expectedResult: 'Banana',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            {
+                code: '<?php $arr = array(); return $arr;',
+                expectedResultCallback: function (result) {
+                    expect(result).to.be.an('array');
+                    expect(result).to.be.empty;
+                },
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            {
+                code: '<?php $arr = array(3 + 4, "hello " + "fred"); return $arr;',
+                expectedResultCallback: function (result) {
+                    expect(result).to.be.an('array');
+                    expect(result).to.deep.equal([7, 'hello fred']);
+                },
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {
                 it('should return the expected result', function (done) {
                     engine.execute(scenario.code).done(function (result) {
-                        expect(result).to.equal(scenario.expectedResult);
+                        if (hasOwn.call(scenario, 'expectedResult')) {
+                            expect(result).to.equal(scenario.expectedResult);
+                        } else {
+                            scenario.expectedResultCallback(result);
+                        }
                         done();
                     }).fail(done);
                 });

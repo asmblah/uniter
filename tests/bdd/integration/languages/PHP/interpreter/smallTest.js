@@ -272,6 +272,34 @@ define([
                     }]
                 },
                 expectedResult: 'Banana'
+            },
+            {
+                originalCode: '<?php $arr = array("hello", 84 + 3); return $arr;',
+                ast: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_ASSIGNMENT_STATEMENT',
+                        target: '$arr',
+                        expression: {
+                            name: 'N_ARRAY_LITERAL',
+                            elements: [{
+                                name: 'N_STRING_LITERAL',
+                                string: 'hello'
+                            }, {
+                                name: 'N_EXPRESSION',
+                                left: '84',
+                                right: [{
+                                    operator: '+',
+                                    operand: '3'
+                                }]
+                            }]
+                        }
+                    }, {
+                        name: 'N_RETURN_STATEMENT',
+                        expression: '$arr'
+                    }]
+                },
+                expectedResult: ['hello', 87]
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

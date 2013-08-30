@@ -176,7 +176,9 @@ define(function () {
             'T_XOR_EQUAL': /\^=/i,
             'T_YIELD': /yield\b/i,
 
-
+            'N_ARRAY_LITERAL': {
+                components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+            },
             'N_ASSIGNMENT_STATEMENT': {
                 components: [{name: 'target', oneOf: ['T_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
             },
@@ -309,7 +311,7 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['T_VARIABLE', 'T_DNUMBER', 'T_LNUMBER', 'T_STRING', 'N_STRING_LITERAL']}
+                components: {oneOf: ['T_VARIABLE', 'T_DNUMBER', 'T_LNUMBER', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
             }
         },
         start: 'N_PROGRAM'
