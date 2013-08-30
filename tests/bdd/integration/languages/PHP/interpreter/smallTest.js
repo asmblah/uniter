@@ -303,7 +303,7 @@ define([
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable
-            it('should return the expected AST when the original code was "' + scenario.originalCode + '"', function () {
+            it('should return the expected result when the original code was "' + scenario.originalCode + '"', function () {
                 expect(interpreter.interpret(scenario.ast)).to.deep.equal(scenario.expectedResult);
             });
         });
