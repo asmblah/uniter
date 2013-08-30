@@ -230,7 +230,7 @@ define([
             util.each(grammarSpec.rules, function (ruleSpec, name) {
                 var rule;
 
-                rule = new Rule(name, ruleSpec.captureAs || null, ruleSpec.ifNoMatch || null);
+                rule = new Rule(name, ruleSpec.captureAs || null, ruleSpec.ifNoMatch || null, ruleSpec.options || null);
                 rules[name] = rule;
             });
 

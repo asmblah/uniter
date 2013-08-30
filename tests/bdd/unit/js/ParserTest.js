@@ -263,6 +263,27 @@ define([
                         }
                     });
                 });
+
+                describe('"options" option', function () {
+                    check({
+                        grammarSpec: {
+                            rules: {
+                                'increment': {
+                                    components: [{name: 'operator', what: (/\+\+/)}, {name: 'operand', what: (/\$\w+/)}],
+                                    options: {fun: true}
+                                }
+                            },
+                            start: 'increment'
+                        },
+                        text: '++$a',
+                        expectedAST: {
+                            name: 'increment',
+                            fun: true,
+                            operand: '$a',
+                            operator: '++'
+                        }
+                    });
+                });
             });
 
             describe('when using grammar spec #1', function () {
