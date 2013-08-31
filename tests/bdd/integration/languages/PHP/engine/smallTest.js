@@ -9,21 +9,29 @@
 
 /*global define */
 define([
+    './tools',
     '../tools',
     'js/util'
 ], function (
-    tools,
+    engineTools,
+    phpTools,
     util
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
-
     describe('PHP Engine small program integration', function () {
         var engine;
 
+        function check(scenario) {
+            engineTools.check(function () {
+                return {
+                    engine: engine
+                };
+            }, scenario);
+        }
+
         beforeEach(function () {
-            engine = tools.createEngine();
+            engine = phpTools.createEngine();
         });
 
         util.each([
@@ -139,64 +147,9 @@ define([
                 expectedResult: 'Arthur',
                 expectedStderr: '',
                 expectedStdout: ''
-            },
-            {
-                code: '<?php $a = 7; ++$a; return $a;',
-                expectedResult: 8,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            {
-                code: '<?php $a = 4; $a++; return $a;',
-                expectedResult: 5,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            {
-                code: '<?php $a = 7; --$a; return $a;',
-                expectedResult: 6,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            {
-                code: '<?php $a = 4; $a--; return $a;',
-                expectedResult: 3,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            {
-                code: '<?php return ~1;',
-                expectedResult: -2,
-                expectedStderr: '',
-                expectedStdout: ''
             }
         ], function (scenario) {
-            describe('when the code is "' + scenario.code + '"', function () {
-                it('should return the expected result', function (done) {
-                    engine.execute(scenario.code).done(function (result) {
-                        if (hasOwn.call(scenario, 'expectedResult')) {
-                            expect(result).to.equal(scenario.expectedResult);
-                        } else {
-                            scenario.expectedResultCallback(result);
-                        }
-                        done();
-                    }).fail(done);
-                });
-
-                it('should output the expected data to stderr', function (done) {
-                    engine.execute(scenario.code).done(function () {
-                        expect(engine.getStderr().readAll()).to.equal(scenario.expectedStderr);
-                        done();
-                    }).fail(done);
-                });
-
-                it('should output the expected data to stdout', function (done) {
-                    engine.execute(scenario.code).done(function () {
-                        expect(engine.getStdout().readAll()).to.equal(scenario.expectedStdout);
-                        done();
-                    }).fail(done);
-                });
-            });
+            check(scenario);
         });
     });
 });
