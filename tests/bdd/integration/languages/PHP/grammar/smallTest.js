@@ -466,6 +466,21 @@ define([
                         expression: '$a'
                     }]
                 }
+            },
+            {
+                code: '<?php return ~4;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_UNARY_EXPRESSION',
+                            operator: '~',
+                            operand: '4',
+                            prefix: true
+                        }
+                    }]
+                }
             }
         ], function (scenario) {
             // Pretty-print the code strings so any non-printable characters are readable

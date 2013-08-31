@@ -163,6 +163,12 @@ define([
                 expectedResult: 3,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            {
+                code: '<?php return ~1;',
+                expectedResult: -2,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {
