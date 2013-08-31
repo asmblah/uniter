@@ -151,6 +151,18 @@ define([
                 expectedResult: 5,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            {
+                code: '<?php $a = 7; --$a; return $a;',
+                expectedResult: 6,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            {
+                code: '<?php $a = 4; $a--; return $a;',
+                expectedResult: 3,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             describe('when the code is "' + scenario.code + '"', function () {

@@ -214,13 +214,13 @@ define(function () {
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', what: 'T_INC'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'operator', what: 'T_INC'}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },
