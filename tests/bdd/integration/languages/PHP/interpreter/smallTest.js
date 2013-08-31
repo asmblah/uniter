@@ -445,7 +445,7 @@ define([
                 expectedResult: [3, 3]
             },
             {
-                code: '<?php return ~1;',
+                originalCode: '<?php return ~1;',
                 ast: {
                     name: 'N_PROGRAM',
                     statements: [{
