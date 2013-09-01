@@ -39,13 +39,36 @@ define([
                 describe('when the operand is a constant value', function () {
                     util.each([
                         {
-                            code: '<?php return ~1;',
-                            expectedResult: -2,
-                            expectedStderr: '',
-                            expectedStdout: ''
+                            expression: '~1',
+                            expectedResult: -2
+                        },
+                        {
+                            expression: '~"1"',
+                            // Gets cast to a string with the question mark character
+                            expectedResult: '?'
+                        },
+                        {
+                            expression: '~"a"',
+                            // Gets cast to a string with the question mark character
+                            expectedResult: '?'
+                        },
+                        {
+                            expression: '~"a" + 2',
+                            // Gets cast to a string (question mark character), then to int (zero) because of numeric addition
+                            expectedResult: 2
+                        },
+                        {
+                            expression: '~"a" . 3',
+                            // Gets cast to a string (question mark character), but kept as string because of concatenation
+                            expectedResult: '?3'
                         }
                     ], function (scenario) {
-                        check(scenario);
+                        check({
+                            code: '<?php return ' + scenario.expression + ';',
+                            expectedResult: scenario.expectedResult,
+                            expectedStderr: '',
+                            expectedStdout: ''
+                        });
                     });
                 });
 

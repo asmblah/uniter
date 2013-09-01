@@ -37,38 +37,38 @@ define([
         util.each([
             {
                 code: '',
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             {
                 code: '<p>A test</p>',
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '<p>A test</p>'
             },
             {
                 code: '<?php',
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             {
                 code: '<?php ?>',
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             {
                 code: '<strong><?php ?></strong>',
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '<strong></strong>'
             },
             {
                 code: '<?php $xyz = 21;',
                 // No result is returned, even though $xyz is set to 21
-                expectedResult: undefined,
+                expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },

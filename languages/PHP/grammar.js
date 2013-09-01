@@ -180,7 +180,7 @@ define(function () {
                 components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
             'N_ASSIGNMENT_STATEMENT': {
-                components: [{name: 'target', oneOf: ['T_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
+                components: [{name: 'target', oneOf: ['N_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
@@ -307,10 +307,16 @@ define(function () {
             'N_EXPRESSION_STATEMENT': {
                 components: [{name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
             },
+            'N_FLOAT': {
+                components: {name: 'number', what: 'T_DNUMBER'}
+            },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
             },
             'N_INLINE_HTML_STATEMENT': [{oneOf: ['T_CLOSE_TAG', '<BOF>']}, {name: 'html', what: 'T_INLINE_HTML'}, {oneOf: ['T_OPEN_TAG', '<EOF>']}],
+            'N_INTEGER': {
+                components: {name: 'number', what: 'T_LNUMBER'}
+            },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
             },
@@ -324,7 +330,10 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['T_VARIABLE', 'T_DNUMBER', 'T_LNUMBER', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
+            },
+            'N_VARIABLE': {
+                components: {name: 'variable', what: 'T_VARIABLE'}
             }
         },
         start: 'N_PROGRAM'

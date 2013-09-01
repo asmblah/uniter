@@ -75,8 +75,14 @@ define([
                         html: '<html>'
                     }, {
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$b',
-                        expression: '2'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$b'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '2'
+                        }
                     }, {
                         name: 'N_INLINE_HTML_STATEMENT',
                         html: '</html>'
@@ -89,8 +95,14 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$a',
-                        expression: '7'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '7'
+                        }
                     }]
                 }
             },
@@ -100,7 +112,10 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_RETURN_STATEMENT',
-                        expression: '0'
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '0'
+                        }
                     }]
                 }
             },
@@ -110,11 +125,20 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$result',
-                        expression: '6'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$result'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '6'
+                        }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$result'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$result'
+                        }
                     }]
                 }
             },
@@ -124,18 +148,30 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$y',
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$y'
+                        },
                         expression: {
                             name: 'N_EXPRESSION',
-                            left: '3',
+                            left: {
+                                name: 'N_INTEGER',
+                                number: '3'
+                            },
                             right: [{
                                 operator: '*',
-                                operand: '4'
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
                             }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$y'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$y'
+                        }
                     }]
                 }
             },
@@ -197,10 +233,19 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_TERNARY',
-                            condition: '1',
+                            condition: {
+                                name: 'N_INTEGER',
+                                number: '1'
+                            },
                             options: [{
-                                consequent: '4',
-                                alternate: '8'
+                                consequent: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                },
+                                alternate: {
+                                    name: 'N_INTEGER',
+                                    number: '8'
+                                }
                             }]
                         }
                     }]
@@ -217,27 +262,45 @@ define([
                             name: 'N_TERNARY',
                             condition: {
                                 name: 'N_EXPRESSION',
-                                left: '1',
+                                left: {
+                                    name: 'N_INTEGER',
+                                    number: '1'
+                                },
                                 right: [{
                                     operator: '+',
-                                    operand: '2'
+                                    operand: {
+                                        name: 'N_INTEGER',
+                                        number: '2'
+                                    }
                                 }]
                             },
                             options: [{
                                 consequent: {
                                     name: 'N_EXPRESSION',
-                                    left: '3',
+                                    left: {
+                                        name: 'N_INTEGER',
+                                        number: '3'
+                                    },
                                     right: [{
                                         operator: '+',
-                                        operand: '2'
+                                        operand: {
+                                            name: 'N_INTEGER',
+                                            number: '2'
+                                        }
                                     }]
                                 },
                                 alternate: {
                                     name: 'N_EXPRESSION',
-                                    left: '7',
+                                    left: {
+                                        name: 'N_INTEGER',
+                                        number: '7'
+                                    },
                                     right: [{
                                         operator: '+',
-                                        operand: '5'
+                                        operand: {
+                                            name: 'N_INTEGER',
+                                            number: '5'
+                                        }
                                     }]
                                 }
                             }]
@@ -254,7 +317,10 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$arg',
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$arg'
+                        },
                         expression: {
                             name: 'N_STRING_LITERAL',
                             string: 'A'
@@ -265,7 +331,10 @@ define([
                             name: 'N_TERNARY',
                             condition: {
                                 name: 'N_EXPRESSION',
-                                left: '$arg',
+                                left: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$arg'
+                                },
                                 right: [{
                                     operator: '===',
                                     operand: {
@@ -281,7 +350,10 @@ define([
                                 },
                                 alternate: {
                                     name: 'N_EXPRESSION',
-                                    left: '$arg',
+                                    left: {
+                                        name: 'N_VARIABLE',
+                                        variable: '$arg'
+                                    },
                                     right: [{
                                         operator: '===',
                                         operand: {
@@ -310,14 +382,20 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$arr',
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        },
                         expression: {
                             name: 'N_ARRAY_LITERAL',
                             elements: []
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$arr'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        }
                     }]
                 }
             },
@@ -327,14 +405,23 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$arr',
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        },
                         expression: {
                             name: 'N_ARRAY_LITERAL',
-                            elements: ['7']
+                            elements: [{
+                                name: 'N_INTEGER',
+                                number: '7'
+                            }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$arr'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        }
                     }]
                 }
             },
@@ -344,7 +431,10 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$arr',
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        },
                         expression: {
                             name: 'N_ARRAY_LITERAL',
                             elements: [{
@@ -352,16 +442,25 @@ define([
                                 string: 'hello'
                             }, {
                                 name: 'N_EXPRESSION',
-                                left: '84',
+                                left: {
+                                    name: 'N_INTEGER',
+                                    number: '84'
+                                },
                                 right: [{
                                     operator: '+',
-                                    operand: '3'
+                                    operand: {
+                                        name: 'N_INTEGER',
+                                        number: '3'
+                                    }
                                 }]
                             }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$arr'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$arr'
+                        }
                     }]
                 }
             },
@@ -373,8 +472,14 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_ARRAY_INDEX',
-                            array: '$names',
-                            indices: [{index: '2'}]
+                            array: {
+                                name: 'N_VARIABLE',
+                                variable: '$names'
+                            },
+                            indices: [{index: {
+                                name: 'N_INTEGER',
+                                number: '2'
+                            }}]
                         }
                     }]
                 }
@@ -385,19 +490,31 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$a',
-                        expression: '4'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '4'
+                        }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_UNARY_EXPRESSION',
-                            operand: '$a',
+                            operand: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
                             operator: '++',
                             prefix: true
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$a'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        }
                     }]
                 }
             },
@@ -407,19 +524,31 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$a',
-                        expression: '4'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '4'
+                        }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_UNARY_EXPRESSION',
-                            operand: '$a',
+                            operand: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
                             operator: '++',
                             prefix: false
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$a'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        }
                     }]
                 }
             },
@@ -429,19 +558,31 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$a',
-                        expression: '4'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '4'
+                        }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_UNARY_EXPRESSION',
-                            operand: '$a',
+                            operand: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
                             operator: '--',
                             prefix: true
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$a'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        }
                     }]
                 }
             },
@@ -451,19 +592,31 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ASSIGNMENT_STATEMENT',
-                        target: '$a',
-                        expression: '4'
+                        target: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        },
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '4'
+                        }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_UNARY_EXPRESSION',
-                            operand: '$a',
+                            operand: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
                             operator: '--',
                             prefix: false
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
-                        expression: '$a'
+                        expression: {
+                            name: 'N_VARIABLE',
+                            variable: '$a'
+                        }
                     }]
                 }
             },
@@ -476,7 +629,10 @@ define([
                         expression: {
                             name: 'N_UNARY_EXPRESSION',
                             operator: '~',
-                            operand: '4',
+                            operand: {
+                                name: 'N_INTEGER',
+                                number: '4'
+                            },
                             prefix: true
                         }
                     }]
