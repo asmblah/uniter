@@ -27,7 +27,7 @@ define([
     }
 
     util.extend(Interpreter.prototype, {
-        interpret: function (node) {
+        interpret: function (node, data) {
             var interpreter = this,
                 nodeName,
                 spec = interpreter.spec,
@@ -39,19 +39,29 @@ define([
                 throw new Exception('Interpreter.interpret() :: Invalid AST node provided');
             }
 
+            if (arguments.length === 1) {
+                data = null;
+            }
+
             nodeName = node.name;
 
             if (!hasOwn.call(spec.nodes, nodeName)) {
                 throw new Exception('Interpreter.interpret() :: Spec does not define how to handle node "' + nodeName + '"');
             }
 
-            return spec.nodes[nodeName].call(interpreter, node, function (node) {
+            return spec.nodes[nodeName].call(interpreter, node, function (node, newData) {
+                if (arguments.length === 1) {
+                    newData = data;
+                } else if (newData && (typeof newData === 'object')) {
+                    newData = util.extend({}, data, newData);
+                }
+
                 if (util.isString(node)) {
                     return node;
                 } else {
-                    return interpreter.interpret(node);
+                    return interpreter.interpret(node, newData);
                 }
-            }, stdin, stdout, stderr);
+            }, data, stdin, stdout, stderr);
         }
     });
 
