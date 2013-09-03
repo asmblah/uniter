@@ -14,10 +14,12 @@
 /*global define */
 define([
     'js/util',
+    './interpreter/Error',
     './interpreter/ValueFactory',
     './interpreter/Variable'
 ], function (
     util,
+    PHPError,
     ValueFactory,
     Variable
 ) {
@@ -65,8 +67,16 @@ define([
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
-        /*jshint evil:true */
-        result = new Function('stdin, stdout, stderr, tools', code)(stdin, stdout, stderr, tools);
+        try {
+            /*jshint evil:true */
+            result = new Function('stdin, stdout, stderr, tools', code)(stdin, stdout, stderr, tools);
+        } catch (exception) {
+            if (exception instanceof PHPError) {
+                stderr.write(exception.message);
+            }
+
+            throw exception;
+        }
 
         return result.get();
     }
