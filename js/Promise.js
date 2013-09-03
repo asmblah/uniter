@@ -24,6 +24,10 @@ define([
     util.inherit(Promise).from(ModularPromise);
 
     util.extend(Promise.prototype, {
+        always: function (callback) {
+            return this.then(callback, callback);
+        },
+
         done: function (callback) {
             return this.then(callback);
         },
