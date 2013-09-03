@@ -182,6 +182,9 @@ define(function () {
             'N_ASSIGNMENT_STATEMENT': {
                 components: [{name: 'target', oneOf: ['N_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
             },
+            'N_BOOLEAN': {
+                components: {name: 'bool', what: (/true|false/i)}
+            },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
@@ -330,7 +333,7 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
             },
             'N_VARIABLE': {
                 components: {name: 'variable', what: 'T_VARIABLE'}

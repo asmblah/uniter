@@ -94,6 +94,9 @@ define([
             'N_ASSIGNMENT_STATEMENT': function (node, interpret) {
                 return interpret(node.target, {getValue: false}) + '.set(' + interpret(node.expression) + ');';
             },
+            'N_BOOLEAN': function (node) {
+                return 'tools.valueFactory.createBoolean(' + node.bool + ')';
+            },
             'N_EXPRESSION': function (node, interpret) {
                 var expression = interpret(node.left);
 
