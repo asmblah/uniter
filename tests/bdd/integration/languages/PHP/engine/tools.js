@@ -22,29 +22,47 @@ define(function () {
                     engine = getData().engine;
                 });
 
-                it('should return the expected result', function (done) {
-                    engine.execute(scenario.code).done(function (result) {
-                        if (hasOwn.call(scenario, 'expectedResult')) {
-                            expect(result).to.equal(scenario.expectedResult);
-                        } else {
-                            scenario.expectedResultCallback(result);
-                        }
-                        done();
-                    }).fail(done);
-                });
+                if (scenario.expectedException) {
+                    it('should throw the expected Exception', function (done) {
+                        engine.execute(scenario.code).fail(function (exception) {
+                            if (hasOwn.call(scenario.expectedException, 'instanceOf')) {
+                                expect(exception).to.be.an.instanceOf(scenario.expectedException.instanceOf);
+                            }
+                            if (hasOwn.call(scenario.expectedException, 'match')) {
+                                expect(exception.message).to.match(scenario.expectedException.match);
+                            }
+                            done();
+                        }).done(function () {
+                            done(new Error('Expected an Exception to be thrown'));
+                        });
+                    });
+                } else {
+                    it('should return the expected result', function (done) {
+                        engine.execute(scenario.code).done(function (result) {
+                            if (hasOwn.call(scenario, 'expectedResult')) {
+                                expect(result).to.equal(scenario.expectedResult);
+                            } else {
+                                scenario.expectedResultCallback(result);
+                            }
+                            done();
+                        }).fail(function (exception) {
+                            done(new Error('Expected no Exception to be thrown, but one was: ' + exception));
+                        });
+                    });
+                }
 
                 it('should output the expected data to stderr', function (done) {
-                    engine.execute(scenario.code).done(function () {
+                    engine.execute(scenario.code).always(function () {
                         expect(engine.getStderr().readAll()).to.equal(scenario.expectedStderr);
                         done();
-                    }).fail(done);
+                    });
                 });
 
                 it('should output the expected data to stdout', function (done) {
-                    engine.execute(scenario.code).done(function () {
+                    engine.execute(scenario.code).always(function () {
                         expect(engine.getStdout().readAll()).to.equal(scenario.expectedStdout);
                         done();
-                    }).fail(done);
+                    });
                 });
             });
         }

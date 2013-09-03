@@ -10,9 +10,11 @@
 /*global define */
 define([
     'js/util',
+    '../Error/Fatal',
     '../Value'
 ], function (
     util,
+    PHPFatalError,
     Value
 ) {
     'use strict';
@@ -40,6 +42,10 @@ define([
 
         getElement: function (index) {
             return this.value[index.get()];
+        },
+
+        onesComplement: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         }
     });
 

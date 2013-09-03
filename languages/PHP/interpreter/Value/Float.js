@@ -49,6 +49,11 @@ define([
             var value = this;
 
             return value.factory.createString(value.value);
+        },
+
+        onesComplement: function () {
+            /*jshint bitwise: false */
+            return this.factory.createInteger(~this.value);
         }
     });
 

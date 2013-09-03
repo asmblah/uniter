@@ -11,13 +11,17 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
+
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
 
     describe('PHP Engine bitwise operators integration', function () {
         var engine;
@@ -34,54 +38,81 @@ define([
             engine = phpTools.createEngine();
         });
 
-        describe('when using the one\'s complement (bitwise negation) operator "~<val>"', function () {
-            describe('when used as a single term in an expression', function () {
-                describe('when the operand is a constant value', function () {
-                    util.each([
-                        {
-                            expression: '~1',
+        describe('unary operators', function () {
+            util.each({
+                'one\'s complement (bitwise negation) operator "~<val>"': {
+                    operator: '~',
+                    operand: {
+                        'array': [{
+                            operand: 'array()',
+                            expectedException: {
+                                instanceOf: PHPFatalError,
+                                match: /^PHP Fatal error: Unsupported operand types$/
+                            },
+                            expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        }],
+                        'boolean': [{
+                            operand: 'true',
+                            expectedException: {
+                                instanceOf: PHPFatalError,
+                                match: /^PHP Fatal error: Unsupported operand types$/
+                            },
+                            expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        }, {
+                            operand: 'false',
+                            expectedException: {
+                                instanceOf: PHPFatalError,
+                                match: /^PHP Fatal error: Unsupported operand types$/
+                            },
+                            expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        }],
+                        'float': [{
+                            operand: '0.0',
+                            expectedResult: -1
+                        }, {
+                            operand: '0.8',
+                            expectedResult: -1
+                        }, {
+                            operand: '1.0',
                             expectedResult: -2
-                        },
-                        {
-                            expression: '~"1"',
-                            // Gets cast to a string with the question mark character
-                            expectedResult: '?'
-                        },
-                        {
-                            expression: '~"a"',
-                            // Gets cast to a string with the question mark character
-                            expectedResult: '?'
-                        },
-                        {
-                            expression: '~"a" + 2',
-                            // Gets cast to a string (question mark character), then to int (zero) because of numeric addition
-                            expectedResult: 2
-                        },
-                        {
-                            expression: '~"a" . 3',
-                            // Gets cast to a string (question mark character), but kept as string because of concatenation
-                            expectedResult: '?3'
-                        }
-                    ], function (scenario) {
-                        check({
-                            code: '<?php return ' + scenario.expression + ';',
-                            expectedResult: scenario.expectedResult,
-                            expectedStderr: '',
-                            expectedStdout: ''
-                        });
-                    });
-                });
+                        }, {
+                            operand: '4.4',
+                            expectedResult: -5
+                        }],
+                        'integer': [{
+                            operand: '0',
+                            expectedResult: -1
+                        }, {
+                            operand: '1',
+                            expectedResult: -2
+                        }, {
+                            operand: '4',
+                            expectedResult: -5
+                        }]
+                    }
+                }
+            }, function (data, operatorDescription) {
+                var operator = data.operator;
 
-                describe('when the operand is a variable', function () {
-                    util.each([
-                        {
-                            code: '<?php $a = 1; return ~$a;',
-                            expectedResult: -2,
-                            expectedStderr: '',
-                            expectedStdout: ''
-                        }
-                    ], function (scenario) {
-                        check(scenario);
+                describe('for the ' + operatorDescription, function () {
+                    util.each(DATA_TYPES, function (operandType) {
+                        var operandDatas = data.operand[operandType];
+
+                        util.each(operandDatas, function (operandData) {
+                            var operand = operandData.operand;
+
+                            describe('for ' + operator + operandType + '(' + operand + ')', function () {
+                                var expression = operator + operand;
+
+                                check({
+                                    code: '<?php return ' + expression + ';',
+                                    expectedResult: operandData.expectedResult,
+                                    expectedException: operandData.expectedException,
+                                    expectedStderr: operandData.expectedStderr || '',
+                                    expectedStdout: operandData.expectedStdout || ''
+                                });
+                            });
+                        });
                     });
                 });
             });
