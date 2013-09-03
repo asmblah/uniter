@@ -9,7 +9,7 @@
 
 /*global define */
 define([
-    'vendor/sinon/sinon',
+    'sinon/sinon',
     'js/util',
     'js/Interpreter'
 ], function (
