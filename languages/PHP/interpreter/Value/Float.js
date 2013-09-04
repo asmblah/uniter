@@ -41,6 +41,13 @@ define([
             return this;
         },
 
+        coerceToInteger: function () {
+            /*jshint bitwise: false */
+            var value = this;
+
+            return value.factory.createInteger(value.value >> 0);
+        },
+
         coerceToNumber: function () {
             return this;
         },
@@ -54,6 +61,10 @@ define([
         onesComplement: function () {
             /*jshint bitwise: false */
             return this.factory.createInteger(~this.value);
+        },
+
+        shiftLeftBy: function (rightValue) {
+            return this.coerceToInteger().shiftLeftBy(rightValue);
         }
     });
 

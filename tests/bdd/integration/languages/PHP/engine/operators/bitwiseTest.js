@@ -117,5 +117,203 @@ define([
                 });
             });
         });
+
+        describe('binary operators', function () {
+            util.each({
+                'bitwise left shift operator "<val> << <val>"': {
+                    operator: '<<',
+                    left: {
+                        'array': {
+                            right: {
+                                'array': [{
+                                    left: 'array()',
+                                    right: 'array()',
+                                    expectedResult: 0
+                                }],
+                                'boolean': [{
+                                    left: 'array()',
+                                    right: 'false',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(2)',
+                                    right: 'false',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'array()',
+                                    right: 'true',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(2)',
+                                    right: 'true',
+                                    expectedResult: 2
+                                }],
+                                'float': [{
+                                    left: 'array()',
+                                    right: '2.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(1)',
+                                    right: '4.2',
+                                    expectedResult: 16
+                                }, {
+                                    left: 'array(1)',
+                                    right: '5.8',
+                                    expectedResult: 32
+                                }],
+                                'integer': [{
+                                    left: 'array()',
+                                    right: '4',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(1)',
+                                    right: '4',
+                                    expectedResult: 16
+                                }]
+                            }
+                        },
+                        'boolean': {
+                            right: {
+                                'array': [{
+                                    left: 'true',
+                                    right: 'array()',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'false',
+                                    right: 'array()',
+                                    expectedResult: 0
+                                }],
+                                'boolean': [{
+                                    left: 'true',
+                                    right: 'true',
+                                    expectedResult: 2
+                                }, {
+                                    left: 'true',
+                                    right: 'false',
+                                    expectedResult: 1
+                                }],
+                                'float': [{
+                                    left: 'true',
+                                    right: '3.2',
+                                    expectedResult: 8
+                                }, {
+                                    left: 'false',
+                                    right: '3.2',
+                                    expectedResult: 0
+                                }],
+                                'integer': [{
+                                    left: 'true',
+                                    right: '3',
+                                    expectedResult: 8
+                                }, {
+                                    left: 'false',
+                                    right: '2',
+                                    expectedResult: 0
+                                }]
+                            }
+                        },
+                        'float': {
+                            right: {
+                                'array': [{
+                                    left: '3.2',
+                                    right: 'array()',
+                                    expectedResult: 3
+                                }, {
+                                    left: '2.7',
+                                    right: 'array(7)',
+                                    expectedResult: 4
+                                }],
+                                'boolean': [{
+                                    left: '1.2',
+                                    right: 'true',
+                                    expectedResult: 2
+                                }, {
+                                    left: '3.7',
+                                    right: 'false',
+                                    expectedResult: 3
+                                }],
+                                'float': [{
+                                    left: '0.0',
+                                    right: '0.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: '1.2',
+                                    right: '4.5',
+                                    expectedResult: 16
+                                }],
+                                'integer': [{
+                                    left: '3.1',
+                                    right: '2',
+                                    expectedResult: 12
+                                }]
+                            }
+                        },
+                        'integer': {
+                            right: {
+                                'array': [{
+                                    left: '2',
+                                    right: 'array()',
+                                    expectedResult: 2
+                                }, {
+                                    left: '2',
+                                    right: 'array(3)',
+                                    // Even though the array contains int(3), the array is coerced to int(1)
+                                    expectedResult: 4
+                                }],
+                                'boolean': [{
+                                    left: '5',
+                                    right: 'true',
+                                    expectedResult: 10
+                                }, {
+                                    left: '4',
+                                    right: 'false',
+                                    expectedResult: 4
+                                }],
+                                'float': [{
+                                    left: '0',
+                                    right: '0.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: '4',
+                                    right: '3.7',
+                                    expectedResult: 32
+                                }],
+                                'integer': [{
+                                    left: '0',
+                                    right: '0',
+                                    expectedResult: 0
+                                }]
+                            }
+                        }
+                    }
+                }
+            }, function (data, operatorDescription) {
+                var operator = data.operator;
+
+                describe('for the ' + operatorDescription, function () {
+                    util.each(DATA_TYPES, function (leftOperandType) {
+                        util.each(DATA_TYPES, function (rightOperandType) {
+                            var leftOperandData = data.left[leftOperandType],
+                                rightOperandDatas = leftOperandData.right[rightOperandType];
+
+                            util.each(rightOperandDatas, function (rightOperandData) {
+                                var leftOperand = rightOperandData.left,
+                                    rightOperand = rightOperandData.right;
+
+                                describe('for ' + leftOperandType + '(' + leftOperand + ') ' + operator + ' ' + rightOperandType + '(' + rightOperand + ')', function () {
+                                    var expression = leftOperand + operator + rightOperand;
+
+                                    check({
+                                        code: '<?php return ' + expression + ';',
+                                        expectedResult: rightOperandData.expectedResult,
+                                        expectedStderr: '',
+                                        expectedStdout: ''
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
     });
 });

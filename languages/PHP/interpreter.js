@@ -31,6 +31,7 @@ define([
             '*': 'multiply',
             '/': 'divide',
             '.': 'concat',
+            '<<': 'shiftLeftBy',
             '==': 'isEqualTo',
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',

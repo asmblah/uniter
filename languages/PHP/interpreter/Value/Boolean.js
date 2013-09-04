@@ -30,6 +30,12 @@ define([
             return this;
         },
 
+        coerceToInteger: function () {
+            var value = this;
+
+            return value.factory.createInteger(value.value ? 1 : 0);
+        },
+
         coerceToString: function () {
             var value = this;
 
@@ -38,6 +44,10 @@ define([
 
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        shiftLeftBy: function (rightValue) {
+            return this.coerceToInteger().shiftLeftBy(rightValue);
         }
     });
 

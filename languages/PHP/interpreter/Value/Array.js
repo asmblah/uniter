@@ -26,6 +26,16 @@ define([
     util.inherit(ArrayValue).from(Value);
 
     util.extend(ArrayValue.prototype, {
+        coerceToInteger: function () {
+            var value = this;
+
+            return value.factory.createInteger(value.value.length === 0 ? 0 : 1);
+        },
+
+        coerceToNumber: function () {
+            return this.coerceToInteger();
+        },
+
         coerceToString: function () {
             return this.factory.createString('Array');
         },
@@ -46,6 +56,10 @@ define([
 
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        shiftLeftBy: function (rightValue) {
+            return this.coerceToInteger().shiftLeftBy(rightValue);
         }
     });
 
