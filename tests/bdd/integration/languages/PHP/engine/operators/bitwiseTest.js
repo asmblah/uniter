@@ -285,6 +285,180 @@ define([
                             }
                         }
                     }
+                },
+                'bitwise right shift operator "<val> >> <val>"': {
+                    operator: '>>',
+                    left: {
+                        'array': {
+                            right: {
+                                'array': [{
+                                    left: 'array()',
+                                    right: 'array()',
+                                    expectedResult: 0
+                                }],
+                                'boolean': [{
+                                    left: 'array()',
+                                    right: 'false',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(2)',
+                                    right: 'false',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'array()',
+                                    right: 'true',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(2)',
+                                    right: 'true',
+                                    expectedResult: 0
+                                }],
+                                'float': [{
+                                    left: 'array(1)',
+                                    right: '0.0',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'array()',
+                                    right: '2.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(1)',
+                                    right: '4.2',
+                                    expectedResult: 0
+                                }],
+                                'integer': [{
+                                    left: 'array()',
+                                    right: '4',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'array(1)',
+                                    right: '0',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'array(1)',
+                                    right: '1',
+                                    expectedResult: 0
+                                }]
+                            }
+                        },
+                        'boolean': {
+                            right: {
+                                'array': [{
+                                    left: 'true',
+                                    right: 'array()',
+                                    expectedResult: 1
+                                }, {
+                                    left: 'false',
+                                    right: 'array()',
+                                    expectedResult: 0
+                                }],
+                                'boolean': [{
+                                    left: 'true',
+                                    right: 'true',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'true',
+                                    right: 'false',
+                                    expectedResult: 1
+                                }],
+                                'float': [{
+                                    left: 'true',
+                                    right: '3.2',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'false',
+                                    right: '3.2',
+                                    expectedResult: 0
+                                }],
+                                'integer': [{
+                                    left: 'true',
+                                    right: '3',
+                                    expectedResult: 0
+                                }, {
+                                    left: 'false',
+                                    right: '2',
+                                    expectedResult: 0
+                                }]
+                            }
+                        },
+                        'float': {
+                            right: {
+                                'array': [{
+                                    left: '3.2',
+                                    right: 'array()',
+                                    expectedResult: 3
+                                }, {
+                                    left: '2.7',
+                                    right: 'array(7)',
+                                    expectedResult: 1
+                                }],
+                                'boolean': [{
+                                    left: '1.2',
+                                    right: 'true',
+                                    expectedResult: 0
+                                }, {
+                                    left: '3.7',
+                                    right: 'false',
+                                    expectedResult: 3
+                                }],
+                                'float': [{
+                                    left: '0.0',
+                                    right: '0.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: '1.2',
+                                    right: '4.5',
+                                    expectedResult: 0
+                                }],
+                                'integer': [{
+                                    left: '3.1',
+                                    right: '1',
+                                    expectedResult: 1
+                                }]
+                            }
+                        },
+                        'integer': {
+                            right: {
+                                'array': [{
+                                    left: '2',
+                                    right: 'array()',
+                                    expectedResult: 2
+                                }, {
+                                    left: '2',
+                                    right: 'array(3)',
+                                    // Even though the array contains int(3), the array is coerced to int(1)
+                                    expectedResult: 1
+                                }],
+                                'boolean': [{
+                                    left: '5',
+                                    right: 'true',
+                                    expectedResult: 2
+                                }, {
+                                    left: '4',
+                                    right: 'false',
+                                    expectedResult: 4
+                                }],
+                                'float': [{
+                                    left: '0',
+                                    right: '0.0',
+                                    expectedResult: 0
+                                }, {
+                                    left: '4',
+                                    right: '1.2',
+                                    expectedResult: 2
+                                }],
+                                'integer': [{
+                                    left: '0',
+                                    right: '0',
+                                    expectedResult: 0
+                                }, {
+                                    left: '10',
+                                    right: '2',
+                                    expectedResult: 2
+                                }]
+                            }
+                        }
+                    }
                 }
             }, function (data, operatorDescription) {
                 var operator = data.operator;

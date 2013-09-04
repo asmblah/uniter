@@ -32,6 +32,7 @@ define([
             '/': 'divide',
             '.': 'concat',
             '<<': 'shiftLeftBy',
+            '>>': 'shiftRightBy',
             '==': 'isEqualTo',
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',

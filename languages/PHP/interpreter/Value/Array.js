@@ -60,6 +60,10 @@ define([
 
         shiftLeftBy: function (rightValue) {
             return this.coerceToInteger().shiftLeftBy(rightValue);
+        },
+
+        shiftRightBy: function (rightValue) {
+            return this.coerceToInteger().shiftRightBy(rightValue);
         }
     });
 

@@ -90,6 +90,14 @@ define([
             return factory.createInteger(leftValue.get() << rightValue.coerceToInteger().get());
         },
 
+        shiftRightBy: function (rightValue) {
+            /*jshint bitwise: false */
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            return factory.createInteger(leftValue.get() >> rightValue.coerceToInteger().get());
+        },
+
         subtract: function (rightValue) {
             var leftValue = this,
                 factory = leftValue.factory;
