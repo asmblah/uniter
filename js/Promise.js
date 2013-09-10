@@ -17,6 +17,9 @@ define([
 ) {
     'use strict';
 
+    var parent = ModularPromise.prototype,
+        slice = [].slice;
+
     function Promise() {
         ModularPromise.call(this);
     }
@@ -34,6 +37,16 @@ define([
 
         fail: function (callback) {
             return this.then(null, callback);
+        },
+
+        resolve: function () {
+            return parent.resolve.call(this, slice.call(arguments));
+        },
+
+        then: function (onResolve, onReject) {
+            return parent.then.call(this, onResolve ? function (args) {
+                onResolve.apply(null, args);
+            } : null, onReject);
         }
     });
 
