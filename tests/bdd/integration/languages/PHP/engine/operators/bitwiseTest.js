@@ -107,6 +107,7 @@ define([
                                 check({
                                     code: '<?php return ' + expression + ';',
                                     expectedResult: operandData.expectedResult,
+                                    expectedResultType: 'integer',
                                     expectedException: operandData.expectedException,
                                     expectedStderr: operandData.expectedStderr || '',
                                     expectedStdout: operandData.expectedStdout || ''
@@ -479,6 +480,7 @@ define([
                                     check({
                                         code: '<?php return ' + expression + ';',
                                         expectedResult: rightOperandData.expectedResult,
+                                        expectedResultType: 'integer',
                                         expectedStderr: '',
                                         expectedStdout: ''
                                     });

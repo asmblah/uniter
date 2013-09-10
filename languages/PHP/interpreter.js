@@ -80,7 +80,10 @@ define([
             throw exception;
         }
 
-        return result.get();
+        return {
+            type: result.getType(),
+            value: result.get()
+        };
     }
 
     return {

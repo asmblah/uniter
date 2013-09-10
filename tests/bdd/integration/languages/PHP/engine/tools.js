@@ -49,6 +49,17 @@ define(function () {
                             done(new Error('Expected no Exception to be thrown, but one was: ' + exception));
                         });
                     });
+
+                    if (scenario.expectedResultType) {
+                        it('should return a value of type "' + scenario.expectedResultType + '"', function (done) {
+                            engine.execute(scenario.code).done(function (result, type) {
+                                expect(type).to.equal(scenario.expectedResultType);
+                                done();
+                            }).fail(function (exception) {
+                                done(new Error('Expected no Exception to be thrown, but one was: ' + exception));
+                            });
+                        });
+                    }
                 }
 
                 it('should output the expected data to stderr', function (done) {

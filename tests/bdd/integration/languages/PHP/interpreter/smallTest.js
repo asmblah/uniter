@@ -39,7 +39,8 @@ define([
                     name: 'N_PROGRAM',
                     statements: []
                 },
-                expectedResult: null
+                expectedResult: null,
+                expectedResultType: 'null'
             },
             {
                 originalCode: '<a>42</a><b />',
@@ -50,7 +51,8 @@ define([
                         html: '<a>42</a><b />'
                     }]
                 },
-                expectedResult: null
+                expectedResult: null,
+                expectedResultType: 'null'
             },
             {
                 originalCode: '<?php',
@@ -58,7 +60,8 @@ define([
                     name: 'N_PROGRAM',
                     statements: []
                 },
-                expectedResult: null
+                expectedResult: null,
+                expectedResultType: 'null'
             },
             {
                 originalCode: '<?php ?>',
@@ -66,7 +69,8 @@ define([
                     name: 'N_PROGRAM',
                     statements: []
                 },
-                expectedResult: null
+                expectedResult: null,
+                expectedResultType: 'null'
             },
             {
                 originalCode: '<?php $a = 7;',
@@ -85,7 +89,8 @@ define([
                     }]
                 },
                 // Not 7, because the value is never returned
-                expectedResult: null
+                expectedResult: null,
+                expectedResultType: 'null'
             },
             {
                 originalCode: '<?php return 0;',
@@ -99,7 +104,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 0
+                expectedResult: 0,
+                expectedResultType: 'integer'
             },
             {
                 originalCode: '<?php $a = 7; return $a;',
@@ -123,7 +129,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 7
+                expectedResult: 7,
+                expectedResultType: 'integer'
             },
             {
                 originalCode: '<?php $b = 3 * 2; return $b;',
@@ -157,7 +164,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 6
+                expectedResult: 6,
+                expectedResultType: 'integer'
             },
             {
                 originalCode: '<?php $result = (1 + 3) * 2; return $result;',
@@ -202,7 +210,8 @@ define([
                     }]
                 },
                 // Checks precedence handling of explicit parentheses, as "1 + (3 * 2)" will be 7 whereas "(1 + 3) * 2" will be 8
-                expectedResult: 8
+                expectedResult: 8,
+                expectedResultType: 'integer'
             },
             {
                 originalCode: '<?php return "hello";',
@@ -217,7 +226,8 @@ define([
                     }]
                 },
                 // Constant string literal, delimited by double quotes
-                expectedResult: 'hello'
+                expectedResult: 'hello',
+                expectedResultType: 'string'
             },
             {
                 originalCode: '<?php return \'world\';',
@@ -232,7 +242,8 @@ define([
                     }]
                 },
                 // Constant string literal, delimited by single quotes
-                expectedResult: 'world'
+                expectedResult: 'world',
+                expectedResultType: 'string'
             },
             {
                 originalCode: '<?php return \'hello \' . \'world\';',
@@ -256,7 +267,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 'hello world'
+                expectedResult: 'hello world',
+                expectedResultType: 'string'
             },
             // Ternary with nested ternary in condition:
             // - Common gotcha for developers, as in other languages ?: is right-associative whereas in PHP it's left-associative
@@ -325,7 +337,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 'Banana'
+                expectedResult: 'Banana',
+                expectedResultType: 'string'
             },
             {
                 originalCode: '<?php $arr = array("hello", 84 + 3); return $arr;',
@@ -365,7 +378,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: ['hello', 87]
+                expectedResult: ['hello', 87],
+                expectedResultType: 'array'
             },
             {
                 originalCode: '<?php $names = array("Peter", "Paul", "Bex"); return $names[1];',
@@ -405,7 +419,8 @@ define([
                         }
                     }]
                 },
-                expectedResult: 'Paul'
+                expectedResult: 'Paul',
+                expectedResultType: 'string'
             },
             {
                 originalCode: '<?php $a = 4; $b = $a++; return array($a, $b);',
@@ -451,7 +466,8 @@ define([
                     }]
                 },
                 // Note that the pre-increment value is used
-                expectedResult: [5, 4]
+                expectedResult: [5, 4],
+                expectedResultType: 'array'
             },
             {
                 originalCode: '<?php $a = 4; $b = ++$a; return array($a, $b);',
@@ -497,7 +513,8 @@ define([
                     }]
                 },
                 // Note that the post-increment value is used
-                expectedResult: [5, 5]
+                expectedResult: [5, 5],
+                expectedResultType: 'array'
             },
             {
                 originalCode: '<?php $a = 4; $b = $a--; return array($a, $b);',
@@ -543,7 +560,8 @@ define([
                     }]
                 },
                 // Note that the pre-decrement value is used
-                expectedResult: [3, 4]
+                expectedResult: [3, 4],
+                expectedResultType: 'array'
             },
             {
                 originalCode: '<?php $a = 4; $b = --$a; return array($a, $b);',
@@ -589,7 +607,8 @@ define([
                     }]
                 },
                 // Note that the post-decrement value is used
-                expectedResult: [3, 3]
+                expectedResult: [3, 3],
+                expectedResultType: 'array'
             },
             {
                 originalCode: '<?php return ~1;',
@@ -608,12 +627,18 @@ define([
                         }
                     }]
                 },
-                expectedResult: -2
+                expectedResult: -2,
+                expectedResultType: 'integer'
             }
         ], function (scenario) {
-            // Pretty-print the code strings so any non-printable characters are readable
-            it('should return the expected result when the original code was "' + scenario.originalCode + '"', function () {
-                expect(interpreter.interpret(scenario.ast)).to.deep.equal(scenario.expectedResult);
+            describe('when the original code was "' + scenario.originalCode + '"', function () {
+                it('should return the expected result', function () {
+                    expect(interpreter.interpret(scenario.ast).value).to.deep.equal(scenario.expectedResult);
+                });
+
+                it('should return a value of type "' + scenario.expectedResultType + '"', function () {
+                    expect(interpreter.interpret(scenario.ast).type).to.deep.equal(scenario.expectedResultType);
+                });
             });
         });
     });

@@ -35,7 +35,7 @@ define([
             ast = engine.parser.parse(code);
             try {
                 result = engine.interpreter.interpret(ast);
-                promise.resolve(result);
+                promise.resolve(result.value, result.type);
             } catch (exception) {
                 if (!(exception instanceof Exception)) {
                     throw exception;
