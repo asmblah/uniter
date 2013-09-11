@@ -20,6 +20,37 @@ define([
     'use strict';
 
     describe('Interpreter', function () {
+        describe('getEnvironment()', function () {
+            describe('when using interpreter spec #1', function () {
+                var interpreter,
+                    interpreterSpec,
+                    LanguageEnvironment;
+
+                beforeEach(function () {
+                    LanguageEnvironment = function () {};
+
+                    interpreterSpec = {
+                        Environment: LanguageEnvironment,
+                        nodes: {
+                            'PROGRAM': function () {}
+                        }
+                    };
+
+                    interpreter = new Interpreter(interpreterSpec);
+                });
+
+                it('should create an instance of the class defined by Environment', function () {
+                    expect(interpreter.getEnvironment()).to.be.an.instanceOf(LanguageEnvironment);
+                });
+
+                it('should return the same object when called multiple times', function () {
+                    var environment = interpreter.getEnvironment();
+
+                    expect(interpreter.getEnvironment()).to.equal(environment);
+                });
+            });
+        });
+
         describe('interpret()', function () {
             describe('when using interpreter spec #1', function () {
                 var interpreter,

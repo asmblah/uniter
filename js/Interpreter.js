@@ -20,6 +20,7 @@ define([
     var hasOwn = {}.hasOwnProperty;
 
     function Interpreter(spec, stdin, stdout, stderr) {
+        this.environment = null;
         this.spec = spec;
         this.stderr = stderr;
         this.stdin = stdin;
@@ -27,6 +28,16 @@ define([
     }
 
     util.extend(Interpreter.prototype, {
+        getEnvironment: function () {
+            var interpreter = this;
+
+            if (!interpreter.environment) {
+                interpreter.environment = new interpreter.spec.Environment();
+            }
+
+            return interpreter.environment;
+        },
+
         interpret: function (node, data) {
             var interpreter = this,
                 nodeName,
