@@ -25,6 +25,7 @@
         "url": "http://github.com/asmblah/uniter/issues"
     },
     "main": "index",
+    "bin": "bin/uniter.js",
     "scripts": {
         "test": "node tests/bdd/index.js",
         "webtest": "node tests/bdd/webtest.js"
