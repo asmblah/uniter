@@ -7,22 +7,23 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
+/*global define, require */
 define({
     'paths': {
         'languages': './languages',
-        'js': './js'
+        'js': './js',
+
+        // FIXME!! (In Modular)
+        'Modular': require.config().paths.Modular
     }
 }, [
     'languages/PHP/grammar',
-    'languages/PHP/recompiler',
-    'languages/PHP/tokens',
+    'languages/PHP/interpreter',
     'js/Language',
     'js/Uniter'
 ], function (
     phpGrammarSpec,
-    phpRecompilerSpec,
-    phpTokenSpec,
+    phpInterpreterSpec,
     Language,
     Uniter
 ) {
@@ -30,7 +31,7 @@ define({
 
     var uniter = new Uniter();
 
-    uniter.registerLanguage(new Language('PHP', phpTokenSpec, phpGrammarSpec, phpRecompilerSpec));
+    uniter.registerLanguage(new Language('PHP', phpGrammarSpec, phpInterpreterSpec));
 
     return uniter;
 });
