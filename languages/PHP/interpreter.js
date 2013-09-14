@@ -116,6 +116,9 @@ define([
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
+            'N_ECHO_STATEMENT': function (node, interpret) {
+                return 'stdout.write(' + interpret(node.expression) + '.coerceToString().get());';
+            },
             'N_EXPRESSION': function (node, interpret) {
                 var expression = interpret(node.left);
 

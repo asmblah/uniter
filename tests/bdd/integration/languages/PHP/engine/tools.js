@@ -36,7 +36,7 @@ define(function () {
                             done(new Error('Expected an Exception to be thrown'));
                         });
                     });
-                } else {
+                } else if (hasOwn.call(scenario, 'expectedResult')) {
                     it('should return the expected result', function (done) {
                         engine.execute(scenario.code).done(function (result) {
                             if (hasOwn.call(scenario, 'expectedResult')) {
