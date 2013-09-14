@@ -10,9 +10,11 @@
 /*global define */
 define([
     'js/util',
+    '../Error',
     '../Value'
 ], function (
     util,
+    PHPError,
     Value
 ) {
     'use strict';
@@ -24,7 +26,9 @@ define([
     util.inherit(ObjectValue).from(Value);
 
     util.extend(ObjectValue.prototype, {
-
+        coerceToKey: function (scopeChain) {
+            scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+        }
     });
 
     return ObjectValue;

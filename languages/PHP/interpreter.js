@@ -14,14 +14,16 @@
 /*global define */
 define([
     'js/util',
+    './interpreter/Environment',
     './interpreter/Error',
-    './interpreter/ValueFactory',
-    './interpreter/Variable'
+    './interpreter/State',
+    './interpreter/ScopeChain'
 ], function (
     util,
+    PHPEnvironment,
     PHPError,
-    ValueFactory,
-    Variable
+    PHPState,
+    ScopeChain
 ) {
     'use strict';
 
@@ -52,18 +54,18 @@ define([
             }
         };
 
-    function evaluateModule(code, context, stdin, stdout, stderr) {
-        var valueFactory = new ValueFactory(),
+    function evaluateModule(state, code, context, stdin, stdout, stderr) {
+        var valueFactory = state.getValueFactory(),
             result,
+            scopeChain = new ScopeChain(stderr),
             tools = {
-                createVariable: function () {
-                    return new Variable(valueFactory);
-                },
                 valueFactory: valueFactory
             };
 
+        scopeChain.push(state.getGlobalScope());
+
         if (context.localVariableNames.length > 0) {
-            code = 'var ' + context.localVariableNames.join(' = tools.createVariable(), ') + ' = tools.createVariable();' + code;
+            code = 'scopeChain.getCurrent().defineVariables(["' + context.localVariableNames.join('", "') + '"]);' + code;
         }
 
         // Program returns null rather than undefined if nothing is returned
@@ -71,7 +73,7 @@ define([
 
         try {
             /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools', code)(stdin, stdout, stderr, tools);
+            result = new Function('stdin, stdout, stderr, tools, scopeChain', code)(stdin, stdout, stderr, tools, scopeChain);
         } catch (exception) {
             if (exception instanceof PHPError) {
                 stderr.write(exception.message);
@@ -87,6 +89,8 @@ define([
     }
 
     return {
+        Environment: PHPEnvironment,
+        State: PHPState,
         nodes: {
             'N_ARRAY_INDEX': function (node, interpret) {
                 var indexValues = [];
@@ -95,7 +99,7 @@ define([
                     indexValues.push(interpret(index.index));
                 });
 
-                return interpret(node.array) + '.getElement(' + indexValues.join(').getElement(') + ')';
+                return interpret(node.array) + '.getElement(' + indexValues.join(', scopeChain).getElement(') + ', scopeChain)';
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
@@ -133,7 +137,7 @@ define([
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
             },
-            'N_PROGRAM': function (node, interpret, data, stdin, stdout, stderr) {
+            'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
                     context = {
                         localVariableNames: []
@@ -143,7 +147,7 @@ define([
                     body += interpret(statement, context);
                 });
 
-                return evaluateModule(body, context, stdin, stdout, stderr);
+                return evaluateModule(state, body, context, stdin, stdout, stderr);
             },
             'N_RETURN_STATEMENT': function (node, interpret) {
                 var expression = interpret(node.expression);
@@ -175,7 +179,7 @@ define([
                     localVariableNames.push(node.variable);
                 }
 
-                return node.variable + (context.getValue !== false ? '.get()' : '');
+                return 'scopeChain.getCurrent().getVariable("' + node.variable + '")' + (context.getValue !== false ? '.get()' : '');
             }
         }
     };

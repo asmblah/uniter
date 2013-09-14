@@ -24,7 +24,9 @@ define([
     util.inherit(NullValue).from(Value);
 
     util.extend(NullValue.prototype, {
-
+        coerceToKey: function () {
+            return this.factory.createString('');
+        },
     });
 
     return NullValue;

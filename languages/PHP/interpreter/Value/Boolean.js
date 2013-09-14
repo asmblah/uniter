@@ -36,10 +36,19 @@ define([
             return value.factory.createInteger(value.value ? 1 : 0);
         },
 
+        coerceToKey: function () {
+            return this.coerceToInteger();
+        },
+
         coerceToString: function () {
             var value = this;
 
             return value.factory.createString(value.value ? '1' : '');
+        },
+
+        getElement: function () {
+            // Array access on booleans always returns null, no notice or warning is raised
+            return this.factory.createNull();
         },
 
         onesComplement: function () {

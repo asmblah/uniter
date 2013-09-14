@@ -46,6 +46,10 @@ define([
             return promise;
         },
 
+        getEnvironment: function () {
+            return this.interpreter.getEnvironment();
+        },
+
         getStderr: function () {
             return this.interpreter.stderr;
         },

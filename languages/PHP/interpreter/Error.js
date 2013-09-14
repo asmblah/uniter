@@ -17,11 +17,18 @@ define([
 ) {
     'use strict';
 
-    function PHPError(message) {
-        Exception.call(this, message);
+    function PHPError(level, message) {
+        Exception.call(this, 'PHP ' + level + ': ' + message);
     }
 
     util.inherit(PHPError).from(Exception);
+
+    util.extend(PHPError, {
+        E_ERROR: 'Error',
+        E_FATAL: 'Fatal error',
+        E_NOTICE: 'Notice',
+        E_WARNING: 'Warning'
+    });
 
     return PHPError;
 });

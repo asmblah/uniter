@@ -48,6 +48,10 @@ define([
             return value.factory.createInteger(value.value >> 0);
         },
 
+        coerceToKey: function () {
+            return this.coerceToInteger();
+        },
+
         coerceToNumber: function () {
             return this;
         },
@@ -56,6 +60,11 @@ define([
             var value = this;
 
             return value.factory.createString(value.value);
+        },
+
+        getElement: function () {
+            // Array access on floats always returns null, no notice or warning is raised
+            return this.factory.createNull();
         },
 
         onesComplement: function () {

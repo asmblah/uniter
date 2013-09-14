@@ -15,19 +15,15 @@ define([
 ) {
     'use strict';
 
-    function Exception(message) {
-        this.message = message;
+    function PHPEnvironment(state) {
+        this.state = state;
     }
 
-    util.inherit(Exception).from(Error);
-
-    util.extend(Exception.prototype, {
-        type: 'Exception',
-
-        getMessage: function () {
-            return this.message;
+    util.extend(PHPEnvironment.prototype, {
+        getGlobalScope: function () {
+            return this.state.getGlobalScope();
         }
     });
 
-    return Exception;
+    return PHPEnvironment;
 });

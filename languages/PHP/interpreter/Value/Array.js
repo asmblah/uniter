@@ -10,14 +10,18 @@
 /*global define */
 define([
     'js/util',
+    '../Error',
     '../Error/Fatal',
     '../Value'
 ], function (
     util,
+    PHPError,
     PHPFatalError,
     Value
 ) {
     'use strict';
+
+    var hasOwn = {}.hasOwnProperty;
 
     function ArrayValue(factory, value) {
         Value.call(this, factory, 'array', value);
@@ -30,6 +34,10 @@ define([
             var value = this;
 
             return value.factory.createInteger(value.value.length === 0 ? 0 : 1);
+        },
+
+        coerceToKey: function (scopeChain) {
+            scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         coerceToNumber: function () {
@@ -50,8 +58,25 @@ define([
             return result;
         },
 
-        getElement: function (index) {
-            return this.value[index.get()];
+        getElement: function (key, scopeChain) {
+            var keyValue,
+                value = this;
+
+            key = key.coerceToKey(scopeChain);
+
+            if (!key) {
+                // Could not be coerced to a key: error will already have been handled, just return NULL
+                return value.factory.createNull();
+            }
+
+            keyValue = key.get();
+
+            if (!hasOwn.call(value.value, keyValue)) {
+                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined offset: ' + keyValue);
+                return value.factory.createNull();
+            }
+
+            return value.value[keyValue];
         },
 
         onesComplement: function () {

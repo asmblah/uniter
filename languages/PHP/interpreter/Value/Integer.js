@@ -42,6 +42,10 @@ define([
             return this;
         },
 
+        coerceToKey: function () {
+            return this;
+        },
+
         coerceToNumber: function () {
             return this;
         },
@@ -56,6 +60,11 @@ define([
             var value = this;
 
             return value.factory.createInteger(value.value - 1);
+        },
+
+        getElement: function () {
+            // Array access on integers always returns null, no notice or warning is raised
+            return this.factory.createNull();
         },
 
         increment: function () {

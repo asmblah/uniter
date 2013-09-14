@@ -58,6 +58,7 @@ define({
         mocha.suite.emit('pre-require', global, null, mocha);
 
         require([
+            'bdd/integration/languages/PHP/engine/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/engine/operators/bitwiseTest',
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/smallTest',

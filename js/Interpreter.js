@@ -22,6 +22,7 @@ define([
     function Interpreter(spec, stdin, stdout, stderr) {
         this.environment = null;
         this.spec = spec;
+        this.state = null;
         this.stderr = stderr;
         this.stdin = stdin;
         this.stdout = stdout;
@@ -51,7 +52,11 @@ define([
             }
 
             if (arguments.length === 1) {
-                data = null;
+                if (!interpreter.state && spec.State) {
+                    interpreter.state = new spec.State();
+                }
+
+                data = interpreter.state;
             }
 
             nodeName = node.name;

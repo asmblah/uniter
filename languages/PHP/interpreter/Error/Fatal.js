@@ -22,7 +22,7 @@ define([
         };
 
     function PHPFatalError(code) {
-        PHPError.call(this, 'PHP Fatal error: ' + MESSAGE_PREFIXES[code]);
+        PHPError.call(this, PHPError.E_FATAL, MESSAGE_PREFIXES[code]);
     }
 
     util.inherit(PHPFatalError).from(PHPError);
