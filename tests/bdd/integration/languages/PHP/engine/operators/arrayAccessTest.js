@@ -40,7 +40,6 @@ define([
 
         util.each({
             'array access/dereference operator "<val>[<val>]"': {
-                operator: '<<',
                 left: {
                     'array': {
                         right: {
