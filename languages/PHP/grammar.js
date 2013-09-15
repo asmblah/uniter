@@ -316,6 +316,9 @@ define(function () {
             'N_FLOAT': {
                 components: {name: 'number', what: 'T_DNUMBER'}
             },
+            'N_FUNCTION_CALL': {
+                components: [{name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+            },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
             },
@@ -336,7 +339,7 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'T_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_FUNCTION_CALL', 'T_STRING']}
             },
             'N_VARIABLE': {
                 components: {name: 'variable', what: 'T_VARIABLE'}

@@ -63,6 +63,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/statements/echoTest',
             'bdd/integration/languages/PHP/engine/smallTest',
+            'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',
             'bdd/unit/js/InterpreterTest',
