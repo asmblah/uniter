@@ -31,14 +31,15 @@
     ], function (
         uniter
     ) {
-        var phpEngine;
+        var hasOwn = {}.hasOwnProperty,
+            phpEngine;
 
         function output() {
             process.stdout.write(phpEngine.getStdout().readAll());
             process.stderr.write(phpEngine.getStderr().readAll());
         }
 
-        if (parsedOptions.options.run) {
+        if (hasOwn.call(parsedOptions.options, 'run')) {
             phpEngine = uniter.createEngine('PHP');
 
             phpEngine.execute('<?php ' + parsedOptions.options.run).done(function () {
