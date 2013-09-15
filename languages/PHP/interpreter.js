@@ -17,12 +17,14 @@ define([
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/State',
+    './interpreter/Scope',
     './interpreter/ScopeChain'
 ], function (
     util,
     PHPEnvironment,
     PHPError,
     PHPState,
+    Scope,
     ScopeChain
 ) {
     'use strict';
@@ -55,17 +57,27 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        var valueFactory = state.getValueFactory(),
+        var namespace,
+            namespaceCollection = state.getNamespaceCollection(),
+            valueFactory = state.getValueFactory(),
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
+                popScope: function () {
+                    scopeChain.pop();
+                },
+                pushScope: function () {
+                    scopeChain.push(new Scope(valueFactory));
+                },
                 valueFactory: valueFactory
             };
 
+        namespace = namespaceCollection.get('\\');
+
         scopeChain.push(state.getGlobalScope());
 
-        if (context.localVariableNames.length > 0) {
-            code = 'scopeChain.getCurrent().defineVariables(["' + context.localVariableNames.join('", "') + '"]);' + code;
+        if (getKeys(context.localVariableNames).length > 0) {
+            code = 'scopeChain.getCurrent().defineVariables(["' + getKeys(context.localVariableNames).join('", "') + '"]);' + code;
         }
 
         // Program returns null rather than undefined if nothing is returned
@@ -73,7 +85,9 @@ define([
 
         try {
             /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools, scopeChain', code)(stdin, stdout, stderr, tools, scopeChain);
+            result = new Function('stdin, stdout, stderr, tools, scopeChain, namespace', code)(
+                stdin, stdout, stderr, tools, scopeChain, namespace
+            );
         } catch (exception) {
             if (exception instanceof PHPError) {
                 stderr.write(exception.message);
@@ -86,6 +100,16 @@ define([
             type: result.getType(),
             value: result.get()
         };
+    }
+
+    function getKeys(object) {
+        var keys = [];
+
+        util.each(object, function (value, key) {
+            keys.push(key);
+        });
+
+        return keys;
     }
 
     return {
@@ -111,7 +135,7 @@ define([
                 return 'tools.valueFactory.createArray([' + elementValues.join(', ') + '])';
             },
             'N_ASSIGNMENT_STATEMENT': function (node, interpret) {
-                return interpret(node.target, {getValue: false}) + '.set(' + interpret(node.expression) + ');';
+                return interpret(node.target, {assignment: true, getValue: false}) + '.set(' + interpret(node.expression) + ');';
             },
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
@@ -134,6 +158,56 @@ define([
             'N_FLOAT': function (node) {
                 return 'tools.valueFactory.createFloat(' + node.number + ')';
             },
+            'N_FUNCTION_STATEMENT': function (node, interpret) {
+                var args = [],
+                    argumentAssignments = '',
+                    body = '',
+                    func,
+                    localVariableNames = {},
+                    variableDeclarations = '';
+
+                util.each(node.args, function (arg) {
+                    args.push(arg.variable);
+
+                    // Define any arguments as local variables
+                    localVariableNames[arg.variable] = true;
+                });
+
+                // Interpret statements first (will populate localVariableNames)
+                util.each(node.statements, function (statement) {
+                    body += interpret(statement, {localVariableNames: localVariableNames});
+                });
+
+                // Define local variables and arguments
+                if (getKeys(localVariableNames).length > 0) {
+                    variableDeclarations += 'scopeChain.getCurrent().defineVariables(["' + getKeys(localVariableNames).join('", "') + '"]);';
+                }
+
+                // Copy passed values for any arguments
+                util.each(args, function (arg) {
+                    argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).set(' + arg + ');';
+                });
+
+                // Prepend parts in correct order
+                body = variableDeclarations + argumentAssignments + body;
+
+                // Add scope handling logic
+                body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
+
+                // Build function expression
+                func = 'function (' + args.join(', ') + ') {' + body + '}';
+
+                return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
+            },
+            'N_FUNCTION_CALL': function (node, interpret) {
+                var args = [];
+
+                util.each(node.args, function (arg) {
+                    args.push(interpret(arg));
+                });
+
+                return 'namespace.getFunction(' + JSON.stringify(node.func) + ')(' + args + ');';
+            },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
             },
@@ -143,7 +217,7 @@ define([
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
                     context = {
-                        localVariableNames: []
+                        localVariableNames: {}
                     };
 
                 util.each(node.statements, function (statement) {
@@ -176,13 +250,12 @@ define([
                 return operand + '.' + unaryOperatorToMethod[node.prefix ? 'prefix' : 'suffix'][operator] + '()';
             },
             'N_VARIABLE': function (node, interpret, context) {
-                var localVariableNames = context.localVariableNames;
-
-                if (localVariableNames.indexOf(node.variable) === -1) {
-                    localVariableNames.push(node.variable);
+                // Track any implicit variable declarations
+                if (context.assignment) {
+                    context.localVariableNames[node.variable] = true;
                 }
 
-                return 'scopeChain.getCurrent().getVariable("' + node.variable + '")' + (context.getValue !== false ? '.get()' : '');
+                return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.get()' : '');
             }
         }
     };

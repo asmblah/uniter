@@ -33,6 +33,10 @@ define([
             return this.scopes[0];
         },
 
+        pop: function () {
+            this.scopes.pop();
+        },
+
         push: function (scope) {
             this.scopes.push(scope);
         },

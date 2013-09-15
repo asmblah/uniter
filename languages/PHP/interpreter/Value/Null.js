@@ -27,6 +27,10 @@ define([
         coerceToKey: function () {
             return this.factory.createString('');
         },
+
+        coerceToString: function () {
+            return this.factory.createString('');
+        }
     });
 
     return NullValue;

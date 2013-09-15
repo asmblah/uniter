@@ -10,10 +10,12 @@
 /*global define */
 define([
     'js/util',
+    './Collection/Namespace',
     './Scope',
     './ValueFactory'
 ], function (
     util,
+    NamespaceCollection,
     Scope,
     ValueFactory
 ) {
@@ -23,12 +25,17 @@ define([
         var valueFactory = new ValueFactory();
 
         this.globalScope = new Scope(valueFactory);
+        this.namespaceCollection = new NamespaceCollection();
         this.valueFactory = valueFactory;
     }
 
     util.extend(PHPState.prototype, {
         getGlobalScope: function () {
             return this.globalScope;
+        },
+
+        getNamespaceCollection: function () {
+            return this.namespaceCollection;
         },
 
         getValueFactory: function () {
