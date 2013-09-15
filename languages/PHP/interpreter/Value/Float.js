@@ -37,6 +37,12 @@ define([
             return factory.createInteger(leftValue.get() + rightValue.get());
         },
 
+        coerceToBoolean: function () {
+            var value = this;
+
+            return value.factory.createBoolean(!!value.value);
+        },
+
         coerceToFloat: function () {
             return this;
         },
@@ -78,6 +84,18 @@ define([
 
         shiftRightBy: function (rightValue) {
             return this.coerceToInteger().shiftRightBy(rightValue);
+        },
+
+        toNegative: function () {
+            var value = this;
+
+            return value.factory.createInteger(-value.value);
+        },
+
+        toPositive: function () {
+            var value = this;
+
+            return value.factory.createInteger(+value.value);
         }
     });
 

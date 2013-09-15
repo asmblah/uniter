@@ -29,7 +29,7 @@ define([
         },
 
         coerceToBoolean: function () {
-            return this.factory.createBoolean(this.value === '' || this.value === '0');
+            return this.factory.createBoolean(this.value !== '' && this.value !== '0');
         },
 
         coerceToFloat: function () {

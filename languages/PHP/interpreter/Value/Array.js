@@ -30,6 +30,12 @@ define([
     util.inherit(ArrayValue).from(Value);
 
     util.extend(ArrayValue.prototype, {
+        coerceToBoolean: function () {
+            var value = this;
+
+            return value.factory.createBoolean(value.value.length > 0);
+        },
+
         coerceToInteger: function () {
             var value = this;
 

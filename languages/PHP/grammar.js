@@ -245,14 +245,20 @@ define(function () {
                 components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_5'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\*/), (/\//), (/%/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_5'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
-            'N_EXPRESSION_LEVEL_7': {
+            'N_EXPRESSION_LEVEL_7_A': {
+                captureAs: 'N_UNARY_EXPRESSION',
+                components: [{name: 'operator', optionally: (/([+-])(?!\1)/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_6'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'},
+                options: {prefix: true}
+            },
+            'N_EXPRESSION_LEVEL_7_B': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_6'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_6'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_7_A'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_7_A'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_8': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_7'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: ['T_SL', 'T_SR']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_7'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_7_B'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: ['T_SL', 'T_SR']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_7_B'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_9': {

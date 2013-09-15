@@ -238,7 +238,7 @@ define([
                 var expression = '(' + interpret(node.condition) + ')';
 
                 util.each(node.options, function (option) {
-                    expression = '(' + expression + '.coerceToBoolean() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
+                    expression = '(' + expression + '.coerceToBoolean().get() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
                 });
 
                 return expression;

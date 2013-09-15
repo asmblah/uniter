@@ -38,6 +38,12 @@ define([
             return factory.createInteger(leftValue.get() + rightValue.get());
         },
 
+        coerceToBoolean: function () {
+            var value = this;
+
+            return value.factory.createBoolean(!!value.value);
+        },
+
         coerceToInteger: function () {
             return this;
         },
@@ -119,6 +125,18 @@ define([
             }
 
             return factory.createInteger(leftValue.get() - rightValue.get());
+        },
+
+        toNegative: function () {
+            var value = this;
+
+            return value.factory.createInteger(-value.value);
+        },
+
+        toPositive: function () {
+            var value = this;
+
+            return value.factory.createInteger(+value.value);
         }
     });
 
