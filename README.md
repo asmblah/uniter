@@ -7,6 +7,7 @@ Running the tests
 -----------------
 
 There are two supported ways of running the Mocha test suite:
+
 1. Run the tests in Node.js from the command line:
 
         cd uniter/
