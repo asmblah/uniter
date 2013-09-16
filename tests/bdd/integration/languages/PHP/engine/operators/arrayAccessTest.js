@@ -11,13 +11,11 @@
 define([
     '../tools',
     '../../tools',
-    'js/util',
-    'languages/PHP/interpreter/Error/Fatal'
+    'js/util'
 ], function (
     engineTools,
     phpTools,
-    util,
-    PHPFatalError
+    util
 ) {
     'use strict';
 
