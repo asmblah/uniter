@@ -206,7 +206,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return 'namespace.getFunction(' + JSON.stringify(node.func) + ')(' + args + ');';
+                return 'namespace.getFunction(' + JSON.stringify(node.func) + ')(' + args + ')';
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
