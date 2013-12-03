@@ -331,6 +331,9 @@ define(function () {
             'N_FUNCTION_CALL': {
                 components: [{name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
+            'N_IF_STATEMENT': {
+                components: [(/if/i), (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'consequentStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/), {optionally: [(/else/), (/\{/), {name: 'alternateStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]}]
+            },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
             },
@@ -345,7 +348,7 @@ define(function () {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]
             },
             'N_STATEMENT': {
-                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT']}
+                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT']}
             },
             'N_STRING_LITERAL': {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
