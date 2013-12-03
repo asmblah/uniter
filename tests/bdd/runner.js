@@ -66,6 +66,7 @@ define({
             'bdd/integration/languages/PHP/engine/statements/functionTest',
             'bdd/integration/languages/PHP/engine/smallTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
+            'bdd/integration/languages/PHP/grammar/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/grammar/statements/functionTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',

@@ -176,11 +176,14 @@ define(function () {
             'T_XOR_EQUAL': /\^=/i,
             'T_YIELD': /yield\b/i,
 
+            'N_ARRAY_INDEX': {
+                components: 'N_EXPRESSION_LEVEL_2'
+            },
             'N_ARRAY_LITERAL': {
                 components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
             'N_ASSIGNMENT_STATEMENT': {
-                components: [{name: 'target', oneOf: ['N_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
+                components: [{name: 'target', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
             },
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
