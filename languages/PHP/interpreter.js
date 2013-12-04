@@ -208,6 +208,22 @@ define([
 
                 return 'namespace.getFunction(' + JSON.stringify(node.func) + ')(' + args + ')';
             },
+            'N_IF_STATEMENT': function (node, interpret) {
+                var alternateCode = '',
+                    consequentCode = '';
+
+                // Consequent statements are executed if the condition is truthy
+                util.each(node.consequentStatements, function (statement) {
+                    consequentCode += interpret(statement);
+                });
+
+                // Alternate statements are executed if the condition is falsy
+                util.each(node.alternateStatements, function (statement) {
+                    alternateCode += interpret(statement);
+                });
+
+                return 'if (' + interpret(node.condition) + '.coerceToBoolean().get()) {' + consequentCode + '} else {' + alternateCode + '}';
+            },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
             },
