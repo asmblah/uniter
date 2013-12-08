@@ -325,6 +325,9 @@ define(function () {
             'N_FLOAT': {
                 components: {name: 'number', what: 'T_DNUMBER'}
             },
+            'N_FOREACH_STATEMENT': {
+                components: ['T_FOREACH', (/\(/), {name: 'array', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_AS', {optionally: [{name: 'key', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_DOUBLE_ARROW']}, {name: 'value', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
+            },
             'N_FUNCTION_STATEMENT': {
                 components: ['T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
@@ -348,7 +351,7 @@ define(function () {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]
             },
             'N_STATEMENT': {
-                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT']}
+                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT']}
             },
             'N_STRING_LITERAL': {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
