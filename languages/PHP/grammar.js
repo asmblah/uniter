@@ -335,7 +335,7 @@ define(function () {
                 components: [{name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
             'N_IF_STATEMENT': {
-                components: [(/if/i), (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'consequentStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/), {optionally: [(/else/), (/\{/), {name: 'alternateStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]}]
+                components: ['T_IF', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'consequentStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/), {optionally: [(/else/), (/\{/), {name: 'alternateStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]}]
             },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
