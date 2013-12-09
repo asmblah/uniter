@@ -63,6 +63,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/ternaryTest',
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/statements/echoTest',
+            'bdd/integration/languages/PHP/engine/statements/foreachTest',
             'bdd/integration/languages/PHP/engine/statements/functionTest',
             'bdd/integration/languages/PHP/engine/statements/ifTest',
             'bdd/integration/languages/PHP/engine/statements/returnTest',
