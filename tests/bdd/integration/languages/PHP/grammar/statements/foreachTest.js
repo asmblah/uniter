@@ -65,6 +65,34 @@ define([
                         statements: []
                     }]
                 }
+            }, {
+                // Simple foreach over variable with key with one body statement
+                code: 'foreach ($array as $key => $item) { echo 3; }',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOREACH_STATEMENT',
+                        array: {
+                            name: 'N_VARIABLE',
+                            variable: '$array'
+                        },
+                        key: {
+                            name: 'N_VARIABLE',
+                            variable: '$key'
+                        },
+                        value: {
+                            name: 'N_VARIABLE',
+                            variable: '$item'
+                        },
+                        statements: [{
+                            name: 'N_ECHO_STATEMENT',
+                            expression: {
+                                name: 'N_INTEGER',
+                                number: '3'
+                            }
+                        }]
+                    }]
+                }
             }
         ], function (scenario) {
             var code = '<?php ' + scenario.code;
