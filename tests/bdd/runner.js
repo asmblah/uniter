@@ -77,7 +77,8 @@ define({
             'bdd/integration/languages/PHP/interpreter/smallTest',
             'bdd/unit/js/InterpreterTest',
             'bdd/unit/js/ParserTest',
-            'bdd/unit/js/StreamTest'
+            'bdd/unit/js/StreamTest',
+            'bdd/unit/js/utilTest'
         ], function () {
             mocha.run(callback);
         });
