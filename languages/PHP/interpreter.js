@@ -69,6 +69,9 @@ define([
                 pushScope: function () {
                     scopeChain.push(new Scope(valueFactory));
                 },
+                unescapeString: function (string) {
+                    return string.replace(/\\n/g, '\n');
+                },
                 valueFactory: valueFactory
             };
 
@@ -293,7 +296,7 @@ define([
                 return 'return' + (expression ? ' ' + expression : '') + ';';
             },
             'N_STRING_LITERAL': function (node) {
-                return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
+                return 'tools.valueFactory.createString(tools.unescapeString(' + JSON.stringify(node.string) + '))';
             },
             'N_TERNARY': function (node, interpret) {
                 var expression = '(' + interpret(node.condition) + ')';
