@@ -25,6 +25,8 @@ define([
 
     function ArrayValue(factory, value) {
         Value.call(this, factory, 'array', value);
+
+        this.pointer = 0;
     }
 
     util.inherit(ArrayValue).from(Value);
@@ -85,8 +87,28 @@ define([
             return value.value[keyValue];
         },
 
+        getKey: function () {
+            var value = this;
+
+            return value.factory.createInteger(value.pointer);
+        },
+
+        getLength: function () {
+            var value = this;
+
+            return value.factory.createInteger(value.value.length);
+        },
+
+        next: function () {
+            this.pointer++;
+        },
+
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        reset: function () {
+            this.pointer = 0;
         },
 
         shiftLeftBy: function (rightValue) {

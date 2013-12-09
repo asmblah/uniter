@@ -158,6 +158,51 @@ define([
             'N_FLOAT': function (node) {
                 return 'tools.valueFactory.createFloat(' + node.number + ')';
             },
+            'N_FOREACH_STATEMENT': function (node, interpret, context) {
+                var arrayValue = interpret(node.array),
+                    arrayVariable,
+                    code = '',
+                    key = node.key ? interpret(node.key, {getValue: false}) : null,
+                    value = interpret(node.value, {getValue: false});
+
+                if (!context.foreach) {
+                    context.foreach = {
+                        depth: 0
+                    };
+                } else {
+                    context.foreach.depth++;
+                }
+
+                // Ensure the iterator key (if specified) and value variables are defined
+                if (key) {
+                    context.localVariableNames[node.key.variable] = true;
+                }
+
+                context.localVariableNames[node.value.variable] = true;
+
+                // Cache the value being iterated over
+                arrayVariable = '__foreach__' + context.foreach.depth;
+                code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
+
+                // Loop management
+                code += 'for (' + arrayVariable + '.reset(); ' + arrayVariable + '.getKey().get() < ' + arrayVariable + '.getLength().get(); ' + arrayVariable + '.next()) {';
+
+                if (key) {
+                    // Iterator key variable (if specified)
+                    code += key + '.set(' + arrayVariable + '.getKey());';
+                }
+
+                // Iterator value variable
+                code += value + '.set(' + arrayVariable + '.getElement(' + arrayVariable + '.getKey(), scopeChain));';
+
+                util.each(node.statements, function (statement) {
+                    code += interpret(statement);
+                });
+
+                code += '}';
+
+                return code;
+            },
             'N_FUNCTION_STATEMENT': function (node, interpret) {
                 var args = [],
                     argumentAssignments = '',

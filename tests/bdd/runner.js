@@ -73,6 +73,7 @@ define({
             'bdd/integration/languages/PHP/grammar/statements/functionTest',
             'bdd/integration/languages/PHP/grammar/statements/ifTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
+            'bdd/integration/languages/PHP/interpreter/statements/foreachTest',
             'bdd/integration/languages/PHP/interpreter/statements/ifTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',
             'bdd/unit/js/InterpreterTest',
