@@ -22,6 +22,12 @@ define([
     }
 
     util.extend(Value.prototype, {
+        concat: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createString(leftValue.coerceToString().get() + rightValue.coerceToString().get());
+        },
+
         get: function () {
             return this.value;
         },

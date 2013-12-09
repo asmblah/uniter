@@ -59,12 +59,6 @@ define([
             return this;
         },
 
-        concat: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createString(leftValue.coerceToString().get() + rightValue.coerceToString().get());
-        },
-
         onesComplement: function () {
             return this.factory.createString('?');
         }
