@@ -15,7 +15,7 @@ define(function () {
 
     return {
         check: function (getData, scenario) {
-            describe('when the code is "' + scenario.code + '"', function () {
+            describe('when the code is ' + JSON.stringify(scenario.code), function () {
                 var engine;
 
                 beforeEach(function () {
