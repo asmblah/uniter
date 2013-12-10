@@ -66,6 +66,29 @@ define([
                     }]
                 }
             }, {
+                // Simple foreach over variable by reference with key
+                code: 'foreach ($array as $key => &$item) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOREACH_STATEMENT',
+                        array: {
+                            name: 'N_VARIABLE',
+                            variable: '$array'
+                        },
+                        key: {
+                            name: 'N_VARIABLE',
+                            variable: '$key'
+                        },
+                        value: {
+                            name: 'N_VARIABLE',
+                            reference: '&',
+                            variable: '$item'
+                        },
+                        statements: []
+                    }]
+                }
+            }, {
                 // Simple foreach over variable with key with one body statement
                 code: 'foreach ($array as $key => $item) { echo 3; }',
                 expectedAST: {

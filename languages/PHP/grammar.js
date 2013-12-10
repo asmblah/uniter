@@ -360,7 +360,7 @@ define(function () {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_FUNCTION_CALL', 'T_STRING']}
             },
             'N_VARIABLE': {
-                components: {name: 'variable', what: 'T_VARIABLE'}
+                components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]
             }
         },
         start: 'N_PROGRAM'
