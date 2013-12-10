@@ -68,6 +68,30 @@ EOS
 
 EOS
 */) {})
+            }, {
+                // Nested foreach statement over same array
+                // - Arrays must be copied for this to work correctly with internal pointer
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array("A", "B");
+
+    foreach ($array as $index => $outer) {
+        foreach ($array as $inner) {
+            echo $index . "(" . $outer . ") -> " . $inner . "\n";
+        }
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+0(A) -> A
+0(A) -> B
+1(B) -> A
+1(B) -> B
+
+EOS
+*/) {})
             }
         ], function (scenario) {
             check(scenario);

@@ -185,7 +185,7 @@ define([
 
                 // Cache the value being iterated over
                 arrayVariable = 'foreach_' + context.foreach.depth;
-                code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
+                code += 'var ' + arrayVariable + ' = ' + arrayValue + '.clone();';
 
                 // Loop management
                 code += 'for (' + arrayVariable + '.reset(); ' + arrayVariable + '.getKey().get() < ' + arrayVariable + '.getLength().get(); ' + arrayVariable + '.next()) {';

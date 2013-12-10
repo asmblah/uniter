@@ -32,6 +32,16 @@ define([
     util.inherit(ArrayValue).from(Value);
 
     util.extend(ArrayValue.prototype, {
+        clone: function () {
+            var arrayValue,
+                value = this;
+
+            arrayValue = value.factory.createArray(value.value.slice());
+            arrayValue.pointer = value.pointer;
+
+            return arrayValue;
+        },
+
         coerceToBoolean: function () {
             var value = this;
 
