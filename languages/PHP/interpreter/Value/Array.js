@@ -10,11 +10,13 @@
 /*global define */
 define([
     'js/util',
+    '../Reference/ArrayElement',
     '../Error',
     '../Error/Fatal',
     '../Value'
 ], function (
     util,
+    ArrayElementReference,
     PHPError,
     PHPFatalError,
     Value
@@ -76,6 +78,18 @@ define([
             return result;
         },
 
+        getCurrentElement: function () {
+            var value = this;
+
+            return value.value[value.pointer] || value.factory.createNull();
+        },
+
+        getCurrentElementReference: function () {
+            var value = this;
+
+            return new ArrayElementReference(value.value, value.pointer);
+        },
+
         getElement: function (key, scopeChain) {
             var keyValue,
                 value = this;
@@ -119,6 +133,10 @@ define([
 
         reset: function () {
             this.pointer = 0;
+        },
+
+        setPointer: function (pointer) {
+            this.pointer = pointer;
         },
 
         shiftLeftBy: function (rightValue) {

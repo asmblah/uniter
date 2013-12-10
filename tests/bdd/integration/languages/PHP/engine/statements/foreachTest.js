@@ -109,6 +109,23 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            }, {
+                // Ensure that array is modified when value is by reference
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array('A', 'B');
+
+    foreach ($array as &$letter) {
+        $letter = 'C';
+    }
+
+    return $array[0] . $array[1];
+EOS
+*/) {}),
+                expectedResult: 'CC',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             check(scenario);

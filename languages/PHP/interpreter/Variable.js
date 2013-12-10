@@ -16,12 +16,15 @@ define([
     'use strict';
 
     function Variable(valueFactory) {
+        this.reference = null;
         this.value = valueFactory.createNull();
     }
 
     util.extend(Variable.prototype, {
         get: function () {
-            return this.value;
+            var variable = this;
+
+            return variable.value ? variable.value : variable.reference.get();
         },
 
         postDecrement: function () {
@@ -71,7 +74,20 @@ define([
         },
 
         set: function (value) {
-            this.value = value;
+            var variable = this;
+
+            if (variable.value) {
+                variable.value = value;
+            } else {
+                variable.reference.set(value);
+            }
+        },
+
+        setReference: function (reference) {
+            var variable = this;
+
+            variable.reference = reference;
+            variable.value = null;
         },
 
         toArray: function () {

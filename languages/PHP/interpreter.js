@@ -166,6 +166,8 @@ define([
                     arrayVariable,
                     code = '',
                     key = node.key ? interpret(node.key, {getValue: false}) : null,
+                    lengthVariable,
+                    pointerVariable,
                     value = interpret(node.value, {getValue: false});
 
                 if (!context.foreach) {
@@ -184,11 +186,17 @@ define([
                 context.localVariableNames[node.value.variable] = true;
 
                 // Cache the value being iterated over
-                arrayVariable = 'foreach_' + context.foreach.depth;
-                code += 'var ' + arrayVariable + ' = ' + arrayValue + '.clone();';
+                arrayVariable = 'array_' + context.foreach.depth;
+                code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
+
+                lengthVariable = 'length_' + context.foreach.depth;
+                code += 'var ' + lengthVariable + ' = ' + arrayVariable + '.getLength().get();';
+                pointerVariable = 'pointer_' + context.foreach.depth;
+                code += 'var ' + pointerVariable + ' = 0;';
 
                 // Loop management
-                code += 'for (' + arrayVariable + '.reset(); ' + arrayVariable + '.getKey().get() < ' + arrayVariable + '.getLength().get(); ' + arrayVariable + '.next()) {';
+                code += 'while (' + pointerVariable + ' < ' + lengthVariable + ') {';
+                code += arrayVariable + '.setPointer(' + pointerVariable + ');';
 
                 if (key) {
                     // Iterator key variable (if specified)
@@ -196,7 +204,11 @@ define([
                 }
 
                 // Iterator value variable
-                code += value + '.set(' + arrayVariable + '.getElement(' + arrayVariable + '.getKey(), scopeChain));';
+                code += value + '.set' + (node.value.reference ? 'Reference' : '') + '(' + arrayVariable + '.getCurrentElement' + (node.value.reference ? 'Reference' : '') + '());';
+
+                // Set pointer to next element at start of loop body as per spec
+                code += pointerVariable + '++;';
+                code += arrayVariable + '.setPointer(' + pointerVariable + ');';
 
                 util.each(node.statements, function (statement) {
                     code += interpret(statement);
