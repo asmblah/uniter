@@ -184,7 +184,7 @@ define([
                 context.localVariableNames[node.value.variable] = true;
 
                 // Cache the value being iterated over
-                arrayVariable = '__foreach__' + context.foreach.depth;
+                arrayVariable = 'foreach_' + context.foreach.depth;
                 code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
 
                 // Loop management
