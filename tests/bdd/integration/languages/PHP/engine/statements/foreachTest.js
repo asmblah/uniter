@@ -92,6 +92,23 @@ EOS
 
 EOS
 */) {})
+            }, {
+                // Ensure that array is not modified when value is not by reference
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array('A', 'B');
+
+    foreach ($array as $letter) {
+        $letter = 'C';
+    }
+
+    return $array[0] . $array[1];
+EOS
+*/) {}),
+                expectedResult: 'AB',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         ], function (scenario) {
             check(scenario);
