@@ -68,22 +68,28 @@ define([
                             variable: '$number2'
                         }],
                         statements: [{
-                            name: 'N_ASSIGNMENT_STATEMENT',
-                            target: {
-                                name: 'N_VARIABLE',
-                                variable: '$result'
-                            },
+                            name: 'N_EXPRESSION_STATEMENT',
                             expression: {
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$number1'
+                                    variable: '$result'
                                 },
                                 right: [{
-                                    operator: '+',
+                                    operator: '=',
                                     operand: {
-                                        name: 'N_VARIABLE',
-                                        variable: '$number2'
+                                        name: 'N_EXPRESSION',
+                                        left: {
+                                            name: 'N_VARIABLE',
+                                            variable: '$number1'
+                                        },
+                                        right: [{
+                                            operator: '+',
+                                            operand: {
+                                                name: 'N_VARIABLE',
+                                                variable: '$number2'
+                                            }
+                                        }]
                                     }
                                 }]
                             }

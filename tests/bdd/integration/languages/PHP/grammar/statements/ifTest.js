@@ -76,14 +76,20 @@ define([
                             }]
                         },
                         consequentStatements: [{
-                            name: 'N_ASSIGNMENT_STATEMENT',
-                            target: {
-                                name: 'N_VARIABLE',
-                                variable: '$cheques'
-                            },
+                            name: 'N_EXPRESSION_STATEMENT',
                             expression: {
-                                name: 'N_INTEGER',
-                                number: '7'
+                                name: 'N_EXPRESSION',
+                                left: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$cheques'
+                                },
+                                right: [{
+                                    operator: '=',
+                                    operand: {
+                                        name: 'N_INTEGER',
+                                        number: '7'
+                                    }
+                                }]
                             }
                         }]
                     }]

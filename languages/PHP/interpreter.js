@@ -40,7 +40,8 @@ define([
             '==': 'isEqualTo',
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',
-            '!==': 'isNotIdenticalTo'
+            '!==': 'isNotIdenticalTo',
+            '=': 'set'
         },
         unaryOperatorToMethod = {
             prefix: {
@@ -137,9 +138,6 @@ define([
 
                 return 'tools.valueFactory.createArray([' + elementValues.join(', ') + '])';
             },
-            'N_ASSIGNMENT_STATEMENT': function (node, interpret) {
-                return interpret(node.target, {assignment: true, getValue: false}) + '.set(' + interpret(node.expression) + ');';
-            },
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
@@ -147,7 +145,8 @@ define([
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().get());';
             },
             'N_EXPRESSION': function (node, interpret) {
-                var expression = interpret(node.left);
+                var isAssignment = node.right[0].operator === '=',
+                    expression = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
 
                 util.each(node.right, function (operation) {
                     expression += '.' + binaryOperatorToMethod[operation.operator] + '(' + interpret(operation.operand) + ')';

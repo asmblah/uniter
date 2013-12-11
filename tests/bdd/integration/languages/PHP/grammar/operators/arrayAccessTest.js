@@ -31,21 +31,27 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_ARRAY_INDEX',
-                            array: {
+                            name: 'N_EXPRESSION',
+                            left: {
                                 name: 'N_VARIABLE',
-                                variable: '$elements'
+                                variable: '$a'
                             },
-                            indices: [{
-                                index: {
-                                    name: 'N_INTEGER',
-                                    number: '0'
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_ARRAY_INDEX',
+                                    array: {
+                                        name: 'N_VARIABLE',
+                                        variable: '$elements'
+                                    },
+                                    indices: [{
+                                        index: {
+                                            name: 'N_INTEGER',
+                                            number: '0'
+                                        }
+                                    }]
                                 }
                             }]
                         }
@@ -57,23 +63,29 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_ARRAY_INDEX',
-                            array: {
-                                name: 'N_VARIABLE',
-                                variable: '$elements'
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_ARRAY_INDEX',
+                                array: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$elements'
+                                },
+                                indices: [{
+                                    index: {
+                                        name: 'N_INTEGER',
+                                        number: '2'
+                                    }
+                                }]
                             },
-                            indices: [{
-                                index: {
+                            right: [{
+                                operator: '=',
+                                operand: {
                                     name: 'N_INTEGER',
-                                    number: '2'
+                                    number: '4'
                                 }
                             }]
-                        },
-                        expression:{
-                            name: 'N_INTEGER',
-                            number: '4'
                         }
                     }]
                 }

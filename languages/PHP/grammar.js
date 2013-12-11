@@ -182,9 +182,6 @@ define(function () {
             'N_ARRAY_LITERAL': {
                 components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
-            'N_ASSIGNMENT_STATEMENT': {
-                components: [{name: 'target', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, (/=/), {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
-            },
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
             },
@@ -305,7 +302,9 @@ define(function () {
                 ifNoMatch: {component: 'options', capture: 'condition'}
             },
             'N_EXPRESSION_LEVEL_17': {
-                components: 'N_EXPRESSION_LEVEL_16'
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_16'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_16'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_18': {
                 components: 'N_EXPRESSION_LEVEL_17'
@@ -351,7 +350,7 @@ define(function () {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]
             },
             'N_STATEMENT': {
-                components: {oneOf: ['N_ASSIGNMENT_STATEMENT', 'N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT']}
             },
             'N_STRING_LITERAL': {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}

@@ -45,33 +45,39 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_FUNCTION_CALL',
-                            func: 'doSomething',
-                            args: [{
-                                name: 'N_INTEGER',
-                                number: '1'
-                            }, {
-                                name: 'N_EXPRESSION',
-                                left: {
-                                    name: 'N_INTEGER',
-                                    number: '4'
-                                },
-                                right: [{
-                                    operator: '+',
-                                    operand: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_FUNCTION_CALL',
+                                    func: 'doSomething',
+                                    args: [{
                                         name: 'N_INTEGER',
-                                        number: '2'
-                                    }
-                                }]
-                            }, {
-                                name: 'N_STRING_LITERAL',
-                                string: 'test'
+                                        number: '1'
+                                    }, {
+                                        name: 'N_EXPRESSION',
+                                        left: {
+                                            name: 'N_INTEGER',
+                                            number: '4'
+                                        },
+                                        right: [{
+                                            operator: '+',
+                                            operand: {
+                                                name: 'N_INTEGER',
+                                                number: '2'
+                                            }
+                                        }]
+                                    }, {
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'test'
+                                    }]
+                                }
                             }]
                         }
                     }]

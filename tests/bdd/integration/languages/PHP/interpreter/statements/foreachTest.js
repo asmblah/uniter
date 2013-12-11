@@ -38,14 +38,20 @@ define([
                 ast: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$result'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_STRING_LITERAL',
-                            string: ''
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$result'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: ''
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_FOREACH_STATEMENT',
@@ -71,11 +77,7 @@ define([
                             variable: '$item'
                         },
                         statements: [{
-                            name: 'N_ASSIGNMENT_STATEMENT',
-                            target: {
-                                name: 'N_VARIABLE',
-                                variable: '$result'
-                            },
+                            name: 'N_EXPRESSION_STATEMENT',
                             expression: {
                                 name: 'N_EXPRESSION',
                                 left: {
@@ -83,10 +85,20 @@ define([
                                     variable: '$result'
                                 },
                                 right: [{
-                                    operator: '.',
+                                    operator: '=',
                                     operand: {
-                                        name: 'N_VARIABLE',
-                                        variable: '$item'
+                                        name: 'N_EXPRESSION',
+                                        left: {
+                                            name: 'N_VARIABLE',
+                                            variable: '$result'
+                                        },
+                                        right: [{
+                                            operator: '.',
+                                            operand: {
+                                                name: 'N_VARIABLE',
+                                                variable: '$item'
+                                            }
+                                        }]
                                     }
                                 }]
                             }

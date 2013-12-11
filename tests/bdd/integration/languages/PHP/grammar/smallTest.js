@@ -74,14 +74,20 @@ define([
                         name: 'N_INLINE_HTML_STATEMENT',
                         html: '<html>'
                     }, {
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$b'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '2'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$b'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '2'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_INLINE_HTML_STATEMENT',
@@ -94,14 +100,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '7'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '7'
+                                }
+                            }]
                         }
                     }]
                 }
@@ -124,14 +136,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$result'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '6'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$result'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '6'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
@@ -147,22 +165,28 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$y'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_EXPRESSION',
                             left: {
-                                name: 'N_INTEGER',
-                                number: '3'
+                                name: 'N_VARIABLE',
+                                variable: '$y'
                             },
                             right: [{
-                                operator: '*',
+                                operator: '=',
                                 operand: {
-                                    name: 'N_INTEGER',
-                                    number: '4'
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_INTEGER',
+                                        number: '3'
+                                    },
+                                    right: [{
+                                        operator: '*',
+                                        operand: {
+                                            name: 'N_INTEGER',
+                                            number: '4'
+                                        }
+                                    }]
                                 }
                             }]
                         }
@@ -316,14 +340,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$arg'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_STRING_LITERAL',
-                            string: 'A'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$arg'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'A'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
@@ -381,14 +411,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$arr'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_ARRAY_LITERAL',
-                            elements: []
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$arr'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_ARRAY_LITERAL',
+                                    elements: []
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_RETURN_STATEMENT',
@@ -404,16 +440,22 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$arr'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_ARRAY_LITERAL',
-                            elements: [{
-                                name: 'N_INTEGER',
-                                number: '7'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$arr'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_ARRAY_LITERAL',
+                                    elements: [{
+                                        name: 'N_INTEGER',
+                                        number: '7'
+                                    }]
+                                }
                             }]
                         }
                     }, {
@@ -430,29 +472,35 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$arr'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_ARRAY_LITERAL',
-                            elements: [{
-                                name: 'N_STRING_LITERAL',
-                                string: 'hello'
-                            }, {
-                                name: 'N_EXPRESSION',
-                                left: {
-                                    name: 'N_INTEGER',
-                                    number: '84'
-                                },
-                                right: [{
-                                    operator: '+',
-                                    operand: {
-                                        name: 'N_INTEGER',
-                                        number: '3'
-                                    }
-                                }]
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$arr'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_ARRAY_LITERAL',
+                                    elements: [{
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'hello'
+                                    }, {
+                                        name: 'N_EXPRESSION',
+                                        left: {
+                                            name: 'N_INTEGER',
+                                            number: '84'
+                                        },
+                                        right: [{
+                                            operator: '+',
+                                            operand: {
+                                                name: 'N_INTEGER',
+                                                number: '3'
+                                            }
+                                        }]
+                                    }]
+                                }
                             }]
                         }
                     }, {
@@ -489,14 +537,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '4'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
@@ -523,14 +577,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '4'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
@@ -557,14 +617,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '4'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
@@ -591,14 +657,20 @@ define([
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
-                        name: 'N_ASSIGNMENT_STATEMENT',
-                        target: {
-                            name: 'N_VARIABLE',
-                            variable: '$a'
-                        },
+                        name: 'N_EXPRESSION_STATEMENT',
                         expression: {
-                            name: 'N_INTEGER',
-                            number: '4'
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$a'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
                         }
                     }, {
                         name: 'N_EXPRESSION_STATEMENT',
