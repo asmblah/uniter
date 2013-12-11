@@ -87,6 +87,8 @@ define([
             } else {
                 variable.reference.set(value);
             }
+
+            return value;
         },
 
         setReference: function (reference) {

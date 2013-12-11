@@ -42,6 +42,12 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
+                'reading result of assignment': {
+                    code: '<?php $a = ($b = 7); return $a;',
+                    expectedResult: 7,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
                 'assignment of integer value to variable then reading from a reference': {
                     code: '<?php $a = 24; $b =& $a; return $b;',
                     expectedResult: 24,
