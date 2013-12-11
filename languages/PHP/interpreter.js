@@ -149,7 +149,17 @@ define([
                     expression = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
 
                 util.each(node.right, function (operation) {
-                    expression += '.' + binaryOperatorToMethod[operation.operator] + '(' + interpret(operation.operand) + ')';
+                    var isReference = false,
+                        method = binaryOperatorToMethod[operation.operator],
+                        valuePostProcess = '';
+
+                    if (isAssignment && operation.operand.reference) {
+                        isReference = true;
+                        method += 'Reference';
+                        valuePostProcess = '.getReference()';
+                    }
+
+                    expression += '.' + method + '(' + interpret(operation.operand, {getValue: !isReference}) + valuePostProcess + ')';
                 });
 
                 return expression;

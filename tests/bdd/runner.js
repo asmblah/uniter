@@ -59,6 +59,7 @@ define({
 
         require([
             'bdd/integration/languages/PHP/engine/operators/arrayAccessTest',
+            'bdd/integration/languages/PHP/engine/operators/assignmentTest',
             'bdd/integration/languages/PHP/engine/operators/bitwiseTest',
             'bdd/integration/languages/PHP/engine/operators/ternaryTest',
             'bdd/integration/languages/PHP/engine/operators/updateTest',

@@ -9,9 +9,11 @@
 
 /*global define */
 define([
-    'js/util'
+    'js/util',
+    './Reference/Variable'
 ], function (
-    util
+    util,
+    VariableReference
 ) {
     'use strict';
 
@@ -25,6 +27,10 @@ define([
             var variable = this;
 
             return variable.value ? variable.value : variable.reference.get();
+        },
+
+        getReference: function () {
+            return new VariableReference(this);
         },
 
         postDecrement: function () {
