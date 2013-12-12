@@ -69,6 +69,7 @@ define({
             'bdd/integration/languages/PHP/engine/statements/ifTest',
             'bdd/integration/languages/PHP/engine/statements/returnTest',
             'bdd/integration/languages/PHP/engine/smallTest',
+            'bdd/integration/languages/PHP/grammar/constructs/listTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
             'bdd/integration/languages/PHP/grammar/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/grammar/statements/foreachTest',

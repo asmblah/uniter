@@ -343,6 +343,9 @@ define(function () {
             'N_INTEGER': {
                 components: {name: 'number', what: 'T_LNUMBER'}
             },
+            'N_LIST': {
+                components: ['T_LIST', (/\(/), {name: 'elements', oneOrMoreOf: [{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+            },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
             },
@@ -356,7 +359,7 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_FUNCTION_CALL', 'T_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_FUNCTION_CALL', 'T_STRING']}
             },
             'N_VARIABLE': {
                 components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]
