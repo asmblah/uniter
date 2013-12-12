@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Uniter interactive demo</title>
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../styles/base.css">
+
+        <script src="../node_modules/modular-amd/modular.js" data-main="demo"></script>
+
+        <style type="text/css">
+            .contain-floats::after {
+                display: block;
+                content: " ";
+                clear: left;
+            }
+
+            .panes {
+                margin-left: -30%;
+                margin-right: -30%;
+            }
+
+            .panes section {
+                float: left;
+                width: 33%;
+                height: 30em;
+            }
+
+            .code-editor,
+            .result {
+                display: block;
+                margin-right: 1em;
+                height: 100%;
+            }
+
+            .result {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <article>
+            <heading>
+                <ul class="nav nav-pills pull-right">
+                    <li><a href="..">Home</a></li>
+                    <li class="active"><a href="">Demo</a></li>
+                </ul>
+                <h1 class="text-muted">Uniter</h1>
+            </heading>
+
+            <div class="panes contain-floats">
+                <section>
+                    <heading>
+                        <h1>JavaScript</h1>
+                    </heading>
+
+                    <div class="code-editor" id="javascriptEditor"></div>
+                </section>
+
+                <section>
+                    <heading>
+                        <h1>PHP</h1>
+                    </heading>
+
+                    <div class="code-editor" id="phpEditor"></div>
+                </section>
+
+                <section>
+                    <heading>
+                        <h1>Result</h1>
+                    </heading>
+
+                    <iframe class="result" id="result"></iframe>
+                </section>
+            </div>
+        </article>
+
+        <script src="//code.jquery.com/jquery.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    </body>
+</html>

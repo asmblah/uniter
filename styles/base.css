@@ -1,0 +1,22 @@
+article {
+    margin: 0 auto;
+    width: 60%;
+}
+
+article > heading {
+    border-bottom: 1px solid #e5e5e5;
+
+    margin: 1.5em 0;
+    padding-bottom: 1.5em;
+
+    display: block;
+    overflow: auto;
+}
+
+article > heading h1 {
+    margin: 0;
+}
+
+.jumbotron {
+    text-align: center;
+}

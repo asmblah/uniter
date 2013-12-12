@@ -3,6 +3,11 @@ Uniter
 
 Uniter is a recompiling interpreter written in JavaScript.
 
+Can I try it now?
+-----------------
+
+[Sure you can](http://asmblah.github.io/uniter/demo/interactive.html).
+
 Running the tests
 -----------------
 
