@@ -355,6 +355,9 @@ define([
                 }
 
                 return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.get()' : '');
+            },
+            'N_VOID': function () {
+                return 'null';
             }
         }
     };

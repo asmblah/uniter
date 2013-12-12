@@ -41,6 +41,30 @@ define([
                     expectedResult: 25,
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'of array with two elements to list with two elements with first element skipped': {
+                    code: '<?php list(, $a) = array(21, 22); return $a;',
+                    expectedResult: 22,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'of array with two elements to list with two elements with first two elements skipped': {
+                    code: '<?php list(,, $third) = array(100, 101, 102); return $third;',
+                    expectedResult: 102,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'of array with two elements to list with two elements with last element skipped': {
+                    code: '<?php list($first,) = array(4, 5); return $first;',
+                    expectedResult: 4,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'of array with three elements to list with three elements with second element skipped': {
+                    code: '<?php list($first,,$third) = array(7, 8, 9); return $first . " then " . $third;',
+                    expectedResult: '7 then 9',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

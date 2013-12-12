@@ -34,7 +34,9 @@ define([
             arrayElements = value.get();
 
             for (index = 0, length = listElements.length; index < length; index++) {
-                listElements[index].set(arrayElements[index]);
+                if (listElements[index]) {
+                    listElements[index].set(arrayElements[index]);
+                }
             }
 
             return value;
