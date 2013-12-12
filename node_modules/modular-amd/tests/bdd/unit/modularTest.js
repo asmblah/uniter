@@ -49,11 +49,13 @@ define([
         util.each([
             {
                 browser: false,
-                externalDefine: true
+                externalDefine: true,
+                charset: "utf-8"
             },
             {
                 browser: false,
-                externalDefine: false
+                externalDefine: false,
+                charset: "utf-8"
             },
             {
                 browser: true,
@@ -67,7 +69,8 @@ define([
                 ModularSrc: "http://another.world/path/to/righteousness/js/Modular.js",
                 dataMain: undefined,
                 domReady: false,
-                supportsDOMContentLoaded: true
+                supportsDOMContentLoaded: true,
+                charset: "utf-8"
             },
             {
                 browser: true,
@@ -81,7 +84,8 @@ define([
                 ModularSrc: "http://another.world/path/to/righteousness/js/Modular.js",
                 dataMain: undefined,
                 domReady: true,
-                supportsDOMContentLoaded: false
+                supportsDOMContentLoaded: false,
+                charset: "iso-8859-1"
             },
             {
                 browser: true,
@@ -95,7 +99,8 @@ define([
                 ModularSrc: "http://another.world/path/to/righteousness/js/Modular.js",
                 dataMain: "a/module/to/remember",
                 domReady: true,
-                supportsDOMContentLoaded: true
+                supportsDOMContentLoaded: true,
+                charset: "utf-8"
             },
             {
                 browser: true,
@@ -109,7 +114,8 @@ define([
                 ModularSrc: "http://another.world/path/to/righteousness/js/Modular.js",
                 dataMain: "a/module/to/remember",
                 domReady: true,
-                supportsDOMContentLoaded: true
+                supportsDOMContentLoaded: true,
+                charset: "utf-8"
             }
         ], function (scenario) {
             describe("when the environment is" + (scenario.browser ? "": " not") + " a browser, define(...) is" + (scenario.externalDefine ? "" : " not") + " already defined, document.baseURI is" + (scenario.supportsDocumentBaseURI ? "" : " not") + " supported, script.onload is" + (scenario.supportsScriptOnload ? "" : " not") + " supported", function () {
@@ -177,7 +183,7 @@ define([
                         loadModule();
                     });
 
-                    function expectScriptToHaveLoaded(src) {
+                    function expectScriptToHaveLoaded(src, charset) {
                         describe("when the script with src '" + src + "' loads", function () {
                             it("should create a script element", function () {
                                 expect(global.document.createElement).to.have.been.calledOnce;
@@ -186,6 +192,12 @@ define([
                             it("should set the script element's src to the correct URI", function () {
                                 expect(createdScript.src).to.equal(src);
                             });
+
+                            if (charset) {
+                                it("should set the script element's charset correctly", function () {
+                                    expect(createdScript.charset).to.equal(charset);
+                                });
+                            }
 
                             it("should insert one element in the head", function () {
                                 expect(head.insertBefore).to.have.been.calledOnce;
@@ -367,13 +379,14 @@ define([
                                                     beforeEach(function () {
                                                         module.config.baseUrl = scenario.baseUrl;
                                                         module.config.cache = fixture.allowCached;
+                                                        module.config.charset = scenario.charset;
                                                         module.id = fixture.id;
                                                         Math.random.returns(fixture.random);
 
                                                         transport(callback, module);
                                                     });
 
-                                                    expectScriptToHaveLoaded(scenario.baseUrl + "/" + fixture.id + ".js" + (fixture.allowCached ? "" : "?__r=" + fixture.random));
+                                                    expectScriptToHaveLoaded(scenario.baseUrl + "/" + fixture.id + ".js" + (fixture.allowCached ? "" : "?__r=" + fixture.random), scenario.charset);
                                                 });
                                             });
                                         });

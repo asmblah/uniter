@@ -65,8 +65,13 @@
                     }
                 }
 
-                function loadScript(uri, onSuccess, onFail) {
-                    var script = document.createElement("script");
+                function loadScript(uri, onSuccess, onFail, options) {
+                    var charset = get(options, "charset"),
+                        script = document.createElement("script");
+
+                    if (charset) {
+                        script.charset = charset;
+                    }
 
                     if (useInteractiveScript) {
                         callbacks[script.uniqueID] = onSuccess;
@@ -137,6 +142,7 @@
                     modular.configure({
                         // TODO: Tests to ensure baseURI is respected (eg. when <base /> tag is on page)
                         "baseUrl": getBase(document.baseURI || global.location.pathname),
+                        "charset": "utf-8",
                         "defineAnonymous": defineAnonymous,
                         "exclude": /^(https?:)?\/\//,
                         "paths": {
@@ -175,7 +181,7 @@
                                 }
 
                                 error(msg);
-                            });
+                            }, module.config);
                         }
                     });
                 }
@@ -213,7 +219,7 @@
                             });
                         }, function () {
                             error("Could not load AMD loader js/Modular.js");
-                        });
+                        }, {});
                     }(scripts[scripts.length - 1]));
                 }
             }(global.document));
