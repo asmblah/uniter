@@ -7,14 +7,11 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, require */
+/*global define */
 define({
     'paths': {
         'languages': './languages',
-        'js': './js',
-
-        // FIXME!! (In Modular)
-        'Modular': require.config().paths.Modular
+        'js': './js'
     }
 }, [
     'languages/PHP/grammar',
