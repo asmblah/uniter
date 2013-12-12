@@ -55,7 +55,6 @@ require([
     }).fail(function (exception) {
         output();
         print(exception.getMessage());
-        print('\n');
     });
 });
 
@@ -67,7 +66,11 @@ EOS
 
 $project = 'Uniter';
 
-echo 'Hello from ' . $project . '!';
+function makeExclamation($text) {
+    return $text . '!';
+}
+
+echo 'Hello from ' . makeExclamation($project);
 
 EOS
 */) {}),
