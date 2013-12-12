@@ -68,7 +68,7 @@ define([
             return this.factory.createString('Array');
         },
 
-        get: function () {
+        getNative: function () {
             var result = [];
 
             util.each(this.value, function (value) {

@@ -32,6 +32,10 @@ define([
             return this.value;
         },
 
+        getNative: function () {
+            return this.value;
+        },
+
         getType: function () {
             return this.type;
         },

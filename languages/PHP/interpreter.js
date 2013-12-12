@@ -14,6 +14,7 @@
 /*global define */
 define([
     'js/util',
+    './interpreter/List',
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/State',
@@ -21,6 +22,7 @@ define([
     './interpreter/ScopeChain'
 ], function (
     util,
+    List,
     PHPEnvironment,
     PHPError,
     PHPState,
@@ -64,6 +66,9 @@ define([
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
+                createList: function (elements) {
+                    return new List(elements);
+                },
                 popScope: function () {
                     scopeChain.pop();
                 },
@@ -102,7 +107,7 @@ define([
 
         return {
             type: result.getType(),
-            value: result.get()
+            value: result.getNative()
         };
     }
 
@@ -298,6 +303,15 @@ define([
             },
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
+            },
+            'N_LIST': function (node, interpret) {
+                var elementsCodes = [];
+
+                util.each(node.elements, function (element) {
+                    elementsCodes.push(interpret(element, {getValue: false}));
+                });
+
+                return 'tools.createList([' + elementsCodes.join(',') + '])';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
