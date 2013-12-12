@@ -344,7 +344,7 @@ define(function () {
                 components: {name: 'number', what: 'T_LNUMBER'}
             },
             'N_LIST': {
-                components: ['T_LIST', (/\(/), {name: 'elements', oneOrMoreOf: [{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+                components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]
             },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
@@ -363,6 +363,9 @@ define(function () {
             },
             'N_VARIABLE': {
                 components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]
+            },
+            'N_VOID': {
+                components: {name: 'value', what: (/,()/), captureIndex: 1}
             }
         },
         start: 'N_PROGRAM'

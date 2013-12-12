@@ -94,6 +94,38 @@ define([
                         }
                     }]
                 }
+            },
+            'assignment to list with one variable (after skipping first value) of array with two elements': {
+                code: 'list(, $value) = array(1);',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_LIST',
+                                elements: [{
+                                    name: 'N_VOID',
+                                    value: ''
+                                }, {
+                                    name: 'N_VARIABLE',
+                                    variable: '$value'
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_ARRAY_LITERAL',
+                                    elements: [{
+                                        name: 'N_INTEGER',
+                                        number: '1'
+                                    }]
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
