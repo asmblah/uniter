@@ -134,13 +134,14 @@ define([
                     indexValues.push(interpret(index.index, {assignment: false, getValue: false}));
                 });
 
-                arrayVariableCode = interpret(node.array, {getValue: true});
+                arrayVariableCode = interpret(node.array, {getValue: false});
 
                 if (context.assignment) {
                     methodSuffix = 'Reference';
+                    arrayVariableCode = '(' + arrayVariableCode + '.get().getNative() ? null : (' + arrayVariableCode + '.set(tools.valueFactory.createArray([]))), ' + arrayVariableCode + ')';
                 }
 
-                return arrayVariableCode + '.getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
+                return arrayVariableCode + '.get().getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];

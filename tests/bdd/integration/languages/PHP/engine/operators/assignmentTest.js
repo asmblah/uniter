@@ -60,9 +60,15 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
-                'assignment of integer value to array index then reading back': {
+                'assignment of integer value to index of existing array then reading back': {
                     code: '<?php $array = array(); $array[0] = 27; return $array[0];',
                     expectedResult: 27,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'assignment of integer value to index of implied array then reading back': {
+                    code: '<?php $array[0] = 22; return $array[0];',
+                    expectedResult: 22,
                     expectedStderr: '',
                     expectedStdout: ''
                 }
