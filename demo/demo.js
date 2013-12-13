@@ -54,7 +54,6 @@ require([
         output();
     }).fail(function (exception) {
         output();
-        print(exception.getMessage());
     });
 });
 
@@ -86,13 +85,17 @@ EOS
                 resultBody.insertAdjacentHTML('beforeEnd', html);
             }
 
+            function printText(text) {
+                resultBody.appendChild(global.document.createTextNode(text));
+            }
+
             resultBody.innerHTML = '';
 
             try {
                 /*jshint evil: true */
                 new Function('require, phpCode, print', javascriptCode)(require, phpCode, print);
             } catch (error) {
-                print(error.toString());
+                printText('<JavaScript error> ' + error.toString());
             }
         }
 
