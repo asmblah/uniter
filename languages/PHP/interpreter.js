@@ -125,14 +125,22 @@ define([
         Environment: PHPEnvironment,
         State: PHPState,
         nodes: {
-            'N_ARRAY_INDEX': function (node, interpret) {
-                var indexValues = [];
+            'N_ARRAY_INDEX': function (node, interpret, context) {
+                var arrayVariableCode,
+                    indexValues = [],
+                    methodSuffix = '';
 
                 util.each(node.indices, function (index) {
-                    indexValues.push(interpret(index.index));
+                    indexValues.push(interpret(index.index, {assignment: false, getValue: false}));
                 });
 
-                return interpret(node.array) + '.getElement(' + indexValues.join(', scopeChain).getElement(') + ', scopeChain)';
+                arrayVariableCode = interpret(node.array, {getValue: true});
+
+                if (context.assignment) {
+                    methodSuffix = 'Reference';
+                }
+
+                return arrayVariableCode + '.getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];

@@ -111,6 +111,22 @@ define([
             return value.value[keyValue];
         },
 
+        getElementReference: function (key, scopeChain) {
+            var keyValue,
+                value = this;
+
+            key = key.coerceToKey(scopeChain);
+
+            if (!key) {
+                // Could not be coerced to a key: error will already have been handled, just return NULL
+                return value.factory.createNull();
+            }
+
+            keyValue = key.get();
+
+            return new ArrayElementReference(value.value, keyValue);
+        },
+
         getKey: function () {
             var value = this;
 

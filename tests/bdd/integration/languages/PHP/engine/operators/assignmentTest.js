@@ -59,6 +59,12 @@ define([
                     expectedResult: 3,
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'assignment of integer value to array index then reading back': {
+                    code: '<?php $array = array(); $array[0] = 27; return $array[0];',
+                    expectedResult: 27,
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {
