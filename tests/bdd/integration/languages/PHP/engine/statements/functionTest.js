@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -51,6 +53,39 @@ define([
                 code: '<?php $a = 1; function doSomething() { echo $a; } doSomething();',
                 expectedResult: null,
                 expectedStderr: 'PHP Notice: Undefined variable: $a',
+                expectedStdout: ''
+            },
+            'calling a function before its definition outside of any blocks eg. conditionals': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return add1(7);
+
+    function add1($number) {
+        return $number + 1;
+    }
+EOS
+*/) {}),
+                expectedResult: 8,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'calling a function before its definition where definition is inside of a conditional': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return add1(7);
+
+    if (true) {
+        function add1($number) {
+            return $number + 1;
+        }
+    }
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function add1\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

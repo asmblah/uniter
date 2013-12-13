@@ -9,9 +9,11 @@
 
 /*global define */
 define([
-    'js/util'
+    'js/util',
+    './Error/Fatal'
 ], function (
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -30,7 +32,11 @@ define([
         getFunction: function (name) {
             var namespace = this;
 
-            return hasOwn.call(namespace.functions, name) ? namespace.functions[name] : null;
+            if (!hasOwn.call(namespace.functions, name)) {
+                throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_FUNCTION, {name: name});
+            }
+
+            return namespace.functions[name];
         }
     });
 

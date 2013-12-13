@@ -128,6 +128,21 @@ define([
         return keys;
     }
 
+    function hoistDeclarations(statements) {
+        var declarations = [],
+            nonDeclarations = [];
+
+        util.each(statements, function (statement) {
+            if (statement.name === 'N_FUNCTION_STATEMENT') {
+                declarations.push(statement);
+            } else {
+                nonDeclarations.push(statement);
+            }
+        });
+
+        return declarations.concat(nonDeclarations);
+    }
+
     return {
         Environment: PHPEnvironment,
         State: PHPState,
@@ -240,7 +255,7 @@ define([
                 code += pointerVariable + '++;';
                 code += arrayVariable + '.setPointer(' + pointerVariable + ');';
 
-                util.each(node.statements, function (statement) {
+                util.each(hoistDeclarations(node.statements), function (statement) {
                     code += interpret(statement);
                 });
 
@@ -264,7 +279,7 @@ define([
                 });
 
                 // Interpret statements first (will populate localVariableNames)
-                util.each(node.statements, function (statement) {
+                util.each(hoistDeclarations(node.statements), function (statement) {
                     body += interpret(statement, {localVariableNames: localVariableNames});
                 });
 
@@ -303,12 +318,12 @@ define([
                     consequentCode = '';
 
                 // Consequent statements are executed if the condition is truthy
-                util.each(node.consequentStatements, function (statement) {
+                util.each(hoistDeclarations(node.consequentStatements), function (statement) {
                     consequentCode += interpret(statement);
                 });
 
                 // Alternate statements are executed if the condition is falsy
-                util.each(node.alternateStatements, function (statement) {
+                util.each(hoistDeclarations(node.alternateStatements), function (statement) {
                     alternateCode += interpret(statement);
                 });
 
@@ -335,7 +350,7 @@ define([
                         localVariableNames: {}
                     };
 
-                util.each(node.statements, function (statement) {
+                util.each(hoistDeclarations(node.statements), function (statement) {
                     body += interpret(statement, context);
                 });
 
