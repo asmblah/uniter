@@ -33,7 +33,7 @@ require({
     mocha.setup({
         "ui": "bdd",
         "reporter": mocha.reporters.HTML,
-        "globals": ["_gaq", "jQuery*", "setTimeout", "setInterval", "clearTimeout", "clearInterval"]
+        "globals": ["_gaq", "jQuery*", "setTimeout", "setInterval", "clearTimeout", "clearInterval", "top"]
     });
 
     chai.use(sinonChai);

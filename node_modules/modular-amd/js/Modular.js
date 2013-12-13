@@ -38,7 +38,7 @@
 
                 options = options || {};
 
-                if (hasOwn.call(obj, "length") && !options.keys) {
+                if (("length" in obj) && !options.keys) {
                     for (key = 0, length = obj.length; key < length; key += 1) { // Keep JSLint happy with "+= 1"
                         if (callback.call(obj[key], obj[key], key, obj) === false) {
                             break;

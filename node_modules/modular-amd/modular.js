@@ -21,7 +21,7 @@
         var key,
             length;
 
-        if (!obj || !hasOwn.call(obj, "length")) {
+        if (!obj || !("length" in obj)) {
             return;
         }
 
