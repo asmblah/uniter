@@ -34,28 +34,29 @@ define([
             engine = phpTools.createEngine();
         });
 
-        util.each([
-            {
-                // Simple function call
+        util.each({
+            'simple function call': {
                 code: '<?php function show($string) { echo $string; } show("hello!");',
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'hello!'
-            }, {
-                // Make sure variables defined in inner scopes are not defined in the outer one
+            },
+            'make sure variables defined in inner scopes are not defined in the outer one': {
                 code: '<?php function doSomething() { $a = 1; } echo $a;',
                 expectedResult: null,
                 expectedStderr: 'PHP Notice: Undefined variable: $a',
                 expectedStdout: ''
-            }, {
-                // Make sure variables defined in outer scopes are not defined in the inner one
+            },
+            'make sure variables defined in outer scopes are not defined in the inner one': {
                 code: '<?php $a = 1; function doSomething() { echo $a; } doSomething();',
                 expectedResult: null,
                 expectedStderr: 'PHP Notice: Undefined variable: $a',
                 expectedStdout: ''
             }
-        ], function (scenario) {
-            check(scenario);
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });
