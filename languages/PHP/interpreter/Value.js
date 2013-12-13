@@ -9,9 +9,13 @@
 
 /*global define */
 define([
-    'js/util'
+    'js/util',
+    './Reference/Null',
+    './Error'
 ], function (
-    util
+    util,
+    NullReference,
+    PHPError
 ) {
     'use strict';
 
@@ -30,6 +34,16 @@ define([
 
         get: function () {
             return this.value;
+        },
+
+        getElement: function (key, scopeChain) {
+            scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
+            return this.factory.createNull();
+        },
+
+        getElementReference: function (key, scopeChain) {
+            scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
+            return new NullReference(this.factory);
         },
 
         getNative: function () {

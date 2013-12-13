@@ -71,6 +71,12 @@ define([
                     expectedResult: 22,
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'assignment of integer value to index of non-array element': {
+                    code: '<?php $notAnArray = 2; $notAnArray[0] = 3; return $notAnArray;',
+                    expectedResult: 2,
+                    expectedStderr: 'PHP Warning: Cannot use a scalar value as an array',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

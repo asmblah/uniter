@@ -69,6 +69,13 @@ define([
                 createList: function (elements) {
                     return new List(elements);
                 },
+                implyArray: function (variable) {
+                    if (variable.get().getNative() === null) {
+                        variable.set(tools.valueFactory.createArray([]));
+                    }
+
+                    return variable.get();
+                },
                 popScope: function () {
                     scopeChain.pop();
                 },
@@ -134,14 +141,14 @@ define([
                     indexValues.push(interpret(index.index, {assignment: false, getValue: false}));
                 });
 
-                arrayVariableCode = interpret(node.array, {getValue: false});
-
                 if (context.assignment) {
                     methodSuffix = 'Reference';
-                    arrayVariableCode = '(' + arrayVariableCode + '.get().getNative() ? null : (' + arrayVariableCode + '.set(tools.valueFactory.createArray([]))), ' + arrayVariableCode + ')';
+                    arrayVariableCode = 'tools.implyArray(' + interpret(node.array, {getValue: false}) + ')';
+                } else {
+                    arrayVariableCode = interpret(node.array, {getValue: true});
                 }
 
-                return arrayVariableCode + '.get().getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
+                return arrayVariableCode + '.getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
