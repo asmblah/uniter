@@ -75,16 +75,12 @@ define([
                 string;
 
             if (!match) {
-                throw new Error("util.heredoc() :: Function does not contain a heredoc");
+                throw new Error('util.heredoc() :: Function does not contain a heredoc');
             }
 
-            string = match[2] || "";
+            string = match[2] || '';
 
-            util.each(variables, function (value, name) {
-                var pattern = new RegExp(("${" + name + "}").replace(/[^a-z0-9]/g, "\\$&"), "g");
-
-                string = string.replace(pattern, value);
-            }, {keys: true});
+            string = util.stringTemplate(string, variables);
 
             return string;
         },
@@ -129,6 +125,16 @@ define([
             });
 
             return result;
+        },
+
+        stringTemplate: function (string, variables) {
+            util.each(variables, function (value, name) {
+                var pattern = new RegExp(('${' + name + '}').replace(/[^a-z0-9]/g, '\\$&'), 'g');
+
+                string = string.replace(pattern, value);
+            }, {keys: true});
+
+            return string;
         }
     });
 });
