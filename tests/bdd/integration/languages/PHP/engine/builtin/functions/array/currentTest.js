@@ -54,9 +54,15 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
-                'getting value of current element of array when initially empty then setting an element at index > 0': {
+                'getting value of current indexed element of array when initially empty then setting an element at index > 0': {
                     code: '<?php $array = array(); $array[7] = 2; return current($array);',
                     expectedResult: 2,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'getting value of current associative element of array when initially empty then set': {
+                    code: '<?php $array = array(); $array["me"] = 3; return current($array);',
+                    expectedResult: 3,
                     expectedStderr: '',
                     expectedStdout: ''
                 }

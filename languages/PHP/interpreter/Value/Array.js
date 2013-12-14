@@ -120,7 +120,7 @@ define([
                 return value.factory.createNull();
             }
 
-            return value.value[Object.keys(value.value)[keyValue]];
+            return value.value[keyValue];
         },
 
         getElementReference: function (key, scopeChain) {

@@ -44,6 +44,10 @@ define([
             return value.factory.createInteger(/^(\d|-\d)/.test(value.value) ? parseInt(value.value, 10) : 0);
         },
 
+        coerceToKey: function () {
+            return this;
+        },
+
         coerceToNumber: function () {
             var value = this,
                 isInteger = !/^[.eE]+$/.test(value.value);

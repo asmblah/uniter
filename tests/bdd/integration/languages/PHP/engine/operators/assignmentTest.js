@@ -66,6 +66,12 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
+                'assignment of integer value to string key of existing array then reading back': {
+                    code: '<?php $array = array(); $array["test"] = 6; return $array["test"];',
+                    expectedResult: 6,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
                 'assignment of integer value to index of implied array then reading back': {
                     code: '<?php $array[0] = 22; return $array[0];',
                     expectedResult: 22,
