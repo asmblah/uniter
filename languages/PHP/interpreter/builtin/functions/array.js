@@ -34,6 +34,12 @@ define([
                     arrayValue = isReference ? arrayReference.get() : arrayReference;
 
                 arrayValue.setPointer(arrayValue.getPointer() + 1);
+
+                if (arrayValue.getPointer() >= arrayValue.getLength()) {
+                    return valueFactory.createBoolean(false);
+                }
+
+                return arrayValue.getCurrentElement();
             }
         };
     };
