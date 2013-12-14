@@ -72,5 +72,34 @@ define([
                 });
             });
         });
+
+        describe('inside foreach (...) {...}', function () {
+            util.each({
+                'foreach should reset internal pointer but not advance during': {
+                    code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array(1, 2, 3);
+    $result = '';
+
+    // Advance to next element before loop, to check internal pointer is reset by foreach
+    next($array);
+
+    foreach ($array as $val) {
+        $result = $result . current($array) . ',';
+    }
+
+    return $result;
+EOS
+*/) {}),
+                    expectedResult: '1,1,1,',
+                    expectedStderr: '',
+                    expectedStdout: ''
+                }
+            }, function (scenario, description) {
+                describe(description, function () {
+                    check(scenario);
+                });
+            });
+        });
     });
 });

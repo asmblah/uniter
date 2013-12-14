@@ -257,9 +257,10 @@ define([
 
                 context.localVariableNames[node.value.variable] = true;
 
-                // Cache the value being iterated over
                 arrayVariable = 'array_' + context.foreach.depth;
-                code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
+
+                // Cache the value being iterated over and reset the internal array pointer before the loop
+                code += 'var ' + arrayVariable + ' = ' + arrayValue + '.reset().clone();';
 
                 lengthVariable = 'length_' + context.foreach.depth;
                 code += 'var ' + lengthVariable + ' = ' + arrayVariable + '.getLength();';

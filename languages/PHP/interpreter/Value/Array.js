@@ -164,7 +164,11 @@ define([
         },
 
         reset: function () {
-            this.pointer = 0;
+            var value = this;
+
+            value.pointer = 0;
+
+            return value;
         },
 
         setPointer: function (pointer) {

@@ -26,6 +26,12 @@ define([
                 }
 
                 return arrayValue.getCurrentElement();
+            },
+            'next': function (arrayReference) {
+                var isReference = (arrayReference instanceof Variable),
+                    arrayValue = isReference ? arrayReference.get() : arrayReference;
+
+                arrayValue.setPointer(arrayValue.getPointer() + 1);
             }
         };
     };
