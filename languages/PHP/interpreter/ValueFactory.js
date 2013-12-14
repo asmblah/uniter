@@ -43,6 +43,15 @@ define([
         createFloat: function (value) {
             return new FloatValue(this, value);
         },
+        createFromNative: function (nativeValue) {
+            var factory = this;
+
+            if (util.isNumber(nativeValue)) {
+                return factory.createInteger(nativeValue);
+            }
+
+            return factory.createString(nativeValue);
+        },
         createInteger: function (value) {
             return new IntegerValue(this, value);
         },

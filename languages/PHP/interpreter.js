@@ -190,7 +190,7 @@ define([
                     arrayVariableCode = interpret(node.array, {getValue: true});
                 }
 
-                return arrayVariableCode + '.getElement' + methodSuffix + '(' + indexValues.join(', scopeChain).getElement' + methodSuffix + '(') + ', scopeChain)';
+                return arrayVariableCode + '.getElement' + methodSuffix + 'ByKey(' + indexValues.join(', scopeChain).getElement' + methodSuffix + 'ByKey(') + ', scopeChain)';
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
@@ -260,7 +260,7 @@ define([
                 arrayVariable = 'array_' + context.foreach.depth;
 
                 // Cache the value being iterated over and reset the internal array pointer before the loop
-                code += 'var ' + arrayVariable + ' = ' + arrayValue + '.reset().clone();';
+                code += 'var ' + arrayVariable + ' = ' + arrayValue + '.reset();';
 
                 lengthVariable = 'length_' + context.foreach.depth;
                 code += 'var ' + lengthVariable + ' = ' + arrayVariable + '.getLength();';
@@ -269,19 +269,17 @@ define([
 
                 // Loop management
                 code += 'while (' + pointerVariable + ' < ' + lengthVariable + ') {';
-                code += arrayVariable + '.setPointer(' + pointerVariable + ');';
 
                 if (key) {
                     // Iterator key variable (if specified)
-                    code += key + '.set(' + arrayVariable + '.getKey());';
+                    code += key + '.set(' + arrayVariable + '.getKeyByIndex(' + pointerVariable + '));';
                 }
 
                 // Iterator value variable
-                code += value + '.set' + (node.value.reference ? 'Reference' : '') + '(' + arrayVariable + '.getCurrentElement' + (node.value.reference ? 'Reference' : '') + '());';
+                code += value + '.set' + (node.value.reference ? 'Reference' : '') + '(' + arrayVariable + '.getElement' + (node.value.reference ? 'Reference' : '') + 'ByIndex(' + pointerVariable + '));';
 
                 // Set pointer to next element at start of loop body as per spec
                 code += pointerVariable + '++;';
-                code += arrayVariable + '.setPointer(' + pointerVariable + ');';
 
                 util.each(hoistDeclarations(node.statements), function (statement) {
                     code += interpret(statement);

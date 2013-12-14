@@ -36,12 +36,11 @@ define([
             return this.value;
         },
 
-        getElement: function (key, scopeChain) {
-            scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
+        getElementByKey: function (key, scopeChain) {
             return this.factory.createNull();
         },
 
-        getElementReference: function (key, scopeChain) {
+        getElementReferenceByKey: function (key, scopeChain) {
             scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
             return new NullReference(this.factory);
         },

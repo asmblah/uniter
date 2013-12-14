@@ -102,7 +102,7 @@ define([
             return new ArrayElementReference(value, value.value, value.pointer);
         },
 
-        getElement: function (key, scopeChain) {
+        getElementByKey: function (key, scopeChain) {
             var keyValue,
                 value = this;
 
@@ -123,7 +123,14 @@ define([
             return value.value[keyValue];
         },
 
-        getElementReference: function (key, scopeChain) {
+        getElementByIndex: function (index) {
+            var value = this,
+                keyValue = Object.keys(value.value)[index];
+
+            return value.value[keyValue];
+        },
+
+        getElementReferenceByKey: function (key, scopeChain) {
             var keyValue,
                 value = this;
 
@@ -139,10 +146,18 @@ define([
             return new ArrayElementReference(value, value.value, keyValue);
         },
 
-        getKey: function () {
-            var value = this;
+        getElementReferenceByIndex: function (index) {
+            var value = this,
+                keyValue = Object.keys(value.value)[index];
 
-            return value.factory.createInteger(value.pointer);
+            return new ArrayElementReference(value, value.value, keyValue);
+        },
+
+        getKeyByIndex: function (index) {
+            var value = this,
+                keyValue = Object.keys(value.value)[index];
+
+            return value.factory.createFromNative(keyValue);
         },
 
         getLength: function () {
