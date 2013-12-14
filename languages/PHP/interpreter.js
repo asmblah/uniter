@@ -15,6 +15,7 @@
 define([
     './interpreter/builtin/builtins',
     'js/util',
+    './interpreter/KeyValuePair',
     './interpreter/List',
     './interpreter/Environment',
     './interpreter/Error',
@@ -24,6 +25,7 @@ define([
 ], function (
     builtinGroups,
     util,
+    KeyValuePair,
     List,
     PHPEnvironment,
     PHPError,
@@ -69,6 +71,9 @@ define([
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
+                createKeyValuePair: function (key, value) {
+                    return new KeyValuePair(key, value);
+                },
                 createList: function (elements) {
                     return new List(elements);
                 },
@@ -356,6 +361,9 @@ define([
             },
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
+            },
+            'N_KEY_VALUE_PAIR': function (node, interpret) {
+                return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
             },
             'N_LIST': function (node, interpret) {
                 var elementsCodes = [];

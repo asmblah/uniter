@@ -180,7 +180,7 @@ define(function () {
                 components: 'N_EXPRESSION_LEVEL_2'
             },
             'N_ARRAY_LITERAL': {
-                components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+                components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: [{oneOf: ['N_KEY_VALUE_PAIR', 'N_EXPRESSION']}, {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
@@ -342,6 +342,9 @@ define(function () {
             'N_INLINE_HTML_STATEMENT': [{oneOf: ['T_CLOSE_TAG', '<BOF>']}, {name: 'html', what: 'T_INLINE_HTML'}, {oneOf: ['T_OPEN_TAG', '<EOF>']}],
             'N_INTEGER': {
                 components: {name: 'number', what: 'T_LNUMBER'}
+            },
+            'N_KEY_VALUE_PAIR': {
+                components: [{name: 'key', what: 'N_EXPRESSION'}, 'T_DOUBLE_ARROW', {name: 'value', what: 'N_EXPRESSION'}]
             },
             'N_LIST': {
                 components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]

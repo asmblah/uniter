@@ -42,9 +42,15 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
-                'getting value of current element of 1-element array when just created': {
+                'getting value of current indexed element of 1-element array when just created': {
                     code: '<?php $array = array(7); return current($array);',
                     expectedResult: 7,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'getting value of current associative element of 1-element array when just created': {
+                    code: '<?php $array = array("a" => "b"); return current($array);',
+                    expectedResult: 'b',
                     expectedStderr: '',
                     expectedStdout: ''
                 },

@@ -11,12 +11,14 @@
 define([
     'js/util',
     '../Reference/ArrayElement',
+    '../KeyValuePair',
     '../Error',
     '../Error/Fatal',
     '../Value'
 ], function (
     util,
     ArrayElementReference,
+    KeyValuePair,
     PHPError,
     PHPFatalError,
     Value
@@ -26,7 +28,17 @@ define([
     var hasOwn = {}.hasOwnProperty;
 
     function ArrayValue(factory, value) {
-        Value.call(this, factory, 'array', value);
+        var elements = [];
+
+        util.each(value, function (element) {
+            if (element instanceof KeyValuePair) {
+                elements[element.getKey().getNative()] = element.getValue();
+            } else {
+                elements.push(element);
+            }
+        });
+
+        Value.call(this, factory, 'array', elements);
 
         this.pointer = 0;
     }
@@ -81,7 +93,7 @@ define([
         getCurrentElement: function () {
             var value = this;
 
-            return value.value[value.pointer] || value.factory.createNull();
+            return value.value[Object.keys(value.value)[value.pointer]] || value.factory.createNull();
         },
 
         getCurrentElementReference: function () {
@@ -108,7 +120,7 @@ define([
                 return value.factory.createNull();
             }
 
-            return value.value[keyValue];
+            return value.value[Object.keys(value.value)[keyValue]];
         },
 
         getElementReference: function (key, scopeChain) {
@@ -136,7 +148,7 @@ define([
         getLength: function () {
             var value = this;
 
-            return value.value.length;
+            return Object.keys(value.value).length;
         },
 
         getPointer: function () {

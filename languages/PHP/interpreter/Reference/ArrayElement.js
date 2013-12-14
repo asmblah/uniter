@@ -29,10 +29,14 @@ define([
         },
 
         set: function (value) {
-            var reference = this;
+            var reference = this,
+                isFirstElement = (reference.arrayValue.getLength() === 0);
 
             reference.array[reference.key] = value;
-            reference.arrayValue.setPointer(reference.key);
+
+            if (isFirstElement) {
+                reference.arrayValue.setPointer(Object.keys(reference.array).indexOf(reference.key.toString()));
+            }
         }
     });
 
