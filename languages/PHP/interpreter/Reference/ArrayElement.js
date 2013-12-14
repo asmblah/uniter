@@ -15,8 +15,9 @@ define([
 ) {
     'use strict';
 
-    function ArrayElementReference(array, key) {
+    function ArrayElementReference(arrayValue, array, key) {
         this.array = array;
+        this.arrayValue = arrayValue;
         this.key = key;
     }
 
@@ -31,6 +32,7 @@ define([
             var reference = this;
 
             reference.array[reference.key] = value;
+            reference.arrayValue.setPointer(reference.key);
         }
     });
 

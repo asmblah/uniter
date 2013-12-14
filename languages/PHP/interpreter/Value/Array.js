@@ -87,7 +87,7 @@ define([
         getCurrentElementReference: function () {
             var value = this;
 
-            return new ArrayElementReference(value.value, value.pointer);
+            return new ArrayElementReference(value, value.value, value.pointer);
         },
 
         getElement: function (key, scopeChain) {
@@ -124,7 +124,7 @@ define([
 
             keyValue = key.get();
 
-            return new ArrayElementReference(value.value, keyValue);
+            return new ArrayElementReference(value, value.value, keyValue);
         },
 
         getKey: function () {
@@ -136,7 +136,11 @@ define([
         getLength: function () {
             var value = this;
 
-            return value.factory.createInteger(value.value.length);
+            return value.value.length;
+        },
+
+        getPointer: function () {
+            return this.pointer;
         },
 
         next: function () {

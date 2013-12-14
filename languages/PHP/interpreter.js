@@ -13,6 +13,7 @@
 
 /*global define */
 define([
+    './interpreter/builtin/builtins',
     'js/util',
     './interpreter/List',
     './interpreter/Environment',
@@ -21,6 +22,7 @@ define([
     './interpreter/Scope',
     './interpreter/ScopeChain'
 ], function (
+    builtinGroups,
     util,
     List,
     PHPEnvironment,
@@ -60,7 +62,8 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        var namespace,
+        var builtins = {},
+            namespace,
             namespaceCollection = state.getNamespaceCollection(),
             valueFactory = state.getValueFactory(),
             result,
@@ -68,6 +71,9 @@ define([
             tools = {
                 createList: function (elements) {
                     return new List(elements);
+                },
+                getBuiltin: function (name) {
+                    return builtins[name];
                 },
                 implyArray: function (variable) {
                     if (variable.get().getNative() === null) {
@@ -91,6 +97,22 @@ define([
         namespace = namespaceCollection.get('\\');
 
         scopeChain.push(state.getGlobalScope());
+
+        code = (function () {
+            var builtinDeclarationsCode = '';
+
+            util.each(builtinGroups, function (groupFactory) {
+                var groupBuiltins = groupFactory(valueFactory);
+
+                util.each(groupBuiltins, function (fn, name) {
+                    builtinDeclarationsCode += 'namespace.defineFunction(' + JSON.stringify(name) + ', tools.getBuiltin(' + JSON.stringify(name) + '));';
+                });
+
+                util.extend(builtins, groupBuiltins);
+            });
+
+            return builtinDeclarationsCode;
+        }()) + code;
 
         if (getKeys(context.localVariableNames).length > 0) {
             code = 'scopeChain.getCurrent().defineVariables(["' + getKeys(context.localVariableNames).join('", "') + '"]);' + code;
@@ -235,7 +257,7 @@ define([
                 code += 'var ' + arrayVariable + ' = ' + arrayValue + ';';
 
                 lengthVariable = 'length_' + context.foreach.depth;
-                code += 'var ' + lengthVariable + ' = ' + arrayVariable + '.getLength().get();';
+                code += 'var ' + lengthVariable + ' = ' + arrayVariable + '.getLength();';
                 pointerVariable = 'pointer_' + context.foreach.depth;
                 code += 'var ' + pointerVariable + ' = 0;';
 
