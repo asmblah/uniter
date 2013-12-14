@@ -15,7 +15,9 @@ define([
 ) {
     'use strict';
 
-    return function (valueFactory) {
+    return function (internals) {
+        var valueFactory = internals.valueFactory;
+
         return {
             'current': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),

@@ -358,11 +358,14 @@ define(function () {
             'N_STATEMENT': {
                 components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT']}
             },
+            'N_STRING': {
+                components: {name: 'string', what: 'T_STRING'}
+            },
             'N_STRING_LITERAL': {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_FUNCTION_CALL', 'T_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_FUNCTION_CALL', 'N_STRING']}
             },
             'N_VARIABLE': {
                 components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]

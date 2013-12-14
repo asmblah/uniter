@@ -15,6 +15,7 @@
 define([
     './interpreter/builtin/builtins',
     'js/util',
+    'js/Exception',
     './interpreter/KeyValuePair',
     './interpreter/List',
     './interpreter/Environment',
@@ -25,6 +26,7 @@ define([
 ], function (
     builtinGroups,
     util,
+    Exception,
     KeyValuePair,
     List,
     PHPEnvironment,
@@ -104,10 +106,14 @@ define([
         scopeChain.push(state.getGlobalScope());
 
         code = (function () {
-            var builtinDeclarationsCode = '';
+            var builtinDeclarationsCode = '',
+                internals = {
+                    stdout: stdout,
+                    valueFactory: valueFactory
+                };
 
             util.each(builtinGroups, function (groupFactory) {
-                var groupBuiltins = groupFactory(valueFactory);
+                var groupBuiltins = groupFactory(internals);
 
                 util.each(groupBuiltins, function (fn, name) {
                     builtinDeclarationsCode += 'namespace.defineFunction(' + JSON.stringify(name) + ', tools.getBuiltin(' + JSON.stringify(name) + '));';
@@ -389,6 +395,14 @@ define([
                 var expression = interpret(node.expression);
 
                 return 'return' + (expression ? ' ' + expression : '') + ';';
+            },
+            'N_STRING': function (node) {
+                switch (node.string) {
+                case 'null':
+                    return 'tools.valueFactory.createNull()';
+                default:
+                    throw new Exception('N_STRING - unsupported string ' + node.string);
+                }
             },
             'N_STRING_LITERAL': function (node) {
                 return 'tools.valueFactory.createString(tools.unescapeString(' + JSON.stringify(node.string) + '))';

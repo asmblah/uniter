@@ -9,13 +9,16 @@
 
 /*global define */
 define([
-    './functions/array'
+    './functions/array',
+    './functions/variableHandling'
 ], function (
-    arrayFunctions
+    arrayFunctions,
+    variableHandlingFunctions
 ) {
     'use strict';
 
     return [
-        arrayFunctions
+        arrayFunctions,
+        variableHandlingFunctions
     ];
 });

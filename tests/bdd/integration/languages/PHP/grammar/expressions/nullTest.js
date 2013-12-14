@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar array literal expression integration', function () {
+    describe('PHP Parser grammar null expression integration', function () {
         var parser;
 
         beforeEach(function () {
@@ -25,8 +25,8 @@ define([
         });
 
         util.each({
-            'array with one associative element': {
-                code: '$array = array("a" => "b");',
+            'assignment of null to variable': {
+                code: '$nothing = null;',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -35,23 +35,13 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$array'
+                                variable: '$nothing'
                             },
                             right: [{
                                 operator: '=',
                                 operand: {
-                                    name: 'N_ARRAY_LITERAL',
-                                    elements: [{
-                                        name: 'N_KEY_VALUE_PAIR',
-                                        key: {
-                                            name: 'N_STRING_LITERAL',
-                                            string: 'a'
-                                        },
-                                        value: {
-                                            name: 'N_STRING_LITERAL',
-                                            string: 'b'
-                                        }
-                                    }]
+                                    name: 'N_STRING',
+                                    string: 'null'
                                 }
                             }]
                         }

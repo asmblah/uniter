@@ -59,6 +59,7 @@ define({
 
         require([
             'bdd/integration/languages/PHP/engine/builtin/functions/array/currentTest',
+            'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',
             'bdd/integration/languages/PHP/engine/constructs/listTest',
             'bdd/integration/languages/PHP/engine/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/engine/operators/assignmentTest',
@@ -74,6 +75,7 @@ define({
             'bdd/integration/languages/PHP/grammar/constructs/listTest',
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
+            'bdd/integration/languages/PHP/grammar/expressions/nullTest',
             'bdd/integration/languages/PHP/grammar/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/grammar/statements/foreachTest',
             'bdd/integration/languages/PHP/grammar/statements/functionTest',
