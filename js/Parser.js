@@ -27,6 +27,15 @@ define([
         this.grammarSpec = grammarSpec;
 
         (function (parser) {
+            // Ensure the regex is anchored to the start of the string so it matches the very next characters
+            function anchorRegex(regex) {
+                if (regex.source.charAt(0) !== '^') {
+                    regex = new RegExp('^(?:' + regex.source + ')', regex.toString().match(/[^\/]*$/)[0]);
+                }
+
+                return regex;
+            }
+
             var qualifiers = {
                     // Like "(...)" grouping - 'arg' is an array of components that must all match
                     'allOf': function (text, offset, arg, args, options) {
@@ -235,15 +244,6 @@ define([
             });
 
             util.each(grammarSpec.rules, function (ruleSpec, name) {
-                // Ensure the regex is anchored to the start of the string so it matches the very next characters
-                function anchorRegex(regex) {
-                    if (regex.source.charAt(0) !== '^') {
-                        regex = new RegExp('^(?:' + regex.source + ')', regex.toString().match(/[^\/]*$/)[0]);
-                    }
-
-                    return regex;
-                }
-
                 function createComponent(componentSpec) {
                     var arg,
                         args = {},
