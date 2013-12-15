@@ -38,7 +38,7 @@ define(function () {
             'T_CALLABLE': /callable\b/i,
             'T_CASE': /case\b/i,
             'T_CATCH': /catch\b/i,
-            'T_CLASS': /class/i,
+            'T_CLASS': /class\b/i,
             'T_CLASS_C': /__CLASS__/i,
             'T_CLONE': /clone/i,
             'T_CLOSE_TAG': /[?%]>\n?/,
@@ -184,6 +184,9 @@ define(function () {
             },
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
+            },
+            'N_CLASS_STATEMENT': {
+                components: ['T_CLASS', {name: 'className', what: 'T_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: [{what: (/(?!)/)}]}, (/\}/)]
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
@@ -356,7 +359,7 @@ define(function () {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]
             },
             'N_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_CLASS_STATEMENT']}
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
