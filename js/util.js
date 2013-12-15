@@ -22,6 +22,7 @@ define([
         F.prototype = from;
         return new F();
     },
+        toString = {}.toString,
         util = inheritFrom(modular.util),
         Promise;
 
@@ -107,7 +108,23 @@ define([
         },
 
         isNumber: function (value) {
-            return this.getType(value) === 'Number';
+            return toString.call(value) === '[object Number]';
+        },
+
+        isArray: function (value) {
+            return toString.call(value) === '[object Array]';
+        },
+
+        isFunction: function (value) {
+            return toString.call(value) === '[object Function]';
+        },
+
+        isPlainObject: function (value) {
+            return toString.call(value) === '[object Object]' && !util.isUndefined(value);
+        },
+
+        isString: function (value) {
+            return typeof value === 'string' || toString.call(value) === '[object String]';
         },
 
         regexEscape: function (text) {
