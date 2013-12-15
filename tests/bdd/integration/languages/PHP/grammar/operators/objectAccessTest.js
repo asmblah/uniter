@@ -93,6 +93,36 @@ define([
                         }
                     }]
                 }
+            },
+            'assignment to dynamically referenced property of object with key in variable': {
+                code: '$anObject->$propName = 4;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$anObject'
+                                },
+                                property: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$propName'
+                                }
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
