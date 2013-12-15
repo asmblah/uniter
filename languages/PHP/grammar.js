@@ -208,14 +208,20 @@ define(function () {
             'N_EXPRESSION_LEVEL_0': {
                 components: [{oneOf: ['N_TERM', [(/\(/), 'N_EXPRESSION', (/\)/)]]}]
             },
-            'N_EXPRESSION_LEVEL_1': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'operator', optionally: {oneOf: ['T_CLONE', 'T_NEW']}}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_0'}],
-                ifNoMatch: {component: 'operator', capture: 'operand'}
+            'N_EXPRESSION_LEVEL_1_A': {
+                captureAs: 'N_NEW_EXPRESSION',
+                components: [{name: 'operator', optionally: 'T_NEW'}, {name: 'className', what: 'N_EXPRESSION_LEVEL_0'}, {name: 'args', zeroOrMoreOf: {what: (/(?!)/)}}],
+                ifNoMatch: {component: 'operator', capture: 'className'}
+            },
+            'N_EXPRESSION_LEVEL_1_B': {
+                captureAs: 'N_UNARY_EXPRESSION',
+                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_A'}],
+                ifNoMatch: {component: 'operator', capture: 'operand'},
+                options: {prefix: true}
             },
             'N_EXPRESSION_LEVEL_2': {
                 captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_B'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_3': {
