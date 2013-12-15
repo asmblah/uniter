@@ -45,6 +45,33 @@ define([
                                     className: {
                                         name: 'N_STRING',
                                         string: 'Worker'
+                                    }
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'creating instance of class with name specified statically and with argument brackets': {
+                code: '$object = new Worker();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: '$object'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_NEW_EXPRESSION',
+                                    operator: 'new',
+                                    className: {
+                                        name: 'N_STRING',
+                                        string: 'Worker'
                                     },
                                     args: []
                                 }

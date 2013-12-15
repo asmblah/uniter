@@ -186,7 +186,7 @@ define(function () {
                 components: {name: 'bool', what: (/true|false/i)}
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', what: 'T_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: [{what: (/(?!)/)}]}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: [{what: (/(?!)/)}]}, (/\}/)]
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
@@ -210,18 +210,44 @@ define(function () {
             },
             'N_EXPRESSION_LEVEL_1_A': {
                 captureAs: 'N_NEW_EXPRESSION',
-                components: [{name: 'operator', optionally: 'T_NEW'}, {name: 'className', what: 'N_EXPRESSION_LEVEL_0'}, {name: 'args', zeroOrMoreOf: {what: (/(?!)/)}}],
-                ifNoMatch: {component: 'operator', capture: 'className'}
+                components: {oneOf: [
+                    [
+                        {name: 'operator', what: 'T_NEW'},
+                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0'},
+                        {optionally: [
+                            (/\(/),
+                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                            (/\)/)
+                        ]}
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
+                ]},
+                ifNoMatch: {component: 'operator', capture: 'next'}
             },
             'N_EXPRESSION_LEVEL_1_B': {
+                captureAs: 'N_FUNCTION_CALL',
+                components: {oneOf: [
+                    [
+                        {name: 'func', what: 'N_EXPRESSION_LEVEL_1_A'},
+                        [
+                            (/\(/),
+                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                            (/\)/)
+                        ]
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_A'}
+                ]},
+                ifNoMatch: {component: 'func', capture: 'next'}
+            },
+            'N_EXPRESSION_LEVEL_1_C': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_A'}],
+                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_B'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_EXPRESSION_LEVEL_2': {
                 captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_B'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_C'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_3': {
@@ -339,9 +365,6 @@ define(function () {
             'N_FUNCTION_STATEMENT': {
                 components: ['T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
-            'N_FUNCTION_CALL': {
-                components: [{name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
-            },
             'N_IF_STATEMENT': {
                 components: ['T_IF', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'consequentStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/), {optionally: [(/else/), (/\{/), {name: 'alternateStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]}]
             },
@@ -374,7 +397,7 @@ define(function () {
                 components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_FUNCTION_CALL', 'N_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_STRING']}
             },
             'N_VARIABLE': {
                 components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]

@@ -31,7 +31,10 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: 'Test',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'Test'
+                        },
                         members: []
                     }]
                 }

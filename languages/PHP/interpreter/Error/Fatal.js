@@ -19,7 +19,8 @@ define([
 
     var MESSAGE_PREFIXES = {
             1: 'Unsupported operand types',
-            2: 'Call to undefined function ${name}()'
+            2: 'Call to undefined function ${name}()',
+            3: 'Class \'${name}\' not found'
         };
 
     function PHPFatalError(code, variables) {
@@ -30,7 +31,8 @@ define([
 
     util.extend(PHPFatalError, {
         UNSUPPORTED_OPERAND_TYPES: 1,
-        CALL_TO_UNDEFINED_FUNCTION: 2
+        CALL_TO_UNDEFINED_FUNCTION: 2,
+        CLASS_NOT_FOUND: 3
     });
 
     return PHPFatalError;

@@ -51,6 +51,9 @@ define([
                     case 'null':
                         representation = 'NULL';
                         break;
+                    case 'object':
+                        representation = 'object(' + value.getClassName() + ')#1 (0) {\n}';
+                        break;
                     case 'string':
                         string = value.get();
                         representation = 'string(' + string.length + ') "' + string + '"';

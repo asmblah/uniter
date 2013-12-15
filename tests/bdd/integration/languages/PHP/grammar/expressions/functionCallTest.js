@@ -34,7 +34,10 @@ define([
                         name: 'N_EXPRESSION_STATEMENT',
                         expression: {
                             name: 'N_FUNCTION_CALL',
-                            func: 'now',
+                            func: {
+                                name: 'N_STRING',
+                                string: 'now'
+                            },
                             args: []
                         }
                     }]
@@ -56,7 +59,10 @@ define([
                                 operator: '=',
                                 operand: {
                                     name: 'N_FUNCTION_CALL',
-                                    func: 'doSomething',
+                                    func: {
+                                        name: 'N_STRING',
+                                        string: 'doSomething'
+                                    },
                                     args: [{
                                         name: 'N_INTEGER',
                                         number: '1'

@@ -58,8 +58,8 @@ define([
         createNull: function () {
             return new NullValue(this);
         },
-        createObject: function (value) {
-            return new ObjectValue(this, value);
+        createObject: function (value, className) {
+            return new ObjectValue(this, value, className);
         },
         createString: function (value) {
             return new StringValue(this, value);

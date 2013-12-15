@@ -73,6 +73,12 @@ define([
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
+                createInstance: function (classNameValue) {
+                    var className = classNameValue.get(),
+                        object = new (namespace.getClass(className))();
+
+                    return valueFactory.createObject(object, className);
+                },
                 createKeyValuePair: function (key, value) {
                     return new KeyValuePair(key, value);
                 },
@@ -210,6 +216,9 @@ define([
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
+            'N_CLASS_STATEMENT': function (node, interpret) {
+                return 'namespace.defineClass(' + interpret(node.className) + '.get());';
+            },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().get());';
             },
@@ -345,7 +354,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return 'namespace.getFunction(' + JSON.stringify(node.func) + ')(' + args + ')';
+                return 'namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ')';
             },
             'N_IF_STATEMENT': function (node, interpret) {
                 var alternateCode = '',
@@ -381,6 +390,9 @@ define([
 
                 return 'tools.createList([' + elementsCodes.join(',') + '])';
             },
+            'N_NEW_EXPRESSION': function (node, interpret) {
+                return 'tools.createInstance(' + interpret(node.className) + ')';
+            },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
                     context = {
@@ -403,7 +415,7 @@ define([
                 case 'null':
                     return 'tools.valueFactory.createNull()';
                 default:
-                    throw new Exception('N_STRING - unsupported string ' + node.string);
+                    return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
                 }
             },
             'N_STRING_LITERAL': function (node) {

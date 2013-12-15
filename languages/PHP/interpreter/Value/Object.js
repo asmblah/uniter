@@ -19,8 +19,10 @@ define([
 ) {
     'use strict';
 
-    function ObjectValue(factory, value) {
+    function ObjectValue(factory, value, className) {
         Value.call(this, factory, 'object', value);
+
+        this.className = className;
     }
 
     util.inherit(ObjectValue).from(Value);
@@ -28,6 +30,10 @@ define([
     util.extend(ObjectValue.prototype, {
         coerceToKey: function (scopeChain) {
             scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+        },
+
+        getClassName: function () {
+            return this.className;
         }
     });
 
