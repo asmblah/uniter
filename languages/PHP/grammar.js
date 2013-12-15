@@ -205,22 +205,27 @@ define(function () {
              * Operator precedence: see http://php.net/manual/en/language.operators.precedence.php
              */
             // Precedence level 0 (highest) - single terms and bracketed expressions
-            'N_EXPRESSION_LEVEL_0': {
+            'N_EXPRESSION_LEVEL_0_A': {
                 components: [{oneOf: ['N_TERM', [(/\(/), 'N_EXPRESSION', (/\)/)]]}]
+            },
+            'N_EXPRESSION_LEVEL_0_B': {
+                captureAs: 'N_OBJECT_PROPERTY',
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_0_A'}, {optionally: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_0_A'}]}],
+                ifNoMatch: {component: 'property', capture: 'object'}
             },
             'N_EXPRESSION_LEVEL_1_A': {
                 captureAs: 'N_NEW_EXPRESSION',
                 components: {oneOf: [
                     [
                         {name: 'operator', what: 'T_NEW'},
-                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0'},
+                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0_B'},
                         {optionally: [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
                             (/\)/)
                         ]}
                     ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_0_B'}
                 ]},
                 ifNoMatch: {component: 'operator', capture: 'next'}
             },
