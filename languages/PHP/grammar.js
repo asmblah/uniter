@@ -177,7 +177,7 @@ define(function () {
             'T_YIELD': /yield\b/i,
 
             'N_ARRAY_INDEX': {
-                components: 'N_EXPRESSION_LEVEL_2'
+                components: 'N_EXPRESSION_LEVEL_2_A'
             },
             'N_ARRAY_LITERAL': {
                 components: ['T_ARRAY', (/\(/), {name: 'elements', zeroOrMoreOf: [{oneOf: ['N_KEY_VALUE_PAIR', 'N_EXPRESSION']}, {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
@@ -205,27 +205,22 @@ define(function () {
              * Operator precedence: see http://php.net/manual/en/language.operators.precedence.php
              */
             // Precedence level 0 (highest) - single terms and bracketed expressions
-            'N_EXPRESSION_LEVEL_0_A': {
+            'N_EXPRESSION_LEVEL_0': {
                 components: [{oneOf: ['N_TERM', [(/\(/), 'N_EXPRESSION', (/\)/)]]}]
-            },
-            'N_EXPRESSION_LEVEL_0_B': {
-                captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_0_A'}, {optionally: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_0_A'}]}],
-                ifNoMatch: {component: 'property', capture: 'object'}
             },
             'N_EXPRESSION_LEVEL_1_A': {
                 captureAs: 'N_NEW_EXPRESSION',
                 components: {oneOf: [
                     [
                         {name: 'operator', what: 'T_NEW'},
-                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0_B'},
+                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0'},
                         {optionally: [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
                             (/\)/)
                         ]}
                     ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_0_B'}
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
                 ]},
                 ifNoMatch: {component: 'operator', capture: 'next'}
             },
@@ -250,23 +245,28 @@ define(function () {
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
-            'N_EXPRESSION_LEVEL_2': {
+            'N_EXPRESSION_LEVEL_2_A': {
                 captureAs: 'N_ARRAY_INDEX',
                 components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_C'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
+            'N_EXPRESSION_LEVEL_2_B': {
+                captureAs: 'N_OBJECT_PROPERTY',
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {optionally: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_2_A'}]}],
+                ifNoMatch: {component: 'property', capture: 'object'}
+            },
             'N_EXPRESSION_LEVEL_3': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_B']
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },

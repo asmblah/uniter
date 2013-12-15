@@ -54,6 +54,45 @@ define([
                         }
                     }]
                 }
+            },
+            'assignment to statically referenced property of object stored at array index': {
+                code: '$anArray[3]->aProp = 6;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_ARRAY_INDEX',
+                                    array: {
+                                        name: 'N_VARIABLE',
+                                        variable: '$anArray'
+                                    },
+                                    indices: [{
+                                        index: {
+                                            name: 'N_INTEGER',
+                                            number: '3'
+                                        }
+                                    }]
+                                },
+                                property: {
+                                    name: 'N_STRING',
+                                    string: 'aProp'
+                                }
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '6'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
