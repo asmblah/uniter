@@ -76,6 +76,18 @@ EOS
                     expectedResult: false,
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'trying to advance internal pointer of variable containing integer': {
+                    code: util.heredoc(function (/*<<<EOS
+<?php
+    $notAnArray = 3;
+
+    return next($notAnArray);
+EOS
+*/) {}),
+                    expectedResult: null,
+                    expectedStderr: 'PHP Warning: next() expects parameter 1 to be array, integer given',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

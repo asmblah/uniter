@@ -21,7 +21,7 @@ define([
         var stdout = internals.stdout;
 
         return {
-            'var_dump': function (valueReference) {
+            'var_dump': function (scopeChain, valueReference) {
                 var isReference = (valueReference instanceof Variable),
                     value = isReference ? valueReference.get() : valueReference;
 

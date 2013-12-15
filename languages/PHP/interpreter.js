@@ -331,13 +331,15 @@ define([
                 // Add scope handling logic
                 body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
 
+                args.unshift('scopeChain');
+
                 // Build function expression
                 func = 'function (' + args.join(', ') + ') {' + body + '}';
 
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },
             'N_FUNCTION_CALL': function (node, interpret) {
-                var args = [];
+                var args = ['scopeChain'];
 
                 util.each(node.args, function (arg) {
                     args.push(interpret(arg));

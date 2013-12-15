@@ -9,8 +9,10 @@
 
 /*global define */
 define([
+    'languages/PHP/interpreter/Error',
     'languages/PHP/interpreter/Variable'
 ], function (
+    PHPError,
     Variable
 ) {
     'use strict';
@@ -19,7 +21,7 @@ define([
         var valueFactory = internals.valueFactory;
 
         return {
-            'current': function (arrayReference) {
+            'current': function (scopeChain, arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.get() : arrayReference;
 
@@ -29,9 +31,14 @@ define([
 
                 return arrayValue.getCurrentElement();
             },
-            'next': function (arrayReference) {
+            'next': function (scopeChain, arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.get() : arrayReference;
+
+                if (arrayValue.getType() !== 'array') {
+                    scopeChain.raiseError(PHPError.E_WARNING, 'next() expects parameter 1 to be array, ' + arrayValue.getType() + ' given');
+                    return valueFactory.createNull();
+                }
 
                 arrayValue.setPointer(arrayValue.getPointer() + 1);
 
