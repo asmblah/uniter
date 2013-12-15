@@ -26,15 +26,17 @@ define([
                     value = isReference ? valueReference.get() : valueReference;
 
                 function dump(value) {
-                    var representation,
-                        string;
+                    var nativeValue,
+                        representation;
 
                     switch (value.getType()) {
                     case 'array':
                         representation = 'array(' + value.getLength() + ') {\n';
 
-                        util.each(value.get(), function (value, key) {
-                            representation += '  [' + key + ']=>\n  ' + dump(value);
+                        nativeValue = value.get();
+
+                        util.each(Object.keys(nativeValue), function (key) {
+                            representation += '  [' + key + ']=>\n  ' + dump(nativeValue[key]);
                         });
 
                         representation += '}';
@@ -55,8 +57,8 @@ define([
                         representation = 'object(' + value.getClassName() + ')#1 (0) {\n}';
                         break;
                     case 'string':
-                        string = value.get();
-                        representation = 'string(' + string.length + ') "' + string + '"';
+                        nativeValue = value.get();
+                        representation = 'string(' + nativeValue.length + ') "' + nativeValue + '"';
                         break;
                     }
 

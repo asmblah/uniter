@@ -56,6 +56,17 @@ EOS
 */) {})
             },
             {
+                value: 'array(4 => "a")',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [4]=>
+  string(1) "a"
+}
+
+EOS
+*/) {})
+            },
+            {
                 value: 'true',
                 expectedStdout: 'bool(true)\n'
             },
