@@ -81,6 +81,7 @@ define({
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
             'bdd/integration/languages/PHP/grammar/expressions/nullTest',
+            'bdd/integration/languages/PHP/grammar/expressions/printTest',
             'bdd/integration/languages/PHP/grammar/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/grammar/operators/newTest',
             'bdd/integration/languages/PHP/grammar/operators/objectAccessTest',

@@ -272,7 +272,7 @@ define(function () {
             },
             'N_EXPRESSION_LEVEL_4': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', optionally: 'T_INSTANCEOF'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: 'T_INSTANCEOF'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_5': {
@@ -341,13 +341,26 @@ define(function () {
                 components: [{name: 'condition', what: 'N_EXPRESSION_LEVEL_15'}, {name: 'options', zeroOrMoreOf: [(/\?/), {name: 'consequent', what: 'N_EXPRESSION_LEVEL_15'}, (/:/), {name: 'alternate', what: 'N_EXPRESSION_LEVEL_15'}]}],
                 ifNoMatch: {component: 'options', capture: 'condition'}
             },
-            'N_EXPRESSION_LEVEL_17': {
+            'N_EXPRESSION_LEVEL_17_A': {
                 captureAs: 'N_EXPRESSION',
                 components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_16'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_16'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
+            'N_EXPRESSION_LEVEL_17_B': {
+                captureAs: 'N_PRINT_EXPRESSION',
+                components: {oneOf: [
+                    [
+                        'T_PRINT',
+                        {name: 'operand', what: 'N_EXPRESSION_LEVEL_17_A'},
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_17_A'}
+                ]},
+                ifNoMatch: {component: 'operand', capture: 'next'}
+            },
             'N_EXPRESSION_LEVEL_18': {
-                components: 'N_EXPRESSION_LEVEL_17'
+                captureAs: 'N_EXPRESSION',
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_17_B'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: 'T_LOGICAL_AND'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_17_B'}]}],
+                ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_19': {
                 components: 'N_EXPRESSION_LEVEL_18'
