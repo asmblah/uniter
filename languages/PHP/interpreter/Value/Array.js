@@ -27,7 +27,7 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function ArrayValue(factory, value) {
+    function ArrayValue(factory, value, type) {
         var elements = [];
 
         util.each(value, function (element) {
@@ -38,7 +38,7 @@ define([
             }
         });
 
-        Value.call(this, factory, 'array', elements);
+        Value.call(this, factory, type || 'array', elements);
 
         this.pointer = 0;
     }
@@ -116,7 +116,7 @@ define([
             keyValue = key.get();
 
             if (!hasOwn.call(value.value, keyValue)) {
-                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined offset: ' + keyValue);
+                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(keyValue));
                 return value.factory.createNull();
             }
 
@@ -176,6 +176,10 @@ define([
 
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        referToElement: function (key) {
+            return 'offset: ' + key;
         },
 
         reset: function () {

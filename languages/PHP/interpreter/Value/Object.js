@@ -10,26 +10,24 @@
 /*global define */
 define([
     'js/util',
+    './Array',
     '../Reference/ObjectProperty',
-    '../Error',
-    '../Value'
+    '../Error'
 ], function (
     util,
+    ArrayValue,
     ObjectPropertyReference,
-    PHPError,
-    Value
+    PHPError
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
-
     function ObjectValue(factory, value, className) {
-        Value.call(this, factory, 'object', value);
+        ArrayValue.call(this, factory, value, 'object');
 
         this.className = className;
     }
 
-    util.inherit(ObjectValue).from(Value);
+    util.inherit(ObjectValue).from(ArrayValue);
 
     util.extend(ObjectValue.prototype, {
         coerceToKey: function (scopeChain) {
@@ -40,41 +38,8 @@ define([
             return this.className;
         },
 
-        getPropertyByKey: function (key, scopeChain) {
-            var keyValue,
-                value = this;
-
-            key = key.coerceToKey(scopeChain);
-
-            if (!key) {
-                // Could not be coerced to a key: error will already have been handled, just return NULL
-                return value.factory.createNull();
-            }
-
-            keyValue = key.get();
-
-            if (!hasOwn.call(value.value, keyValue)) {
-                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined property: ' + value.className + '::$' + keyValue);
-                return value.factory.createNull();
-            }
-
-            return value.value[keyValue];
-        },
-
-        getPropertyReferenceByKey: function (key, scopeChain) {
-            var keyValue,
-                value = this;
-
-            key = key.coerceToKey(scopeChain);
-
-            if (!key) {
-                // Could not be coerced to a key: error will already have been handled, just return NULL
-                return value.factory.createNull();
-            }
-
-            keyValue = key.get();
-
-            return new ObjectPropertyReference(value, value.value, keyValue);
+        referToElement: function (key) {
+            return 'property: ' + this.className + '::$' + key;
         }
     });
 

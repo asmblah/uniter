@@ -397,7 +397,7 @@ define([
                     methodSuffix = 'Reference';
                 }
 
-                return interpret(node.object, {getValue: true}) + '.getProperty' + methodSuffix + 'ByKey(' + interpret(node.property) + ', scopeChain)';
+                return interpret(node.object, {getValue: true}) + '.getElement' + methodSuffix + 'ByKey(' + interpret(node.property) + ', scopeChain)';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',

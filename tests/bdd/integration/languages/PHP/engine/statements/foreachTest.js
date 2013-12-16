@@ -125,6 +125,39 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'foreach statement over object with one public, visible property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new stdClass;
+
+    $object->aProp = 4;
+
+    foreach ($object as $prop => $value) {
+        echo $prop . '=' . $value . ',';
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'aProp=4,'
+            },
+            'foreach statement over object with two public, visible properties': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new stdClass;
+
+    $object->oneProp = 5;
+    $object->anotherProp = 6;
+
+    foreach ($object as $prop => $value) {
+        echo $prop . '=' . $value . ',';
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'oneProp=5,anotherProp=6,'
             }
         }, function (scenario, description) {
             describe(description, function () {
