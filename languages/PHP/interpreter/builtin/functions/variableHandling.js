@@ -25,57 +25,59 @@ define([
                 var isReference = (valueReference instanceof Variable),
                     value = isReference ? valueReference.get() : valueReference;
 
-                function dump(value) {
-                    var nativeValue,
+                function dump(value, depth) {
+                    var currentIndentation = new Array(depth).join('  '),
+                        nativeValue,
+                        nextIndentation = new Array(depth + 1).join('  '),
                         properties,
-                        representation;
+                        representation = currentIndentation;
 
                     switch (value.getType()) {
                     case 'array':
-                        representation = 'array(' + value.getLength() + ') {\n';
+                        representation += 'array(' + value.getLength() + ') {\n';
 
                         nativeValue = value.get();
 
                         util.each(Object.keys(nativeValue), function (key) {
-                            representation += '  [' + key + ']=>\n  ' + dump(nativeValue[key]);
+                            representation += nextIndentation + '[' + key + ']=>\n' + dump(nativeValue[key], depth + 1);
                         });
 
-                        representation += '}';
+                        representation += currentIndentation + '}';
                         break;
                     case 'boolean':
-                        representation = 'bool(' + (value.get() ? 'true' : 'false') + ')';
+                        representation += 'bool(' + (value.get() ? 'true' : 'false') + ')';
                         break;
                     case 'float':
-                        representation = 'float(' + value.get() + ')';
+                        representation += 'float(' + value.get() + ')';
                         break;
                     case 'integer':
-                        representation = 'int(' + value.get() + ')';
+                        representation += 'int(' + value.get() + ')';
                         break;
                     case 'null':
-                        representation = 'NULL';
+                        representation += 'NULL';
                         break;
                     case 'object':
                         nativeValue = value.get();
                         properties = Object.keys(nativeValue);
 
-                        representation = 'object(' + value.getClassName() + ')#1 (' + properties.length + ') {\n';
+                        representation += 'object(' + value.getClassName() + ')#1 (' + properties.length + ') {\n';
 
                         util.each(properties, function (property) {
-                            representation += '  [' + JSON.stringify(property) + ']=>\n  ' + dump(nativeValue[property]);
+                            representation += nextIndentation + '[' + JSON.stringify(property) + ']=>\n' + dump(nativeValue[property], depth + 1);
                         });
 
-                        representation += '}';
+                        representation += currentIndentation + '}';
                         break;
                     case 'string':
                         nativeValue = value.get();
-                        representation = 'string(' + nativeValue.length + ') "' + nativeValue + '"';
+                        representation += 'string(' + nativeValue.length + ') "' + nativeValue + '"';
                         break;
                     }
 
                     return representation + '\n';
                 }
 
-                stdout.write(dump(value));
+                stdout.write(dump(value, 1));
             }
         };
     };

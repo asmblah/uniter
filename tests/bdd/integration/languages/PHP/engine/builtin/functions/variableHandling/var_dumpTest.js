@@ -67,6 +67,22 @@ EOS
 */) {})
             },
             {
+                value: 'array(5 => array(6, 7))',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [5]=>
+  array(2) {
+    [0]=>
+    int(6)
+    [1]=>
+    int(7)
+  }
+}
+
+EOS
+*/) {})
+            },
+            {
                 value: 'true',
                 expectedStdout: 'bool(true)\n'
             },
