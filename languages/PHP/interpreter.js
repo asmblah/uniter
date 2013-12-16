@@ -391,13 +391,24 @@ define([
                 return 'tools.createInstance(' + interpret(node.className) + ')';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
-                var methodSuffix = '';
+                var methodSuffix = '',
+                    objectVariableCode,
+                    propertyCode = '';
 
                 if (context.assignment) {
                     methodSuffix = 'Reference';
+                    objectVariableCode = 'tools.implyArray(' + interpret(node.object, {getValue: false}) + ')';
+                } else {
+                    objectVariableCode = interpret(node.object, {getValue: true});
                 }
 
-                return interpret(node.object, {getValue: true}) + '.getElement' + methodSuffix + 'ByKey(' + interpret(node.property) + ', scopeChain)';
+                util.each(node.properties, function (property, index) {
+                    var keyValue = interpret(property.property, {assignment: false, getValue: false});
+
+                    propertyCode += '.getElement' + (index === node.properties.length - 1 ? methodSuffix : '') + 'ByKey(' + keyValue + ', scopeChain)';
+                });
+
+                return objectVariableCode + propertyCode;
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',

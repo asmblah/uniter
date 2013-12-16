@@ -21,10 +21,11 @@ define([
 ) {
     'use strict';
 
-    function ObjectValue(factory, value, className) {
+    function ObjectValue(factory, value, className, id) {
         ArrayValue.call(this, factory, value, 'object');
 
         this.className = className;
+        this.id = id;
     }
 
     util.inherit(ObjectValue).from(ArrayValue);
@@ -36,6 +37,10 @@ define([
 
         getClassName: function () {
             return this.className;
+        },
+
+        getID: function () {
+            return this.id;
         },
 
         referToElement: function (key) {

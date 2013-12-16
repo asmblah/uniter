@@ -39,10 +39,12 @@ define([
                                     name: 'N_VARIABLE',
                                     variable: '$anObject'
                                 },
-                                property: {
-                                    name: 'N_STRING',
-                                    string: 'prop'
-                                }
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop'
+                                    }
+                                }]
                             },
                             right: [{
                                 operator: '=',
@@ -78,10 +80,12 @@ define([
                                         }
                                     }]
                                 },
-                                property: {
-                                    name: 'N_STRING',
-                                    string: 'aProp'
-                                }
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'aProp'
+                                    }
+                                }]
                             },
                             right: [{
                                 operator: '=',
@@ -108,16 +112,55 @@ define([
                                     name: 'N_VARIABLE',
                                     variable: '$anObject'
                                 },
-                                property: {
-                                    name: 'N_VARIABLE',
-                                    variable: '$propName'
-                                }
+                                properties: [{
+                                    property: {
+                                        name: 'N_VARIABLE',
+                                        variable: '$propName'
+                                    }
+                                }]
                             },
                             right: [{
                                 operator: '=',
                                 operand: {
                                     name: 'N_INTEGER',
                                     number: '4'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'assignment to statically referenced property of statically referenced property': {
+                code: '$anObject->prop1->prop2 = 3;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$anObject'
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop1'
+                                    }
+                                }, {
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop2'
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
                                 }
                             }]
                         }

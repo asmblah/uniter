@@ -30,7 +30,7 @@ define([
     'use strict';
 
     function ValueFactory() {
-
+        this.nextObjectID = 1;
     }
 
     util.extend(ValueFactory.prototype, {
@@ -59,7 +59,10 @@ define([
             return new NullValue(this);
         },
         createObject: function (value, className) {
-            return new ObjectValue(this, value, className);
+            var factory = this;
+
+            // Object ID tracking is incomplete: ID should be freed when all references are lost
+            return new ObjectValue(factory, value, className, factory.nextObjectID++);
         },
         createString: function (value) {
             return new StringValue(this, value);

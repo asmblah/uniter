@@ -252,8 +252,8 @@ define(function () {
             },
             'N_EXPRESSION_LEVEL_2_B': {
                 captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {optionally: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_2_A'}]}],
-                ifNoMatch: {component: 'property', capture: 'object'}
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_2_A'}]}],
+                ifNoMatch: {component: 'properties', capture: 'object'}
             },
             'N_EXPRESSION_LEVEL_3': {
                 oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_B']

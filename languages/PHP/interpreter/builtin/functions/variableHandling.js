@@ -60,7 +60,7 @@ define([
                         nativeValue = value.get();
                         properties = Object.keys(nativeValue);
 
-                        representation += 'object(' + value.getClassName() + ')#1 (' + properties.length + ') {\n';
+                        representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + properties.length + ') {\n';
 
                         util.each(properties, function (property) {
                             representation += nextIndentation + '[' + JSON.stringify(property) + ']=>\n' + dump(nativeValue[property], depth + 1);
