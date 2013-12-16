@@ -37,7 +37,7 @@ define([
                 return null;
             }
 
-            util.extend(match.components, rule.options);
+            util.copy(match.components, rule.options);
 
             if (rule.ifNoMatch && (!(component = match.components[rule.ifNoMatch.component]) || component.length === 0)) {
                 match = {

@@ -59,7 +59,7 @@ define([
                         };
                         util.each(subMatch.components, function (value) {
                             if (util.isPlainObject(value)) {
-                                util.extend(match.components, value);
+                                util.copy(match.components, value);
                             }
                         });
                     }

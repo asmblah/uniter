@@ -17,16 +17,27 @@ define([
 ) {
     'use strict';
 
-    var inheritFrom = Object.create || function (from) {
-        function F() {}
-        F.prototype = from;
-        return new F();
-    },
+    var hasOwn = {}.hasOwnProperty,
+        inheritFrom = Object.create || function (from) {
+            function F() {}
+            F.prototype = from;
+            return new F();
+        },
         toString = {}.toString,
         util = inheritFrom(modular.util),
         Promise;
 
     return util.extend(util, {
+        copy: function (to, from) {
+            var key;
+
+            for (key in from) {
+                if (hasOwn.call(from, key)) {
+                    to[key] = from[key];
+                }
+            }
+        },
+
         from: function (from) {
             return {
                 to: function (to, callback) {
