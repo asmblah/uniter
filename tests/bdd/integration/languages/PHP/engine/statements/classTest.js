@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -53,6 +55,41 @@ object(Test)#1 (0) {
 
 EOS
 */) {})
+            },
+            // Test for pre-hoisting
+            'instantiating a class before its definition outside of any blocks eg. conditionals': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    var_dump(new FunTime);
+
+    class FunTime {}
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(FunTime)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
+            'instantiating a class before its definition where definition is inside of a conditional': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    var_dump(new FunTime);
+
+    if (true) {
+        class FunTime {}
+    }
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'FunTime' not found$/
+                },
+                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+                expectedStdout: ''
             }
         }, function (scenario) {
             check(scenario);

@@ -169,7 +169,7 @@ define([
             nonDeclarations = [];
 
         util.each(statements, function (statement) {
-            if (statement.name === 'N_FUNCTION_STATEMENT') {
+            if (/^N_(CLASS|FUNCTION)_STATEMENT$/.test(statement.name)) {
                 declarations.push(statement);
             } else {
                 nonDeclarations.push(statement);

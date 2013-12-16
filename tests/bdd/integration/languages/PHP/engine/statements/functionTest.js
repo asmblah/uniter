@@ -55,6 +55,7 @@ define([
                 expectedStderr: 'PHP Notice: Undefined variable: $a',
                 expectedStdout: ''
             },
+            // Test for pre-hoisting
             'calling a function before its definition outside of any blocks eg. conditionals': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
