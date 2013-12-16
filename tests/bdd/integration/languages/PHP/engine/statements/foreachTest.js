@@ -34,9 +34,8 @@ define([
             engine = phpTools.createEngine();
         });
 
-        util.each([
-            {
-                // Simple foreach statement over array with 3 values
+        util.each({
+            'simple foreach statement over array with 3 values': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     foreach (array("hello", "goodbye") as $index => $word) {
@@ -47,8 +46,8 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '0 is hello\n1 is goodbye\n'
-            }, {
-                // Nested foreach statement
+            },
+            'nested foreach statement': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     foreach (array("A", "B") as $index => $outer) {
@@ -68,9 +67,9 @@ EOS
 
 EOS
 */) {})
-            }, {
-                // Nested foreach statement over same array
-                // - Arrays must be copied for this to work correctly with internal pointer
+            },
+            'nested foreach statement over same array': {
+                // Arrays must be copied for this to work correctly with internal pointer
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $array = array("A", "B");
@@ -92,8 +91,8 @@ EOS
 
 EOS
 */) {})
-            }, {
-                // Ensure that array is not modified when value is not by reference
+            },
+            'ensure that array is not modified when value is not by reference': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $array = array('A', 'B');
@@ -109,8 +108,8 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
-            }, {
-                // Ensure that array is modified when value is by reference
+            },
+            'ensure that array is modified when value is by reference': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $array = array('A', 'B');
@@ -127,8 +126,10 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             }
-        ], function (scenario) {
-            check(scenario);
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });
