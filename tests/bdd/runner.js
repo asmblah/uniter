@@ -67,6 +67,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/assignmentTest',
             'bdd/integration/languages/PHP/engine/operators/bitwiseTest',
             'bdd/integration/languages/PHP/engine/operators/newTest',
+            'bdd/integration/languages/PHP/engine/operators/objectAccessTest',
             'bdd/integration/languages/PHP/engine/operators/ternaryTest',
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/statements/classTest',

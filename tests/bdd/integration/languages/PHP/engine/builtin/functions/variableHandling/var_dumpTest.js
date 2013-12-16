@@ -87,6 +87,26 @@ EOS
                 expectedStdout: 'NULL\n'
             },
             {
+                value: 'new stdClass',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
+            {
+                value: 'new stdClass; $value->prop = 1',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (1) {
+  ["prop"]=>
+  int(1)
+}
+
+EOS
+*/) {})
+            },
+            {
                 value: '"world"',
                 expectedStdout: 'string(5) "world"\n'
             }

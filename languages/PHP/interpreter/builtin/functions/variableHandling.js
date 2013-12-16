@@ -27,6 +27,7 @@ define([
 
                 function dump(value) {
                     var nativeValue,
+                        properties,
                         representation;
 
                     switch (value.getType()) {
@@ -54,7 +55,16 @@ define([
                         representation = 'NULL';
                         break;
                     case 'object':
-                        representation = 'object(' + value.getClassName() + ')#1 (0) {\n}';
+                        nativeValue = value.get();
+                        properties = Object.keys(nativeValue);
+
+                        representation = 'object(' + value.getClassName() + ')#1 (' + properties.length + ') {\n';
+
+                        util.each(properties, function (property) {
+                            representation += '  [' + JSON.stringify(property) + ']=>\n  ' + dump(nativeValue[property]);
+                        });
+
+                        representation += '}';
                         break;
                     case 'string':
                         nativeValue = value.get();

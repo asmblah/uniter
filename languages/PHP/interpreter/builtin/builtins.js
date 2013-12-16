@@ -10,15 +10,22 @@
 /*global define */
 define([
     './functions/array',
+    './classes/stdClass',
     './functions/variableHandling'
 ], function (
     arrayFunctions,
+    stdClass,
     variableHandlingFunctions
 ) {
     'use strict';
 
-    return [
-        arrayFunctions,
-        variableHandlingFunctions
-    ];
+    return {
+        classes: {
+            'stdClass': stdClass
+        },
+        functionGroups: [
+            arrayFunctions,
+            variableHandlingFunctions
+        ]
+    };
 });

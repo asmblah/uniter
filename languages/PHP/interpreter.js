@@ -24,7 +24,7 @@ define([
     './interpreter/Scope',
     './interpreter/ScopeChain'
 ], function (
-    builtinGroups,
+    builtinTypes,
     util,
     Exception,
     KeyValuePair,
@@ -66,8 +66,7 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        var builtins = {},
-            namespace,
+        var namespace,
             namespaceCollection = state.getNamespaceCollection(),
             valueFactory = state.getValueFactory(),
             result,
@@ -84,9 +83,6 @@ define([
                 },
                 createList: function (elements) {
                     return new List(elements);
-                },
-                getBuiltin: function (name) {
-                    return builtins[name];
                 },
                 implyArray: function (variable) {
                     if (variable.get().getNative() === null) {
@@ -111,25 +107,26 @@ define([
 
         scopeChain.push(state.getGlobalScope());
 
-        code = (function () {
-            var builtinDeclarationsCode = '',
-                internals = {
+        (function () {
+            var internals = {
                     stdout: stdout,
                     valueFactory: valueFactory
                 };
 
-            util.each(builtinGroups, function (groupFactory) {
+            util.each(builtinTypes.functionGroups, function (groupFactory) {
                 var groupBuiltins = groupFactory(internals);
 
                 util.each(groupBuiltins, function (fn, name) {
-                    builtinDeclarationsCode += 'namespace.defineFunction(' + JSON.stringify(name) + ', tools.getBuiltin(' + JSON.stringify(name) + '));';
+                    namespace.defineFunction(name, fn);
                 });
-
-                util.extend(builtins, groupBuiltins);
             });
 
-            return builtinDeclarationsCode;
-        }()) + code;
+            util.each(builtinTypes.classes, function (classFactory, name) {
+                var Class = classFactory(internals);
+
+                namespace.defineClass(name);
+            });
+        }());
 
         if (getKeys(context.localVariableNames).length > 0) {
             code = 'scopeChain.getCurrent().defineVariables(["' + getKeys(context.localVariableNames).join('", "') + '"]);' + code;
@@ -392,6 +389,15 @@ define([
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 return 'tools.createInstance(' + interpret(node.className) + ')';
+            },
+            'N_OBJECT_PROPERTY': function (node, interpret, context) {
+                var methodSuffix = '';
+
+                if (context.assignment) {
+                    methodSuffix = 'Reference';
+                }
+
+                return interpret(node.object, {getValue: true}) + '.getProperty' + methodSuffix + 'ByKey(' + interpret(node.property) + ', scopeChain)';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
