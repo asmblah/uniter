@@ -26,10 +26,10 @@ define([
     }
 
     util.extend(Namespace.prototype, {
-        defineClass: function (name) {
+        defineClass: function (name, Class) {
             var namespace = this;
 
-            namespace.classes[name] = function () {};
+            namespace.classes[name] = Class;
         },
 
         defineFunction: function (name, func) {

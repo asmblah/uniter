@@ -186,7 +186,7 @@ define(function () {
                 components: {name: 'bool', what: (/true|false/i)}
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: [{what: (/(?!)/)}]}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: 'N_PROPERTY_DEFINITION'}, (/\}/)]
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
@@ -401,6 +401,9 @@ define(function () {
             },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
+            },
+            'N_PROPERTY_DEFINITION': {
+                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, {name: 'variable', what: 'N_VARIABLE'}, {optionally: [(/=/), {name: 'value', what: 'N_TERM'}]}, (/;/)]
             },
             'N_RETURN_STATEMENT': {
                 components: ['T_RETURN', {name: 'expression', optionally: 'N_EXPRESSION'}, (/;/)]

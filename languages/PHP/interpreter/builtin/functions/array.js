@@ -23,17 +23,17 @@ define([
         return {
             'current': function (scopeChain, arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
-                    arrayValue = isReference ? arrayReference.get() : arrayReference;
+                    arrayValue = isReference ? arrayReference.getValue() : arrayReference;
 
                 if (arrayValue.getPointer() >= arrayValue.getLength()) {
                     return valueFactory.createBoolean(false);
                 }
 
-                return arrayValue.getCurrentElement();
+                return arrayValue.getCurrentElement().getValue(scopeChain);
             },
             'next': function (scopeChain, arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
-                    arrayValue = isReference ? arrayReference.get() : arrayReference;
+                    arrayValue = isReference ? arrayReference.getValue() : arrayReference;
 
                 if (arrayValue.getType() !== 'array') {
                     scopeChain.raiseError(PHPError.E_WARNING, 'next() expects parameter 1 to be array, ' + arrayValue.getType() + ' given');
@@ -46,7 +46,7 @@ define([
                     return valueFactory.createBoolean(false);
                 }
 
-                return arrayValue.getCurrentElement();
+                return arrayValue.getCurrentElement().getValue(scopeChain);
             }
         };
     };

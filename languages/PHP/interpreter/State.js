@@ -11,11 +11,13 @@
 define([
     'js/util',
     './Collection/Namespace',
+    './ReferenceFactory',
     './Scope',
     './ValueFactory'
 ], function (
     util,
     NamespaceCollection,
+    ReferenceFactory,
     Scope,
     ValueFactory
 ) {
@@ -26,6 +28,7 @@ define([
 
         this.globalScope = new Scope(valueFactory);
         this.namespaceCollection = new NamespaceCollection();
+        this.referenceFactory = new ReferenceFactory(valueFactory);
         this.valueFactory = valueFactory;
     }
 
@@ -36,6 +39,10 @@ define([
 
         getNamespaceCollection: function () {
             return this.namespaceCollection;
+        },
+
+        getReferenceFactory: function () {
+            return this.referenceFactory;
         },
 
         getValueFactory: function () {

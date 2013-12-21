@@ -15,17 +15,24 @@ define([
 ) {
     'use strict';
 
-    function NullReference() {
+    function NullReference(valueFactory, options) {
+        options = options || {};
 
+        this.onSet = options.onSet;
+        this.valueFactory = valueFactory;
     }
 
     util.extend(NullReference.prototype, {
-        get: function () {
-
+        getValue: function () {
+            return this.valueFactory.createNull();
         },
 
-        set: function () {
+        setValue: function () {
+            var reference = this;
 
+            if (reference.onSet) {
+                reference.onSet();
+            }
         }
     });
 

@@ -90,6 +90,27 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
                 expectedStdout: ''
+            },
+            'class with one public property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class OnePub {
+        public $prop = 'ok';
+    }
+
+    var_dump(new OnePub);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(OnePub)#1 (1) {
+  ["prop"]=>
+  string(2) "ok"
+}
+
+EOS
+*/) {})
             }
         }, function (scenario) {
             check(scenario);

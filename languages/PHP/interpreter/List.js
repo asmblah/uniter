@@ -20,24 +20,16 @@ define([
     }
 
     util.extend(List.prototype, {
-        set: function (value) {
-            var arrayElements,
-                list = this,
-                listElements = list.elements,
-                index,
-                length;
+        setValue: function (value) {
+            var listElements = this.elements;
 
             if (value.getType() !== 'array') {
                 throw new Error('Unsupported');
             }
 
-            arrayElements = value.get();
-
-            for (index = 0, length = listElements.length; index < length; index++) {
-                if (listElements[index]) {
-                    listElements[index].set(arrayElements[index]);
-                }
-            }
+            util.each(listElements, function (reference, index) {
+                reference.setValue(value.getElementByIndex(index).getValue());
+            });
 
             return value;
         }

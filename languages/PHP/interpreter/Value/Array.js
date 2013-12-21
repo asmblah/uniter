@@ -10,15 +10,17 @@
 /*global define */
 define([
     'js/util',
-    '../Reference/ArrayElement',
+    '../Reference/Element',
     '../KeyValuePair',
+    '../Reference/Null',
     '../Error',
     '../Error/Fatal',
     '../Value'
 ], function (
     util,
-    ArrayElementReference,
+    ElementReference,
     KeyValuePair,
+    NullReference,
     PHPError,
     PHPFatalError,
     Value
@@ -27,19 +29,32 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function ArrayValue(factory, value, type) {
-        var elements = [];
+    function ArrayValue(factory, orderedElements, type) {
+        var elements = [],
+            keysToElements = [],
+            value = this;
 
-        util.each(value, function (element) {
+        util.each(orderedElements, function (element, key) {
             if (element instanceof KeyValuePair) {
-                elements[element.getKey().getNative()] = element.getValue();
+                key = element.getKey();
+                element = element.getValue();
             } else {
-                elements.push(element);
+                if (util.isNumber(key)) {
+                    key = factory.createInteger(keysToElements.length);
+                } else {
+                    key = factory.createFromNative(key);
+                }
             }
+
+            element = new ElementReference(factory, value, key, element);
+
+            elements.push(element);
+            keysToElements[key.getNative()] = element;
         });
 
         Value.call(this, factory, type || 'array', elements);
 
+        this.keysToElements = keysToElements;
         this.pointer = 0;
     }
 
@@ -48,9 +63,14 @@ define([
     util.extend(ArrayValue.prototype, {
         clone: function () {
             var arrayValue,
+                orderedElements,
                 value = this;
 
-            arrayValue = value.factory.createArray(value.value.slice());
+            util.each(value.value, function (element, index) {
+                orderedElements[index] = element.clone();
+            });
+
+            arrayValue = value.factory.createArray(orderedElements);
             arrayValue.pointer = value.pointer;
 
             return arrayValue;
@@ -80,11 +100,21 @@ define([
             return this.factory.createString('Array');
         },
 
+        getKeys: function () {
+            var keys = [];
+
+            util.each(this.value, function (element) {
+                keys.push(element.getKey());
+            });
+
+            return keys;
+        },
+
         getNative: function () {
             var result = [];
 
-            util.each(this.value, function (value) {
-                result.push(value.get());
+            util.each(this.value, function (element) {
+                result[element.getKey().getNative()] = element.getValue().getNative();
             });
 
             return result;
@@ -93,77 +123,46 @@ define([
         getCurrentElement: function () {
             var value = this;
 
-            return value.value[Object.keys(value.value)[value.pointer]] || value.factory.createNull();
-        },
-
-        getCurrentElementReference: function () {
-            var value = this;
-
-            return new ArrayElementReference(value, value.value, value.pointer);
+            return value.value[value.pointer] || value.factory.createNull();
         },
 
         getElementByKey: function (key, scopeChain) {
-            var keyValue,
+            var element,
+                keyValue,
                 value = this;
 
             key = key.coerceToKey(scopeChain);
 
             if (!key) {
                 // Could not be coerced to a key: error will already have been handled, just return NULL
-                return value.factory.createNull();
+                return new NullReference(value.factory);
             }
 
-            keyValue = key.get();
+            keyValue = key.getNative();
 
-            if (!hasOwn.call(value.value, keyValue)) {
-                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(keyValue));
-                return value.factory.createNull();
+            if (!hasOwn.call(value.keysToElements, keyValue)) {
+                element = new ElementReference(value.factory, value, key, null);
+
+                value.value.push(element);
+                value.keysToElements[keyValue] = element;
             }
 
-            return value.value[keyValue];
+            return value.keysToElements[keyValue];
         },
 
         getElementByIndex: function (index) {
-            var value = this,
-                keyValue = Object.keys(value.value)[index];
-
-            return value.value[keyValue];
-        },
-
-        getElementReferenceByKey: function (key, scopeChain) {
-            var keyValue,
-                value = this;
-
-            key = key.coerceToKey(scopeChain);
-
-            if (!key) {
-                // Could not be coerced to a key: error will already have been handled, just return NULL
-                return value.factory.createNull();
-            }
-
-            keyValue = key.get();
-
-            return new ArrayElementReference(value, value.value, keyValue);
-        },
-
-        getElementReferenceByIndex: function (index) {
-            var value = this,
-                keyValue = Object.keys(value.value)[index];
-
-            return new ArrayElementReference(value, value.value, keyValue);
+            return this.value[index] || (function () { throw new Error('Test me!'); }());
         },
 
         getKeyByIndex: function (index) {
             var value = this,
-                keyValue = Object.keys(value.value)[index];
+                element = value.value[index];
 
-            return value.factory.createFromNative(keyValue);
+            return element ? element.key : null;
         },
 
         getLength: function () {
-            var value = this;
-
-            return Object.keys(value.value).length;
+            return this.value.length;
         },
 
         getPointer: function () {

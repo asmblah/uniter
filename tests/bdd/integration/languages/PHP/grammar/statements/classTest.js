@@ -26,7 +26,7 @@ define([
 
         util.each({
             'empty class that does not extend or implement': {
-                code: 'class Test {}',
+                code: '<?php class Test {}',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -38,15 +38,45 @@ define([
                         members: []
                     }]
                 }
+            },
+            'class with one public property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class OnePub {
+        public $aPublicProp = 'yep';
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'OnePub'
+                        },
+                        members: [{
+                            name: 'N_PROPERTY_DEFINITION',
+                            visibility: 'public',
+                            type: '',
+                            variable: {
+                                name: 'N_VARIABLE',
+                                variable: '$aPublicProp'
+                            },
+                            value: {
+                                name: 'N_STRING_LITERAL',
+                                string: 'yep'
+                            }
+                        }]
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
-                var code = '<?php ' + scenario.code;
-
                 // Pretty-print the code strings so any non-printable characters are readable
-                describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
+                describe('when the code is ' + JSON.stringify(scenario.code) + ' ?>', function () {
                     it('should return the expected AST', function () {
-                        expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                        expect(parser.parse(scenario.code)).to.deep.equal(scenario.expectedAST);
                     });
                 });
             });

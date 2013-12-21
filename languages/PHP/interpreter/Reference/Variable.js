@@ -20,12 +20,12 @@ define([
     }
 
     util.extend(VariableReference.prototype, {
-        get: function () {
-            return this.variable.get();
+        getValue: function () {
+            return this.variable.getValue();
         },
 
-        set: function (value) {
-            this.variable.set(value);
+        setValue: function (value) {
+            this.variable.setValue(value);
         }
     });
 

@@ -49,7 +49,10 @@ define([
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',
             '!==': 'isNotIdenticalTo',
-            '=': 'set'
+            '=': {
+                'false': 'setValue',
+                'true': 'setReference'
+            }
         },
         unaryOperatorToMethod = {
             prefix: {
@@ -69,11 +72,23 @@ define([
         var namespace,
             namespaceCollection = state.getNamespaceCollection(),
             valueFactory = state.getValueFactory(),
+            referenceFactory = state.getReferenceFactory(),
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
+                createClass: function (definition) {
+                    function Class() {
+                        var instance = this;
+
+                        util.each(definition.properties, function (value, name) {
+                            instance[name] = value;
+                        });
+                    }
+
+                    return Class;
+                },
                 createInstance: function (classNameValue) {
-                    var className = classNameValue.get(),
+                    var className = classNameValue.getNative(),
                         object = new (namespace.getClass(className))();
 
                     return valueFactory.createObject(object, className);
@@ -85,11 +100,11 @@ define([
                     return new List(elements);
                 },
                 implyArray: function (variable) {
-                    if (variable.get().getNative() === null) {
-                        variable.set(tools.valueFactory.createArray([]));
+                    if (variable.getValue().getNative() === null) {
+                        variable.setValue(tools.valueFactory.createArray([]));
                     }
 
-                    return variable.get();
+                    return variable.getValue();
                 },
                 popScope: function () {
                     scopeChain.pop();
@@ -97,6 +112,7 @@ define([
                 pushScope: function () {
                     scopeChain.push(new Scope(valueFactory));
                 },
+                referenceFactory: referenceFactory,
                 unescapeString: function (string) {
                     return string.replace(/\\n/g, '\n');
                 },
@@ -124,7 +140,7 @@ define([
             util.each(builtinTypes.classes, function (classFactory, name) {
                 var Class = classFactory(internals);
 
-                namespace.defineClass(name);
+                namespace.defineClass(name, Class);
             });
         }());
 
@@ -186,20 +202,20 @@ define([
             'N_ARRAY_INDEX': function (node, interpret, context) {
                 var arrayVariableCode,
                     indexValues = [],
-                    methodSuffix = '';
+                    suffix = '';
 
                 util.each(node.indices, function (index) {
                     indexValues.push(interpret(index.index, {assignment: false, getValue: false}));
                 });
 
                 if (context.assignment) {
-                    methodSuffix = 'Reference';
                     arrayVariableCode = 'tools.implyArray(' + interpret(node.array, {getValue: false}) + ')';
                 } else {
+                    suffix = '.getValue(scopeChain)';
                     arrayVariableCode = interpret(node.array, {getValue: true});
                 }
 
-                return arrayVariableCode + '.getElement' + methodSuffix + 'ByKey(' + indexValues.join(', scopeChain).getElement' + methodSuffix + 'ByKey(') + ', scopeChain)';
+                return arrayVariableCode + '.getElementByKey(' + indexValues.join(', scopeChain).getValue(scopeChain).getElementByKey(') + ', scopeChain)' + suffix;
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
@@ -214,10 +230,23 @@ define([
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
             'N_CLASS_STATEMENT': function (node, interpret) {
-                return 'namespace.defineClass(' + interpret(node.className) + '.get());';
+                var code,
+                    propertyCodes = [];
+
+                util.each(node.members, function (member) {
+                    var data = interpret(member);
+
+                    if (member.name === 'N_PROPERTY_DEFINITION') {
+                        propertyCodes.push('"' + data.name + '": ' + data.value);
+                    }
+                });
+
+                code = '{properties: {' + propertyCodes.join(', ') + '}}';
+
+                return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), tools.createClass(' + code + '));';
             },
             'N_ECHO_STATEMENT': function (node, interpret) {
-                return 'stdout.write(' + interpret(node.expression) + '.coerceToString().get());';
+                return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },
             'N_EXPRESSION': function (node, interpret) {
                 var isAssignment = node.right[0].operator === '=',
@@ -225,13 +254,18 @@ define([
 
                 util.each(node.right, function (operation) {
                     var isReference = false,
-                        method = binaryOperatorToMethod[operation.operator],
+                        method,
                         valuePostProcess = '';
 
                     if (isAssignment && operation.operand.reference) {
                         isReference = true;
-                        method += 'Reference';
                         valuePostProcess = '.getReference()';
+                    }
+
+                    method = binaryOperatorToMethod[operation.operator];
+
+                    if (util.isPlainObject(method)) {
+                        method = method[isReference];
                     }
 
                     expression += '.' + method + '(' + interpret(operation.operand, {getValue: !isReference}) + valuePostProcess + ')';
@@ -284,11 +318,11 @@ define([
 
                 if (key) {
                     // Iterator key variable (if specified)
-                    code += key + '.set(' + arrayVariable + '.getKeyByIndex(' + pointerVariable + '));';
+                    code += key + '.setValue(' + arrayVariable + '.getKeyByIndex(' + pointerVariable + '));';
                 }
 
                 // Iterator value variable
-                code += value + '.set' + (node.value.reference ? 'Reference' : '') + '(' + arrayVariable + '.getElement' + (node.value.reference ? 'Reference' : '') + 'ByIndex(' + pointerVariable + '));';
+                code += value + '.set' + (node.value.reference ? 'Reference' : 'Value') + '(' + arrayVariable + '.getElementByIndex(' + pointerVariable + ')' + (node.value.reference ? '' : '.getValue(scopeChain)') + ');';
 
                 // Set pointer to next element at start of loop body as per spec
                 code += pointerVariable + '++;';
@@ -328,7 +362,7 @@ define([
 
                 // Copy passed values for any arguments
                 util.each(args, function (arg) {
-                    argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).set(' + arg + ');';
+                    argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).setValue(' + arg + ');';
                 });
 
                 // Prepend parts in correct order
@@ -367,7 +401,7 @@ define([
                     alternateCode += interpret(statement);
                 });
 
-                return 'if (' + interpret(node.condition) + '.coerceToBoolean().get()) {' + consequentCode + '} else {' + alternateCode + '}';
+                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {' + consequentCode + '} else {' + alternateCode + '}';
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
@@ -391,24 +425,28 @@ define([
                 return 'tools.createInstance(' + interpret(node.className) + ')';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
-                var methodSuffix = '',
-                    objectVariableCode,
-                    propertyCode = '';
+                var objectVariableCode,
+                    propertyCode = '',
+                    suffix = '';
 
                 if (context.assignment) {
-                    methodSuffix = 'Reference';
                     objectVariableCode = 'tools.implyArray(' + interpret(node.object, {getValue: false}) + ')';
                 } else {
+                    suffix = '.getValue(scopeChain)';
                     objectVariableCode = interpret(node.object, {getValue: true});
                 }
 
                 util.each(node.properties, function (property, index) {
                     var keyValue = interpret(property.property, {assignment: false, getValue: false});
 
-                    propertyCode += '.getElement' + (index === node.properties.length - 1 ? methodSuffix : '') + 'ByKey(' + keyValue + ', scopeChain)';
+                    propertyCode += '.getElementByKey(' + keyValue + ', scopeChain)';
+
+                    if (index < node.properties.length - 1) {
+                        propertyCode += '.getValue(scopeChain)';
+                    }
                 });
 
-                return objectVariableCode + propertyCode;
+                return objectVariableCode + propertyCode + suffix;
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
@@ -421,6 +459,12 @@ define([
                 });
 
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
+            },
+            'N_PROPERTY_DEFINITION': function (node, interpret) {
+                return {
+                    name: node.variable.variable.substr(1),
+                    value: node.value ? interpret(node.value) : 'null'
+                };
             },
             'N_RETURN_STATEMENT': function (node, interpret) {
                 var expression = interpret(node.expression);
@@ -442,7 +486,7 @@ define([
                 var expression = '(' + interpret(node.condition) + ')';
 
                 util.each(node.options, function (option) {
-                    expression = '(' + expression + '.coerceToBoolean().get() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
+                    expression = '(' + expression + '.coerceToBoolean().getNative() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
                 });
 
                 return expression;
@@ -459,10 +503,10 @@ define([
                     context.localVariableNames[node.variable] = true;
                 }
 
-                return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.get()' : '');
+                return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VOID': function () {
-                return 'null';
+                return 'tools.referenceFactory.createNull()';
             }
         }
     };

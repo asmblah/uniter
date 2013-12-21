@@ -23,10 +23,10 @@ define([
     }
 
     util.extend(Variable.prototype, {
-        get: function () {
+        getValue: function () {
             var variable = this;
 
-            return variable.value ? variable.value : variable.reference.get();
+            return variable.value ? variable.value : variable.reference.getValue();
         },
 
         getReference: function () {
@@ -79,13 +79,13 @@ define([
             return variable.value;
         },
 
-        set: function (value) {
+        setValue: function (value) {
             var variable = this;
 
             if (variable.value) {
                 variable.value = value;
             } else {
-                variable.reference.set(value);
+                variable.reference.setValue(value);
             }
 
             return value;

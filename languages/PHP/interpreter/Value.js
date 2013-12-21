@@ -29,7 +29,7 @@ define([
         concat: function (rightValue) {
             var leftValue = this;
 
-            return leftValue.factory.createString(leftValue.coerceToString().get() + rightValue.coerceToString().get());
+            return leftValue.factory.createString(leftValue.coerceToString().getNative() + rightValue.coerceToString().getNative());
         },
 
         get: function () {
@@ -37,12 +37,11 @@ define([
         },
 
         getElementByKey: function (key, scopeChain) {
-            return this.factory.createNull();
-        },
-
-        getElementReferenceByKey: function (key, scopeChain) {
-            scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
-            return new NullReference(this.factory);
+            return new NullReference(this.factory, {
+                onSet: function () {
+                    scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
+                }
+            });
         },
 
         getNative: function () {

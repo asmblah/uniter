@@ -23,53 +23,50 @@ define([
         return {
             'var_dump': function (scopeChain, valueReference) {
                 var isReference = (valueReference instanceof Variable),
-                    value = isReference ? valueReference.get() : valueReference;
+                    value = isReference ? valueReference.getValue() : valueReference;
 
                 function dump(value, depth) {
                     var currentIndentation = new Array(depth).join('  '),
+                        keys,
                         nativeValue,
                         nextIndentation = new Array(depth + 1).join('  '),
-                        properties,
                         representation = currentIndentation;
 
                     switch (value.getType()) {
                     case 'array':
                         representation += 'array(' + value.getLength() + ') {\n';
 
-                        nativeValue = value.get();
-
-                        util.each(Object.keys(nativeValue), function (key) {
-                            representation += nextIndentation + '[' + key + ']=>\n' + dump(nativeValue[key], depth + 1);
+                        util.each(value.getKeys(), function (key) {
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(value.getElementByKey(key).getValue(scopeChain), depth + 1);
                         });
 
                         representation += currentIndentation + '}';
                         break;
                     case 'boolean':
-                        representation += 'bool(' + (value.get() ? 'true' : 'false') + ')';
+                        representation += 'bool(' + (value.getNative() ? 'true' : 'false') + ')';
                         break;
                     case 'float':
-                        representation += 'float(' + value.get() + ')';
+                        representation += 'float(' + value.getNative() + ')';
                         break;
                     case 'integer':
-                        representation += 'int(' + value.get() + ')';
+                        representation += 'int(' + value.getNative() + ')';
                         break;
                     case 'null':
                         representation += 'NULL';
                         break;
                     case 'object':
-                        nativeValue = value.get();
-                        properties = Object.keys(nativeValue);
+                        keys = value.getKeys();
 
-                        representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + properties.length + ') {\n';
+                        representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + keys.length + ') {\n';
 
-                        util.each(properties, function (property) {
-                            representation += nextIndentation + '[' + JSON.stringify(property) + ']=>\n' + dump(nativeValue[property], depth + 1);
+                        util.each(keys, function (key) {
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(value.getElementByKey(key).getValue(scopeChain), depth + 1);
                         });
 
                         representation += currentIndentation + '}';
                         break;
                     case 'string':
-                        nativeValue = value.get();
+                        nativeValue = value.getNative();
                         representation += 'string(' + nativeValue.length + ') "' + nativeValue + '"';
                         break;
                     }

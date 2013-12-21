@@ -11,12 +11,10 @@
 define([
     'js/util',
     './Array',
-    '../Reference/ObjectProperty',
     '../Error'
 ], function (
     util,
     ArrayValue,
-    ObjectPropertyReference,
     PHPError
 ) {
     'use strict';
@@ -41,6 +39,10 @@ define([
 
         getID: function () {
             return this.id;
+        },
+
+        getNative: function () {
+            return this.value;
         },
 
         referToElement: function (key) {
