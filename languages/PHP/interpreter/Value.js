@@ -32,10 +32,6 @@ define([
             return leftValue.factory.createString(leftValue.coerceToString().getNative() + rightValue.coerceToString().getNative());
         },
 
-        get: function () {
-            return this.value;
-        },
-
         getElementByKey: function (key, scopeChain) {
             return new NullReference(this.factory, {
                 onSet: function () {

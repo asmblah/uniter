@@ -31,10 +31,10 @@ define([
 
             // Coerce to float and return a float if either operand is a float
             if (rightType === 'float') {
-                return factory.createFloat(leftValue.coerceToFloat().get() + rightValue.coerceToFloat().get());
+                return factory.createFloat(leftValue.coerceToFloat().getNative() + rightValue.coerceToFloat().getNative());
             }
 
-            return factory.createInteger(leftValue.get() + rightValue.get());
+            return factory.createInteger(leftValue.getNative() + rightValue.getNative());
         },
 
         coerceToBoolean: function () {
