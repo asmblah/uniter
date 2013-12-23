@@ -225,29 +225,46 @@ define(function () {
                 ifNoMatch: {component: 'operator', capture: 'next'}
             },
             'N_EXPRESSION_LEVEL_1_B': {
+                captureAs: 'N_METHOD_CALL',
+                components: [
+                    {name: 'object', what: 'N_EXPRESSION_LEVEL_1_A'},
+                    {optionally: {
+                        name: 'calls',
+                        oneOrMoreOf: [
+                            'T_OBJECT_OPERATOR',
+                            {name: 'func', oneOf: ['N_STRING', 'N_VARIABLE']},
+                            (/\(/),
+                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                            (/\)/)
+                        ]
+                    }}
+                ],
+                ifNoMatch: {component: 'calls', capture: 'object'}
+            },
+            'N_EXPRESSION_LEVEL_1_C': {
                 captureAs: 'N_FUNCTION_CALL',
                 components: {oneOf: [
                     [
-                        {name: 'func', what: 'N_EXPRESSION_LEVEL_1_A'},
+                        {name: 'func', what: 'N_EXPRESSION_LEVEL_1_B'},
                         [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
                             (/\)/)
                         ]
                     ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_A'}
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_B'}
                 ]},
                 ifNoMatch: {component: 'func', capture: 'next'}
             },
-            'N_EXPRESSION_LEVEL_1_C': {
+            'N_EXPRESSION_LEVEL_1_D': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_B'}],
+                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_C'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_EXPRESSION_LEVEL_2_A': {
                 captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_C'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_D'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_2_B': {

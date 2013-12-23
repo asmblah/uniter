@@ -80,6 +80,7 @@ define({
             'bdd/integration/languages/PHP/grammar/constructs/listTest',
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
+            'bdd/integration/languages/PHP/grammar/expressions/methodCallTest',
             'bdd/integration/languages/PHP/grammar/expressions/nullTest',
             'bdd/integration/languages/PHP/grammar/expressions/printTest',
             'bdd/integration/languages/PHP/grammar/operators/arrayAccessTest',
