@@ -269,7 +269,7 @@ define(function () {
             },
             'N_EXPRESSION_LEVEL_2_B': {
                 captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_EXPRESSION_LEVEL_2_A'}]}],
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_MEMBER'}]}],
                 ifNoMatch: {component: 'properties', capture: 'object'}
             },
             'N_EXPRESSION_LEVEL_3': {
@@ -415,6 +415,9 @@ define(function () {
             },
             'N_LIST': {
                 components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]
+            },
+            'N_MEMBER': {
+                components: {oneOf: ['N_STRING', 'N_VARIABLE', [(/\{/), 'N_EXPRESSION', (/\}/)]]}
             },
             'N_METHOD_DEFINITION': {
                 components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]

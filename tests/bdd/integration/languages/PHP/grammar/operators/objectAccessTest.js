@@ -130,6 +130,48 @@ define([
                     }]
                 }
             },
+            'assignment to dynamically referenced property of object with expression for key': {
+                code: '$anObject->{$propName . "a"} = 4;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$anObject'
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_EXPRESSION',
+                                        left: {
+                                            name: 'N_VARIABLE',
+                                            variable: '$propName'
+                                        },
+                                        right: [{
+                                            operator: '.',
+                                            operand: {
+                                                name: 'N_STRING_LITERAL',
+                                                string: 'a'
+                                            }
+                                        }]
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
             'assignment to statically referenced property of statically referenced property': {
                 code: '$anObject->prop1->prop2 = 3;',
                 expectedAST: {

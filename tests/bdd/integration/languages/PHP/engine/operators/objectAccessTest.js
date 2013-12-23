@@ -67,7 +67,29 @@ EOS
                 expectedResult: null,
                 expectedStderr: 'PHP Notice: Undefined property: stdClass::$anUndefinedProperty',
                 expectedStdout: 'NULL\n'
-            }
+            },
+            'setting dynamically referenced property of object with expression for key': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new stdClass;
+    $propPrefix = 'my';
+
+    $object->{$propPrefix . 'Name'} = 'Fred';
+
+    var_dump($object);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (1) {
+  ["myName"]=>
+  string(4) "Fred"
+}
+
+EOS
+*/) {})
+            },
         }, function (scenario) {
             check(scenario);
         });
