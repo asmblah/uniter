@@ -69,14 +69,13 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        var namespace,
-            namespaceCollection = state.getNamespaceCollection(),
+        var globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
             referenceFactory = state.getReferenceFactory(),
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
-                createInstance: function (classNameValue) {
+                createInstance: function (namespace, classNameValue) {
                     var className = classNameValue.getNative(),
                         classData = namespace.getClass(className),
                         object = new classData.Class();
@@ -109,8 +108,6 @@ define([
                 valueFactory: valueFactory
             };
 
-        namespace = namespaceCollection.get('\\');
-
         scopeChain.push(state.getGlobalScope());
 
         (function () {
@@ -123,14 +120,14 @@ define([
                 var groupBuiltins = groupFactory(internals);
 
                 util.each(groupBuiltins, function (fn, name) {
-                    namespace.defineFunction(name, fn);
+                    globalNamespace.defineFunction(name, fn);
                 });
             });
 
             util.each(builtinTypes.classes, function (classFactory, name) {
                 var Class = classFactory(internals);
 
-                namespace.defineClass(name, Class);
+                globalNamespace.defineClass(name, Class);
             });
         }());
 
@@ -144,7 +141,7 @@ define([
         try {
             /*jshint evil:true */
             result = new Function('stdin, stdout, stderr, tools, scopeChain, namespace', code)(
-                stdin, stdout, stderr, tools, scopeChain, namespace
+                stdin, stdout, stderr, tools, scopeChain, globalNamespace
             );
         } catch (exception) {
             if (exception instanceof PHPError) {
@@ -444,8 +441,17 @@ define([
                     body: interpretFunction(node.args, node.statements, interpret)
                 };
             },
+            'N_NAMESPACE_STATEMENT': function (node, interpret) {
+                var body = '';
+
+                util.each(hoistDeclarations(node.statements), function (statement) {
+                    body += interpret(statement);
+                });
+
+                return 'namespace = namespace.getDescendant(' + JSON.stringify(node.namespace) + ');' + body;
+            },
             'N_NEW_EXPRESSION': function (node, interpret) {
-                return 'tools.createInstance(' + interpret(node.className) + ')';
+                return 'tools.createInstance(namespace, ' + interpret(node.className) + ')';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
                 var objectVariableCode,

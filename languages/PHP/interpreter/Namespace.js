@@ -19,10 +19,12 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Namespace(name) {
+    function Namespace(parent, name) {
+        this.children = {};
         this.classes = {};
         this.functions = {};
         this.name = name;
+        this.parent = parent;
     }
 
     util.extend(Namespace.prototype, {
@@ -42,7 +44,7 @@ define([
             });
 
             namespace.classes[name.toLowerCase()] = {
-                name: name,
+                name: namespace.getPrefix() + name,
                 Class: Class
             };
         },
@@ -62,14 +64,46 @@ define([
             return namespace.classes[lowerName];
         },
 
+        getDescendant: function (name) {
+            var namespace = this;
+
+            util.each(name.split('\\'), function (part) {
+                if (!hasOwn.call(namespace.children, part)) {
+                    namespace.children[part] = new Namespace(namespace, part);
+                }
+
+                namespace = namespace.children[part];
+            });
+
+            return namespace;
+        },
+
         getFunction: function (name) {
             var namespace = this;
 
-            if (!hasOwn.call(namespace.functions, name)) {
+            while (namespace && !hasOwn.call(namespace.functions, name)) {
+                namespace = namespace.getParent();
+            }
+
+            if (!namespace) {
                 throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_FUNCTION, {name: name});
             }
 
             return namespace.functions[name];
+        },
+
+        getParent: function () {
+            return this.parent;
+        },
+
+        getPrefix: function () {
+            var namespace = this;
+
+            if (namespace.name === '') {
+                return '';
+            }
+
+            return (namespace.parent ? namespace.parent.getPrefix() : '') + namespace.name + '\\';
         }
     });
 

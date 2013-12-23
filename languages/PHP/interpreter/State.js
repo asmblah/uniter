@@ -10,13 +10,13 @@
 /*global define */
 define([
     'js/util',
-    './Collection/Namespace',
+    './Namespace',
     './ReferenceFactory',
     './Scope',
     './ValueFactory'
 ], function (
     util,
-    NamespaceCollection,
+    Namespace,
     ReferenceFactory,
     Scope,
     ValueFactory
@@ -26,19 +26,19 @@ define([
     function PHPState() {
         var valueFactory = new ValueFactory();
 
+        this.globalNamespace = new Namespace(null, '');
         this.globalScope = new Scope(valueFactory);
-        this.namespaceCollection = new NamespaceCollection();
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.valueFactory = valueFactory;
     }
 
     util.extend(PHPState.prototype, {
-        getGlobalScope: function () {
-            return this.globalScope;
+        getGlobalNamespace: function () {
+            return this.globalNamespace;
         },
 
-        getNamespaceCollection: function () {
-            return this.namespaceCollection;
+        getGlobalScope: function () {
+            return this.globalScope;
         },
 
         getReferenceFactory: function () {

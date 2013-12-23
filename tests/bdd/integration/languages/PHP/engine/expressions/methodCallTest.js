@@ -92,7 +92,7 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
-            'call to undefined method of object': {
+            'call to undefined method of object when class is in global namespace': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Test {}
@@ -107,6 +107,25 @@ EOS
                     match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
                 },
                 expectedStderr: 'PHP Fatal error: Call to undefined method Test::iDontExist()',
+                expectedStdout: ''
+            },
+            'call to undefined method of object when class is in a namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace MyStuff;
+
+    class Test {}
+
+    $object = new Test;
+
+    var_dump($object->iDontExist());
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist()',
                 expectedStdout: ''
             }
         }, function (scenario, description) {
