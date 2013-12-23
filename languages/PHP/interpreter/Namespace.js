@@ -41,7 +41,10 @@ define([
                 Class.prototype[name] = method;
             });
 
-            namespace.classes[name] = Class;
+            namespace.classes[name.toLowerCase()] = {
+                name: name,
+                Class: Class
+            };
         },
 
         defineFunction: function (name, func) {
@@ -49,13 +52,14 @@ define([
         },
 
         getClass: function (name) {
-            var namespace = this;
+            var lowerName = name.toLowerCase(),
+                namespace = this;
 
-            if (!hasOwn.call(namespace.classes, name)) {
+            if (!hasOwn.call(namespace.classes, lowerName)) {
                 throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: name});
             }
 
-            return namespace.classes[name];
+            return namespace.classes[lowerName];
         },
 
         getFunction: function (name) {

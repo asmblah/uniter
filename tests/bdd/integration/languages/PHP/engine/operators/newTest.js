@@ -89,6 +89,25 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Class \'IDontExist\' not found',
                 expectedStdout: ''
+            },
+            'class name should be case insensitive': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {}
+
+    $object = new tEst();
+
+    var_dump($object);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Test)#1 (0) {
+}
+
+EOS
+*/) {})
             }
         }, function (scenario) {
             check(scenario);

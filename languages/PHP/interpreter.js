@@ -78,9 +78,10 @@ define([
             tools = {
                 createInstance: function (classNameValue) {
                     var className = classNameValue.getNative(),
-                        object = new (namespace.getClass(className))();
+                        classData = namespace.getClass(className),
+                        object = new classData.Class();
 
-                    return valueFactory.createObject(object, className);
+                    return valueFactory.createObject(object, classData.name);
                 },
                 createKeyValuePair: function (key, value) {
                     return new KeyValuePair(key, value);
