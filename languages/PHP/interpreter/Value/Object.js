@@ -11,11 +11,13 @@
 define([
     'js/util',
     './Array',
-    '../Error'
+    '../Error',
+    '../Error/Fatal'
 ], function (
     util,
     ArrayValue,
-    PHPError
+    PHPError,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -31,13 +33,16 @@ define([
 
     util.extend(ObjectValue.prototype, {
         callMethod: function (name, args, scopeChain) {
-            var object = this.object;
+            var value = this,
+                object = value.object;
 
             name = name.getNative();
 
-            if (util.isFunction(object[name])) {
-                return object[name].apply(object, [scopeChain].concat(args));
+            if (!util.isFunction(object[name])) {
+                throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
             }
+
+            return object[name].apply(object, [scopeChain].concat(args));
         },
 
         coerceToKey: function (scopeChain) {

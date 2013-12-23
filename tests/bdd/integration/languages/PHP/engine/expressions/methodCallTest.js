@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -88,6 +90,23 @@ EOS
 */) {}),
                 expectedResult: 6,
                 expectedStderr: '',
+                expectedStdout: ''
+            },
+            'call to undefined method of object': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {}
+
+    $object = new Test;
+
+    var_dump($object->iDontExist());
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined method Test::iDontExist()',
                 expectedStdout: ''
             }
         }, function (scenario, description) {
