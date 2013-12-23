@@ -213,7 +213,7 @@ define(function () {
                 components: {oneOf: [
                     [
                         {name: 'operator', what: 'T_NEW'},
-                        {name: 'className', what: 'N_EXPRESSION_LEVEL_0'},
+                        {name: 'className', what: 'N_CLASS_REFERENCE'},
                         {optionally: [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
@@ -223,6 +223,9 @@ define(function () {
                     {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
                 ]},
                 ifNoMatch: {component: 'operator', capture: 'next'}
+            },
+            'N_CLASS_REFERENCE': {
+                components: {name: 'path', oneOf: [[{optionally: 'T_NS_SEPARATOR'}, 'N_NAMESPACE'], 'N_EXPRESSION_LEVEL_0']}
             },
             'N_EXPRESSION_LEVEL_1_B': {
                 captureAs: 'N_METHOD_CALL',
@@ -422,8 +425,11 @@ define(function () {
             'N_METHOD_DEFINITION': {
                 components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
+            'N_NAMESPACE': {
+                components: ['T_STRING', {zeroOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
+            },
             'N_NAMESPACE_STATEMENT': {
-                components: ['T_NAMESPACE', {name: 'namespace', what: ['T_STRING', {zeroOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]}, (/;/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
+                components: ['T_NAMESPACE', {name: 'namespace', what: 'N_NAMESPACE'}, (/;/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}]

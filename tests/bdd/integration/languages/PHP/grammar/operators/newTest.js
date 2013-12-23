@@ -43,8 +43,8 @@ define([
                                     name: 'N_NEW_EXPRESSION',
                                     operator: 'new',
                                     className: {
-                                        name: 'N_STRING',
-                                        string: 'Worker'
+                                        name: 'N_CLASS_REFERENCE',
+                                        path: 'Worker'
                                     }
                                 }
                             }]
@@ -70,13 +70,44 @@ define([
                                     name: 'N_NEW_EXPRESSION',
                                     operator: 'new',
                                     className: {
-                                        name: 'N_STRING',
-                                        string: 'Worker'
+                                        name: 'N_CLASS_REFERENCE',
+                                        path: 'Worker'
                                     },
                                     args: []
                                 }
                             }]
                         }
+                    }]
+                }
+            },
+            'referring to class in global namespace from sub-namespace': {
+                code: 'namespace Fun; $object = new \\stdClass;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_NAMESPACE_STATEMENT',
+                        namespace: 'Fun',
+                        statements: [{
+                            name: 'N_EXPRESSION_STATEMENT',
+                            expression: {
+                                name: 'N_EXPRESSION',
+                                left: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$object'
+                                },
+                                right: [{
+                                    operator: '=',
+                                    operand: {
+                                        name: 'N_NEW_EXPRESSION',
+                                        operator: 'new',
+                                        className: {
+                                            name: 'N_CLASS_REFERENCE',
+                                            path: '\\stdClass'
+                                        }
+                                    }
+                                }]
+                            }
+                        }]
                     }]
                 }
             }
