@@ -39,7 +39,7 @@ define([
                     }]
                 }
             },
-            'class with one public property': {
+            'class with one public instance property': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class OnePub {
@@ -67,6 +67,44 @@ EOS
                                 name: 'N_STRING_LITERAL',
                                 string: 'yep'
                             }
+                        }]
+                    }]
+                }
+            },
+            'class with one public instance method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class OneMethod {
+        public function printIt($what) {
+            echo $what;
+        }
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'OneMethod'
+                        },
+                        members: [{
+                            name: 'N_METHOD_DEFINITION',
+                            visibility: 'public',
+                            type: '',
+                            func: 'printIt',
+                            args: [{
+                                name: 'N_VARIABLE',
+                                variable: '$what'
+                            }],
+                            statements: [{
+                                name: 'N_ECHO_STATEMENT',
+                                expression: {
+                                    name: 'N_VARIABLE',
+                                    variable: '$what'
+                                }
+                            }]
                         }]
                     }]
                 }
