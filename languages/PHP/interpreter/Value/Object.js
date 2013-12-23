@@ -19,16 +19,27 @@ define([
 ) {
     'use strict';
 
-    function ObjectValue(factory, value, className, id) {
-        ArrayValue.call(this, factory, value, 'object');
+    function ObjectValue(factory, object, className, id) {
+        ArrayValue.call(this, factory, object, 'object');
 
         this.className = className;
         this.id = id;
+        this.object = object;
     }
 
     util.inherit(ObjectValue).from(ArrayValue);
 
     util.extend(ObjectValue.prototype, {
+        callMethod: function (name, args, scopeChain) {
+            var object = this.object;
+
+            name = name.getNative();
+
+            if (util.isFunction(object[name])) {
+                return object[name].apply(object, [scopeChain].concat(args));
+            }
+        },
+
         coerceToKey: function (scopeChain) {
             scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
@@ -42,7 +53,7 @@ define([
         },
 
         getNative: function () {
-            return this.value;
+            return this.object;
         },
 
         referToElement: function (key) {

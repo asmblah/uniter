@@ -76,17 +76,6 @@ define([
             result,
             scopeChain = new ScopeChain(stderr),
             tools = {
-                createClass: function (definition) {
-                    function Class() {
-                        var instance = this;
-
-                        util.each(definition.properties, function (value, name) {
-                            instance[name] = value;
-                        });
-                    }
-
-                    return Class;
-                },
                 createInstance: function (classNameValue) {
                     var className = classNameValue.getNative(),
                         object = new (namespace.getClass(className))();
@@ -231,6 +220,7 @@ define([
             },
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,
+                    methodCodes = [],
                     propertyCodes = [];
 
                 util.each(node.members, function (member) {
@@ -238,12 +228,14 @@ define([
 
                     if (member.name === 'N_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
+                    } else if (member.name === 'N_METHOD_DEFINITION') {
+                        methodCodes.push('"' + data.name + '": function () {' + data.body + '}');
                     }
                 });
 
-                code = '{properties: {' + propertyCodes.join(', ') + '}}';
+                code = '{properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
-                return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), tools.createClass(' + code + '));';
+                return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
@@ -420,6 +412,27 @@ define([
                 });
 
                 return 'tools.createList([' + elementsCodes.join(',') + '])';
+            },
+            'N_METHOD_CALL': function (node, interpret) {
+                var code = '';
+
+                util.each(node.calls, function (call) {
+                    code += '.callMethod(' + interpret(call.func) + ', [], scopeChain)';
+                });
+
+                return interpret(node.object) + code;
+            },
+            'N_METHOD_DEFINITION': function (node, interpret) {
+                var body = '';
+
+                util.each(hoistDeclarations(node.statements), function (statement) {
+                    body += interpret(statement);
+                });
+
+                return {
+                    name: interpret(node.func),
+                    body: body
+                };
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 return 'tools.createInstance(' + interpret(node.className) + ')';

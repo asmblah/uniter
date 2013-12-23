@@ -26,8 +26,20 @@ define([
     }
 
     util.extend(Namespace.prototype, {
-        defineClass: function (name, Class) {
+        defineClass: function (name, definition) {
             var namespace = this;
+
+            function Class() {
+                var instance = this;
+
+                util.each(definition.properties, function (value, name) {
+                    instance[name] = value;
+                });
+            }
+
+            util.each(definition.methods, function (method, name) {
+                Class.prototype[name] = method;
+            });
 
             namespace.classes[name] = Class;
         },

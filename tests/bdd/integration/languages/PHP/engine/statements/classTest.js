@@ -111,6 +111,26 @@ object(OnePub)#1 (1) {
 
 EOS
 */) {})
+            },
+            'class with one public method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function doIt() {
+            echo 21;
+        }
+    }
+
+    $object = new Test();
+    $object->doIt();
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+21
+EOS
+*/) {})
             }
         }, function (scenario) {
             check(scenario);
