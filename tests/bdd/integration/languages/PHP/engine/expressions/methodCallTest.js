@@ -53,6 +53,24 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'call to statically referenced instance method with argument and returning value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function addOne($number) {
+            return $number + 1;
+        }
+    }
+
+    $object = new Test;
+
+    return $object->addOne(3);
+EOS
+*/) {}),
+                expectedResult: 4,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'call to dynamically referenced instance method returning value': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

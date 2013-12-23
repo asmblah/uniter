@@ -184,6 +184,47 @@ define([
         return declarations.concat(nonDeclarations);
     }
 
+    function interpretFunction(argNodes, statementNodes, interpret) {
+        var args = [],
+            argumentAssignments = '',
+            body = '',
+            localVariableNames = {},
+            variableDeclarations = '';
+
+        util.each(argNodes, function (arg) {
+            args.push(arg.variable);
+
+            // Define any arguments as local variables
+            localVariableNames[arg.variable] = true;
+        });
+
+        // Interpret statements first (will populate localVariableNames)
+        util.each(hoistDeclarations(statementNodes), function (statement) {
+            body += interpret(statement, {localVariableNames: localVariableNames});
+        });
+
+        // Define local variables and arguments
+        if (getKeys(localVariableNames).length > 0) {
+            variableDeclarations += 'scopeChain.getCurrent().defineVariables(["' + getKeys(localVariableNames).join('", "') + '"]);';
+        }
+
+        // Copy passed values for any arguments
+        util.each(args, function (arg) {
+            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).setValue(' + arg + ');';
+        });
+
+        // Prepend parts in correct order
+        body = variableDeclarations + argumentAssignments + body;
+
+        // Add scope handling logic
+        body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
+
+        args.unshift('scopeChain');
+
+        // Build function expression
+        return 'function (' + args.join(', ') + ') {' + body + '}';
+    }
+
     return {
         Environment: PHPEnvironment,
         State: PHPState,
@@ -229,7 +270,7 @@ define([
                     if (member.name === 'N_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_METHOD_DEFINITION') {
-                        methodCodes.push('"' + data.name + '": function () {' + data.body + '}');
+                        methodCodes.push('"' + data.name + '": ' + data.body);
                     }
                 });
 
@@ -328,45 +369,7 @@ define([
                 return code;
             },
             'N_FUNCTION_STATEMENT': function (node, interpret) {
-                var args = [],
-                    argumentAssignments = '',
-                    body = '',
-                    func,
-                    localVariableNames = {},
-                    variableDeclarations = '';
-
-                util.each(node.args, function (arg) {
-                    args.push(arg.variable);
-
-                    // Define any arguments as local variables
-                    localVariableNames[arg.variable] = true;
-                });
-
-                // Interpret statements first (will populate localVariableNames)
-                util.each(hoistDeclarations(node.statements), function (statement) {
-                    body += interpret(statement, {localVariableNames: localVariableNames});
-                });
-
-                // Define local variables and arguments
-                if (getKeys(localVariableNames).length > 0) {
-                    variableDeclarations += 'scopeChain.getCurrent().defineVariables(["' + getKeys(localVariableNames).join('", "') + '"]);';
-                }
-
-                // Copy passed values for any arguments
-                util.each(args, function (arg) {
-                    argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).setValue(' + arg + ');';
-                });
-
-                // Prepend parts in correct order
-                body = variableDeclarations + argumentAssignments + body;
-
-                // Add scope handling logic
-                body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
-
-                args.unshift('scopeChain');
-
-                // Build function expression
-                func = 'function (' + args.join(', ') + ') {' + body + '}';
+                var func = interpretFunction(node.args, node.statements, interpret);
 
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },
@@ -417,7 +420,13 @@ define([
                 var code = '';
 
                 util.each(node.calls, function (call) {
-                    code += '.callMethod(' + interpret(call.func) + ', [], scopeChain)';
+                    var args = [];
+
+                    util.each(call.args, function (arg) {
+                        args.push(interpret(arg));
+                    });
+
+                    code += '.callMethod(' + interpret(call.func) + ', [' + args.join(', ') + '], scopeChain)';
                 });
 
                 return interpret(node.object) + code;
@@ -431,7 +440,7 @@ define([
 
                 return {
                     name: interpret(node.func),
-                    body: body
+                    body: interpretFunction(node.args, node.statements, interpret)
                 };
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
