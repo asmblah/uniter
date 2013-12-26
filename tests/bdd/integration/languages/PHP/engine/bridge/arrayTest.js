@@ -43,7 +43,7 @@ define([
 EOS
 */) {}),
                     expose: {
-                        '$names': ['Fred']
+                        'names': ['Fred']
                     },
                     expectedResult: 'Fred',
                     expectedResultType: 'string',
@@ -57,7 +57,7 @@ EOS
 EOS
 */) {}),
                     expose: {
-                        '$orders': [{
+                        'orders': [{
                             'amount': 28
                         }]
                     },

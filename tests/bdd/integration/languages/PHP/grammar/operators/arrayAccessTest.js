@@ -35,7 +35,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -43,7 +43,7 @@ define([
                                     name: 'N_ARRAY_INDEX',
                                     array: {
                                         name: 'N_VARIABLE',
-                                        variable: '$elements'
+                                        variable: 'elements'
                                     },
                                     indices: [{
                                         index: {
@@ -69,7 +69,7 @@ define([
                                 name: 'N_ARRAY_INDEX',
                                 array: {
                                     name: 'N_VARIABLE',
-                                    variable: '$elements'
+                                    variable: 'elements'
                                 },
                                 indices: [{
                                     index: {
@@ -103,7 +103,7 @@ define([
                                     name: 'N_OBJECT_PROPERTY',
                                     object: {
                                         name: 'N_VARIABLE',
-                                        variable: '$object'
+                                        variable: 'object'
                                     },
                                     properties: [{
                                         property: {

@@ -43,7 +43,7 @@ define([
 EOS
 */) {}),
                     expose: {
-                        '$me': {
+                        'me': {
                             name: 'Dan'
                         }
                     },
@@ -59,7 +59,7 @@ EOS
 EOS
 */) {}),
                     expose: {
-                        '$me': {
+                        'me': {
                             age: 23
                         }
                     },
@@ -75,7 +75,7 @@ EOS
 EOS
 */) {}),
                     expose: {
-                        '$order': {
+                        'order': {
                             'payments': [10, 20]
                         }
                     },

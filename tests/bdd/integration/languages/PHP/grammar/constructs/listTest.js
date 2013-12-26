@@ -37,7 +37,7 @@ define([
                                 name: 'N_LIST',
                                 elements: [{
                                     name: 'N_VARIABLE',
-                                    variable: '$value'
+                                    variable: 'value'
                                 }]
                             },
                             right: [{
@@ -66,13 +66,13 @@ define([
                                 name: 'N_LIST',
                                 elements: [{
                                     name: 'N_VARIABLE',
-                                    variable: '$value1'
+                                    variable: 'value1'
                                 }, {
                                     name: 'N_VARIABLE',
-                                    variable: '$value2'
+                                    variable: 'value2'
                                 }, {
                                     name: 'N_VARIABLE',
-                                    variable: '$value3'
+                                    variable: 'value3'
                                 }]
                             },
                             right: [{
@@ -110,7 +110,7 @@ define([
                                     value: ''
                                 }, {
                                     name: 'N_VARIABLE',
-                                    variable: '$value'
+                                    variable: 'value'
                                 }]
                             },
                             right: [{

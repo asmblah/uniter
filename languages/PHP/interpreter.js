@@ -494,7 +494,7 @@ define([
             },
             'N_PROPERTY_DEFINITION': function (node, interpret) {
                 return {
-                    name: node.variable.variable.substr(1),
+                    name: node.variable.variable,
                     value: node.value ? interpret(node.value) : 'null'
                 };
             },

@@ -35,7 +35,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$nothing'
+                                variable: 'nothing'
                             },
                             right: [{
                                 operator: '=',

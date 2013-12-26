@@ -43,7 +43,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$result'
+                                variable: 'result'
                             },
                             right: [{
                                 operator: '=',
@@ -70,11 +70,11 @@ define([
                         },
                         key: {
                             name: 'N_VARIABLE',
-                            variable: '$key'
+                            variable: 'key'
                         },
                         value: {
                             name: 'N_VARIABLE',
-                            variable: '$item'
+                            variable: 'item'
                         },
                         statements: [{
                             name: 'N_EXPRESSION_STATEMENT',
@@ -82,7 +82,7 @@ define([
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$result'
+                                    variable: 'result'
                                 },
                                 right: [{
                                     operator: '=',
@@ -90,13 +90,13 @@ define([
                                         name: 'N_EXPRESSION',
                                         left: {
                                             name: 'N_VARIABLE',
-                                            variable: '$result'
+                                            variable: 'result'
                                         },
                                         right: [{
                                             operator: '.',
                                             operand: {
                                                 name: 'N_VARIABLE',
-                                                variable: '$item'
+                                                variable: 'item'
                                             }
                                         }]
                                     }
@@ -107,7 +107,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$result'
+                            variable: 'result'
                         }
                     }]
                 },

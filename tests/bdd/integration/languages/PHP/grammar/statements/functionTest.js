@@ -47,7 +47,7 @@ define([
                         func: 'doNothing',
                         args: [{
                             name: 'N_VARIABLE',
-                            variable: '$a'
+                            variable: 'a'
                         }],
                         statements: []
                     }]
@@ -62,10 +62,10 @@ define([
                         func: 'add',
                         args: [{
                             name: 'N_VARIABLE',
-                            variable: '$number1'
+                            variable: 'number1'
                         }, {
                             name: 'N_VARIABLE',
-                            variable: '$number2'
+                            variable: 'number2'
                         }],
                         statements: [{
                             name: 'N_EXPRESSION_STATEMENT',
@@ -73,7 +73,7 @@ define([
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$result'
+                                    variable: 'result'
                                 },
                                 right: [{
                                     operator: '=',
@@ -81,13 +81,13 @@ define([
                                         name: 'N_EXPRESSION',
                                         left: {
                                             name: 'N_VARIABLE',
-                                            variable: '$number1'
+                                            variable: 'number1'
                                         },
                                         right: [{
                                             operator: '+',
                                             operand: {
                                                 name: 'N_VARIABLE',
-                                                variable: '$number2'
+                                                variable: 'number2'
                                             }
                                         }]
                                     }
@@ -97,7 +97,7 @@ define([
                             name: 'N_RETURN_STATEMENT',
                             expression: {
                                 name: 'N_VARIABLE',
-                                variable: '$result'
+                                variable: 'result'
                             }
                         }]
                     }]

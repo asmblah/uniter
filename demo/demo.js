@@ -52,7 +52,7 @@ require([
 
     phpEngine.expose({
         salutation: 'Hello'
-    }, '$info');
+    }, 'info');
 
     phpEngine.execute(phpCode).done(function () {
         output();

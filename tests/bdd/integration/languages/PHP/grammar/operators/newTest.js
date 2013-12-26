@@ -35,7 +35,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$object'
+                                variable: 'object'
                             },
                             right: [{
                                 operator: '=',
@@ -62,7 +62,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$object'
+                                variable: 'object'
                             },
                             right: [{
                                 operator: '=',
@@ -93,7 +93,7 @@ define([
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$object'
+                                    variable: 'object'
                                 },
                                 right: [{
                                     operator: '=',

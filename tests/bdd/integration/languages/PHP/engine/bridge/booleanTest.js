@@ -43,7 +43,7 @@ define([
 EOS
 */) {}),
                     expose: {
-                        '$theBoolean': true
+                        'theBoolean': true
                     },
                     expectedResult: true,
                     expectedResultType: 'boolean',
@@ -57,7 +57,7 @@ EOS
 EOS
 */) {}),
                     expose: {
-                        '$theBoolean': false
+                        'theBoolean': false
                     },
                     expectedResult: false,
                     expectedResultType: 'boolean',

@@ -56,7 +56,7 @@ define([
             var scope = this;
 
             if (!hasOwn.call(scope.variables, name)) {
-                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined variable: ' + name);
+                scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined variable: $' + name);
 
                 // Implicitly define the variable
                 scope.variables[name] = new Variable(scope.valueFactory);

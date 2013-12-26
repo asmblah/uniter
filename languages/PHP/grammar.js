@@ -170,7 +170,7 @@ define(function () {
             'T_UNSET_CAST': /\(\s*unset\s*\)/i,
             'T_USE': /use\b/i,
             'T_VAR': /var\b/i,
-            'T_VARIABLE': /\$[a-z0-9_]+/i,
+            'T_VARIABLE': {what: /\$([a-z0-9_]+)/i, captureIndex: 1},
             'T_WHILE': /while\b/i,
             'T_WHITESPACE': /[\r\n\t ]+/,
             'T_XOR_EQUAL': /\^=/i,
@@ -467,7 +467,13 @@ define(function () {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_STRING']}
             },
             'N_VARIABLE': {
-                components: [{optionally: {name: 'reference', what: (/&/)}}, {name: 'variable', what: 'T_VARIABLE'}]
+                components: [
+                    {optionally: {name: 'reference', what: (/&/)}},
+                    {oneOf: [
+                        {name: 'variable', what: 'T_VARIABLE'},
+                        {name: 'variable', what: (/\$\{([a-z0-9_]+)\}/i), captureIndex: 1}
+                    ]}
+                ]
             },
             'N_VOID': {
                 components: {name: 'value', what: (/,()/), captureIndex: 1}

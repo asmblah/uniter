@@ -35,7 +35,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$array'
+                                variable: 'array'
                             },
                             right: [{
                                 operator: '=',

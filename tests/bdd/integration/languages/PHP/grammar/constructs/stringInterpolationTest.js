@@ -35,7 +35,7 @@ define([
                             name: 'N_STRING_EXPRESSION',
                             parts: [{
                                 name: 'N_VARIABLE',
-                                variable: '$myValue'
+                                variable: 'myValue'
                             }]
                         }
                     }]
@@ -54,7 +54,7 @@ define([
                                 string: 'abc'
                             }, {
                                 name: 'N_VARIABLE',
-                                variable: '$myValue'
+                                variable: 'myValue'
                             }]
                         }
                     }]
@@ -70,10 +70,26 @@ define([
                             name: 'N_STRING_EXPRESSION',
                             parts: [{
                                 name: 'N_VARIABLE',
-                                variable: '$value1'
+                                variable: 'value1'
                             }, {
                                 name: 'N_VARIABLE',
-                                variable: '$value2'
+                                variable: 'value2'
+                            }]
+                        }
+                    }]
+                }
+            },
+            'string interpolation with ${...}': {
+                code: '<?php return "${value}";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_EXPRESSION',
+                            parts: [{
+                                name: 'N_VARIABLE',
+                                variable: 'value'
                             }]
                         }
                     }]

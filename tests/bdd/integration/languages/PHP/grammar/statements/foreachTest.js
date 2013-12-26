@@ -34,11 +34,11 @@ define([
                         name: 'N_FOREACH_STATEMENT',
                         array: {
                             name: 'N_VARIABLE',
-                            variable: '$array'
+                            variable: 'array'
                         },
                         value: {
                             name: 'N_VARIABLE',
-                            variable: '$item'
+                            variable: 'item'
                         },
                         statements: []
                     }]
@@ -52,15 +52,15 @@ define([
                         name: 'N_FOREACH_STATEMENT',
                         array: {
                             name: 'N_VARIABLE',
-                            variable: '$array'
+                            variable: 'array'
                         },
                         key: {
                             name: 'N_VARIABLE',
-                            variable: '$key'
+                            variable: 'key'
                         },
                         value: {
                             name: 'N_VARIABLE',
-                            variable: '$item'
+                            variable: 'item'
                         },
                         statements: []
                     }]
@@ -74,16 +74,16 @@ define([
                         name: 'N_FOREACH_STATEMENT',
                         array: {
                             name: 'N_VARIABLE',
-                            variable: '$array'
+                            variable: 'array'
                         },
                         key: {
                             name: 'N_VARIABLE',
-                            variable: '$key'
+                            variable: 'key'
                         },
                         value: {
                             name: 'N_VARIABLE',
                             reference: '&',
-                            variable: '$item'
+                            variable: 'item'
                         },
                         statements: []
                     }]
@@ -97,15 +97,15 @@ define([
                         name: 'N_FOREACH_STATEMENT',
                         array: {
                             name: 'N_VARIABLE',
-                            variable: '$array'
+                            variable: 'array'
                         },
                         key: {
                             name: 'N_VARIABLE',
-                            variable: '$key'
+                            variable: 'key'
                         },
                         value: {
                             name: 'N_VARIABLE',
-                            variable: '$item'
+                            variable: 'item'
                         },
                         statements: [{
                             name: 'N_ECHO_STATEMENT',

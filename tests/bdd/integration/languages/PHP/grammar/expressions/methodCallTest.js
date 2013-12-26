@@ -35,7 +35,7 @@ define([
                             name: 'N_METHOD_CALL',
                             object: {
                                 name: 'N_VARIABLE',
-                                variable: '$obj'
+                                variable: 'obj'
                             },
                             calls: [{
                                 func: {
@@ -58,12 +58,12 @@ define([
                             name: 'N_METHOD_CALL',
                             object: {
                                 name: 'N_VARIABLE',
-                                variable: '$obj'
+                                variable: 'obj'
                             },
                             calls: [{
                                 func: {
                                     name: 'N_VARIABLE',
-                                    variable: '$methodName'
+                                    variable: 'methodName'
                                 },
                                 args: []
                             }]

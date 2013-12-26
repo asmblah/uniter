@@ -43,7 +43,7 @@ define([
 EOS
 */) {}),
                     expose: {
-                        '$tools': {
+                        'tools': {
                             getValue: function () {
                                 return 21;
                             }
@@ -61,7 +61,7 @@ EOS
 EOS
 */) {}),
                     expose: {
-                        '$tools': Object.create({
+                        'tools': Object.create({
                             getValue: function () {
                                 return 'me';
                             }

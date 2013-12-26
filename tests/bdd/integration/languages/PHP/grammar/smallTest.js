@@ -79,7 +79,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$b'
+                                variable: 'b'
                             },
                             right: [{
                                 operator: '=',
@@ -105,7 +105,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -141,7 +141,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$result'
+                                variable: 'result'
                             },
                             right: [{
                                 operator: '=',
@@ -155,7 +155,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$result'
+                            variable: 'result'
                         }
                     }]
                 }
@@ -170,7 +170,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$y'
+                                variable: 'y'
                             },
                             right: [{
                                 operator: '=',
@@ -194,7 +194,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$y'
+                            variable: 'y'
                         }
                     }]
                 }
@@ -345,7 +345,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$arg'
+                                variable: 'arg'
                             },
                             right: [{
                                 operator: '=',
@@ -363,7 +363,7 @@ define([
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$arg'
+                                    variable: 'arg'
                                 },
                                 right: [{
                                     operator: '===',
@@ -382,7 +382,7 @@ define([
                                     name: 'N_EXPRESSION',
                                     left: {
                                         name: 'N_VARIABLE',
-                                        variable: '$arg'
+                                        variable: 'arg'
                                     },
                                     right: [{
                                         operator: '===',
@@ -416,7 +416,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$arr'
+                                variable: 'arr'
                             },
                             right: [{
                                 operator: '=',
@@ -430,7 +430,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$arr'
+                            variable: 'arr'
                         }
                     }]
                 }
@@ -445,7 +445,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$arr'
+                                variable: 'arr'
                             },
                             right: [{
                                 operator: '=',
@@ -462,7 +462,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$arr'
+                            variable: 'arr'
                         }
                     }]
                 }
@@ -477,7 +477,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$arr'
+                                variable: 'arr'
                             },
                             right: [{
                                 operator: '=',
@@ -507,7 +507,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$arr'
+                            variable: 'arr'
                         }
                     }]
                 }
@@ -522,7 +522,7 @@ define([
                             name: 'N_ARRAY_INDEX',
                             array: {
                                 name: 'N_VARIABLE',
-                                variable: '$names'
+                                variable: 'names'
                             },
                             indices: [{index: {
                                 name: 'N_INTEGER',
@@ -542,7 +542,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -558,7 +558,7 @@ define([
                             name: 'N_UNARY_EXPRESSION',
                             operand: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             operator: '++',
                             prefix: true
@@ -567,7 +567,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$a'
+                            variable: 'a'
                         }
                     }]
                 }
@@ -582,7 +582,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -598,7 +598,7 @@ define([
                             name: 'N_UNARY_EXPRESSION',
                             operand: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             operator: '++',
                             prefix: false
@@ -607,7 +607,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$a'
+                            variable: 'a'
                         }
                     }]
                 }
@@ -622,7 +622,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -638,7 +638,7 @@ define([
                             name: 'N_UNARY_EXPRESSION',
                             operand: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             operator: '--',
                             prefix: true
@@ -647,7 +647,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$a'
+                            variable: 'a'
                         }
                     }]
                 }
@@ -662,7 +662,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             right: [{
                                 operator: '=',
@@ -678,7 +678,7 @@ define([
                             name: 'N_UNARY_EXPRESSION',
                             operand: {
                                 name: 'N_VARIABLE',
-                                variable: '$a'
+                                variable: 'a'
                             },
                             operator: '--',
                             prefix: false
@@ -687,7 +687,7 @@ define([
                         name: 'N_RETURN_STATEMENT',
                         expression: {
                             name: 'N_VARIABLE',
-                            variable: '$a'
+                            variable: 'a'
                         }
                     }]
                 }

@@ -65,7 +65,7 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: '$accountNumber'
+                                variable: 'accountNumber'
                             },
                             right: [{
                                 operator: '===',
@@ -81,7 +81,7 @@ define([
                                 name: 'N_EXPRESSION',
                                 left: {
                                     name: 'N_VARIABLE',
-                                    variable: '$cheques'
+                                    variable: 'cheques'
                                 },
                                 right: [{
                                     operator: '=',

@@ -37,7 +37,7 @@ define([
                                 name: 'N_OBJECT_PROPERTY',
                                 object: {
                                     name: 'N_VARIABLE',
-                                    variable: '$anObject'
+                                    variable: 'anObject'
                                 },
                                 properties: [{
                                     property: {
@@ -71,7 +71,7 @@ define([
                                     name: 'N_ARRAY_INDEX',
                                     array: {
                                         name: 'N_VARIABLE',
-                                        variable: '$anArray'
+                                        variable: 'anArray'
                                     },
                                     indices: [{
                                         index: {
@@ -110,12 +110,12 @@ define([
                                 name: 'N_OBJECT_PROPERTY',
                                 object: {
                                     name: 'N_VARIABLE',
-                                    variable: '$anObject'
+                                    variable: 'anObject'
                                 },
                                 properties: [{
                                     property: {
                                         name: 'N_VARIABLE',
-                                        variable: '$propName'
+                                        variable: 'propName'
                                     }
                                 }]
                             },
@@ -142,14 +142,14 @@ define([
                                 name: 'N_OBJECT_PROPERTY',
                                 object: {
                                     name: 'N_VARIABLE',
-                                    variable: '$anObject'
+                                    variable: 'anObject'
                                 },
                                 properties: [{
                                     property: {
                                         name: 'N_EXPRESSION',
                                         left: {
                                             name: 'N_VARIABLE',
-                                            variable: '$propName'
+                                            variable: 'propName'
                                         },
                                         right: [{
                                             operator: '.',
@@ -184,7 +184,7 @@ define([
                                 name: 'N_OBJECT_PROPERTY',
                                 object: {
                                     name: 'N_VARIABLE',
-                                    variable: '$anObject'
+                                    variable: 'anObject'
                                 },
                                 properties: [{
                                     property: {

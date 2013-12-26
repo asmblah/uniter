@@ -61,7 +61,7 @@ EOS
                             type: '',
                             variable: {
                                 name: 'N_VARIABLE',
-                                variable: '$aPublicProp'
+                                variable: 'aPublicProp'
                             },
                             value: {
                                 name: 'N_STRING_LITERAL',
@@ -96,13 +96,13 @@ EOS
                             func: 'printIt',
                             args: [{
                                 name: 'N_VARIABLE',
-                                variable: '$what'
+                                variable: 'what'
                             }],
                             statements: [{
                                 name: 'N_ECHO_STATEMENT',
                                 expression: {
                                     name: 'N_VARIABLE',
-                                    variable: '$what'
+                                    variable: 'what'
                                 }
                             }]
                         }]
