@@ -170,7 +170,7 @@ define(function () {
             'T_UNSET_CAST': /\(\s*unset\s*\)/i,
             'T_USE': /use\b/i,
             'T_VAR': /var\b/i,
-            'T_VARIABLE': /\$[\$a-z0-9_]+/i,
+            'T_VARIABLE': /\$[a-z0-9_]+/i,
             'T_WHILE': /while\b/i,
             'T_WHITESPACE': /[\r\n\t ]+/,
             'T_XOR_EQUAL': /\^=/i,
@@ -453,8 +453,15 @@ define(function () {
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
             },
+            'N_STRING_EXPRESSION': {
+                components: [(/"/), {name: 'parts', oneOrMoreOf: {oneOf: ['N_VARIABLE', 'N_STRING_TEXT']}}, (/"/)]
+            },
             'N_STRING_LITERAL': {
-                components: {name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}
+                components: {oneOf: [{name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}, 'N_STRING_EXPRESSION']}
+            },
+            'N_STRING_TEXT': {
+                captureAs: 'N_STRING_LITERAL',
+                components: [{name: 'string', what: (/[^"\$][\w_]*/)}]
             },
             'N_TERM': {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_STRING']}

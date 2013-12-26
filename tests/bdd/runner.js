@@ -85,6 +85,7 @@ define({
             'bdd/integration/languages/PHP/engine/smallTest',
             'bdd/integration/languages/PHP/grammar/constructs/listTest',
             'bdd/integration/languages/PHP/grammar/constructs/namespaceTest',
+            'bdd/integration/languages/PHP/grammar/constructs/stringInterpolationTest',
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
             'bdd/integration/languages/PHP/grammar/expressions/methodCallTest',
