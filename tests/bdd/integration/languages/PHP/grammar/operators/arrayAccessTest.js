@@ -24,9 +24,8 @@ define([
             parser = tools.createParser();
         });
 
-        util.each([
-            {
-                // Simple numeric index read
+        util.each({
+            'simple numeric index read': {
                 code: '$a = $elements[0];',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -57,8 +56,8 @@ define([
                         }
                     }]
                 }
-            }, {
-                // Simple numeric index assignment
+            },
+            'simple numeric index assignment': {
                 code: '$elements[2] = 4;',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -90,13 +89,15 @@ define([
                     }]
                 }
             }
-        ], function (scenario) {
-            var code = '<?php ' + scenario.code;
+        }, function (scenario, description) {
+            describe(description, function () {
+                var code = '<?php ' + scenario.code;
 
-            // Pretty-print the code strings so any non-printable characters are readable
-            describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
-                it('should return the expected AST', function () {
-                    expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                // Pretty-print the code strings so any non-printable characters are readable
+                describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
+                    it('should return the expected AST', function () {
+                        expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                    });
                 });
             });
         });
