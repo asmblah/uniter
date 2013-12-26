@@ -16,7 +16,8 @@ define([
     './Value/Integer',
     './Value/Null',
     './Value/Object',
-    './Value/String'
+    './Value/String',
+    './Value'
 ], function (
     util,
     ArrayValue,
@@ -25,7 +26,8 @@ define([
     IntegerValue,
     NullValue,
     ObjectValue,
-    StringValue
+    StringValue,
+    Value
 ) {
     'use strict';
 
@@ -34,6 +36,13 @@ define([
     }
 
     util.extend(ValueFactory.prototype, {
+        coerce: function (value) {
+            if (value instanceof Value) {
+                return value;
+            }
+
+            return this.createFromNative(value);
+        },
         createArray: function (value) {
             return new ArrayValue(this, value);
         },
@@ -46,11 +55,23 @@ define([
         createFromNative: function (nativeValue) {
             var factory = this;
 
+            if (util.isString(nativeValue)) {
+                return factory.createString(nativeValue);
+            }
+
             if (util.isNumber(nativeValue)) {
                 return factory.createInteger(nativeValue);
             }
 
-            return factory.createString(nativeValue);
+            if (util.isBoolean(nativeValue)) {
+                return factory.createBoolean(nativeValue);
+            }
+
+            if (util.isArray(nativeValue)) {
+                return factory.createArray(nativeValue);
+            }
+
+            return factory.createObject(nativeValue, 'Object');
         },
         createInteger: function (value) {
             return new IntegerValue(this, value);

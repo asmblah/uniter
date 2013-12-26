@@ -28,12 +28,28 @@ define([
     }
 
     util.extend(Scope.prototype, {
+        defineVariable: function (name) {
+            var scope = this,
+                variable = new Variable(scope.valueFactory);
+
+            scope.variables[name] = variable;
+
+            return variable;
+        },
+
         defineVariables: function (names) {
             var scope = this;
 
             util.each(names, function (name) {
-                scope.variables[name] = new Variable(scope.valueFactory);
+                scope.defineVariable(name);
             });
+        },
+
+        expose: function (object, name) {
+            var scope = this,
+                valueFactory = scope.valueFactory;
+
+            scope.defineVariable(name).setValue(valueFactory.coerce(object));
         },
 
         getVariable: function (name, scopeChain) {

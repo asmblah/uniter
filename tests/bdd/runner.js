@@ -58,6 +58,9 @@ define({
         mocha.suite.emit('pre-require', global, null, mocha);
 
         require([
+            'bdd/integration/languages/PHP/engine/bridge/arrayTest',
+            'bdd/integration/languages/PHP/engine/bridge/booleanTest',
+            'bdd/integration/languages/PHP/engine/bridge/plainObjectTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/currentTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/nextTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',

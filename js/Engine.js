@@ -46,6 +46,10 @@ define([
             return promise;
         },
 
+        expose: function (object, name) {
+            this.interpreter.expose(object, name);
+        },
+
         getEnvironment: function () {
             return this.interpreter.getEnvironment();
         },

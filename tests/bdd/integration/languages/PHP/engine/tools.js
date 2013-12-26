@@ -8,7 +8,11 @@
  */
 
 /*global define */
-define(function () {
+define([
+    'js/util'
+], function (
+    util
+) {
     'use strict';
 
     var hasOwn = {}.hasOwnProperty;
@@ -20,6 +24,10 @@ define(function () {
 
                 beforeEach(function () {
                     engine = getData().engine;
+
+                    util.each(scenario.expose, function (object, name) {
+                        engine.expose(object, name);
+                    });
                 });
 
                 if (scenario.expectedException) {

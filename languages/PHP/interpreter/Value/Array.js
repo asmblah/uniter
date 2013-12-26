@@ -44,6 +44,8 @@ define([
                 } else {
                     key = factory.createFromNative(key);
                 }
+
+                element = factory.coerce(element);
             }
 
             element = new ElementReference(factory, value, key, element);

@@ -29,14 +29,31 @@ define([
     }
 
     util.extend(Interpreter.prototype, {
+        expose: function (object, name) {
+            var globalScope = this.getEnvironment().getGlobalScope();
+
+            globalScope.expose(object, name);
+        },
+
         getEnvironment: function () {
             var interpreter = this;
 
             if (!interpreter.environment) {
-                interpreter.environment = new interpreter.spec.Environment();
+                interpreter.environment = new interpreter.spec.Environment(interpreter.getState());
             }
 
             return interpreter.environment;
+        },
+
+        getState: function () {
+            var interpreter = this,
+                spec = interpreter.spec;
+
+            if (!interpreter.state && spec.State) {
+                interpreter.state = new spec.State();
+            }
+
+            return interpreter.state;
         },
 
         interpret: function (node, data) {
@@ -52,11 +69,7 @@ define([
             }
 
             if (arguments.length === 1) {
-                if (!interpreter.state && spec.State) {
-                    interpreter.state = new spec.State();
-                }
-
-                data = interpreter.state;
+                data = interpreter.getState();
             }
 
             nodeName = node.name;
