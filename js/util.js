@@ -126,6 +126,10 @@ define([
             return toString.call(value) === '[object Array]';
         },
 
+        isBoolean: function (value) {
+            return toString.call(value) === '[object Boolean]';
+        },
+
         isFunction: function (value) {
             return toString.call(value) === '[object Function]';
         },

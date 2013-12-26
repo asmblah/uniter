@@ -65,5 +65,47 @@ EOS
                 expect(Object.getPrototypeOf(To.prototype)).to.equal(From.prototype);
             });
         });
+
+        // Should only return true for values of Boolean type
+        describe('isBoolean()', function () {
+            util.each([
+                {
+                    value: true,
+                    expectedIsBoolean: true
+                },
+                {
+                    value: false,
+                    expectedIsBoolean: true
+                },
+                {
+                    value: [],
+                    expectedIsBoolean: false
+                },
+                {
+                    value: {},
+                    expectedIsBoolean: false
+                },
+                {
+                    value: 0,
+                    expectedIsBoolean: false
+                },
+                {
+                    value: 1,
+                    expectedIsBoolean: false
+                }
+            ], function (scenario) {
+                describe('for ' + JSON.stringify(scenario.value), function () {
+                    if (scenario.expectedIsBoolean) {
+                        it('should return true', function () {
+                            expect(util.isBoolean(scenario.value)).to.be.true;
+                        });
+                    } else {
+                        it('should return false', function () {
+                            expect(util.isBoolean(scenario.value)).to.be.false;
+                        });
+                    }
+                });
+            });
+        });
     });
 });
