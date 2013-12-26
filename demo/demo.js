@@ -50,6 +50,10 @@ require([
         print(phpEngine.getStderr().readAll());
     }
 
+    phpEngine.expose({
+        salutation: 'Hello'
+    }, '$info');
+
     phpEngine.execute(phpCode).done(function () {
         output();
     }).fail(function (exception) {
@@ -65,11 +69,11 @@ EOS
 
 $project = 'Uniter';
 
-function makeExclamation($text) {
+function exclaim($text) {
     return $text . '!';
 }
 
-echo 'Hello from ' . makeExclamation($project);
+echo $info->salutation . ' from ' . exclaim($project);
 
 EOS
 */) {}),
