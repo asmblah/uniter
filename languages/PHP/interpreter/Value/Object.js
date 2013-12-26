@@ -42,7 +42,7 @@ define([
                 throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
             }
 
-            return object[name].apply(object, [scopeChain].concat(args));
+            return value.factory.coerce(object[name].apply(object, [scopeChain].concat(args)));
         },
 
         coerceToKey: function (scopeChain) {

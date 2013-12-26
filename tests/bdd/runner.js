@@ -60,6 +60,7 @@ define({
         require([
             'bdd/integration/languages/PHP/engine/bridge/arrayTest',
             'bdd/integration/languages/PHP/engine/bridge/booleanTest',
+            'bdd/integration/languages/PHP/engine/bridge/methodTest',
             'bdd/integration/languages/PHP/engine/bridge/plainObjectTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/currentTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/nextTest',
