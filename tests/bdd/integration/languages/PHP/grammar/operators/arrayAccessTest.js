@@ -88,6 +88,47 @@ define([
                         }
                     }]
                 }
+            },
+            'numeric index assignment to array in property': {
+                code: '$object->prop[2] = 4;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_ARRAY_INDEX',
+                                array: {
+                                    name: 'N_OBJECT_PROPERTY',
+                                    object: {
+                                        name: 'N_VARIABLE',
+                                        variable: '$object'
+                                    },
+                                    properties: [{
+                                        property: {
+                                            name: 'N_STRING',
+                                            string: 'prop'
+                                        }
+                                    }]
+                                },
+                                indices: [{
+                                    index: {
+                                        name: 'N_INTEGER',
+                                        number: '2'
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '4'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

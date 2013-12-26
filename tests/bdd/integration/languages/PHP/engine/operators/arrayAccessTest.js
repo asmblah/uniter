@@ -291,5 +291,25 @@ define([
                 });
             });
         });
+
+        util.each({
+            'array access of object property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new stdClass;
+
+    $object->prop = array(4);
+
+    return $object->prop[0];
+EOS
+*/) {}),
+                expectedResult: 4,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario) {
+            check(scenario);
+        });
     });
 });

@@ -265,6 +265,7 @@ define(function () {
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
+            // Array index and object property must have identical precedence: with LL grammar we have to repeat
             'N_EXPRESSION_LEVEL_2_A': {
                 captureAs: 'N_ARRAY_INDEX',
                 components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_D'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
@@ -275,18 +276,24 @@ define(function () {
                 components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_MEMBER'}]}],
                 ifNoMatch: {component: 'properties', capture: 'object'}
             },
+            // Second occurrence of N_ARRAY_INDEX (see above)
+            'N_EXPRESSION_LEVEL_2_C': {
+                captureAs: 'N_ARRAY_INDEX',
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                ifNoMatch: {component: 'indices', capture: 'array'}
+            },
             'N_EXPRESSION_LEVEL_3': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_B']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_C']
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_C'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_C'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },
