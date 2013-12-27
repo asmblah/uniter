@@ -146,7 +146,7 @@ define([
 
                         function skipWhitespace() {
                             var match;
-                            if (parser.ignoreRule && options.ignoreWhitespace !== false) {
+                            if (parser.ignoreRule && options.ignoreWhitespace !== false && args.ignoreWhitespace !== false) {
                                 // Prevent infinite recursion of whitespace skipper
                                 while ((match = parser.ignoreRule.match(text, offset + whitespaceLength, {ignoreWhitespace: false}))) {
                                     whitespaceLength += match.textLength;

@@ -112,6 +112,29 @@ define([
                 });
             });
 
+            describe('whitespace delimiter: "ignore" option but with "ignoreWhitespace" arg set to override', function () {
+                check({
+                    grammarSpec: {
+                        ignore: 'whitespace',
+                        rules: {
+                            'add': /\+/,
+                            'expression': [{name: 'left', what: 'string', ignoreWhitespace: false}, {name: 'operator', what: 'add'}, {name: 'right', what: 'string'}],
+                            'string': /[\d\s]+/,
+                            'whitespace': /\s+/
+                        },
+                        start: 'expression'
+                    },
+                    text: '321 + 89',
+                    expectedAST: {
+                        name: 'expression',
+                        // Check that space after number is captured too
+                        left: '321 ',
+                        operator: '+',
+                        right: '89'
+                    }
+                });
+            });
+
             describe('to prevent overriding the component\'s owner rule\'s name', function () {
                 check({
                     grammarSpec: {
