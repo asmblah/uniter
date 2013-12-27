@@ -511,6 +511,15 @@ define([
                     return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
                 }
             },
+            'N_STRING_EXPRESSION': function (node, interpret) {
+                var codes = [];
+
+                util.each(node.parts, function (part) {
+                    codes.push(interpret(part) + '.coerceToString().getNative()');
+                });
+
+                return 'tools.valueFactory.createString(' + codes.join(' + ') + ')';
+            },
             'N_STRING_LITERAL': function (node) {
                 return 'tools.valueFactory.createString(tools.unescapeString(' + JSON.stringify(node.string) + '))';
             },

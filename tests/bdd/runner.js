@@ -67,6 +67,7 @@ define({
             'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',
             'bdd/integration/languages/PHP/engine/constructs/listTest',
             'bdd/integration/languages/PHP/engine/constructs/namespaceTest',
+            'bdd/integration/languages/PHP/engine/constructs/stringInterpolationTest',
             'bdd/integration/languages/PHP/engine/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/engine/expressions/methodCallTest',
             'bdd/integration/languages/PHP/engine/operators/arrayAccessTest',
