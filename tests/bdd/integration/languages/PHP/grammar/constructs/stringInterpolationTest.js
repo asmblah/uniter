@@ -94,6 +94,31 @@ define([
                         }
                     }]
                 }
+            },
+            'string interpolation with whitespace surrounding variable': {
+                code: '<?php return "Increase $what with $control";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_EXPRESSION',
+                            parts: [{
+                                name: 'N_STRING_LITERAL',
+                                string: 'Increase '
+                            }, {
+                                name: 'N_VARIABLE',
+                                variable: 'what'
+                            }, {
+                                name: 'N_STRING_LITERAL',
+                                string: ' with '
+                            }, {
+                                name: 'N_VARIABLE',
+                                variable: 'control'
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
