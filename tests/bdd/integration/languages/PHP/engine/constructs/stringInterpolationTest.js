@@ -70,6 +70,13 @@ define([
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'string containing text with variable variable ${$...} interpolation': {
+                code: '<?php $myName = "Fred"; $varName = "myName"; return "My name is ${$varName}.";',
+                expectedResult: 'My name is Fred.',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

@@ -546,6 +546,9 @@ define([
 
                 return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.getValue()' : '');
             },
+            'N_VARIABLE_EXPRESSION': function (node, interpret, context) {
+                return 'scopeChain.getCurrent().getVariable(' + interpret(node.expression) + '.getNative(), scopeChain)' + (context.getValue !== false ? '.getValue()' : '');
+            },
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';
             }
