@@ -119,6 +119,54 @@ define([
                         }
                     }]
                 }
+            },
+            'string interpolation with double dollar (NOT valid variable variable syntax in strings)': {
+                code: '<?php return "The number is $$myVar.";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_EXPRESSION',
+                            parts: [{
+                                name: 'N_STRING_LITERAL',
+                                // Note that the leading dollar is parsed as plain text
+                                string: 'The number is $'
+                            }, {
+                                name: 'N_VARIABLE',
+                                variable: 'myVar'
+                            }, {
+                                name: 'N_STRING_LITERAL',
+                                string: '.'
+                            }]
+                        }
+                    }]
+                }
+            },
+            'string interpolation with text surrounding variable variable': {
+                code: '<?php return "The number is ${$myVar}.";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_RETURN_STATEMENT',
+                        expression: {
+                            name: 'N_STRING_EXPRESSION',
+                            parts: [{
+                                name: 'N_STRING_LITERAL',
+                                string: 'The number is '
+                            }, {
+                                name: 'N_VARIABLE_EXPRESSION',
+                                expression: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'myVar'
+                                }
+                            }, {
+                                name: 'N_STRING_LITERAL',
+                                string: '.'
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

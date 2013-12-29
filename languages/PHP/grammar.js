@@ -454,14 +454,14 @@ define(function () {
                 components: {name: 'string', what: 'T_STRING'}
             },
             'N_STRING_EXPRESSION': {
-                components: [(/"/), {name: 'parts', oneOrMoreOf: {oneOf: ['N_STRING_VARIABLE', 'N_STRING_TEXT']}}, (/"/)]
+                components: [(/"/), {name: 'parts', oneOrMoreOf: {oneOf: ['N_STRING_VARIABLE', 'N_STRING_VARIABLE_EXPRESSION', 'N_STRING_TEXT']}}, (/"/)]
             },
             'N_STRING_LITERAL': {
                 components: {oneOf: [{name: 'string', what: 'T_CONSTANT_ENCAPSED_STRING'}, 'N_STRING_EXPRESSION']}
             },
             'N_STRING_TEXT': {
                 captureAs: 'N_STRING_LITERAL',
-                components: {name: 'string', what: (/(?:[^"\$]|\\["\$])+/), ignoreWhitespace: false}
+                components: {name: 'string', what: (/(?:[^"\$]|\\["\$]|\$(?=\$))+/), ignoreWhitespace: false}
             },
             'N_STRING_VARIABLE': {
                 captureAs: 'N_VARIABLE',
@@ -469,6 +469,14 @@ define(function () {
                     {oneOf: [
                         {name: 'variable', what: 'T_VARIABLE'},
                         {name: 'variable', what: (/\$\{([a-z0-9_]+)\}/i), captureIndex: 1}
+                    ]}
+                ]
+            },
+            'N_STRING_VARIABLE_EXPRESSION': {
+                captureAs: 'N_VARIABLE_EXPRESSION',
+                components: [
+                    {oneOf: [
+                        {name: 'expression', what: [(/\$\{(?=\$)/), 'N_VARIABLE', (/\}/)]}
                     ]}
                 ]
             },
