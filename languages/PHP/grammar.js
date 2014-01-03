@@ -49,7 +49,10 @@ define(function () {
                 // Single-quoted
                 {what: /'((?:[^']|\\')*)'/, captureIndex: 1},
                 // Double-quoted
-                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!")[\s\S]|\\"))*)"/, captureIndex: 1}
+                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!")[\s\S]|\\"))*)"/, captureIndex: 1, replace: [{
+                    pattern: /\\n/g,
+                    replacement: '\n'
+                }]}
             ]},
             'T_CONTINUE': /continue\b/i,
             'T_CURLY_OPEN': /\{(?=\$)/,

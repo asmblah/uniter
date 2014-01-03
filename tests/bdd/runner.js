@@ -65,6 +65,7 @@ define({
             'bdd/integration/languages/PHP/engine/builtin/functions/array/currentTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/nextTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',
+            'bdd/integration/languages/PHP/engine/constructs/doubleQuotedStringTest',
             'bdd/integration/languages/PHP/engine/constructs/listTest',
             'bdd/integration/languages/PHP/engine/constructs/namespaceTest',
             'bdd/integration/languages/PHP/engine/constructs/singleQuotedStringTest',

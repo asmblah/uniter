@@ -89,6 +89,18 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'string with newline escape sequence (should be ignored in single-quoted strings)': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return 'this \n is not a newline';
+EOS
+*/) {}),
+                // Double-escape the JS backslash escape as we want a literal '\' followed by 'n'
+                expectedResult: 'this \\n is not a newline',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
