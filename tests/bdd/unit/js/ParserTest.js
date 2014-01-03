@@ -309,6 +309,73 @@ define([
                 });
             });
 
+            describe('"what" qualifier', function () {
+                describe('"replace" arg', function () {
+                    var parser;
+
+                    util.each({
+                        'replacing one character with another character when "what" arg is a regex': {
+                            grammarSpec: {
+                                ignore: 'whitespace',
+                                rules: {
+                                    'operator': /\+/,
+                                    'number': /\d(?:\.\d+)?/,
+                                    'whitespace': /\s+/,
+                                    'expression': {
+                                        components: [{name: 'left', what: 'number'}, {name: 'operator', what: 'operator'}, {name: 'right', what: (/\d+/), replace: [{
+                                            pattern: /^2$/,
+                                            replacement: 't'
+                                        }]}]
+                                    }
+                                },
+                                start: 'expression'
+                            },
+                            text: '1 + 2',
+                            expectedAST: {
+                                name: 'expression',
+                                left: '1',
+                                operator: '+',
+                                right: 't'
+                            }
+                        },
+                        'replacing one character with another character when "what" arg is a rule reference': {
+                            grammarSpec: {
+                                ignore: 'whitespace',
+                                rules: {
+                                    'operator': /\+/,
+                                    'number': /\d(?:\.\d+)?/,
+                                    'whitespace': /\s+/,
+                                    'expression': {
+                                        components: [{name: 'left', what: 'number'}, {name: 'operator', what: 'operator'}, {name: 'right', what: 'number', replace: [{
+                                            pattern: /^2$/,
+                                            replacement: 't'
+                                        }]}]
+                                    }
+                                },
+                                start: 'expression'
+                            },
+                            text: '1 + 2',
+                            expectedAST: {
+                                name: 'expression',
+                                left: '1',
+                                operator: '+',
+                                right: 't'
+                            }
+                        }
+                    }, function (scenario, description) {
+                        describe(description, function () {
+                            beforeEach(function () {
+                                parser = new Parser(scenario.grammarSpec);
+                            });
+
+                            it('should return the correct AST when the text is "' + scenario.text + '"', function () {
+                                expect(parser.parse(scenario.text)).to.deep.equal(scenario.expectedAST);
+                            });
+                        });
+                    });
+                });
+            });
+
             describe('when using grammar spec #1', function () {
                 var grammarSpec,
                     parser;

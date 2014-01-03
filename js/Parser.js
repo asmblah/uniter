@@ -142,6 +142,7 @@ define([
                     'what': function (text, offset, arg, args, options) {
                         var captureIndex,
                             match,
+                            result,
                             whitespaceLength = 0;
 
                         function skipWhitespace() {
@@ -152,6 +153,16 @@ define([
                                     whitespaceLength += match.textLength;
                                 }
                             }
+                        }
+
+                        function replace(string) {
+                            if (args.replace) {
+                                util.each(args.replace, function (data) {
+                                    string = string.replace(data.pattern, data.replacement);
+                                });
+                            }
+
+                            return string;
                         }
 
                         if (util.isString(arg)) {
@@ -172,14 +183,22 @@ define([
                             if (match) {
                                 captureIndex = args.captureIndex || 0;
                                 return {
-                                    components: match[captureIndex],
+                                    components: replace(match[captureIndex]),
                                     // Always return the entire match length even though we may have only captured part of it
                                     textLength: match[0].length,
                                     textOffset: whitespaceLength
                                 };
                             }
                         } else if (arg instanceof Component) {
-                            return arg.match(text, offset, options);
+                            result = arg.match(text, offset, options);
+
+                            if (util.isString(result)) {
+                                result = replace(result);
+                            } else if (result && util.isString(result.components)) {
+                                result.components = replace(result.components);
+                            }
+
+                            return result;
                         } else if (util.isFunction(arg)) {
                             return arg(text, offset, options);
                         } else {
