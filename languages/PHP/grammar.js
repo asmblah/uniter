@@ -45,7 +45,12 @@ define(function () {
             'T_COMMENT': /(?:\/\/|#)(.*?)[\r\n]+|\/\*(?!\*)([\s\S]*?)\*\//,
             'T_CONCAT_EQUAL': /\.=/,
             'T_CONST': /const\b/i,
-            'T_CONSTANT_ENCAPSED_STRING': {what: /(['"])((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!\1)[\s\S]|\\\1))*)\1/, captureIndex: 2},
+            'T_CONSTANT_ENCAPSED_STRING': {oneOf: [
+                // Single-quoted
+                {what: /'((?:[^']|\\')*)'/, captureIndex: 1},
+                // Double-quoted
+                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!")[\s\S]|\\"))*)"/, captureIndex: 1}
+            ]},
             'T_CONTINUE': /continue\b/i,
             'T_CURLY_OPEN': /\{(?=\$)/,
             'T_DEC': /--/i,
