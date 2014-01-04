@@ -20,7 +20,7 @@ define(function () {
      */
 
     var stringEscapeReplacements = [{
-            pattern: /\\([\$efnrtv\\])/g,
+            pattern: /\\([\$efnrtv\\"])/g,
             replacement: function (all, chr) {
                 return {
                     'e': '\x1B', // Escape
@@ -30,7 +30,8 @@ define(function () {
                     't': '\t',   // Horizontal tab
                     'v': '\x0B', // Vertical tab (JS '\v' escape not supported in IE < 9)
                     '\\': '\\',
-                    '$': '$'
+                    '$': '$',
+                    '"': '"'
                 }[chr];
             }
         }];
@@ -65,7 +66,7 @@ define(function () {
                 // Single-quoted
                 {what: /'((?:[^']|\\')*)'/, captureIndex: 1},
                 // Double-quoted
-                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:[^"]|\\"))*)"/, captureIndex: 1, replace: stringEscapeReplacements}
+                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:[^\\"]|\\[\s\S]))*)"/, captureIndex: 1, replace: stringEscapeReplacements}
             ]},
             'T_CONTINUE': /continue\b/i,
             'T_CURLY_OPEN': /\{(?=\$)/,

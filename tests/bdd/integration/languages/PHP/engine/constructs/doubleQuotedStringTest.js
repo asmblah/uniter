@@ -79,6 +79,17 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'string with plain text and escaped double-quote': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return "this escaped quote \" should end up as just a double-quote";
+EOS
+*/) {}),
+                expectedResult: 'this escaped quote " should end up as just a double-quote',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'string with plain text and ESC escape': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
@@ -161,10 +172,10 @@ EOS
 <?php
     $name = 'Dan';
 
-    return "before \n \r \t \v \e \f \\ \$ $name after";
+    return "before \n \r \t \v \e \f \\ \$ \" $name after";
 EOS
 */) {}),
-                expectedResult: 'before \n \r \t \v \x1B \f \\ $ Dan after',
+                expectedResult: 'before \n \r \t \v \x1B \f \\ $ " Dan after',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
