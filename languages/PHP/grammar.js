@@ -483,7 +483,7 @@ define(function () {
             },
             'N_STRING_TEXT': {
                 captureAs: 'N_STRING_LITERAL',
-                components: {name: 'string', what: (/(?:[^\\"\$]|\\[\\"\$nrtvef]|\$(?=\$))+/), ignoreWhitespace: false, replace: stringEscapeReplacements}
+                components: {name: 'string', what: (/(?:[^\\"\$]|\\[\s\S]|\$(?=\$))+/), ignoreWhitespace: false, replace: stringEscapeReplacements}
             },
             'N_STRING_VARIABLE': {
                 captureAs: 'N_VARIABLE',

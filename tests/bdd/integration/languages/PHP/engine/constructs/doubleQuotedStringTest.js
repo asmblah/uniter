@@ -68,6 +68,28 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'string with plain text and invalid backslash escape with whitespace following': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return "this standalone backslash \ should end up as a single backslash";
+EOS
+*/) {}),
+                expectedResult: 'this standalone backslash \\ should end up as a single backslash',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'string with plain text and invalid backslash escape with character following': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return "this invalid escape \z should be left alone";
+EOS
+*/) {}),
+                expectedResult: 'this invalid escape \\z should be left alone',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'string with plain text and dollar escape': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
@@ -172,10 +194,10 @@ EOS
 <?php
     $name = 'Dan';
 
-    return "before \n \r \t \v \e \f \\ \$ \" $name after";
+    return "before \n \r \t \v \e \f \\ \ \z \$ \" $name after";
 EOS
 */) {}),
-                expectedResult: 'before \n \r \t \v \x1B \f \\ $ " Dan after',
+                expectedResult: 'before \n \r \t \v \x1B \f \\ \\ \\z $ " Dan after',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
