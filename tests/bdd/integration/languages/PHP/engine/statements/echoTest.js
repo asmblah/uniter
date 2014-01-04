@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    var DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null'/*, 'object'*/, 'string'];
 
     describe('PHP Engine echo statement integration', function () {
         var engine;
@@ -71,6 +71,17 @@ define([
                     }, {
                         operand: '6',
                         expectedStdout: '6'
+                    }],
+                    'null': [{
+                        operand: 'null',
+                        expectedStdout: ''
+                    }],
+                    'string': [{
+                        operand: 'hello',
+                        expectedStdout: 'hello'
+                    }, {
+                        operand: 'world',
+                        expectedStdout: 'world'
                     }]
                 }
             }
