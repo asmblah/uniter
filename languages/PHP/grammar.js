@@ -19,6 +19,22 @@ define(function () {
      * Elimination of left-recursion: http://web.cs.wpi.edu/~kal/PLT/PLT4.1.2.html
      */
 
+    var stringEscapeReplacements = [{
+            pattern: /\\([\$efnrtv\\])/g,
+            replacement: function (all, chr) {
+                return {
+                    'e': '\x1B', // Escape
+                    'f': '\f',   // Form feed
+                    'n': '\n',   // Linefeed
+                    'r': '\r',   // Carriage-return
+                    't': '\t',   // Horizontal tab
+                    'v': '\x0B', // Vertical tab (JS '\v' escape not supported in IE < 9)
+                    '\\': '\\',
+                    '$': '$'
+                }[chr];
+            }
+        }];
+
     return {
         ignore: 'N_IGNORE',
         rules: {
@@ -49,21 +65,7 @@ define(function () {
                 // Single-quoted
                 {what: /'((?:[^']|\\')*)'/, captureIndex: 1},
                 // Double-quoted
-                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:(?!")[\s\S]|\\"))*)"/, captureIndex: 1, replace: [{
-                    pattern: /\\([\$efnrtv\\])/g,
-                    replacement: function (all, chr) {
-                        return {
-                            'e': '\x1B', // Escape
-                            'f': '\f',   // Form feed
-                            'n': '\n',   // Linefeed
-                            'r': '\r',   // Carriage-return
-                            't': '\t',   // Horizontal tab
-                            'v': '\x0B', // Vertical tab (JS '\v' escape not supported in IE < 9)
-                            '\\': '\\',
-                            '$': '$'
-                        }[chr];
-                    }
-                }]}
+                {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:[^"]|\\"))*)"/, captureIndex: 1, replace: stringEscapeReplacements}
             ]},
             'T_CONTINUE': /continue\b/i,
             'T_CURLY_OPEN': /\{(?=\$)/,
@@ -480,7 +482,7 @@ define(function () {
             },
             'N_STRING_TEXT': {
                 captureAs: 'N_STRING_LITERAL',
-                components: {name: 'string', what: (/(?:[^"\$]|\\["\$]|\$(?=\$))+/), ignoreWhitespace: false}
+                components: {name: 'string', what: (/(?:[^\\"\$]|\\[\\"\$nrtvef]|\$(?=\$))+/), ignoreWhitespace: false, replace: stringEscapeReplacements}
             },
             'N_STRING_VARIABLE': {
                 captureAs: 'N_VARIABLE',

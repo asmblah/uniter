@@ -155,6 +155,19 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'string with all escapes and interpolated variable': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $name = 'Dan';
+
+    return "before \n \r \t \v \e \f \\ \$ $name after";
+EOS
+*/) {}),
+                expectedResult: 'before \n \r \t \v \x1B \f \\ $ Dan after',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
