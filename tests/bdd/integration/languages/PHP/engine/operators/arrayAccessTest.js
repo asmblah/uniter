@@ -307,9 +307,26 @@ EOS
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'array access of function call result': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function getArray() {
+        return array('a', 'b');
+    }
+
+    return getArray()[1];
+EOS
+*/) {}),
+                expectedResult: 'b',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
-        }, function (scenario) {
-            check(scenario);
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });
