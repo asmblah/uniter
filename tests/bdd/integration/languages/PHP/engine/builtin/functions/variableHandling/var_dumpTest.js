@@ -34,8 +34,8 @@ define([
             engine = phpTools.createEngine();
         });
 
-        util.each([
-            {
+        util.each({
+            'empty array': {
                 value: 'array()',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 array(0) {
@@ -44,7 +44,7 @@ array(0) {
 EOS
 */) {})
             },
-            {
+            'array with one element with implicit key': {
                 value: 'array(7)',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 array(1) {
@@ -55,7 +55,7 @@ array(1) {
 EOS
 */) {})
             },
-            {
+            'array with one element with explicit key': {
                 value: 'array(4 => "a")',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 array(1) {
@@ -66,7 +66,7 @@ array(1) {
 EOS
 */) {})
             },
-            {
+            'array with one element with explicit key for subarray value': {
                 value: 'array(5 => array(6, 7))',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 array(1) {
@@ -82,27 +82,27 @@ array(1) {
 EOS
 */) {})
             },
-            {
+            'boolean true': {
                 value: 'true',
                 expectedStdout: 'bool(true)\n'
             },
-            {
+            'boolean false': {
                 value: 'false',
                 expectedStdout: 'bool(false)\n'
             },
-            {
+            'float': {
                 value: '2.2',
                 expectedStdout: 'float(2.2)\n'
             },
-            {
+            'integer': {
                 value: '3',
                 expectedStdout: 'int(3)\n'
             },
-            {
+            'null': {
                 value: 'null',
                 expectedStdout: 'NULL\n'
             },
-            {
+            'empty stdClass instance': {
                 value: 'new stdClass',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 object(stdClass)#1 (0) {
@@ -111,7 +111,7 @@ object(stdClass)#1 (0) {
 EOS
 */) {})
             },
-            {
+            'stdClass instance with one property': {
                 value: 'new stdClass; $value->prop = 1',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 object(stdClass)#1 (1) {
@@ -122,7 +122,7 @@ object(stdClass)#1 (1) {
 EOS
 */) {})
             },
-            {
+            'stdClass instance with one property containing another stdClass instance': {
                 value: 'new stdClass; $value->sub = new stdClass; $value->sub->prop = 1',
                 expectedStdout: util.heredoc(function (/*<<<EOS
 object(stdClass)#1 (1) {
@@ -136,15 +136,17 @@ object(stdClass)#1 (1) {
 EOS
 */) {})
             },
-            {
+            'string': {
                 value: '"world"',
                 expectedStdout: 'string(5) "world"\n'
             }
-        ], function (scenario) {
-            check({
-                code: '<?php $value = ' + scenario.value + '; var_dump($value);',
-                expectedStderr: scenario.expectedStderr || '',
-                expectedStdout: scenario.expectedStdout
+        }, function (scenario, description) {
+            describe(description, function () {
+                check({
+                    code: '<?php $value = ' + scenario.value + '; var_dump($value);',
+                    expectedStderr: scenario.expectedStderr || '',
+                    expectedStdout: scenario.expectedStdout
+                });
             });
         });
     });
