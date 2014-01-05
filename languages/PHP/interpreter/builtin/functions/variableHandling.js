@@ -23,7 +23,8 @@ define([
         return {
             'var_dump': function (scopeChain, valueReference) {
                 var isReference = (valueReference instanceof Variable),
-                    value = isReference ? valueReference.getValue() : valueReference;
+                    value = isReference ? valueReference.getValue() : valueReference,
+                    objects = [];
 
                 function dump(value, depth) {
                     var currentIndentation = new Array(depth).join('  '),
@@ -31,6 +32,13 @@ define([
                         nativeValue,
                         nextIndentation = new Array(depth + 1).join('  '),
                         representation = currentIndentation;
+
+                    if (objects.indexOf(value) > -1) {
+                        representation += '*RECURSION*';
+                        return representation + '\n';
+                    }
+
+                    objects.push(value);
 
                     switch (value.getType()) {
                     case 'array':

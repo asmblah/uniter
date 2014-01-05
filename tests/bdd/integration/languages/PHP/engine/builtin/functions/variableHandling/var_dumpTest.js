@@ -139,6 +139,29 @@ EOS
             'string': {
                 value: '"world"',
                 expectedStdout: 'string(5) "world"\n'
+            },
+            'stdClass instance with one property referring to itself': {
+                value: 'new stdClass; $value->me = $value',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (1) {
+  ["me"]=>
+  *RECURSION*
+}
+
+EOS
+*/) {})
+            },
+            'array assigned to an element of itself - should be a copy, so no recursion': {
+                value: 'array(); $value[0] = $value',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [0]=>
+  array(0) {
+  }
+}
+
+EOS
+*/) {})
             }
         }, function (scenario, description) {
             describe(description, function () {
