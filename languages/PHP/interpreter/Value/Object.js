@@ -45,12 +45,20 @@ define([
             return value.factory.coerce(object[name].apply(object, [scopeChain].concat(args)));
         },
 
+        clone: function () {
+            throw new Error('Unimplemented');
+        },
+
         coerceToKey: function (scopeChain) {
             scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         getClassName: function () {
             return this.className;
+        },
+
+        getForAssignment: function () {
+            return this;
         },
 
         getID: function () {

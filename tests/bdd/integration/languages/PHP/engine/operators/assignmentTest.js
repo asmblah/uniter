@@ -36,6 +36,27 @@ define([
 
         describe('the "=" operator', function () {
             util.each({
+                'assignment of variable containing array to another variable': {
+                    code: '<?php $a = array(); $b = $a; return $b;',
+                    expectedResult: [],
+                    expectedResultDeep: true,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'assignment of variable containing array to another variable, then modifying the copy (should not affect original)': {
+                    code: '<?php $a = array(); $b = $a; $b[0] = 7; return $a;',
+                    expectedResult: [],
+                    expectedResultDeep: true,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'assignment of variable containing array to element of array': {
+                    code: '<?php $a = array(); $a[0] = $a; return $a;',
+                    expectedResult: [[]],
+                    expectedResultDeep: true,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
                 'assignment of integer value to variable': {
                     code: '<?php $a = 26; return $a;',
                     expectedResult: 26,

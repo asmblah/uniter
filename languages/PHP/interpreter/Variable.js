@@ -83,7 +83,7 @@ define([
             var variable = this;
 
             if (variable.value) {
-                variable.value = value;
+                variable.value = value.getForAssignment();
             } else {
                 variable.reference.setValue(value);
             }

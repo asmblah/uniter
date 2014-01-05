@@ -40,6 +40,10 @@ define([
             });
         },
 
+        getForAssignment: function () {
+            return this;
+        },
+
         getNative: function () {
             return this.value;
         },

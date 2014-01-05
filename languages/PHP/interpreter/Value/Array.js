@@ -64,18 +64,16 @@ define([
 
     util.extend(ArrayValue.prototype, {
         clone: function () {
-            var arrayValue,
-                orderedElements,
-                value = this;
+            var arrayValue = this,
+                orderedElements = [];
 
-            util.each(value.value, function (element, index) {
-                orderedElements[index] = element.clone();
+            util.each(arrayValue.value, function (element) {
+                if (element.isDefined()) {
+                    orderedElements.push(new KeyValuePair(element.getKey(), element.getValue()));
+                }
             });
 
-            arrayValue = value.factory.createArray(orderedElements);
-            arrayValue.pointer = value.pointer;
-
-            return arrayValue;
+            return new ArrayValue(arrayValue.factory, orderedElements, arrayValue.type);
         },
 
         coerceToBoolean: function () {
@@ -100,6 +98,10 @@ define([
 
         coerceToString: function () {
             return this.factory.createString('Array');
+        },
+
+        getForAssignment: function () {
+            return this.clone();
         },
 
         getKeys: function () {

@@ -47,11 +47,15 @@ define([
             return element.value;
         },
 
+        isDefined: function () {
+            return this.value !== null;
+        },
+
         setValue: function (value) {
             var element = this,
                 isFirstElement = (element.arrayValue.getLength() === 0);
 
-            element.value = value;
+            element.value = value.getForAssignment();
 
             if (isFirstElement) {
                 element.arrayValue.setPointer(element.arrayValue.getKeys().indexOf(element.key.getNative().toString()));

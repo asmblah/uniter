@@ -48,7 +48,11 @@ define([
                     it('should return the expected result', function (done) {
                         engine.execute(scenario.code).done(function (result) {
                             if (hasOwn.call(scenario, 'expectedResult')) {
-                                expect(result).to.equal(scenario.expectedResult);
+                                if (scenario.expectedResultDeep) {
+                                    expect(result).to.deep.equal(scenario.expectedResult);
+                                } else {
+                                    expect(result).to.equal(scenario.expectedResult);
+                                }
                             } else {
                                 scenario.expectedResultCallback(result);
                             }
