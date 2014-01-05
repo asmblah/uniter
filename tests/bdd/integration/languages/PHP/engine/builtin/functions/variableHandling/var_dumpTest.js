@@ -162,6 +162,59 @@ array(1) {
 
 EOS
 */) {})
+            },
+            'array element with reference to variable': {
+                value: 'array(); $where = "Here"; $value[0] =& $where; $where = "There"',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [0]=>
+  &string(5) "There"
+}
+
+EOS
+*/) {})
+            },
+            'reference to variable containing array assigned to an element of itself - should not be a copy, so recurses': {
+                value: 'array(); $value[0] =& $value',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [0]=>
+  &array(1) {
+    [0]=>
+    *RECURSION*
+  }
+}
+
+EOS
+*/) {})
+            },
+            'reference to variable containing object assigned to a property of itself': {
+                value: 'new stdClass; $value->prop =& $value',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (1) {
+  ["prop"]=>
+  *RECURSION*
+}
+
+EOS
+*/) {})
+            },
+            'circular reference from array -> object -> array': {
+                value: 'array(); $object = new stdClass; $value[0] =& $object; $object->prop =& $value',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+array(1) {
+  [0]=>
+  &object(stdClass)#1 (1) {
+    ["prop"]=>
+    &array(1) {
+      [0]=>
+      *RECURSION*
+    }
+  }
+}
+
+EOS
+*/) {})
             }
         }, function (scenario, description) {
             describe(description, function () {

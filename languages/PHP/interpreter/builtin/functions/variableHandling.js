@@ -26,7 +26,7 @@ define([
                     value = isReference ? valueReference.getValue() : valueReference,
                     objects = [];
 
-                function dump(value, depth) {
+                function dump(value, depth, isReference) {
                     var currentIndentation = new Array(depth).join('  '),
                         keys,
                         nativeValue,
@@ -38,14 +38,18 @@ define([
                         return representation + '\n';
                     }
 
-                    objects.push(value);
+                    if (isReference) {
+                        objects.push(value);
+                        representation += '&';
+                    }
 
                     switch (value.getType()) {
                     case 'array':
                         representation += 'array(' + value.getLength() + ') {\n';
 
                         util.each(value.getKeys(), function (key) {
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(value.getElementByKey(key).getValue(scopeChain), depth + 1);
+                            var element = value.getElementByKey(key);
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(scopeChain), depth + 1, element.isReference());
                         });
 
                         representation += currentIndentation + '}';
@@ -67,8 +71,11 @@ define([
 
                         representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + keys.length + ') {\n';
 
+                        objects.push(value);
+
                         util.each(keys, function (key) {
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(value.getElementByKey(key).getValue(scopeChain), depth + 1);
+                            var element = value.getElementByKey(key);
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(scopeChain), depth + 1, element.isReference());
                         });
 
                         representation += currentIndentation + '}';

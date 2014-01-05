@@ -57,6 +57,12 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
+                'assignment of variable reference to element of array': {
+                    code: '<?php $a = array(); $b = 1; $a[0] =& $b; $b = 7; return $a[0];',
+                    expectedResult: 7,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
                 'assignment of integer value to variable': {
                     code: '<?php $a = 26; return $a;',
                     expectedResult: 26,
