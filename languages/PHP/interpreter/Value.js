@@ -19,8 +19,9 @@ define([
 ) {
     'use strict';
 
-    function Value(factory, type, value) {
+    function Value(factory, scopeChain, type, value) {
         this.factory = factory;
+        this.scopeChain = scopeChain;
         this.type = type;
         this.value = value;
     }
@@ -32,7 +33,9 @@ define([
             return leftValue.factory.createString(leftValue.coerceToString().getNative() + rightValue.coerceToString().getNative());
         },
 
-        getElementByKey: function (key, scopeChain) {
+        getElementByKey: function () {
+            var scopeChain = this.scopeChain;
+
             return new NullReference(this.factory, {
                 onSet: function () {
                     scopeChain.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');

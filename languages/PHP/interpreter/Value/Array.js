@@ -29,7 +29,7 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function ArrayValue(factory, orderedElements, type) {
+    function ArrayValue(factory, scopeChain, orderedElements, type) {
         var elements = [],
             keysToElements = [],
             value = this;
@@ -48,13 +48,13 @@ define([
                 element = factory.coerce(element);
             }
 
-            element = new ElementReference(factory, value, key, element);
+            element = new ElementReference(factory, scopeChain, value, key, element);
 
             elements.push(element);
             keysToElements[key.getNative()] = element;
         });
 
-        Value.call(this, factory, type || 'array', elements);
+        Value.call(this, factory, scopeChain, type || 'array', elements);
 
         this.keysToElements = keysToElements;
         this.pointer = 0;
@@ -73,7 +73,7 @@ define([
                 }
             });
 
-            return new ArrayValue(arrayValue.factory, orderedElements, arrayValue.type);
+            return new ArrayValue(arrayValue.factory, arrayValue.scopeChain, orderedElements, arrayValue.type);
         },
 
         coerceToBoolean: function () {
@@ -88,8 +88,8 @@ define([
             return value.factory.createInteger(value.value.length === 0 ? 0 : 1);
         },
 
-        coerceToKey: function (scopeChain) {
-            scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+        coerceToKey: function () {
+            this.scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         coerceToNumber: function () {
@@ -130,12 +130,12 @@ define([
             return value.value[value.pointer] || value.factory.createNull();
         },
 
-        getElementByKey: function (key, scopeChain) {
+        getElementByKey: function (key) {
             var element,
                 keyValue,
                 value = this;
 
-            key = key.coerceToKey(scopeChain);
+            key = key.coerceToKey(value.scopeChain);
 
             if (!key) {
                 // Could not be coerced to a key: error will already have been handled, just return NULL
@@ -145,7 +145,7 @@ define([
             keyValue = key.getNative();
 
             if (!hasOwn.call(value.keysToElements, keyValue)) {
-                element = new ElementReference(value.factory, value, key, null);
+                element = new ElementReference(value.factory, value.scopeChain, value, key, null);
 
                 value.value.push(element);
                 value.keysToElements[keyValue] = element;

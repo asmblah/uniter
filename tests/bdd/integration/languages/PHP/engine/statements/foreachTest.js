@@ -158,6 +158,23 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'oneProp=5,anotherProp=6,'
+            },
+            'unpacking array with list': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array(
+        array(2, 3),
+        array(5, 7)
+    );
+
+    foreach ($array as list($first, $second)) {
+        print $first . ':' . $second . ',';
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: '2:3,5:7,'
             }
         }, function (scenario, description) {
             describe(description, function () {

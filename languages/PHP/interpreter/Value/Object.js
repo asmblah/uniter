@@ -21,8 +21,8 @@ define([
 ) {
     'use strict';
 
-    function ObjectValue(factory, object, className, id) {
-        ArrayValue.call(this, factory, object, 'object');
+    function ObjectValue(factory, scopeChain, object, className, id) {
+        ArrayValue.call(this, factory, scopeChain, object, 'object');
 
         this.className = className;
         this.id = id;
@@ -32,7 +32,7 @@ define([
     util.inherit(ObjectValue).from(ArrayValue);
 
     util.extend(ObjectValue.prototype, {
-        callMethod: function (name, args, scopeChain) {
+        callMethod: function (name, args) {
             var value = this,
                 object = value.object;
 
@@ -42,15 +42,15 @@ define([
                 throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
             }
 
-            return value.factory.coerce(object[name].apply(object, [scopeChain].concat(args)));
+            return value.factory.coerce(object[name].apply(object, [value.scopeChain].concat(args)));
         },
 
         clone: function () {
             throw new Error('Unimplemented');
         },
 
-        coerceToKey: function (scopeChain) {
-            scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+        coerceToKey: function () {
+            this.scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         getClassName: function () {

@@ -10,27 +10,48 @@
 /*global define */
 define([
     'js/util',
+    './Error',
     './Reference/Variable'
 ], function (
     util,
+    PHPError,
     VariableReference
 ) {
     'use strict';
 
-    function Variable(valueFactory) {
+    function Variable(scopeChain, valueFactory, name) {
+        this.name = name;
         this.reference = null;
-        this.value = valueFactory.createNull();
+        this.scopeChain = scopeChain;
+        this.value = null;
+        this.valueFactory = valueFactory;
     }
 
     util.extend(Variable.prototype, {
         getValue: function () {
             var variable = this;
 
-            return variable.value ? variable.value : variable.reference.getValue();
+            if (variable.value) {
+                return variable.value;
+            }
+
+            if (variable.reference) {
+                return variable.reference.getValue();
+            }
+
+            variable.scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined variable: ' + variable.name);
+
+            return variable.valueFactory.createNull();
         },
 
         getReference: function () {
             return new VariableReference(this);
+        },
+
+        isDefined: function () {
+            var variable = this;
+
+            return variable.value || variable.reference;
         },
 
         postDecrement: function () {
@@ -82,10 +103,10 @@ define([
         setValue: function (value) {
             var variable = this;
 
-            if (variable.value) {
-                variable.value = value.getForAssignment();
-            } else {
+            if (variable.reference) {
                 variable.reference.setValue(value);
+            } else {
+                variable.value = value.getForAssignment();
             }
 
             return value;

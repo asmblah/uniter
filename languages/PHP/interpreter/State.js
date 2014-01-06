@@ -13,22 +13,26 @@ define([
     './Namespace',
     './ReferenceFactory',
     './Scope',
+    './ScopeChain',
     './ValueFactory'
 ], function (
     util,
     Namespace,
     ReferenceFactory,
     Scope,
+    ScopeChain,
     ValueFactory
 ) {
     'use strict';
 
-    function PHPState() {
-        var valueFactory = new ValueFactory();
+    function PHPState(stderr) {
+        var scopeChain = new ScopeChain(stderr),
+            valueFactory = new ValueFactory(scopeChain);
 
         this.globalNamespace = new Namespace(null, '');
-        this.globalScope = new Scope(valueFactory);
+        this.globalScope = new Scope(scopeChain, valueFactory);
         this.referenceFactory = new ReferenceFactory(valueFactory);
+        this.scopeChain = scopeChain;
         this.valueFactory = valueFactory;
     }
 
@@ -43,6 +47,10 @@ define([
 
         getReferenceFactory: function () {
             return this.referenceFactory;
+        },
+
+        getScopeChain: function () {
+            return this.scopeChain;
         },
 
         getValueFactory: function () {

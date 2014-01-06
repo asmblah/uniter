@@ -17,8 +17,8 @@ define([
 ) {
     'use strict';
 
-    function StringValue(factory, value) {
-        Value.call(this, factory, 'string', value);
+    function StringValue(factory, scopeChain, value) {
+        Value.call(this, factory, scopeChain, 'string', value);
     }
 
     util.inherit(StringValue).from(Value);

@@ -31,8 +31,9 @@ define([
 ) {
     'use strict';
 
-    function ValueFactory() {
+    function ValueFactory(scopeChain) {
         this.nextObjectID = 1;
+        this.scopeChain = scopeChain;
     }
 
     util.extend(ValueFactory.prototype, {
@@ -44,13 +45,19 @@ define([
             return this.createFromNative(value);
         },
         createArray: function (value) {
-            return new ArrayValue(this, value);
+            var factory = this;
+
+            return new ArrayValue(factory, factory.scopeChain, value);
         },
         createBoolean: function (value) {
-            return new BooleanValue(this, value);
+            var factory = this;
+
+            return new BooleanValue(factory, factory.scopeChain, value);
         },
         createFloat: function (value) {
-            return new FloatValue(this, value);
+            var factory = this;
+
+            return new FloatValue(factory, factory.scopeChain, value);
         },
         createFromNative: function (nativeValue) {
             var factory = this;
@@ -74,19 +81,25 @@ define([
             return factory.createObject(nativeValue, 'Object');
         },
         createInteger: function (value) {
-            return new IntegerValue(this, value);
+            var factory = this;
+
+            return new IntegerValue(factory, factory.scopeChain, value);
         },
         createNull: function () {
-            return new NullValue(this);
+            var factory = this;
+
+            return new NullValue(factory, factory.scopeChain);
         },
         createObject: function (value, className) {
             var factory = this;
 
             // Object ID tracking is incomplete: ID should be freed when all references are lost
-            return new ObjectValue(factory, value, className, factory.nextObjectID++);
+            return new ObjectValue(factory, factory.scopeChain, value, className, factory.nextObjectID++);
         },
         createString: function (value) {
-            return new StringValue(this, value);
+            var factory = this;
+
+            return new StringValue(factory, factory.scopeChain, value);
         }
     });
 

@@ -88,6 +88,30 @@ define([
                     }]
                 }
             },
+            'simple foreach over variable with list for value and no body statements': {
+                code: 'foreach ($array as list($first, $second)) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOREACH_STATEMENT',
+                        array: {
+                            name: 'N_VARIABLE',
+                            variable: 'array'
+                        },
+                        value: {
+                            name: 'N_LIST',
+                            elements: [{
+                                name: 'N_VARIABLE',
+                                variable: 'first'
+                            }, {
+                                name: 'N_VARIABLE',
+                                variable: 'second'
+                            }]
+                        },
+                        statements: []
+                    }]
+                }
+            },
             'simple foreach over variable with key with one body statement': {
                 code: 'foreach ($array as $key => $item) { echo 3; }',
                 expectedAST: {

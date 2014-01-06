@@ -17,8 +17,8 @@ define([
 ) {
     'use strict';
 
-    function FloatValue(factory, value) {
-        Value.call(this, factory, 'float', value);
+    function FloatValue(factory, scopeChain, value) {
+        Value.call(this, factory, scopeChain, 'float', value);
     }
 
     util.inherit(FloatValue).from(Value);

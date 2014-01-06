@@ -50,7 +50,7 @@ define([
                 spec = interpreter.spec;
 
             if (!interpreter.state && spec.State) {
-                interpreter.state = new spec.State();
+                interpreter.state = new spec.State(interpreter.stderr);
             }
 
             return interpreter.state;

@@ -29,7 +29,7 @@ define([
                     return valueFactory.createBoolean(false);
                 }
 
-                return arrayValue.getCurrentElement().getValue(scopeChain);
+                return arrayValue.getCurrentElement().getValue();
             },
             'next': function (scopeChain, arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
@@ -46,7 +46,7 @@ define([
                     return valueFactory.createBoolean(false);
                 }
 
-                return arrayValue.getCurrentElement().getValue(scopeChain);
+                return arrayValue.getCurrentElement().getValue();
             }
         };
     };

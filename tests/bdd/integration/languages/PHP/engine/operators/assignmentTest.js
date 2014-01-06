@@ -99,9 +99,15 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
-                'assignment of integer value to index of implied array then reading back': {
+                'assignment of integer value to index of undefined implied array then reading back': {
                     code: '<?php $array[0] = 22; return $array[0];',
                     expectedResult: 22,
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'assignment of integer value to index of defined but null (so implied) array then reading back': {
+                    code: '<?php $array = null; $array[0] = 23; return $array[0];',
+                    expectedResult: 23,
                     expectedStderr: '',
                     expectedStdout: ''
                 },
@@ -110,6 +116,32 @@ define([
                     expectedResult: 2,
                     expectedStderr: 'PHP Warning: Cannot use a scalar value as an array',
                     expectedStdout: ''
+                },
+                'assignment of integer value to variable after variable has been read: definitions should not be hoisted': {
+                    code: '<?php var_dump($value); $value = 7;',
+                    expectedResult: null,
+                    expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Notice: Undefined variable: value
+EOS
+*/) {}),
+                    expectedStdout: util.heredoc(function (/*<<<EOS
+NULL
+
+EOS
+*/) {}),
+                },
+                'assignment of integer value to variable before variable has been read, but in code block that is never run': {
+                    code: '<?php if (0) { $value = 1; } var_dump($value);',
+                    expectedResult: null,
+                    expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Notice: Undefined variable: value
+EOS
+*/) {}),
+                    expectedStdout: util.heredoc(function (/*<<<EOS
+NULL
+
+EOS
+*/) {}),
                 }
             }, function (scenario, description) {
                 describe(description, function () {

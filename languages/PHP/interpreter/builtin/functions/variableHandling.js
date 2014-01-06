@@ -49,7 +49,7 @@ define([
 
                         util.each(value.getKeys(), function (key) {
                             var element = value.getElementByKey(key);
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(scopeChain), depth + 1, element.isReference());
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
                         });
 
                         representation += currentIndentation + '}';
@@ -75,7 +75,7 @@ define([
 
                         util.each(keys, function (key) {
                             var element = value.getElementByKey(key);
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(scopeChain), depth + 1, element.isReference());
+                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
                         });
 
                         representation += currentIndentation + '}';

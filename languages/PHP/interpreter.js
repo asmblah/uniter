@@ -21,8 +21,7 @@ define([
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/State',
-    './interpreter/Scope',
-    './interpreter/ScopeChain'
+    './interpreter/Scope'
 ], function (
     builtinTypes,
     util,
@@ -32,8 +31,7 @@ define([
     PHPEnvironment,
     PHPError,
     PHPState,
-    Scope,
-    ScopeChain
+    Scope
 ) {
     'use strict';
 
@@ -73,7 +71,7 @@ define([
             valueFactory = state.getValueFactory(),
             referenceFactory = state.getReferenceFactory(),
             result,
-            scopeChain = new ScopeChain(stderr),
+            scopeChain = state.getScopeChain(),
             tools = {
                 createInstance: function (namespace, classNameValue) {
                     var className = classNameValue.getNative(),
@@ -89,8 +87,9 @@ define([
                     return new List(elements);
                 },
                 implyArray: function (variable) {
-                    if (variable.getValue().getNative() === null) {
-                        variable.setValue(tools.valueFactory.createArray([]));
+                    // Undefined variables and variables containing null may be implicitly converted to arrays
+                    if (!variable.isDefined() || variable.getValue().getType() === 'null') {
+                        variable.setValue(valueFactory.createArray([]));
                     }
 
                     return variable.getValue();
@@ -99,7 +98,7 @@ define([
                     scopeChain.pop();
                 },
                 pushScope: function () {
-                    scopeChain.push(new Scope(valueFactory));
+                    scopeChain.push(new Scope(scopeChain, valueFactory));
                 },
                 referenceFactory: referenceFactory,
                 valueFactory: valueFactory
@@ -128,10 +127,6 @@ define([
             });
         }());
 
-        if (getKeys(context.localVariableNames).length > 0) {
-            code = 'scopeChain.getCurrent().defineVariables(["' + getKeys(context.localVariableNames).join('", "') + '"]);' + code;
-        }
-
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
@@ -154,16 +149,6 @@ define([
         };
     }
 
-    function getKeys(object) {
-        var keys = [];
-
-        util.each(object, function (value, key) {
-            keys.push(key);
-        });
-
-        return keys;
-    }
-
     function hoistDeclarations(statements) {
         var declarations = [],
             nonDeclarations = [];
@@ -183,29 +168,20 @@ define([
         var args = [],
             argumentAssignments = '',
             body = '',
-            localVariableNames = {},
             variableDeclarations = '';
 
         util.each(argNodes, function (arg) {
             args.push(arg.variable);
-
-            // Define any arguments as local variables
-            localVariableNames[arg.variable] = true;
         });
 
-        // Interpret statements first (will populate localVariableNames)
+        // Interpret statements first
         util.each(hoistDeclarations(statementNodes), function (statement) {
-            body += interpret(statement, {localVariableNames: localVariableNames});
+            body += interpret(statement);
         });
-
-        // Define local variables and arguments
-        if (getKeys(localVariableNames).length > 0) {
-            variableDeclarations += 'scopeChain.getCurrent().defineVariables(["' + getKeys(localVariableNames).join('", "') + '"]);';
-        }
 
         // Copy passed values for any arguments
         util.each(args, function (arg) {
-            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '", scopeChain).setValue(' + arg + ');';
+            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '").setValue(' + arg + ');';
         });
 
         // Prepend parts in correct order
@@ -236,11 +212,11 @@ define([
                 if (context.assignment) {
                     arrayVariableCode = 'tools.implyArray(' + interpret(node.array, {getValue: false}) + ')';
                 } else {
-                    suffix = '.getValue(scopeChain)';
+                    suffix = '.getValue()';
                     arrayVariableCode = interpret(node.array, {getValue: true});
                 }
 
-                return arrayVariableCode + '.getElementByKey(' + indexValues.join(', scopeChain).getValue(scopeChain).getElementByKey(') + ', scopeChain)' + suffix;
+                return arrayVariableCode + '.getElementByKey(' + indexValues.join(').getValue().getElementByKey(') + ')' + suffix;
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];
@@ -327,13 +303,6 @@ define([
                     context.foreach.depth++;
                 }
 
-                // Ensure the iterator key (if specified) and value variables are defined
-                if (key) {
-                    context.localVariableNames[node.key.variable] = true;
-                }
-
-                context.localVariableNames[node.value.variable] = true;
-
                 arrayVariable = 'array_' + context.foreach.depth;
 
                 // Cache the value being iterated over and reset the internal array pointer before the loop
@@ -353,7 +322,7 @@ define([
                 }
 
                 // Iterator value variable
-                code += value + '.set' + (node.value.reference ? 'Reference' : 'Value') + '(' + arrayVariable + '.getElementByIndex(' + pointerVariable + ')' + (node.value.reference ? '' : '.getValue(scopeChain)') + ');';
+                code += value + '.set' + (node.value.reference ? 'Reference' : 'Value') + '(' + arrayVariable + '.getElementByIndex(' + pointerVariable + ')' + (node.value.reference ? '' : '.getValue()') + ');';
 
                 // Set pointer to next element at start of loop body as per spec
                 code += pointerVariable + '++;';
@@ -424,7 +393,7 @@ define([
                         args.push(interpret(arg));
                     });
 
-                    code += '.callMethod(' + interpret(call.func) + ', [' + args.join(', ') + '], scopeChain)';
+                    code += '.callMethod(' + interpret(call.func) + ', [' + args.join(', ') + '])';
                 });
 
                 return interpret(node.object) + code;
@@ -461,17 +430,17 @@ define([
                 if (context.assignment) {
                     objectVariableCode = 'tools.implyArray(' + interpret(node.object, {getValue: false}) + ')';
                 } else {
-                    suffix = '.getValue(scopeChain)';
+                    suffix = '.getValue()';
                     objectVariableCode = interpret(node.object, {getValue: true});
                 }
 
                 util.each(node.properties, function (property, index) {
                     var keyValue = interpret(property.property, {assignment: false, getValue: false});
 
-                    propertyCode += '.getElementByKey(' + keyValue + ', scopeChain)';
+                    propertyCode += '.getElementByKey(' + keyValue + ')';
 
                     if (index < node.properties.length - 1) {
-                        propertyCode += '.getValue(scopeChain)';
+                        propertyCode += '.getValue()';
                     }
                 });
 
@@ -482,9 +451,7 @@ define([
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
-                    context = {
-                        localVariableNames: {}
-                    };
+                    context = {};
 
                 util.each(hoistDeclarations(node.statements), function (statement) {
                     body += interpret(statement, context);
@@ -539,15 +506,10 @@ define([
                 return operand + '.' + unaryOperatorToMethod[node.prefix ? 'prefix' : 'suffix'][operator] + '()';
             },
             'N_VARIABLE': function (node, interpret, context) {
-                // Track any implicit variable declarations
-                if (context.assignment) {
-                    context.localVariableNames[node.variable] = true;
-                }
-
-                return 'scopeChain.getCurrent().getVariable("' + node.variable + '", scopeChain)' + (context.getValue !== false ? '.getValue()' : '');
+                return 'scopeChain.getCurrent().getVariable("' + node.variable + '")' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VARIABLE_EXPRESSION': function (node, interpret, context) {
-                return 'scopeChain.getCurrent().getVariable(' + interpret(node.expression) + '.getNative(), scopeChain)' + (context.getValue !== false ? '.getValue()' : '');
+                return 'scopeChain.getCurrent().getVariable(' + interpret(node.expression) + '.getNative())' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';
