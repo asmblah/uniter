@@ -448,7 +448,7 @@ define([
                     body += interpret(statement);
                 });
 
-                return 'namespace = namespace.getDescendant(' + JSON.stringify(node.namespace) + ');' + body;
+                return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + ');' + body + '}(namespace));';
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 return 'tools.createInstance(namespace, ' + interpret(node.className) + ')';

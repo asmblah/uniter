@@ -55,6 +55,35 @@ object(SubWhere\Me)#1 (0) {
 
 EOS
 */) {})
+            },
+            'multiple namespace statements, referring to classes from within each namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace There;
+
+    class You {}
+
+    $you = new You;
+    var_dump($you);
+
+    namespace Here;
+
+    class Me {}
+
+    $me = new Me;
+    var_dump($me);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(There\You)#1 (0) {
+}
+object(Here\Me)#2 (0) {
+}
+
+EOS
+*/) {})
             }
         }, function (scenario, description) {
             describe(description, function () {
