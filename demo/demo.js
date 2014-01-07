@@ -69,11 +69,17 @@ EOS
 
 $project = 'Uniter';
 
-function exclaim($text) {
-    return $text . '!';
+class English {
+    public function exclaim($text) {
+        return $text . '!';
+    }
 }
 
-echo $info->salutation . ' from ' . exclaim($project);
+$lang = new English();
+
+echo $info->salutation .
+    ' from ' .
+    $lang->exclaim($project);
 
 EOS
 */) {}),
