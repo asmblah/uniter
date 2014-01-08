@@ -68,6 +68,7 @@ EOS
 <?php
 
 $project = 'Uniter';
+$cc = 'en';
 
 class English {
     public function exclaim($text) {
@@ -75,7 +76,7 @@ class English {
     }
 }
 
-$lang = new English();
+$lang = ($cc === 'en') ? new English() : null;
 
 echo $info->salutation .
     ' from ' .
