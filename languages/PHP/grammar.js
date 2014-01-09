@@ -442,6 +442,9 @@ define(function () {
             'N_INTEGER': {
                 components: {name: 'number', what: 'T_LNUMBER'}
             },
+            'N_ISSET': {
+                components: ['T_ISSET', (/\(/), {name: 'variables', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+            },
             'N_KEY_VALUE_PAIR': {
                 components: [{name: 'key', what: 'N_EXPRESSION'}, 'T_DOUBLE_ARROW', {name: 'value', what: 'N_EXPRESSION'}]
             },
@@ -506,7 +509,7 @@ define(function () {
                 ]
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_STRING']}
             },
             'N_VARIABLE': {
                 components: [
