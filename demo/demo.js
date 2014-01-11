@@ -76,7 +76,7 @@ class English {
     }
 }
 
-$lang = ($cc === 'en') ? new English() : null;
+$lang = ($cc === 'en') ? new English : null;
 
 echo $info->salutation .
     ' from ' .
