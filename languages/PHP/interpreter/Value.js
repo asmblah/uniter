@@ -47,6 +47,10 @@ define([
             return this;
         },
 
+        getLength: function () {
+            return this.coerceToString().getLength();
+        },
+
         getNative: function () {
             return this.value;
         },

@@ -63,6 +63,10 @@ define([
             return this;
         },
 
+        getLength: function () {
+            return this.value.length;
+        },
+
         onesComplement: function () {
             return this.factory.createString('?');
         }

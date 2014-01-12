@@ -11,10 +11,12 @@
 define([
     './functions/array',
     './classes/stdClass',
+    './functions/string',
     './functions/variableHandling'
 ], function (
     arrayFunctions,
     stdClass,
+    stringFunctions,
     variableHandlingFunctions
 ) {
     'use strict';
@@ -25,6 +27,7 @@ define([
         },
         functionGroups: [
             arrayFunctions,
+            stringFunctions,
             variableHandlingFunctions
         ]
     };

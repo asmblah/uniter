@@ -65,7 +65,7 @@ define([
         coerceToString: function () {
             var value = this;
 
-            return value.factory.createString(value.value);
+            return value.factory.createString(value.value + '');
         },
 
         getElement: function () {
