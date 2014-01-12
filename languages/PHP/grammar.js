@@ -443,7 +443,7 @@ define(function () {
                 components: {name: 'number', what: 'T_LNUMBER'}
             },
             'N_ISSET': {
-                components: ['T_ISSET', (/\(/), {name: 'variables', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
+                components: ['T_ISSET', (/\(/), {name: 'variables', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
             'N_KEY_VALUE_PAIR': {
                 components: [{name: 'key', what: 'N_EXPRESSION'}, 'T_DOUBLE_ARROW', {name: 'value', what: 'N_EXPRESSION'}]
