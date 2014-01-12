@@ -59,6 +59,11 @@ define([
             var leftValue = this;
 
             return leftValue.factory.createBoolean(rightValue.type === leftValue.type && rightValue.value === leftValue.value);
+        },
+
+        isSet: function () {
+            // All values except NULL are classed as 'set'
+            return true;
         }
     });
 

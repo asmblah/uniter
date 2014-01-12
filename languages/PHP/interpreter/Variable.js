@@ -54,6 +54,12 @@ define([
             return variable.value || variable.reference;
         },
 
+        isSet: function () {
+            var variable = this;
+
+            return variable.isDefined() && variable.getValue().isSet();
+        },
+
         postDecrement: function () {
             var variable = this,
                 decrementedValue = variable.value.decrement(),

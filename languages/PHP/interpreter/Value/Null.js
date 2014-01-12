@@ -30,6 +30,10 @@ define([
 
         coerceToString: function () {
             return this.factory.createString('');
+        },
+
+        isSet: function () {
+            return false;
         }
     });
 

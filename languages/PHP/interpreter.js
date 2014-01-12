@@ -371,6 +371,15 @@ define([
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
             },
+            'N_ISSET': function (node, interpret) {
+                var issets = [];
+
+                util.each(node.variables, function (variable) {
+                    issets.push(interpret(variable, {getValue: false}) + '.isSet()');
+                });
+
+                return 'tools.valueFactory.createBoolean(' + issets.join(' && ') + ')';
+            },
             'N_KEY_VALUE_PAIR': function (node, interpret) {
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
             },
