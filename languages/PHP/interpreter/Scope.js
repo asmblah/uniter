@@ -62,8 +62,16 @@ define([
             return scope.variables[name];
         },
 
+        suppressErrors: function () {
+            this.errorsSuppressed = true;
+        },
+
         suppressesErrors: function () {
             return this.errorsSuppressed;
+        },
+
+        unsuppressErrors: function () {
+            this.errorsSuppressed = false;
         }
     });
 

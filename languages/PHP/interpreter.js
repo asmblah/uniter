@@ -378,7 +378,9 @@ define([
                     issets.push(interpret(variable, {getValue: false}) + '.isSet()');
                 });
 
-                return 'tools.valueFactory.createBoolean(' + issets.join(' && ') + ')';
+                return '(function (scope) {scope.suppressErrors();' +
+                    'var result = tools.valueFactory.createBoolean(' + issets.join(' && ') + ');' +
+                    'scope.unsuppressErrors(); return result;}(scopeChain.getCurrent()))';
             },
             'N_KEY_VALUE_PAIR': function (node, interpret) {
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';

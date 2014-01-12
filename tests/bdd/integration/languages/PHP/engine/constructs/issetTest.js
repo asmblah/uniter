@@ -49,15 +49,29 @@ define([
                 expectedStderr: '',
                 expectedStdout: ''
             },
-            /*'undefined property of object assigned to variable': {
+            'undefined property of object assigned to variable': {
                 code: '<?php $variable = new stdClass; return isset($variable->undefinedProp);',
                 expectedResult: false,
                 expectedResultType: 'boolean',
                 expectedStderr: '',
                 expectedStdout: ''
-            },*/
+            },
             'defined property with value null of object assigned to variable': {
                 code: '<?php $variable = new stdClass; $variable->prop = null; return isset($variable->prop);',
+                expectedResult: false,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'undefined element of array assigned to variable': {
+                code: '<?php $variable = array(); return isset($variable[7]);',
+                expectedResult: false,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'defined element with value null of array assigned to variable': {
+                code: '<?php $variable = array(); $variable[6] = null; return isset($variable[6]);',
                 expectedResult: false,
                 expectedResultType: 'boolean',
                 expectedStderr: '',
@@ -107,6 +121,20 @@ define([
             },
             'variable with an empty array assigned': {
                 code: '<?php $variable = array(); return isset($variable);',
+                expectedResult: true,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'property with value 0 of object assigned to variable': {
+                code: '<?php $variable = new stdClass; $variable->prop = 0; return isset($variable->prop);',
+                expectedResult: true,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'element with value "rabbit" of array assigned to variable': {
+                code: '<?php $variable = array(); $variable[4] = "rabbit"; return isset($variable[4]);',
                 expectedResult: true,
                 expectedResultType: 'boolean',
                 expectedStderr: '',
