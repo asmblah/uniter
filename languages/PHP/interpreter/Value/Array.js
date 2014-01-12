@@ -155,7 +155,13 @@ define([
         },
 
         getElementByIndex: function (index) {
-            return this.value[index] || (function () { throw new Error('Test me!'); }());
+            var value = this;
+
+            return value.value[index] || (function () {
+                value.scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(index));
+
+                return new NullReference(value.factory);
+            }());
         },
 
         getKeyByIndex: function (index) {

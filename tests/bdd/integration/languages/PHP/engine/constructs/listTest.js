@@ -42,6 +42,12 @@ define([
                     expectedStderr: '',
                     expectedStdout: ''
                 },
+                'of empty array to list with one element': {
+                    code: '<?php list($value) = array(); return $value;',
+                    expectedResult: null,
+                    expectedStderr: 'PHP Notice: Undefined offset: 0',
+                    expectedStdout: ''
+                },
                 'of array with two elements to list with two elements with first element skipped': {
                     code: '<?php list(, $a) = array(21, 22); return $a;',
                     expectedResult: 22,
