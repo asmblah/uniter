@@ -81,7 +81,6 @@ $lang = ($cc === 'en') ? new English : null;
 echo $info->salutation .
     ' from ' .
     $lang->exclaim($project);
-
 EOS
 */) {}),
             phpEditor;
