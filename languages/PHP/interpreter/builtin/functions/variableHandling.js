@@ -10,9 +10,11 @@
 /*global define */
 define([
     'js/util',
+    'languages/PHP/interpreter/Error',
     'languages/PHP/interpreter/Variable'
 ], function (
     util,
+    PHPError,
     Variable
 ) {
     'use strict';
@@ -22,9 +24,17 @@ define([
 
         return {
             'var_dump': function (scopeChain, valueReference) {
-                var isReference = (valueReference instanceof Variable),
-                    value = isReference ? valueReference.getValue() : valueReference,
+                var isReference,
+                    value,
                     objects = [];
+
+                if (!valueReference) {
+                    scopeChain.raiseError(PHPError.E_WARNING, 'var_dump() expects at least 1 parameter, 0 given');
+                    return;
+                }
+
+                isReference = (valueReference instanceof Variable);
+                value = isReference ? valueReference.getValue() : valueReference;
 
                 function dump(value, depth, isReference) {
                     var currentIndentation = new Array(depth).join('  '),

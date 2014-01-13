@@ -34,6 +34,14 @@ define([
             engine = phpTools.createEngine();
         });
 
+        describe('when given no arguments', function () {
+            check({
+                code: '<?php var_dump();',
+                expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given',
+                expectedStdout: ''
+            });
+        });
+
         describe('when given one argument', function () {
             util.each({
                 'empty array': {
