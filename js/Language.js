@@ -36,7 +36,7 @@ define([
                 stdin = new Stream(),
                 stdout = new Stream(),
                 interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr),
-                parser = new Parser(language.grammarSpec);
+                parser = new Parser(language.grammarSpec, stderr);
 
             return new Engine(parser, interpreter, options);
         },

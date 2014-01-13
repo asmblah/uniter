@@ -27,6 +27,7 @@ define([
         E_ERROR: 'Error',
         E_FATAL: 'Fatal error',
         E_NOTICE: 'Notice',
+        E_PARSE: 'Parse error',
         E_WARNING: 'Warning'
     });
 

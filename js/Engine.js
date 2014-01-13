@@ -32,8 +32,8 @@ define([
                 promise = new Promise(),
                 result;
 
-            ast = engine.parser.parse(code);
             try {
+                ast = engine.parser.parse(code);
                 result = engine.interpreter.interpret(ast);
                 promise.resolve(result.value, result.type);
             } catch (exception) {

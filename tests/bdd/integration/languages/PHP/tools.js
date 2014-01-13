@@ -27,11 +27,12 @@ define([
 
     return {
         createEngine: function (options) {
-            var stderr = new Stream(),
+            var tools = this,
+                stderr = new Stream(),
                 stdin = new Stream(),
                 stdout = new Stream(),
-                interpreter = new Interpreter(phpInterpreterSpec, stdin, stdout, stderr),
-                parser = new Parser(phpGrammarSpec);
+                interpreter = tools.createInterpreter(stdin, stdout, stderr),
+                parser = new Parser(phpGrammarSpec, stderr);
 
             return new Engine(parser, interpreter, options);
         },
@@ -41,7 +42,9 @@ define([
         },
 
         createParser: function () {
-            return new Parser(phpGrammarSpec);
+            var stderr = new Stream();
+
+            return new Parser(phpGrammarSpec, stderr);
         },
 
         getGrammarSpec: function () {

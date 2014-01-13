@@ -12,19 +12,23 @@ define([
     'js/util',
     'js/Component',
     'js/Exception',
+    'js/Exception/Parse',
     'js/Rule'
 ], function (
     util,
     Component,
     Exception,
+    ParseException,
     Rule
 ) {
     'use strict';
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Parser(grammarSpec) {
+    function Parser(grammarSpec, stderr) {
+        this.errorHandler = null;
         this.grammarSpec = grammarSpec;
+        this.stderr = stderr;
 
         (function (parser) {
             // Ensure the regex is anchored to the start of the string so it matches the very next characters
@@ -362,9 +366,29 @@ define([
     }
 
     util.extend(Parser.prototype, {
+        getErrorHandler: function () {
+            var parser = this;
+
+            if (!parser.errorHandler && parser.grammarSpec.ErrorHandler) {
+                parser.errorHandler = new parser.grammarSpec.ErrorHandler(parser.stderr);
+            }
+
+            return parser.errorHandler;
+        },
+
         parse: function (text, options) {
-            var rule = this.startRule,
+            var parser = this,
+                errorHandler = parser.getErrorHandler(),
+                rule = parser.startRule,
                 match = rule.match(text, 0, options);
+
+            if (match === null) {
+                return null;
+            }
+
+            if (errorHandler && match.textLength < text.length) {
+                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected "' + text.charAt(match.textLength) + '"', text, match));
+            }
 
             return match !== null ? match.components : null;
         }
