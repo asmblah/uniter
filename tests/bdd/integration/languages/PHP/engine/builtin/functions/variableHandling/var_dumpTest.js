@@ -36,7 +36,8 @@ define([
 
         describe('when given no arguments', function () {
             check({
-                code: '<?php var_dump();',
+                code: '<?php return var_dump();',
+                expectedResult: null,
                 expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given',
                 expectedStdout: ''
             });

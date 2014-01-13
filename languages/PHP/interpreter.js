@@ -346,7 +346,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return 'namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ')';
+                return '(namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ') || tools.valueFactory.createNull())';
             },
             'N_IF_STATEMENT': function (node, interpret) {
                 var alternateCode = '',
