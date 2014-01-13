@@ -18,10 +18,11 @@ define([
     'use strict';
 
     return function (internals) {
-        var valueFactory = internals.valueFactory;
+        var scopeChain = internals.scopeChain,
+            valueFactory = internals.valueFactory;
 
         return {
-            'current': function (scopeChain, arrayReference) {
+            'current': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference;
 
@@ -31,7 +32,7 @@ define([
 
                 return arrayValue.getCurrentElement().getValue();
             },
-            'next': function (scopeChain, arrayReference) {
+            'next': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference;
 

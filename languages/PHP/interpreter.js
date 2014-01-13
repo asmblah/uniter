@@ -108,6 +108,7 @@ define([
 
         (function () {
             var internals = {
+                    scopeChain: scopeChain,
                     stdout: stdout,
                     valueFactory: valueFactory
                 };
@@ -189,8 +190,6 @@ define([
 
         // Add scope handling logic
         body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
-
-        args.unshift('scopeChain');
 
         // Build function expression
         return 'function (' + args.join(', ') + ') {' + body + '}';
@@ -341,7 +340,7 @@ define([
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },
             'N_FUNCTION_CALL': function (node, interpret) {
-                var args = ['scopeChain'];
+                var args = [];
 
                 util.each(node.args, function (arg) {
                     args.push(interpret(arg));

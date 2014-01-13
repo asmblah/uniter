@@ -20,10 +20,11 @@ define([
     'use strict';
 
     return function (internals) {
-        var stdout = internals.stdout;
+        var scopeChain = internals.scopeChain,
+            stdout = internals.stdout;
 
         return {
-            'var_dump': function (scopeChain, valueReference) {
+            'var_dump': function (valueReference) {
                 var isReference,
                     value,
                     objects = [];

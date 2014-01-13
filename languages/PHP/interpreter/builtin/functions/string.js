@@ -18,10 +18,11 @@ define([
     'use strict';
 
     return function (internals) {
-        var valueFactory = internals.valueFactory;
+        var scopeChain = internals.scopeChain,
+            valueFactory = internals.valueFactory;
 
         return {
-            'strlen': function (scopeChain, stringReference) {
+            'strlen': function (stringReference) {
                 var isReference = (stringReference instanceof Variable),
                     stringValue = isReference ? stringReference.getValue() : stringReference;
 
