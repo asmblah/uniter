@@ -21,6 +21,7 @@ define([
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/State',
+    'js/Promise',
     './interpreter/Scope'
 ], function (
     builtinTypes,
@@ -31,6 +32,7 @@ define([
     PHPEnvironment,
     PHPError,
     PHPState,
+    Promise,
     Scope
 ) {
     'use strict';
@@ -69,6 +71,7 @@ define([
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
         var globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
+            promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
             result,
             scopeChain = state.getScopeChain(),
@@ -139,15 +142,14 @@ define([
         } catch (exception) {
             if (exception instanceof PHPError) {
                 stderr.write(exception.message);
+
+                return promise.reject(exception);
             }
 
             throw exception;
         }
 
-        return {
-            type: result.getType(),
-            value: result.getNative()
-        };
+        return promise.resolve(result.getNative(), result.getType());
     }
 
     function hoistDeclarations(statements) {

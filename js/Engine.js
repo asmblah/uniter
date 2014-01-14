@@ -29,13 +29,15 @@ define([
         execute: function (code) {
             var ast,
                 engine = this,
-                promise = new Promise(),
-                result;
+                promise = new Promise();
 
             try {
                 ast = engine.parser.parse(code);
-                result = engine.interpreter.interpret(ast);
-                promise.resolve(result.value, result.type);
+                engine.interpreter.interpret(ast).done(function (value, type) {
+                    promise.resolve(value, type);
+                }).fail(function (exception) {
+                    promise.reject(exception);
+                });
             } catch (exception) {
                 if (!(exception instanceof Exception)) {
                     throw exception;

@@ -116,12 +116,18 @@ define([
             }
         ], function (scenario) {
             describe('when the original code was ' + JSON.stringify(scenario.originalCode), function () {
-                it('should return the expected result', function () {
-                    expect(interpreter.interpret(scenario.ast).value).to.deep.equal(scenario.expectedResult);
+                it('should return the expected result', function (done) {
+                    interpreter.interpret(scenario.ast).done(function (value) {
+                        expect(value).to.deep.equal(scenario.expectedResult);
+                        done();
+                    });
                 });
 
-                it('should return a value of type "' + scenario.expectedResultType + '"', function () {
-                    expect(interpreter.interpret(scenario.ast).type).to.deep.equal(scenario.expectedResultType);
+                it('should return a value of type "' + scenario.expectedResultType + '"', function (done) {
+                    interpreter.interpret(scenario.ast).done(function (value, type) {
+                        expect(type).to.deep.equal(scenario.expectedResultType);
+                        done();
+                    });
                 });
             });
         });
