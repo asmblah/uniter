@@ -183,8 +183,9 @@ define([
         });
 
         // Copy passed values for any arguments
-        util.each(args, function (arg) {
-            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '").setValue(' + arg + ');';
+        util.each(args, function (arg, index) {
+            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '").setValue($' + arg + ');';
+            args[index] = '$' + arg;
         });
 
         // Prepend parts in correct order

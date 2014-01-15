@@ -88,6 +88,23 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
                 expectedStdout: ''
+            },
+            'using the name "tools" for a function argument': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function getResult($tools) {
+        return $tools->result;
+    }
+
+    $tools = new stdClass;
+    $tools->result = 7;
+
+    return getResult($tools);
+EOS
+*/) {}),
+                expectedResult: 7,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
