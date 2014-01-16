@@ -51,6 +51,9 @@ require([
     }
 
     phpEngine.expose({
+        getCC: function () {
+            return 'en';
+        },
         salutation: 'Hello'
     }, 'info');
 
@@ -68,7 +71,6 @@ EOS
 <?php
 
 $project = 'Uniter';
-$cc = 'en';
 
 class English {
     public function exclaim($text) {
@@ -76,7 +78,7 @@ class English {
     }
 }
 
-$lang = ($cc === 'en') ? new English : null;
+$lang = ($info->getCC() === 'en') ? new English : null;
 
 echo $info->salutation .
     ' from ' .
