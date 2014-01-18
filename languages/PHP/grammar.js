@@ -481,7 +481,7 @@ define([
                 components: {oneOf: ['N_NAMESPACE_SCOPED_STATEMENT', 'N_NAMESPACE_STATEMENT']}
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_CLASS_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT']}
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
@@ -527,6 +527,9 @@ define([
             },
             'N_VOID': {
                 components: {name: 'value', what: (/,()/), captureIndex: 1}
+            },
+            'N_WHILE_STATEMENT': {
+                components: ['T_WHILE', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             }
         },
         start: 'N_PROGRAM'
