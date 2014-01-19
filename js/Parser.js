@@ -212,7 +212,9 @@ define([
 
                             return result;
                         } else if (util.isFunction(arg)) {
-                            return arg(text, offset, options);
+                            skipWhitespace();
+
+                            return arg(text, offset, whitespaceLength, options);
                         } else {
                             throw new Exception('Parser "what" qualifier :: Invalid argument "' + arg + '"');
                         }
@@ -248,21 +250,21 @@ define([
 
             // Special BeginningOfFile rule
             rules['<BOF>'] = new Rule('<BOF>', null, null);
-            rules['<BOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset) {
+            rules['<BOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
                 return offset === 0 ? {
                     components: '',
                     textLength: 0,
-                    textOffset: 0
+                    textOffset: textOffset
                 } : null;
             }, {}, null));
 
             // Special EndOfFile rule
             rules['<EOF>'] = new Rule('<EOF>', null, null);
-            rules['<EOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset) {
-                return offset === text.length ? {
+            rules['<EOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
+                return offset + textOffset === text.length ? {
                     components: '',
                     textLength: 0,
-                    textOffset: 0
+                    textOffset: textOffset
                 } : null;
             }, {}, null));
 
@@ -390,12 +392,8 @@ define([
                 rule = parser.startRule,
                 match = rule.match(text, 0, options);
 
-            if (match === null) {
-                return null;
-            }
-
-            if (errorHandler && match.textLength < text.length) {
-                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected "' + text.charAt(match.textLength) + '"', text, match));
+            if (errorHandler && (match === null || match.textLength < text.length)) {
+                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, match));
             }
 
             return match !== null ? match.components : null;

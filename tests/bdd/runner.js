@@ -117,6 +117,7 @@ define({
             'bdd/integration/languages/PHP/grammar/statements/whileTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
             'bdd/integration/languages/PHP/grammar/syntax/errorTest',
+            'bdd/integration/languages/PHP/grammar/syntax/whitespaceTest',
             'bdd/integration/languages/PHP/interpreter/statements/foreachTest',
             'bdd/integration/languages/PHP/interpreter/statements/ifTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',
