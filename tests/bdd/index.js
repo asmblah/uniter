@@ -11,7 +11,11 @@
 (function () {
     'use strict';
 
-    var modular = require('modular-amd');
+    var modular = require('modular-amd'),
+        optionsManager = require('node-getopt').create([
+            ['g', 'grep=<pattern>', 'Optional filter grep to restrict tests to run']
+        ]),
+        parsedOptions = optionsManager.parseSystem();
 
     // FIXME: Modular.js is reading the wrong value as "global" ("this" object is not global in Node.js)
     modular.util.global = global;
@@ -48,6 +52,7 @@
         runner
     ) {
         runner({
+            grep: parsedOptions.options.grep,
             reporter: 'spec'
         }, function (result) {
             process.exit(result);

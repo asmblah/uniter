@@ -29,7 +29,8 @@ define({
 ) {
     'use strict';
 
-    var global = modular.util.global;
+    var global = modular.util.global,
+        query = global.Mocha.utils.parseQuery(global.location.search || '');
 
     define('Mocha', function () {
         return global.Mocha;
@@ -41,6 +42,7 @@ define({
         runner
     ) {
         runner({
+            grep: query.grep,
             reporter: 'html'
         });
     });
