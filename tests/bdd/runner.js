@@ -89,6 +89,7 @@ define({
             'bdd/integration/languages/PHP/engine/statements/functionTest',
             'bdd/integration/languages/PHP/engine/statements/ifTest',
             'bdd/integration/languages/PHP/engine/statements/returnTest',
+            'bdd/integration/languages/PHP/engine/statements/whileTest',
             'bdd/integration/languages/PHP/engine/smallTest',
             'bdd/integration/languages/PHP/grammar/constructs/issetTest',
             'bdd/integration/languages/PHP/grammar/constructs/listTest',

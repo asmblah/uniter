@@ -49,6 +49,7 @@ define([
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',
             '!==': 'isNotIdenticalTo',
+            '<': 'isLessThan',
             '=': {
                 'false': 'setValue',
                 'true': 'setReference'
@@ -526,6 +527,15 @@ define([
             },
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';
+            },
+            'N_WHILE_STATEMENT': function (node, interpret) {
+                var code = '';
+
+                util.each(hoistDeclarations(node.statements), function (statement) {
+                    code += interpret(statement);
+                });
+
+                return 'while (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {' + code + '}';
             }
         }
     };

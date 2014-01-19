@@ -79,6 +79,13 @@ define([
             return value.factory.createInteger(value.value + 1);
         },
 
+        isLessThan: function (rightValue) {
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            return factory.createBoolean(leftValue.getNative() < rightValue.getNative());
+        },
+
         multiply: function (rightValue) {
             var leftValue = this,
                 factory = leftValue.factory,
