@@ -15,9 +15,12 @@ define([
 ) {
     'use strict';
 
-    function Component(qualifierName, qualifier, arg, args, name) {
+    var hasOwn = {}.hasOwnProperty;
+
+    function Component(matchCache, qualifierName, qualifier, arg, args, name) {
         this.arg = arg;
         this.args = args;
+        this.matchCache = matchCache;
         this.name = name;
         this.qualifier = qualifier;
         this.qualifierName = qualifierName;
@@ -27,9 +30,16 @@ define([
         match: function (text, offset, options) {
             var component = this,
                 match,
-                subMatch = component.qualifier(text, offset, component.arg, component.args, options);
+                subMatch;
+
+            if (hasOwn.call(component.matchCache, offset)) {
+                return component.matchCache[offset];
+            }
+
+            subMatch = component.qualifier(text, offset, component.arg, component.args, options);
 
             if (subMatch === null) {
+                component.matchCache[offset] = null;
                 return null;
             }
 
@@ -73,6 +83,8 @@ define([
                     match = subMatch;
                 }
             }
+
+            component.matchCache[offset] = match;
 
             return match;
         }

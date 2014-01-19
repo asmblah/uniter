@@ -40,7 +40,15 @@ define([
                 return regex;
             }
 
-            var qualifiers = {
+            // Speed up repeated match tests in complex grammars by caching component matches
+            function createMatchCache() {
+                var matchCache = {};
+                matchCaches.push(matchCache);
+                return matchCache;
+            }
+
+            var matchCaches = [],
+                qualifiers = {
                     // Like "(...)" grouping - 'arg' is an array of components that must all match
                     'allOf': function (text, offset, arg, args, options) {
                         var matches = [],
@@ -240,7 +248,7 @@ define([
 
             // Special BeginningOfFile rule
             rules['<BOF>'] = new Rule('<BOF>', null, null);
-            rules['<BOF>'].setComponent(new Component('what', qualifiers.what, function (text, offset) {
+            rules['<BOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset) {
                 return offset === 0 ? {
                     components: '',
                     textLength: 0,
@@ -250,7 +258,7 @@ define([
 
             // Special EndOfFile rule
             rules['<EOF>'] = new Rule('<EOF>', null, null);
-            rules['<EOF>'].setComponent(new Component('what', qualifiers.what, function (text, offset) {
+            rules['<EOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset) {
                 return offset === text.length ? {
                     components: '',
                     textLength: 0,
@@ -354,7 +362,7 @@ define([
                         throw new Exception('Parser :: Invalid component - qualifier name "' + qualifierName + '" is invalid');
                     }
 
-                    return new Component(qualifierName, qualifiers[qualifierName], arg, args, name);
+                    return new Component(createMatchCache(), qualifierName, qualifiers[qualifierName], arg, args, name);
                 }
 
                 rules[name].setComponent(createComponent(ruleSpec.components || ruleSpec));
