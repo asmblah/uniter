@@ -179,6 +179,35 @@ define([
             return this.pointer;
         },
 
+        isEqualTo: function (rightValue) {
+            var equal = true,
+                leftValue = this,
+                factory = leftValue.factory;
+
+            if (rightValue.getType() === 'boolean') {
+                return factory.createBoolean(rightValue.getNative() === (leftValue.value.length > 0));
+            }
+
+            if (rightValue.getType() !== 'array' || rightValue.value.length !== leftValue.value.length) {
+                return factory.createBoolean(false);
+            }
+
+            util.each(rightValue.keysToElements, function (element, nativeKey) {
+                if (!hasOwn.call(leftValue.keysToElements, nativeKey) || element.getValue().isNotEqualTo(leftValue.keysToElements[nativeKey].getValue()).getNative()) {
+                    equal = false;
+                    return false;
+                }
+            }, {keys: true});
+
+            return factory.createBoolean(equal);
+        },
+
+        isNotEqualTo: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(!leftValue.isEqualTo(rightValue).getNative());
+        },
+
         next: function () {
             this.pointer++;
         },

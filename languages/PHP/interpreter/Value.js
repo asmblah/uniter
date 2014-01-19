@@ -59,10 +59,23 @@ define([
             return this.type;
         },
 
+        isEqualTo: function (rightValue) {
+            /*jshint eqeqeq:false */
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(rightValue.value == leftValue.value);
+        },
+
         isIdenticalTo: function (rightValue) {
             var leftValue = this;
 
             return leftValue.factory.createBoolean(rightValue.type === leftValue.type && rightValue.value === leftValue.value);
+        },
+
+        isNotEqualTo: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(!leftValue.isEqualTo(rightValue).getNative());
         },
 
         isSet: function () {
