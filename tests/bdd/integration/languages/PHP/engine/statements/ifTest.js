@@ -46,6 +46,30 @@ define([
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'goodbye'
+            },
+            'if statement with elseif when first conditional is true and second is false': {
+                code: '<?php if (true) { echo "first"; } elseif (false) { echo "second"; }',
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'first'
+            },
+            'if statement with elseif when first conditional is true and second is true': {
+                code: '<?php if (true) { echo "first"; } elseif (true) { echo "second"; }',
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'first'
+            },
+            'if statement with elseif when first conditional is false and second is true': {
+                code: '<?php if (false) { echo "first"; } elseif (true) { echo "second"; }',
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'second'
+            },
+            'if statement with elseif when first conditional is false and second is false': {
+                code: '<?php if (false) { echo "first"; } elseif (false) { echo "second"; }',
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

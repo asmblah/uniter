@@ -364,10 +364,10 @@ define([
             'N_IF_STATEMENT': function (node, interpret) {
                 // Consequent statements are executed if the condition is truthy,
                 // Alternate statements are executed if the condition is falsy
-                var alternateCode = node.alternateStatement ? interpret(node.alternateStatement) : '',
+                var alternateCode = node.alternateStatement ? ' else ' + interpret(node.alternateStatement) : '',
                     consequentCode = interpret(node.consequentStatement);
 
-                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) ' + consequentCode + ' else ' + alternateCode;
+                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) ' + consequentCode + alternateCode;
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
