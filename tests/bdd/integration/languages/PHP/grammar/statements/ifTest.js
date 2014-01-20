@@ -154,6 +154,66 @@ define([
                         }
                     }]
                 }
+            },
+            'if with one elseif (no space)': {
+                code: 'if (true) {} elseif (false) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_IF_STATEMENT',
+                        condition: {
+                            name: 'N_BOOLEAN',
+                            bool: 'true'
+                        },
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        },
+                        alternateStatement: {
+                            name: 'N_IF_STATEMENT',
+                            condition: {
+                                name: 'N_BOOLEAN',
+                                bool: 'false'
+                            },
+                            consequentStatement: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }
+                    }]
+                }
+            },
+            'if with one elseif (no space) and an else': {
+                code: 'if (true) {} elseif (false) {} else {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_IF_STATEMENT',
+                        condition: {
+                            name: 'N_BOOLEAN',
+                            bool: 'true'
+                        },
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        },
+                        alternateStatement: {
+                            name: 'N_IF_STATEMENT',
+                            condition: {
+                                name: 'N_BOOLEAN',
+                                bool: 'false'
+                            },
+                            consequentStatement: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            },
+                            alternateStatement: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
