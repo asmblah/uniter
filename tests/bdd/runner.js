@@ -113,6 +113,7 @@ define({
             'bdd/integration/languages/PHP/grammar/statements/classTest',
             'bdd/integration/languages/PHP/grammar/statements/foreachTest',
             'bdd/integration/languages/PHP/grammar/statements/functionTest',
+            'bdd/integration/languages/PHP/grammar/statements/gotoTest',
             'bdd/integration/languages/PHP/grammar/statements/ifTest',
             'bdd/integration/languages/PHP/grammar/statements/whileTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
