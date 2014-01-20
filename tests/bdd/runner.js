@@ -121,6 +121,7 @@ define({
             'bdd/integration/languages/PHP/interpreter/statements/foreachTest',
             'bdd/integration/languages/PHP/interpreter/statements/ifTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',
+            'bdd/integration/nodeAPITest',
             'bdd/unit/js/InterpreterTest',
             'bdd/unit/js/ParserTest',
             'bdd/unit/js/StreamTest',

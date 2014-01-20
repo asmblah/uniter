@@ -32,6 +32,8 @@ define({
     var global = modular.util.global,
         query = global.Mocha.utils.parseQuery(global.location.search || '');
 
+    define('test-environment', {});
+
     define('Mocha', function () {
         return global.Mocha;
     });

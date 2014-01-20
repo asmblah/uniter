@@ -23,9 +23,11 @@
     modular.define('chai/chai', function () {
         return require('chai');
     });
-    modular.define('fs', {
-        basePath: __dirname,
-        fs: require('fs')
+    modular.define('test-environment', {
+        node: {
+            require: require,
+            rootPath: __dirname + '/../..'
+        }
     });
     modular.define('Mocha', function () {
         return require('mocha');
