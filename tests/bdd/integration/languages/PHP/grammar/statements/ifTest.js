@@ -26,7 +26,6 @@ define([
 
         util.each({
             'simple if with no consequent body statements': {
-                // S
                 code: 'if (true) {}',
                 expectedAST: {
                     name: 'N_PROGRAM',
