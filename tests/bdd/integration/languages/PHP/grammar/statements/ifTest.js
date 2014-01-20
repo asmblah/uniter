@@ -24,9 +24,9 @@ define([
             parser = tools.createParser();
         });
 
-        util.each([
-            {
-                // Simple if with no consequent body statements
+        util.each({
+            'simple if with no consequent body statements': {
+                // S
                 code: 'if (true) {}',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -39,8 +39,8 @@ define([
                         consequentStatements: []
                     }]
                 }
-            }, {
-                // Simple if with no consequent or alternate body statements
+            },
+            'simple if with no consequent or alternate body statements': {
                 code: 'if (true) {} else {}',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -54,8 +54,8 @@ define([
                         alternateStatements: []
                     }]
                 }
-            }, {
-                // If with more complex expression and one consequent body statement
+            },
+            'if with more complex expression and one consequent body statement': {
                 code: 'if ($accountNumber === 2) { $cheques = 7; }',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -95,13 +95,15 @@ define([
                     }]
                 }
             }
-        ], function (scenario) {
-            var code = '<?php ' + scenario.code;
+        }, function (scenario, description) {
+            describe(description, function () {
+                var code = '<?php ' + scenario.code;
 
-            // Pretty-print the code strings so any non-printable characters are readable
-            describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
-                it('should return the expected AST', function () {
-                    expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                // Pretty-print the code strings so any non-printable characters are readable
+                describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
+                    it('should return the expected AST', function () {
+                        expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                    });
                 });
             });
         });
