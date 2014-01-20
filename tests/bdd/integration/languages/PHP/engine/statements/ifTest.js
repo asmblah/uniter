@@ -34,22 +34,23 @@ define([
             engine = phpTools.createEngine();
         });
 
-        util.each([
-            {
-                // Simple if statement with true condition that echoes a result
+        util.each({
+            'simple if statement with true condition that echoes a result': {
                 code: '<?php if (true) { echo "hello"; } else { echo "goodbye"; }',
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'hello'
-            }, {
-                // Simple if statement with false condition that echoes a result
+            },
+            'simple if statement with false condition that echoes a result': {
                 code: '<?php if (false) { echo "hello"; } else { echo "goodbye"; }',
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'goodbye'
             }
-        ], function (scenario) {
-            check(scenario);
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });
