@@ -105,6 +105,19 @@ EOS
                 expectedResult: 7,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'function declarations inside conditionals should not be hoisted within the block': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    if (true) {
+        doSomething();
+
+        function doSomething() {}
+    }
+EOS
+*/) {}),
+                expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

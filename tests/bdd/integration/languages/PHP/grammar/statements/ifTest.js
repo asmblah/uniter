@@ -36,7 +36,10 @@ define([
                             name: 'N_BOOLEAN',
                             bool: 'true'
                         },
-                        consequentStatements: []
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
                     }]
                 }
             },
@@ -50,8 +53,14 @@ define([
                             name: 'N_BOOLEAN',
                             bool: 'true'
                         },
-                        consequentStatements: [],
-                        alternateStatements: []
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        },
+                        alternateStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
                     }]
                 }
             },
@@ -75,23 +84,74 @@ define([
                                 }
                             }]
                         },
-                        consequentStatements: [{
-                            name: 'N_EXPRESSION_STATEMENT',
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_EXPRESSION_STATEMENT',
+                                expression: {
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'cheques'
+                                    },
+                                    right: [{
+                                        operator: '=',
+                                        operand: {
+                                            name: 'N_INTEGER',
+                                            number: '7'
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'if with consequent statement without compound braces': {
+                code: 'if (true) echo 1;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_IF_STATEMENT',
+                        condition: {
+                            name: 'N_BOOLEAN',
+                            bool: 'true'
+                        },
+                        consequentStatement: {
+                            name: 'N_ECHO_STATEMENT',
                             expression: {
-                                name: 'N_EXPRESSION',
-                                left: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'cheques'
-                                },
-                                right: [{
-                                    operator: '=',
-                                    operand: {
-                                        name: 'N_INTEGER',
-                                        number: '7'
-                                    }
-                                }]
+                                name: 'N_INTEGER',
+                                number: '1'
                             }
-                        }]
+                        }
+                    }]
+                }
+            },
+            'if with one else if (space)': {
+                code: 'if (true) {} else if (false) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_IF_STATEMENT',
+                        condition: {
+                            name: 'N_BOOLEAN',
+                            bool: 'true'
+                        },
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        },
+                        alternateStatement: {
+                            name: 'N_IF_STATEMENT',
+                            condition: {
+                                name: 'N_BOOLEAN',
+                                bool: 'false'
+                            },
+                            consequentStatement: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }
                     }]
                 }
             }

@@ -255,6 +255,15 @@ define([
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
+            'N_COMPOUND_STATEMENT': function (node, interpret) {
+                var code = '';
+
+                util.each(node.statements, function (statement) {
+                    code += interpret(statement);
+                });
+
+                return '{' + code + '}';
+            },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },
@@ -353,20 +362,12 @@ define([
                 return '(namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ') || tools.valueFactory.createNull())';
             },
             'N_IF_STATEMENT': function (node, interpret) {
-                var alternateCode = '',
-                    consequentCode = '';
-
-                // Consequent statements are executed if the condition is truthy
-                util.each(hoistDeclarations(node.consequentStatements), function (statement) {
-                    consequentCode += interpret(statement);
-                });
-
+                // Consequent statements are executed if the condition is truthy,
                 // Alternate statements are executed if the condition is falsy
-                util.each(hoistDeclarations(node.alternateStatements), function (statement) {
-                    alternateCode += interpret(statement);
-                });
+                var alternateCode = node.alternateStatement ? interpret(node.alternateStatement) : '',
+                    consequentCode = interpret(node.consequentStatement);
 
-                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {' + consequentCode + '} else {' + alternateCode + '}';
+                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) ' + consequentCode + ' else ' + alternateCode;
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';

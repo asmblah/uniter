@@ -43,20 +43,26 @@ define([
                             name: 'N_BOOLEAN',
                             bool: 'true'
                         },
-                        consequentStatements: [{
-                            name: 'N_RETURN_STATEMENT',
-                            expression: {
-                                name: 'N_STRING_LITERAL',
-                                string: 'yes'
-                            }
-                        }],
-                        alternateStatements: [{
-                            name: 'N_RETURN_STATEMENT',
-                            expression: {
-                                name: 'N_STRING_LITERAL',
-                                string: 'no'
-                            }
-                        }]
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_RETURN_STATEMENT',
+                                expression: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'yes'
+                                }
+                            }]
+                        },
+                        alternateStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_RETURN_STATEMENT',
+                                expression: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'no'
+                                }
+                            }]
+                        }
                     }]
                 },
                 expectedResult: 'yes',
@@ -72,20 +78,26 @@ define([
                             name: 'N_BOOLEAN',
                             bool: 'false'
                         },
-                        consequentStatements: [{
-                            name: 'N_RETURN_STATEMENT',
-                            expression: {
-                                name: 'N_STRING_LITERAL',
-                                string: 'yes'
-                            }
-                        }],
-                        alternateStatements: [{
-                            name: 'N_RETURN_STATEMENT',
-                            expression: {
-                                name: 'N_STRING_LITERAL',
-                                string: 'no'
-                            }
-                        }]
+                        consequentStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_RETURN_STATEMENT',
+                                expression: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'yes'
+                                }
+                            }]
+                        },
+                        alternateStatement: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_RETURN_STATEMENT',
+                                expression: {
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'no'
+                                }
+                            }]
+                        }
                     }]
                 },
                 expectedResult: 'no',

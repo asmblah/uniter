@@ -216,7 +216,7 @@ define([
                 components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
             'N_COMPOUND_STATEMENT': {
-                components: [(/\{/), {name: 'statements', oneOrMoreOf: 'N_STATEMENT'}, (/\}/)]
+                components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
             'N_ECHO_STATEMENT': {
                 components: ['T_ECHO', {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
@@ -438,7 +438,7 @@ define([
                 components: ['T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
             'N_IF_STATEMENT': {
-                components: ['T_IF', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'consequentStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/), {optionally: [(/else/), (/\{/), {name: 'alternateStatements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]}]
+                components: ['T_IF', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), {name: 'consequentStatement', what: 'N_STATEMENT'}, {optionally: ['T_ELSE', {name: 'alternateStatement', what: 'N_STATEMENT'}]}]
             },
             'N_IGNORE': {
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
