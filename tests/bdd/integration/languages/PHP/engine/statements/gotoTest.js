@@ -83,6 +83,27 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'third'
+            },
+            'jumping over first if statement to echo inside second if with falsy condition': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    goto end;
+    echo 'first';
+
+    if (true) {
+        echo 'second';
+    }
+
+    if (0) {
+        echo 'third';
+end:
+        echo 'fourth';
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'fourth'
             }
         }, function (scenario, description) {
             describe(description, function () {
