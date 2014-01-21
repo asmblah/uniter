@@ -110,6 +110,33 @@ define([
                         }]
                     }]
                 }
+            },
+            'creating class from variable': {
+                code: '$object = new $className;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'object'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_NEW_EXPRESSION',
+                                    operator: 'new',
+                                    className: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'className'
+                                    }
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

@@ -237,8 +237,8 @@ define([
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
-            'N_CLASS_REFERENCE': function (node) {
-                return 'tools.valueFactory.createString(' + JSON.stringify(node.path) + ')';
+            'N_CLASS_REFERENCE': function (node, interpret) {
+                return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';
             },
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,

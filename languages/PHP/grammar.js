@@ -252,7 +252,7 @@ define([
                 ifNoMatch: {component: 'operator', capture: 'next'}
             },
             'N_CLASS_REFERENCE': {
-                components: {name: 'path', oneOf: [[{optionally: 'T_NS_SEPARATOR'}, 'N_NAMESPACE'], 'N_EXPRESSION_LEVEL_0']}
+                components: {oneOf: [{name: 'path', what: [{optionally: 'T_NS_SEPARATOR'}, 'N_NAMESPACE']}, 'N_EXPRESSION_LEVEL_0']}
             },
             'N_EXPRESSION_LEVEL_1_B': {
                 captureAs: 'N_METHOD_CALL',
