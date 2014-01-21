@@ -1,6 +1,8 @@
 Uniter
 ======
 
+[![Build Status](https://secure.travis-ci.org/asmblah/uniter.png)](http://travis-ci.org/asmblah/uniter)
+
 Uniter is a recompiling interpreter written in JavaScript.
 
 Can I try it now?
