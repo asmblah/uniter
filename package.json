@@ -31,12 +31,12 @@
         "webtest": "node tests/bdd/webtest.js"
     },
     "dependencies": {
-        "express": "3.2.x",
         "modular-amd": "0.1.x",
         "node-getopt": "0.2.x"
     },
     "devDependencies": {
         "chai": "1.7.x",
+        "express": "3.2.x",
         "mocha": "1.12.x",
         "sinon-chai": "2.4.x"
     },
