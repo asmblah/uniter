@@ -21,6 +21,7 @@ define([
     './interpreter/List',
     './interpreter/Environment',
     './interpreter/Error',
+    './interpreter/Error/Fatal',
     './interpreter/State',
     'js/Promise',
     './interpreter/Scope'
@@ -33,6 +34,7 @@ define([
     List,
     PHPEnvironment,
     PHPError,
+    PHPFatalError,
     PHPState,
     Promise,
     Scope
@@ -381,21 +383,24 @@ define([
                     foundLabels = false,
                     labelRepository = context.labelRepository;
 
-                if (labelRepository.hasPending()) {
-                    labelRepository.onFound(function (label) {
-                        // Label for goto is contained within consequent statement(s)
-                        if (!foundLabels) {
-                            foundLabels = true;
-                            code += '}';
-                        }
+                function onFoundLabel(label) {
+                    // Label for goto is contained within consequent statement(s)
+                    if (!foundLabels) {
+                        foundLabels = true;
+                        code += '}';
+                    }
 
-                        consequentPrefix = 'if (!' + 'goingToLabel_' + label + ') {' + consequentPrefix;
-                        conditionCode = 'goingToLabel_' + label + ' || (' + conditionCode + ')';
-                    });
+                    consequentPrefix = 'if (!' + 'goingToLabel_' + label + ') {' + consequentPrefix;
+                    conditionCode = 'goingToLabel_' + label + ' || (' + conditionCode + ')';
+                }
+
+                if (labelRepository.hasPending()) {
+                    labelRepository.on('found label', onFoundLabel);
                 }
 
                 consequentCode = interpret(node.consequentStatement);
                 consequentCode = '{' + consequentPrefix + consequentCode + '}';
+                labelRepository.off('found label', onFoundLabel);
 
                 alternateCode = node.alternateStatement ? ' else ' + interpret(node.alternateStatement) : '';
 
@@ -513,9 +518,17 @@ define([
                     },
                     labels;
 
-                util.each(hoistDeclarations(node.statements), function (statement) {
-                    body += interpret(statement, context);
-                });
+                try {
+                    util.each(hoistDeclarations(node.statements), function (statement) {
+                        body += interpret(statement, context);
+                    });
+                } catch (exception) {
+                    if (exception instanceof PHPError) {
+                        stderr.write(exception.message);
+
+                        return new Promise().reject(exception);
+                    }
+                }
 
                 labels = context.labelRepository.getLabels();
 
@@ -580,8 +593,12 @@ define([
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';
             },
-            'N_WHILE_STATEMENT': function (node, interpret) {
+            'N_WHILE_STATEMENT': function (node, interpret, context) {
                 var code = '';
+
+                context.labelRepository.on('found label', function () {
+                    throw new PHPFatalError(PHPFatalError.GOTO_DISALLOWED);
+                });
 
                 util.each(hoistDeclarations(node.statements), function (statement) {
                     code += interpret(statement);

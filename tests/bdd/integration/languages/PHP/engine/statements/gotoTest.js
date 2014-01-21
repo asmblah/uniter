@@ -16,8 +16,8 @@ define([
 ], function (
     engineTools,
     phpTools,
-    util/*,
-    PHPFatalError*/
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -119,6 +119,23 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'fourth'
+            },
+            'invalid jump into while loop': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    goto invalid;
+
+    while (0) {
+invalid:
+    }
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: 'goto' into loop or switch statement is disallowed$/
+                },
+                expectedStderr: 'PHP Fatal error: \'goto\' into loop or switch statement is disallowed',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

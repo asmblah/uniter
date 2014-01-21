@@ -21,7 +21,8 @@ define([
             1: 'Unsupported operand types',
             2: 'Call to undefined function ${name}()',
             3: 'Class \'${name}\' not found',
-            4: 'Call to undefined method ${className}::${methodName}()'
+            4: 'Call to undefined method ${className}::${methodName}()',
+            5: '\'goto\' into loop or switch statement is disallowed'
         };
 
     function PHPFatalError(code, variables) {
@@ -34,7 +35,8 @@ define([
         UNSUPPORTED_OPERAND_TYPES: 1,
         CALL_TO_UNDEFINED_FUNCTION: 2,
         CLASS_NOT_FOUND: 3,
-        UNDEFINED_METHOD: 4
+        UNDEFINED_METHOD: 4,
+        GOTO_DISALLOWED: 5
     });
 
     return PHPFatalError;

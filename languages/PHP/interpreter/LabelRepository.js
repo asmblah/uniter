@@ -51,10 +51,6 @@ define([
 
         isPending: function (label) {
             return this.pendingLabels[label] === true;
-        },
-
-        onFound: function (callback) {
-            this.on('found label', callback);
         }
     });
 
