@@ -32,6 +32,7 @@ define([
 
             repository.labels[label] = true;
             repository.pendingLabels[label] = true;
+            repository.emit('pending label', label);
         },
 
         found: function (label) {

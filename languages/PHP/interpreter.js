@@ -366,11 +366,18 @@ define([
                 return '(namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ') || tools.valueFactory.createNull())';
             },
             'N_GOTO_STATEMENT': function (node, interpret, context) {
-                var label = node.label;
+                var code = '',
+                    label = node.label;
 
                 context.labelRepository.addPending(label);
 
-                return label + ': { goingToLabel_' + label + ' = true; break ' + label + ';';
+                if (!context.insideBlock) {
+                    code += label + ': {';
+                }
+
+                code += 'goingToLabel_' + label + ' = true; break ' + label + ';';
+
+                return code;
             },
             'N_IF_STATEMENT': function (node, interpret, context) {
                 // Consequent statements are executed if the condition is truthy,
@@ -380,27 +387,39 @@ define([
                     conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
                     consequentCode,
                     consequentPrefix = '',
-                    foundLabels = false,
+                    gotosBreakingOut = {},
+                    gotosJumpingIn = {},
                     labelRepository = context.labelRepository;
 
+                function onPendingLabel(label) {
+                    gotosBreakingOut[label] = true;
+                    delete gotosJumpingIn[label];
+                }
+
                 function onFoundLabel(label) {
-                    // Label for goto is contained within consequent statement(s)
-                    if (!foundLabels) {
-                        foundLabels = true;
-                        code += '}';
-                    }
+                    delete gotosBreakingOut[label];
+                    gotosJumpingIn[label] = true;
+                }
+
+                labelRepository.on('pending label', onPendingLabel);
+                labelRepository.on('found label', onFoundLabel);
+
+                consequentCode = interpret(node.consequentStatement, {insideBlock: true});
+                labelRepository.off('pending label', onPendingLabel);
+                labelRepository.off('found label', onFoundLabel);
+
+                util.each(Object.keys(gotosJumpingIn), function (label) {
+                    code += '}';
 
                     consequentPrefix = 'if (!' + 'goingToLabel_' + label + ') {' + consequentPrefix;
                     conditionCode = 'goingToLabel_' + label + ' || (' + conditionCode + ')';
-                }
+                });
 
-                if (labelRepository.hasPending()) {
-                    labelRepository.on('found label', onFoundLabel);
-                }
+                util.each(Object.keys(gotosBreakingOut), function (label) {
+                    code += label + ': {';
+                });
 
-                consequentCode = interpret(node.consequentStatement);
                 consequentCode = '{' + consequentPrefix + consequentCode + '}';
-                labelRepository.off('found label', onFoundLabel);
 
                 alternateCode = node.alternateStatement ? ' else ' + interpret(node.alternateStatement) : '';
 

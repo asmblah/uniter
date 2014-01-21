@@ -120,6 +120,53 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'fourth'
             },
+            'jumping out of if statement': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    if (true) {
+        echo 'second';
+        goto end;
+        echo 'third';
+    }
+
+    echo 'fourth';
+
+end:
+    echo 'fifth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondfifth'
+            },
+            'jumping out of first if statement to echo inside second if': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    if (true) {
+        echo 'second';
+        goto sixth;
+        echo 'third';
+    }
+
+    echo 'fourth';
+
+    if (0) {
+        echo 'fifth';
+sixth:
+        echo 'sixth';
+    }
+
+    echo 'seventh';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondsixthseventh'
+            },
             'invalid jump into while loop': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
