@@ -36,7 +36,7 @@ define([
             });
 
             it('should make the Uniter singleton instance available as module.exports', function () {
-                expect(nodeRequire('.')).to.equal(uniter);
+                expect(nodeRequire(testEnvironment.node.rootPath)).to.equal(uniter);
             });
         });
     }
