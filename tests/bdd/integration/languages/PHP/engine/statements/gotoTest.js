@@ -167,6 +167,31 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'firstsecondsixthseventh'
             },
+            'jumping into nested if': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+    goto end;
+
+    echo 'second';
+
+    if (0) {
+        echo 'third';
+        if (0) {
+            echo 'fourth';
+end:
+            echo 'fifth';
+        }
+        echo 'sixth';
+    }
+
+    echo 'seventh';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstfifthsixthseventh'
+            },
             'invalid jump into while loop': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
