@@ -4,7 +4,7 @@
     "publishConfig": {
         "proprietary-attribs": false
     },
-    "description": "Uniter - JavaScript recompiling interpreter",
+    "description": "Uniter - PHP in the browser and Node.js",
     "keywords": [
         "javascript",
         "php",
