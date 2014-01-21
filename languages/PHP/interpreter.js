@@ -17,6 +17,7 @@ define([
     'js/util',
     'js/Exception',
     './interpreter/KeyValuePair',
+    './interpreter/LabelRepository',
     './interpreter/List',
     './interpreter/Environment',
     './interpreter/Error',
@@ -28,6 +29,7 @@ define([
     util,
     Exception,
     KeyValuePair,
+    LabelRepository,
     List,
     PHPEnvironment,
     PHPError,
@@ -262,7 +264,7 @@ define([
                     code += interpret(statement);
                 });
 
-                return '{' + code + '}';
+                return code;
             },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
@@ -361,13 +363,45 @@ define([
 
                 return '(namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ') || tools.valueFactory.createNull())';
             },
-            'N_IF_STATEMENT': function (node, interpret) {
+            'N_GOTO_STATEMENT': function (node, interpret, context) {
+                var label = node.label;
+
+                context.labelRepository.addPending(label);
+
+                return label + ': { goingToLabel_' + label + ' = true; break ' + label + ';';
+            },
+            'N_IF_STATEMENT': function (node, interpret, context) {
                 // Consequent statements are executed if the condition is truthy,
                 // Alternate statements are executed if the condition is falsy
-                var alternateCode = node.alternateStatement ? ' else ' + interpret(node.alternateStatement) : '',
-                    consequentCode = interpret(node.consequentStatement);
+                var alternateCode,
+                    code = '',
+                    conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
+                    consequentCode,
+                    consequentPrefix = '',
+                    foundLabels = false,
+                    labelRepository = context.labelRepository;
 
-                return 'if (' + interpret(node.condition) + '.coerceToBoolean().getNative()) ' + consequentCode + alternateCode;
+                if (labelRepository.hasPending()) {
+                    labelRepository.onFound(function (label) {
+                        // Label for goto is contained within consequent statement(s)
+                        if (!foundLabels) {
+                            foundLabels = true;
+                            code += '}';
+                        }
+
+                        consequentPrefix = 'if (!' + 'goingToLabel_' + label + ') {' + consequentPrefix;
+                        conditionCode = 'goingToLabel_' + label + ' || (' + conditionCode + ')';
+                    });
+                }
+
+                consequentCode = interpret(node.consequentStatement);
+                consequentCode = '{' + consequentPrefix + consequentCode + '}';
+
+                alternateCode = node.alternateStatement ? ' else ' + interpret(node.alternateStatement) : '';
+
+                code += 'if (' + conditionCode + ') ' + consequentCode + alternateCode;
+
+                return code;
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
@@ -388,6 +422,11 @@ define([
             },
             'N_KEY_VALUE_PAIR': function (node, interpret) {
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
+            },
+            'N_LABEL_STATEMENT': function (node, interpret, context) {
+                context.labelRepository.found(node.label);
+
+                return '}';
             },
             'N_LIST': function (node, interpret) {
                 var elementsCodes = [];
@@ -466,11 +505,20 @@ define([
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
-                    context = {};
+                    context = {
+                        labelRepository: new LabelRepository()
+                    },
+                    labels;
 
                 util.each(hoistDeclarations(node.statements), function (statement) {
                     body += interpret(statement, context);
                 });
+
+                labels = context.labelRepository.getLabels();
+
+                if (labels.length > 0) {
+                    body = 'var goingToLabel_' + labels.join(' = false, ') + ' = false;' + body;
+                }
 
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
             },
