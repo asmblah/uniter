@@ -51,6 +51,21 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'second'
             },
+            'jumping over unused label': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    goto second;
+
+first:
+    echo 'first';
+second:
+    echo 'second';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'second'
+            },
             'jumping over first echo to second inside if with falsy condition': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

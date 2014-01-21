@@ -49,6 +49,10 @@ define([
             return Object.keys(this.pendingLabels).length > 0;
         },
 
+        isPending: function (label) {
+            return this.pendingLabels[label] === true;
+        },
+
         onFound: function (callback) {
             this.on('found label', callback);
         }

@@ -424,9 +424,12 @@ define([
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
             },
             'N_LABEL_STATEMENT': function (node, interpret, context) {
-                context.labelRepository.found(node.label);
+                var label = node.label,
+                    isPending = context.labelRepository.isPending(label);
 
-                return '}';
+                context.labelRepository.found(label);
+
+                return isPending ? '}' : '';
             },
             'N_LIST': function (node, interpret) {
                 var elementsCodes = [];
