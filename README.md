@@ -3,7 +3,24 @@ Uniter
 
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png)](http://travis-ci.org/asmblah/uniter)
 
-Uniter is a recompiling interpreter written in JavaScript.
+Uniter allows you to execute PHP in the browser or in Node.js.
+As an on-the-fly recompiling interpreter (or transpiler) it results in the closest possible translation
+from PHP to native JavaScript code.
+
+Features
+--------
+- Environment-agnostic architecture: should run in any modern browser (IE < 9 support coming soon) and Node.js
+
+- PHP statements, constructs and operators:
+    - `if`, `else` and `else if` statements
+    - `while` loop support
+    - `foreach` loop support
+    - `function` statements
+    - Forward `goto` statements
+    - Basic `class` object support using the `new` operator
+    - Ternary operator
+
+    And others... see [the `Engine` integration tests](https://github.com/asmblah/uniter/tree/master/tests/bdd/integration/languages/PHP/engine) for more info.
 
 Can I try it now?
 -----------------
