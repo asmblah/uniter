@@ -4,6 +4,7 @@ Uniter
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png)](http://travis-ci.org/asmblah/uniter)
 
 Uniter allows you to execute PHP in the browser or in Node.js.
+
 As an on-the-fly recompiling interpreter (or transpiler) it results in the closest possible translation
 from PHP to native JavaScript code.
 
@@ -26,6 +27,10 @@ Can I try it now?
 -----------------
 
 [Sure you can](http://asmblah.github.io/uniter/demo/interactive.html).
+
+Keeping up to date
+------------------
+- [Follow me on Twitter](https://twitter.com/@asmblah) for updates: [https://twitter.com/@asmblah](https://twitter.com/@asmblah)
 
 Running the tests
 -----------------
