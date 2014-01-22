@@ -35,7 +35,7 @@ define({
         'ace/src-min-noconflict/theme-twilight'
     ], function () {
         var ace = global.ace,
-            javascriptCode = util.heredoc(function (/*<<<EOS
+            javascriptCode = util.heredoc(function () {/*<<<EOS
 require([
     'uniter'
 ], function (
@@ -65,9 +65,10 @@ require([
 });
 
 EOS
-*/) {}),
+*/
+        }),
             javascriptEditor,
-            phpCode = util.heredoc(function (/*<<<EOS
+            phpCode = util.heredoc(function () {/*<<<EOS
 <?php
 
 $project = 'Uniter';
@@ -84,7 +85,8 @@ echo $info->salutation .
     ' from ' .
     $lang->exclaim($project);
 EOS
-*/) {}),
+*/
+        }),
             phpEditor;
 
         function updateResult() {
