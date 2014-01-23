@@ -215,6 +215,9 @@ define([
             'N_CLASS_STATEMENT': {
                 components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
+            'N_COMMA_EXPRESSION': {
+                components: {optionally: [{name: 'expressions', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=[;\)]))()/), captureIndex: 2}]}, (/(?=[;\)])/)]}
+            },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
@@ -431,6 +434,9 @@ define([
             'N_FLOAT': {
                 components: {name: 'number', what: 'T_DNUMBER'}
             },
+            'N_FOR_STATEMENT': {
+                components: ['T_FOR', (/\(/), {name: 'initializer', what: 'N_COMMA_EXPRESSION'}, (/;/), {name: 'condition', what: 'N_COMMA_EXPRESSION'}, (/;/), {name: 'update', what: 'N_COMMA_EXPRESSION'}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
+            },
             'N_FOREACH_STATEMENT': {
                 components: ['T_FOREACH', (/\(/), {name: 'array', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_AS', {optionally: [{name: 'key', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_DOUBLE_ARROW']}, {name: 'value', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, (/\)/), (/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
@@ -487,7 +493,7 @@ define([
                 components: {oneOf: ['N_NAMESPACE_SCOPED_STATEMENT', 'N_NAMESPACE_STATEMENT']}
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}

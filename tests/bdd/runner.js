@@ -113,6 +113,7 @@ define({
             'bdd/integration/languages/PHP/grammar/operators/objectAccessTest',
             'bdd/integration/languages/PHP/grammar/statements/classTest',
             'bdd/integration/languages/PHP/grammar/statements/foreachTest',
+            'bdd/integration/languages/PHP/grammar/statements/forTest',
             'bdd/integration/languages/PHP/grammar/statements/functionTest',
             'bdd/integration/languages/PHP/grammar/statements/gotoTest',
             'bdd/integration/languages/PHP/grammar/statements/ifTest',
