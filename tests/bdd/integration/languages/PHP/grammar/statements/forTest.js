@@ -49,6 +49,71 @@ define([
                         }
                     }]
                 }
+            },
+            'for loop iterating 3 times': {
+                code: 'for ($i = 0; $i < 2; $i++) { echo $i; }',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOR_STATEMENT',
+                        initializer: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: [{
+                                name: 'N_EXPRESSION',
+                                left: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'i'
+                                },
+                                right: [{
+                                    operator: '=',
+                                    operand: {
+                                        name: 'N_INTEGER',
+                                        number: '0'
+                                    }
+                                }]
+                            }]
+                        },
+                        condition: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: [{
+                                name: 'N_EXPRESSION',
+                                left: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'i'
+                                },
+                                right: [{
+                                    operator: '<',
+                                    operand: {
+                                        name: 'N_INTEGER',
+                                        number: '2'
+                                    }
+                                }]
+                            }]
+                        },
+                        update: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: [{
+                                name: 'N_UNARY_EXPRESSION',
+                                operator: '++',
+                                operand: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'i'
+                                },
+                                prefix: false
+                            }]
+                        },
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_ECHO_STATEMENT',
+                                expression: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'i'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
