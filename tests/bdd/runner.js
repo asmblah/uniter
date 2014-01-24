@@ -90,6 +90,7 @@ define({
             'bdd/integration/languages/PHP/engine/syntax/errorTest',
             'bdd/integration/languages/PHP/engine/statements/classTest',
             'bdd/integration/languages/PHP/engine/statements/echoTest',
+            'bdd/integration/languages/PHP/engine/statements/forTest',
             'bdd/integration/languages/PHP/engine/statements/foreachTest',
             'bdd/integration/languages/PHP/engine/statements/functionTest',
             'bdd/integration/languages/PHP/engine/statements/gotoTest',

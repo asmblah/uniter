@@ -259,6 +259,15 @@ define([
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
+            'N_COMMA_EXPRESSION': function (node, interpret) {
+                var expressionCodes = [];
+
+                util.each(node.expressions, function (expression) {
+                    expressionCodes.push(interpret(expression));
+                });
+
+                return expressionCodes.join(',');
+            },
             'N_COMPOUND_STATEMENT': function (node, interpret) {
                 var code = '';
 
@@ -301,6 +310,14 @@ define([
             },
             'N_FLOAT': function (node) {
                 return 'tools.valueFactory.createFloat(' + node.number + ')';
+            },
+            'N_FOR_STATEMENT': function (node, interpret) {
+                var bodyCode = interpret(node.body),
+                    conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
+                    initializerCode = interpret(node.initializer),
+                    updateCode = interpret(node.update);
+
+                return 'for (' + initializerCode + ';' + conditionCode + ';' + updateCode + ') {' + bodyCode + '}';
             },
             'N_FOREACH_STATEMENT': function (node, interpret, context) {
                 var arrayValue = interpret(node.array),

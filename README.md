@@ -15,6 +15,7 @@ Features
 - PHP statements, constructs and operators:
     - `if`, `else` and `else if` statements
     - `while` loop support
+    - `for` loop support
     - `foreach` loop support
     - `function` statements
     - Forward `goto` statements
