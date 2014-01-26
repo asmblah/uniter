@@ -237,6 +237,18 @@ define([
             'N_BOOLEAN': function (node) {
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
+            'N_BREAK_STATEMENT': function (node, interpret, context) {
+                return 'break switch_' + context.switchCase.depth + ';';
+            },
+            'N_CASE': function (node, interpret, context) {
+                var body = '';
+
+                util.each(node.body, function (statement) {
+                    body += interpret(statement);
+                });
+
+                return 'if (switchMatched_' + context.switchCase.depth + ' || switchExpression_' + context.switchCase.depth + '.isEqualTo(' + interpret(node.expression) + ').getNative()) {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
+            },
             'N_CLASS_REFERENCE': function (node, interpret) {
                 return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';
             },
@@ -604,6 +616,27 @@ define([
             },
             'N_STRING_LITERAL': function (node) {
                 return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
+            },
+            'N_SWITCH_STATEMENT': function (node, interpret, context) {
+                var code = '',
+                    expressionCode = interpret(node.expression);
+
+                if (!context.switchCase) {
+                    context.switchCase = {
+                        depth: 0
+                    };
+                } else {
+                    context.switchCase.depth++;
+                }
+
+                code += 'var switchExpression_' + context.switchCase.depth + ' = ' + expressionCode + ',' +
+                    ' switchMatched_' + context.switchCase.depth + ' = false;';
+
+                util.each(node.cases, function (caseNode) {
+                    code += interpret(caseNode);
+                });
+
+                return 'switch_' + context.switchCase.depth + ': {' + code + '}';
             },
             'N_TERNARY': function (node, interpret) {
                 var expression = '(' + interpret(node.condition) + ')';
