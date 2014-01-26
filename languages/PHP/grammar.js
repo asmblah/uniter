@@ -212,6 +212,17 @@ define([
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
             },
+            'N_BREAK_ONE_LEVEL': {
+                captureAs: 'N_INTEGER',
+                components: {name: 'number', what: (/()/)},
+                options: {number: '1'}
+            },
+            'N_BREAK_STATEMENT': {
+                components: ['T_BREAK', {name: 'levels', oneOf: ['N_INTEGER', 'N_BREAK_ONE_LEVEL']}, (/;/)]
+            },
+            'N_CASE': {
+                components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
+            },
             'N_CLASS_STATEMENT': {
                 components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
@@ -220,6 +231,9 @@ define([
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
+            },
+            'N_DEFAULT_CASE': {
+                components: ['T_DEFAULT', (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_ECHO_STATEMENT': {
                 components: ['T_ECHO', {name: 'expression', what: 'N_EXPRESSION'}, (/;/)]
@@ -463,7 +477,7 @@ define([
                 components: [{name: 'key', what: 'N_EXPRESSION'}, 'T_DOUBLE_ARROW', {name: 'value', what: 'N_EXPRESSION'}]
             },
             'N_LABEL_STATEMENT': {
-                components: [{name: 'label', what: 'T_STRING'}, (/:/)]
+                components: [{name: 'label', what: [(/(?!default\b)/i), 'T_STRING']}, (/:/)]
             },
             'N_LIST': {
                 components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]
@@ -493,7 +507,7 @@ define([
                 components: {oneOf: ['N_NAMESPACE_SCOPED_STATEMENT', 'N_NAMESPACE_STATEMENT']}
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
@@ -524,6 +538,9 @@ define([
                         {name: 'expression', what: [(/\$\{(?=\$)/), 'N_VARIABLE', (/\}/)]}
                     ]}
                 ]
+            },
+            'N_SWITCH_STATEMENT': {
+                components: ['T_SWITCH', (/\(/), {name: 'expression', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'cases', zeroOrMoreOf: {oneOf: ['N_CASE', 'N_DEFAULT_CASE']}}, (/\}/)]
             },
             'N_TERM': {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_STRING']}
