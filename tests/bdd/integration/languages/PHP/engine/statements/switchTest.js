@@ -47,7 +47,7 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'done'
             },
-            'switch statement with one unmatched case - still check that expression is evaluated': {
+            'switch statement with no cases - still check that expression is evaluated': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     switch ($a = 21) {}
