@@ -212,13 +212,8 @@ define([
             'N_BOOLEAN': {
                 components: {name: 'bool', what: (/true|false/i)}
             },
-            'N_BREAK_ONE_LEVEL': {
-                captureAs: 'N_INTEGER',
-                components: {name: 'number', what: (/()/)},
-                options: {number: '1'}
-            },
             'N_BREAK_STATEMENT': {
-                components: ['T_BREAK', {name: 'levels', oneOf: ['N_INTEGER', 'N_BREAK_ONE_LEVEL']}, (/;/)]
+                components: ['T_BREAK', {name: 'levels', oneOf: ['N_INTEGER', 'N_JUMP_ONE_LEVEL']}, (/;/)]
             },
             'N_CASE': {
                 components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
@@ -231,6 +226,9 @@ define([
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
+            },
+            'N_CONTINUE_STATEMENT': {
+                components: ['T_CONTINUE', {name: 'levels', oneOf: ['N_INTEGER', 'N_JUMP_ONE_LEVEL']}, (/;/)]
             },
             'N_DEFAULT_CASE': {
                 components: ['T_DEFAULT', (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
@@ -473,6 +471,11 @@ define([
             'N_ISSET': {
                 components: ['T_ISSET', (/\(/), {name: 'variables', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
+            'N_JUMP_ONE_LEVEL': {
+                captureAs: 'N_INTEGER',
+                components: {name: 'number', what: (/()/)},
+                options: {number: '1'}
+            },
             'N_KEY_VALUE_PAIR': {
                 components: [{name: 'key', what: 'N_EXPRESSION'}, 'T_DOUBLE_ARROW', {name: 'value', what: 'N_EXPRESSION'}]
             },
@@ -507,7 +510,7 @@ define([
                 components: {oneOf: ['N_NAMESPACE_SCOPED_STATEMENT', 'N_NAMESPACE_STATEMENT']}
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_CONTINUE_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT']}
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}

@@ -247,6 +247,49 @@ define([
                         }]
                     }]
                 }
+            },
+            'switch with one matched case with assignment then continue': {
+                code: 'switch (1) {case 1: $a = 1; continue;}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_SWITCH_STATEMENT',
+                        expression: {
+                            name: 'N_INTEGER',
+                            number: '1'
+                        },
+                        cases: [{
+                            name: 'N_CASE',
+                            expression: {
+                                name: 'N_INTEGER',
+                                number: '1'
+                            },
+                            body: [{
+                                name: 'N_EXPRESSION_STATEMENT',
+                                expression: {
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'a'
+                                    },
+                                    right: [{
+                                        operator: '=',
+                                        operand: {
+                                            name: 'N_INTEGER',
+                                            number: '1'
+                                        }
+                                    }]
+                                }
+                            }, {
+                                name: 'N_CONTINUE_STATEMENT',
+                                levels: {
+                                    name: 'N_INTEGER',
+                                    number: '1'
+                                }
+                            }]
+                        }]
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
