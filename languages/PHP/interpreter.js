@@ -292,6 +292,15 @@ define([
             'N_CONTINUE_STATEMENT': function (node, interpret, context) {
                 return 'break switch_' + context.switchCase.depth + ';';
             },
+            'N_DEFAULT_CASE': function (node, interpret, context) {
+                var body = '';
+
+                util.each(node.body, function (statement) {
+                    body += interpret(statement);
+                });
+
+                return 'if (!switchMatched_' + context.switchCase.depth + ') {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
+            },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },

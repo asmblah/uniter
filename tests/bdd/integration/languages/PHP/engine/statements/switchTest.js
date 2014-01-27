@@ -172,6 +172,53 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'firstsecondthirdfifthsixth'
+            },
+            'switch with one unmatched case and "default" case': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $done = true;
+
+    echo 'first';
+
+    switch (3) {
+    case 4:
+        echo 'second';
+
+        break;
+    default:
+        echo 'third';
+    }
+
+    echo 'fourth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstthirdfourth'
+            },
+            'switch with two unmatched cases but "default" case falling through to unmatched one': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $done = true;
+
+    echo 'first';
+
+    switch (3) {
+    case 4:
+        echo 'second';
+
+        break;
+    default:
+    case 5:
+        echo 'third';
+    }
+
+    echo 'fourth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstthirdfourth'
             }
         }, function (scenario, description) {
             describe(description, function () {
