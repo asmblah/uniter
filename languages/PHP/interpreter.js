@@ -289,6 +289,9 @@ define([
 
                 return code;
             },
+            'N_CONTINUE_STATEMENT': function (node, interpret, context) {
+                return 'break switch_' + context.switchCase.depth + ';';
+            },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },

@@ -143,6 +143,35 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'firstsecondthirdfifthsixth'
+            },
+            'nested switch with continue should only "break" out of the inner switch (continue is identical to break)': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $done = true;
+
+    echo 'first';
+
+    switch (4) {
+    case 4:
+        echo 'second';
+
+        switch ($done) {
+        case true:
+            echo 'third';
+            continue;
+        case false:
+            echo 'fourth';
+        }
+
+        echo 'fifth';
+    }
+
+    echo 'sixth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondthirdfifthsixth'
             }
         }, function (scenario, description) {
             describe(description, function () {
