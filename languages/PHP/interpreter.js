@@ -619,24 +619,22 @@ define([
             },
             'N_SWITCH_STATEMENT': function (node, interpret, context) {
                 var code = '',
-                    expressionCode = interpret(node.expression);
-
-                if (!context.switchCase) {
-                    context.switchCase = {
-                        depth: 0
+                    expressionCode = interpret(node.expression),
+                    switchCase = {
+                        depth: context.switchCase ? context.switchCase.depth + 1 : 0
+                    },
+                    subContext = {
+                        switchCase: switchCase
                     };
-                } else {
-                    context.switchCase.depth++;
-                }
 
-                code += 'var switchExpression_' + context.switchCase.depth + ' = ' + expressionCode + ',' +
-                    ' switchMatched_' + context.switchCase.depth + ' = false;';
+                code += 'var switchExpression_' + switchCase.depth + ' = ' + expressionCode + ',' +
+                    ' switchMatched_' + switchCase.depth + ' = false;';
 
                 util.each(node.cases, function (caseNode) {
-                    code += interpret(caseNode);
+                    code += interpret(caseNode, subContext);
                 });
 
-                return 'switch_' + context.switchCase.depth + ': {' + code + '}';
+                return 'switch_' + switchCase.depth + ': {' + code + '}';
             },
             'N_TERNARY': function (node, interpret) {
                 var expression = '(' + interpret(node.condition) + ')';

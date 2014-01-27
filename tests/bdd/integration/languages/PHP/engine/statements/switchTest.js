@@ -114,6 +114,35 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'yep, seven - yep, eight - done'
+            },
+            'nested switch with break should only break out of the inner switch': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $done = true;
+
+    echo 'first';
+
+    switch (4) {
+    case 4:
+        echo 'second';
+
+        switch ($done) {
+        case true:
+            echo 'third';
+            break;
+        case false:
+            echo 'fourth';
+        }
+
+        echo 'fifth';
+    }
+
+    echo 'sixth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondthirdfifthsixth'
             }
         }, function (scenario, description) {
             describe(description, function () {
