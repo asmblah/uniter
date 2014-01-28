@@ -301,6 +301,11 @@ define([
 
                 return 'if (!switchMatched_' + context.switchCase.depth + ') {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
             },
+            'N_DO_WHILE_STATEMENT': function (node, interpret/*, context*/) {
+                var code = interpret(node.body);
+
+                return 'do {' + code + '} while (' + interpret(node.condition) + '.coerceToBoolean().getNative());';
+            },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },
