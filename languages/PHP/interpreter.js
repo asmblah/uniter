@@ -290,7 +290,7 @@ define([
                 return code;
             },
             'N_CONTINUE_STATEMENT': function (node, interpret, context) {
-                return 'break switch_' + context.switchCase.depth + ';';
+                return 'break switch_' + (context.switchCase.depth - (node.levels.number - 1)) + ';';
             },
             'N_DEFAULT_CASE': function (node, interpret, context) {
                 var body = '';

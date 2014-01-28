@@ -220,7 +220,7 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'firstthirdfourth'
             },
-            'breaking out of nested switch and its parent': {
+            'breaking out of nested switch and its parent with "break"': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $done = true;
@@ -235,6 +235,37 @@ EOS
         case 3:
             echo 'third';
             break 2;
+        case 4:
+            echo 'fourth';
+        }
+
+        echo 'fifth';
+
+        break;
+    }
+
+    echo 'sixth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondthirdsixth'
+            },
+            'breaking out of nested switch and its parent with "continue"': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $done = true;
+
+    echo 'first';
+
+    switch (2) {
+    case 2:
+        echo 'second';
+
+        switch (3) {
+        case 3:
+            echo 'third';
+            continue 2;
         case 4:
             echo 'fourth';
         }
