@@ -238,7 +238,7 @@ define([
                 return 'tools.valueFactory.createBoolean(' + node.bool + ')';
             },
             'N_BREAK_STATEMENT': function (node, interpret, context) {
-                return 'break switch_' + context.switchCase.depth + ';';
+                return 'break switch_' + (context.switchCase.depth - (node.levels.number - 1)) + ';';
             },
             'N_CASE': function (node, interpret, context) {
                 var body = '';
