@@ -38,6 +38,7 @@ define([
         found: function (label) {
             var repository = this;
 
+            repository.labels[label] = true;
             delete repository.pendingLabels[label];
             repository.emit('found label', label);
         },

@@ -59,6 +59,7 @@ define([
                 'true': 'setReference'
             }
         },
+        hasOwn = {}.hasOwnProperty,
         unaryOperatorToMethod = {
             prefix: {
                 '+': 'toPositive',
@@ -203,6 +204,76 @@ define([
         return 'function (' + args.join(', ') + ') {' + body + '}';
     }
 
+    function processBlock(statements, interpret, context) {
+        var code = '',
+            labelRepository = context.labelRepository,
+            statementDatas = [];
+
+        util.each(statements, function (statement) {
+            var labels = {},
+                gotos = {},
+                statementCode;
+
+            function onPendingLabel(label) {
+                gotos[label] = true;
+            }
+
+            function onFoundLabel(label) {
+                labels[label] = true;
+            }
+
+            labelRepository.on('pending label', onPendingLabel);
+            labelRepository.on('found label', onFoundLabel);
+
+            statementCode = interpret(statement, context);
+            labelRepository.off('pending label', onPendingLabel);
+            labelRepository.off('found label', onFoundLabel);
+
+            statementDatas.push({
+                code: statementCode,
+                gotos: gotos,
+                labels: labels
+            });
+        });
+
+        util.each(statementDatas, function (statementData, index) {
+            if (index > 0) {
+                util.each(Object.keys(statementData.labels), function (label) {
+                    statementDatas[0].code = 'if (!' + 'goingToLabel_' + label + ') {' + statementDatas[0].code;
+                    statementData.code = '}' + statementData.code;
+                });
+            }
+        });
+
+        util.each(statementDatas, function (statementData, statementIndex) {
+            util.each(Object.keys(statementData.gotos), function (label) {
+                if (!hasOwn.call(statementData.labels, label)) {
+                    // This is a goto to a label in another statement: find the statement containing the label
+                    util.each(statementDatas, function (otherStatementData, otherStatementIndex) {
+                        if (otherStatementData !== statementData) {
+                            if (hasOwn.call(otherStatementData.labels, label)) {
+                                // We have found the label we are trying to jump to
+                                if (otherStatementIndex > statementIndex) {
+                                    // The label is after the goto
+                                    statementData.code = label + ': {' + statementData.code;
+                                    otherStatementData.code = '}' + otherStatementData.code;
+                                } else {
+                                    throw new Error('Not implemented yet.');
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        util.each(statementDatas, function (statementData) {
+            code += statementData.code;
+        });
+
+        return code;
+    }
+
     return {
         Environment: PHPEnvironment,
         State: PHPState,
@@ -280,14 +351,8 @@ define([
 
                 return expressionCodes.join(',');
             },
-            'N_COMPOUND_STATEMENT': function (node, interpret) {
-                var code = '';
-
-                util.each(node.statements, function (statement) {
-                    code += interpret(statement);
-                });
-
-                return code;
+            'N_COMPOUND_STATEMENT': function (node, interpret, context) {
+                return processBlock(node.statements, interpret, context);
             },
             'N_CONTINUE_STATEMENT': function (node, interpret, context) {
                 return 'break switch_' + (context.switchCase.depth - (node.levels.number - 1)) + ';';
@@ -417,10 +482,6 @@ define([
 
                 context.labelRepository.addPending(label);
 
-                if (!context.insideBlock) {
-                    code += label + ': {';
-                }
-
                 code += 'goingToLabel_' + label + ' = true; break ' + label + ';';
 
                 return code;
@@ -433,36 +494,26 @@ define([
                     conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
                     consequentCode,
                     consequentPrefix = '',
-                    gotosBreakingOut = {},
                     gotosJumpingIn = {},
                     labelRepository = context.labelRepository;
 
                 function onPendingLabel(label) {
-                    gotosBreakingOut[label] = true;
                     delete gotosJumpingIn[label];
                 }
 
                 function onFoundLabel(label) {
-                    delete gotosBreakingOut[label];
                     gotosJumpingIn[label] = true;
                 }
 
                 labelRepository.on('pending label', onPendingLabel);
                 labelRepository.on('found label', onFoundLabel);
 
-                consequentCode = interpret(node.consequentStatement, {insideBlock: true});
+                consequentCode = interpret(node.consequentStatement);
                 labelRepository.off('pending label', onPendingLabel);
                 labelRepository.off('found label', onFoundLabel);
 
                 util.each(Object.keys(gotosJumpingIn), function (label) {
-                    code += '}';
-
-                    consequentPrefix = 'if (!' + 'goingToLabel_' + label + ') {' + consequentPrefix;
                     conditionCode = 'goingToLabel_' + label + ' || (' + conditionCode + ')';
-                });
-
-                util.each(Object.keys(gotosBreakingOut), function (label) {
-                    code += label + ': {';
                 });
 
                 consequentCode = '{' + consequentPrefix + consequentCode + '}';
@@ -494,12 +545,11 @@ define([
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
             },
             'N_LABEL_STATEMENT': function (node, interpret, context) {
-                var label = node.label,
-                    isPending = context.labelRepository.isPending(label);
+                var label = node.label;
 
                 context.labelRepository.found(label);
 
-                return isPending ? '}' : '';
+                return '';
             },
             'N_LIST': function (node, interpret) {
                 var elementsCodes = [];
@@ -584,9 +634,7 @@ define([
                     labels;
 
                 try {
-                    util.each(hoistDeclarations(node.statements), function (statement) {
-                        body += interpret(statement, context);
-                    });
+                    body += processBlock(hoistDeclarations(node.statements), interpret, context);
                 } catch (exception) {
                     if (exception instanceof PHPError) {
                         stderr.write(exception.message);
@@ -598,7 +646,7 @@ define([
                 labels = context.labelRepository.getLabels();
 
                 if (labels.length > 0) {
-                    body = 'var goingToLabel_' + labels.join(' = false, ') + ' = false;' + body;
+                    body = 'var goingToLabel_' + labels.join(' = false, goingToLabel_') + ' = false;' + body;
                 }
 
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
