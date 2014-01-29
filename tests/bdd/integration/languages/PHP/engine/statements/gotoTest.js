@@ -251,6 +251,54 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'firstsecondthirdninthtentheleventh'
             },
+            'jumping backward into if': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    if (0) {
+        echo 'second';
+backward:
+        echo 'third';
+        return;
+        echo 'fourth';
+    }
+
+    echo 'fifth';
+    goto backward;
+    echo 'sixth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstfifththird'
+            },
+            'jumping backward from if into previous if': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    if (0) {
+        echo 'second';
+backward:
+        echo 'third';
+        return;
+        echo 'fourth';
+    }
+
+    echo 'fifth';
+    if (true) {
+        echo 'sixth';
+        goto backward;
+        echo 'seventh';
+    }
+    echo 'eighth';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstfifthsixththird'
+            },
             'invalid jump into while loop': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

@@ -20,6 +20,7 @@ define([
     function LabelRepository() {
         EventEmitter.call(this);
 
+        this.foundLabels = {};
         this.labels = {};
         this.pendingLabels = {};
     }
@@ -38,6 +39,7 @@ define([
         found: function (label) {
             var repository = this;
 
+            repository.foundLabels[label] = true;
             repository.labels[label] = true;
             delete repository.pendingLabels[label];
             repository.emit('found label', label);
@@ -45,6 +47,12 @@ define([
 
         getLabels: function () {
             return Object.keys(this.labels);
+        },
+
+        hasBeenFound: function (label) {
+            var repository = this;
+
+            return repository.foundLabels[label] === true;
         },
 
         hasPending: function () {

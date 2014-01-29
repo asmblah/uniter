@@ -232,15 +232,17 @@ define([
             statementDatas.push({
                 code: statementCode,
                 gotos: gotos,
-                labels: labels
+                labels: labels,
+                prefix: '',
+                suffix: ''
             });
         });
 
         util.each(statementDatas, function (statementData, index) {
             if (index > 0) {
                 util.each(Object.keys(statementData.labels), function (label) {
-                    statementDatas[0].code = 'if (!' + 'goingToLabel_' + label + ') {' + statementDatas[0].code;
-                    statementData.code = '}' + statementData.code;
+                    statementDatas[0].prefix = 'if (!' + 'goingToLabel_' + label + ') {' + statementDatas[0].prefix;
+                    statementData.prefix = '}' + statementData.prefix;
                 });
             }
         });
@@ -254,11 +256,13 @@ define([
                             if (hasOwn.call(otherStatementData.labels, label)) {
                                 // We have found the label we are trying to jump to
                                 if (otherStatementIndex > statementIndex) {
-                                    // The label is after the goto
-                                    statementData.code = label + ': {' + statementData.code;
-                                    otherStatementData.code = '}' + otherStatementData.code;
+                                    // The label is after the goto (forward jump)
+                                    statementData.prefix = label + ': {' + statementData.prefix;
+                                    otherStatementData.prefix = '}' + otherStatementData.prefix;
                                 } else {
-                                    throw new Error('Not implemented yet.');
+                                    // The goto is after the label (backward jump)
+                                    otherStatementData.prefix += 'continue_' + label + ': do {';
+                                    statementData.suffix += '} while (goingToLabel_' + label + ');';
                                 }
                             }
                         }
@@ -268,7 +272,7 @@ define([
         });
 
         util.each(statementDatas, function (statementData) {
-            code += statementData.code;
+            code += statementData.prefix + statementData.code + statementData.suffix;
         });
 
         return code;
@@ -482,7 +486,13 @@ define([
 
                 context.labelRepository.addPending(label);
 
-                code += 'goingToLabel_' + label + ' = true; break ' + label + ';';
+                code += 'goingToLabel_' + label + ' = true;';
+
+                if (context.labelRepository.hasBeenFound(label)) {
+                    code += ' continue continue_' + label + ';';
+                } else {
+                    code += ' break ' + label + ';';
+                }
 
                 return code;
             },
@@ -660,7 +670,7 @@ define([
             'N_RETURN_STATEMENT': function (node, interpret) {
                 var expression = interpret(node.expression);
 
-                return 'return' + (expression ? ' ' + expression : '') + ';';
+                return 'return ' + (expression ? expression : 'tools.valueFactory.createNull()') + ';';
             },
             'N_STRING': function (node) {
                 switch (node.string) {
