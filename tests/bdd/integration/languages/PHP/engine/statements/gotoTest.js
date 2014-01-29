@@ -217,6 +217,40 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'firstsecondthirdseventh'
             },
+            'jumping out of nested if into nested if': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    if (true) {
+        echo 'second';
+        if (true) {
+            echo 'third';
+goto end;
+            echo 'fourth';
+        }
+        echo 'fifth';
+    }
+
+    echo 'sixth';
+
+    if (false) {
+        echo 'seventh';
+        if (false) {
+            echo 'eighth';
+end:
+            echo 'ninth';
+        }
+        echo 'tenth';
+    }
+
+    echo 'eleventh';
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstsecondthirdninthtentheleventh'
+            },
             'invalid jump into while loop': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
