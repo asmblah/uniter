@@ -54,6 +54,24 @@ define([
                 });
             });
 
+            describe('when reused for parsing a different string', function () {
+                it('should return the correct AST', function () {
+                    var parser = new Parser({
+                        rules: {
+                            'number': {name: 'value', what: /\d+/}
+                        },
+                        start: 'number'
+                    });
+
+                    parser.parse('128');
+
+                    expect(parser.parse('321')).to.deep.equal({
+                        name: 'number',
+                        value: '321'
+                    });
+                });
+            });
+
             describe('"allOf" qualifier', function () {
                 check({
                     grammarSpec: {

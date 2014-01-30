@@ -28,6 +28,7 @@ define([
     function Parser(grammarSpec, stderr) {
         this.errorHandler = null;
         this.grammarSpec = grammarSpec;
+        this.matchCaches = [];
         this.stderr = stderr;
 
         (function (parser) {
@@ -43,12 +44,11 @@ define([
             // Speed up repeated match tests in complex grammars by caching component matches
             function createMatchCache() {
                 var matchCache = {};
-                matchCaches.push(matchCache);
+                parser.matchCaches.push(matchCache);
                 return matchCache;
             }
 
-            var matchCaches = [],
-                qualifiers = {
+            var qualifiers = {
                     // Like "(...)" grouping - 'arg' is an array of components that must all match
                     'allOf': function (text, offset, arg, args, options) {
                         var matches = [],
@@ -390,7 +390,15 @@ define([
             var parser = this,
                 errorHandler = parser.getErrorHandler(),
                 rule = parser.startRule,
-                match = rule.match(text, 0, options);
+                match;
+
+            util.each(parser.matchCaches, function (matchCache) {
+                util.each(matchCache, function (value, name) {
+                    delete matchCache[name];
+                });
+            });
+
+            match = rule.match(text, 0, options);
 
             if (errorHandler && (match === null || match.textLength < text.length)) {
                 errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, match));
