@@ -106,6 +106,7 @@ define({
             'bdd/integration/languages/PHP/grammar/constructs/singleQuotedStringTest',
             'bdd/integration/languages/PHP/grammar/constructs/stringInterpolationTest',
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
+            'bdd/integration/languages/PHP/grammar/expressions/closureTest',
             'bdd/integration/languages/PHP/grammar/expressions/functionCallTest',
             'bdd/integration/languages/PHP/grammar/expressions/methodCallTest',
             'bdd/integration/languages/PHP/grammar/expressions/nullTest',

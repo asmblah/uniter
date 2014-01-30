@@ -221,6 +221,9 @@ define([
             'N_CLASS_STATEMENT': {
                 components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
+            'N_CLOSURE': {
+                components: ['T_FUNCTION', (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {oneOf: [['T_USE', (/\(/), {name: 'bindings', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)], {name: 'bindings', zeroOrMoreOf: {what: (/(?!)/)}}]}, {name: 'body', what: 'N_STATEMENT'}]
+            },
             'N_COMMA_EXPRESSION': {
                 components: {optionally: [{name: 'expressions', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=[;\)]))()/), captureIndex: 2}]}, (/(?=[;\)])/)]}
             },
@@ -549,7 +552,7 @@ define([
                 components: ['T_SWITCH', (/\(/), {name: 'expression', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'cases', zeroOrMoreOf: {oneOf: ['N_CASE', 'N_DEFAULT_CASE']}}, (/\}/)]
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_STRING']}
             },
             'N_VARIABLE': {
                 components: [
