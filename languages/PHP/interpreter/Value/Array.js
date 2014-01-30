@@ -180,15 +180,15 @@ define([
         },
 
         isEqualTo: function (rightValue) {
+            return rightValue.isEqualToArray(this);
+        },
+
+        isEqualToArray: function (rightValue) {
             var equal = true,
                 leftValue = this,
                 factory = leftValue.factory;
 
-            if (rightValue.getType() === 'boolean') {
-                return factory.createBoolean(rightValue.getNative() === (leftValue.value.length > 0));
-            }
-
-            if (rightValue.getType() !== 'array' || rightValue.value.length !== leftValue.value.length) {
+            if (rightValue.value.length !== leftValue.value.length) {
                 return factory.createBoolean(false);
             }
 
@@ -202,10 +202,14 @@ define([
             return factory.createBoolean(equal);
         },
 
-        isNotEqualTo: function (rightValue) {
+        isEqualToBoolean: function (rightValue) {
             var leftValue = this;
 
-            return leftValue.factory.createBoolean(!leftValue.isEqualTo(rightValue).getNative());
+            return leftValue.factory.createBoolean(rightValue.getNative() === (leftValue.value.length > 0));
+        },
+
+        isEqualToFloat: function () {
+            return this.factory.createBoolean(false);
         },
 
         next: function () {

@@ -73,6 +73,16 @@ define([
             return this.factory.createNull();
         },
 
+        isEqualTo: function (rightValue) {
+            return rightValue.isEqualToFloat(this);
+        },
+
+        isEqualToFloat: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(rightValue.value === leftValue.value);
+        },
+
         onesComplement: function () {
             /*jshint bitwise: false */
             return this.factory.createInteger(~this.value);

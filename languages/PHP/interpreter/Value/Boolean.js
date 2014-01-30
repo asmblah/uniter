@@ -51,6 +51,13 @@ define([
             return this.factory.createNull();
         },
 
+        isEqualTo: function (rightValue) {
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            return factory.createBoolean(rightValue.coerceToBoolean().value === leftValue.value);
+        },
+
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },

@@ -66,6 +66,14 @@ define([
             return leftValue.factory.createBoolean(rightValue.value == leftValue.value);
         },
 
+        isEqualToArray: function (rightValue) {
+            return this.isEqualTo(rightValue);
+        },
+
+        isEqualToFloat: function (rightValue) {
+            return this.isEqualTo(rightValue);
+        },
+
         isIdenticalTo: function (rightValue) {
             var leftValue = this;
 
