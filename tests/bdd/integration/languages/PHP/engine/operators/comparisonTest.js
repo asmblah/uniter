@@ -101,12 +101,12 @@ define([
                                 expectedResultType: 'boolean'
                             }, {
                                 left: 'array(5)',
-                                right: '5',
+                                right: '5.0',
                                 expectedResult: false,
                                 expectedResultType: 'boolean'
                             }, {
                                 left: 'array("a" => 7)',
-                                right: '7',
+                                right: '7.0',
                                 expectedResult: false,
                                 expectedResultType: 'boolean'
                             }]
