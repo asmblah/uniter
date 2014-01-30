@@ -83,6 +83,12 @@ define([
             return leftValue.factory.createBoolean(rightValue.value === leftValue.value);
         },
 
+        isEqualToInteger: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(rightValue.coerceToFloat().value === leftValue.value);
+        },
+
         onesComplement: function () {
             /*jshint bitwise: false */
             return this.factory.createInteger(~this.value);

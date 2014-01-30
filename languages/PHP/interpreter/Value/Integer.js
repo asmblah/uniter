@@ -44,6 +44,12 @@ define([
             return value.factory.createBoolean(!!value.value);
         },
 
+        coerceToFloat: function () {
+            var value = this;
+
+            return value.factory.createFloat(value.value);
+        },
+
         coerceToInteger: function () {
             return this;
         },
@@ -77,6 +83,16 @@ define([
             var value = this;
 
             return value.factory.createInteger(value.value + 1);
+        },
+
+        isEqualTo: function (rightValue) {
+            return rightValue.isEqualToInteger(this);
+        },
+
+        isEqualToInteger: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(rightValue.value === leftValue.value);
         },
 
         isLessThan: function (rightValue) {
