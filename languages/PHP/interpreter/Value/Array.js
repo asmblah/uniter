@@ -183,6 +183,12 @@ define([
             return rightValue.isEqualToArray(this);
         },
 
+        isEqualToNull: function () {
+            var value = this;
+
+            return value.factory.createBoolean(value.value.length === 0);
+        },
+
         isEqualToArray: function (rightValue) {
             var equal = true,
                 leftValue = this,

@@ -78,6 +78,10 @@ define([
             return this.isEqualTo(rightValue);
         },
 
+        isEqualToNull: function (rightValue) {
+            return this.isEqualTo(rightValue);
+        },
+
         isIdenticalTo: function (rightValue) {
             var leftValue = this;
 

@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    var DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null'/*, 'object', 'string'*/];
 
     describe('PHP Engine loose equality/inequality comparison operators integration', function () {
         function check(scenario) {
@@ -117,6 +117,17 @@ define([
                             right: '7',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: 'array()',
+                            right: 'null',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'array(0)',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -184,6 +195,17 @@ define([
                             left: 'false',
                             right: '3',
                             expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: 'true',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'false',
+                            right: 'null',
+                            expectedResult: true,
                             expectedResultType: 'boolean'
                         }]
                     }
@@ -265,6 +287,28 @@ define([
                             right: '0',
                             expectedResult: true,
                             expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: '0.0',
+                            right: 'null',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1.0',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '0.1',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            // Negative and positive zero are equal
+                            left: '-0.0',
+                            right: 'null',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -343,6 +387,94 @@ define([
                             // Negative and positive zero are equal
                             left: '-0',
                             right: '0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: '0',
+                            right: 'null',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            // Negative and positive zero are equal
+                            left: '-0',
+                            right: 'null',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }]
+                    }
+                },
+                'null': {
+                    right: {
+                        'array': [{
+                            left: 'null',
+                            right: 'array()',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: 'array(0.0)',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'boolean': [{
+                            left: 'null',
+                            right: 'false',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: 'true',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'float': [{
+                            left: 'null',
+                            right: '0.0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: '1.0',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: '0.1',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            // Negative and positive zero are equal
+                            left: 'null',
+                            right: '-0.0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }],
+                        'integer': [{
+                            left: 'null',
+                            right: '0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: '1',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            // Negative and positive zero are equal
+                            left: 'null',
+                            right: '0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: 'null',
+                            right: 'null',
                             expectedResult: true,
                             expectedResultType: 'boolean'
                         }]

@@ -24,12 +24,28 @@ define([
     util.inherit(NullValue).from(Value);
 
     util.extend(NullValue.prototype, {
+        coerceToBoolean: function () {
+            return this.factory.createBoolean(false);
+        },
+
         coerceToKey: function () {
             return this.factory.createString('');
         },
 
         coerceToString: function () {
             return this.factory.createString('');
+        },
+
+        isEqualTo: function (rightValue) {
+            return rightValue.isEqualToNull(this);
+        },
+
+        isEqualToFloat: function (floatValue) {
+            return floatValue.isEqualToNull();
+        },
+
+        isEqualToNull: function () {
+            return this.factory.createBoolean(true);
         },
 
         isSet: function () {

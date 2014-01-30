@@ -95,6 +95,12 @@ define([
             return leftValue.factory.createBoolean(rightValue.value === leftValue.value);
         },
 
+        isEqualToNull: function () {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(leftValue.value === 0);
+        },
+
         isLessThan: function (rightValue) {
             var leftValue = this,
                 factory = leftValue.factory;
