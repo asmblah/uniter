@@ -184,9 +184,14 @@ define([
         });
 
         // Interpret statements first
-        util.each(hoistDeclarations(statementNodes), function (statement) {
-            body += interpret(statement);
-        });
+        if (util.isArray(statementNodes)) {
+            // TODO: Remove the need for this conditional by matching N_COMPOUND_STATEMENT for function bodies
+            util.each(hoistDeclarations(statementNodes), function (statement) {
+                body += interpret(statement);
+            });
+        } else {
+            body = interpret(statementNodes);
+        }
 
         // Copy passed values for any arguments
         util.each(args, function (arg, index) {
@@ -345,6 +350,11 @@ define([
                 code = '{properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
+            },
+            'N_CLOSURE': function (node, interpret) {
+                var func = interpretFunction(node.args, node.body, interpret);
+
+                return 'tools.valueFactory.createObject(' + func + ', "Closure")';
             },
             'N_COMMA_EXPRESSION': function (node, interpret) {
                 var expressionCodes = [];

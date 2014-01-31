@@ -81,6 +81,10 @@ define([
         getFunction: function (name) {
             var namespace = this;
 
+            if (util.isFunction(name)) {
+                return name;
+            }
+
             while (namespace && !hasOwn.call(namespace.functions, name)) {
                 namespace = namespace.getParent();
             }

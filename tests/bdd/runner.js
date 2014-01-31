@@ -77,6 +77,7 @@ define({
             'bdd/integration/languages/PHP/engine/constructs/singleQuotedStringTest',
             'bdd/integration/languages/PHP/engine/constructs/stringInterpolationTest',
             'bdd/integration/languages/PHP/engine/expressions/arrayLiteralTest',
+            'bdd/integration/languages/PHP/engine/expressions/closureTest',
             'bdd/integration/languages/PHP/engine/expressions/methodCallTest',
             'bdd/integration/languages/PHP/engine/expressions/printTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/looseEqualityTest',
