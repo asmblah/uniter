@@ -50,6 +50,34 @@ define([
                     }]
                 }
             },
+            'for loop with empty components and one body statement not wrapped in braces': {
+                code: 'for (;;) echo 1;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOR_STATEMENT',
+                        initializer: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: []
+                        },
+                        condition: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: []
+                        },
+                        update: {
+                            name: 'N_COMMA_EXPRESSION',
+                            expressions: []
+                        },
+                        body: {
+                            name: 'N_ECHO_STATEMENT',
+                            expression: {
+                                name: 'N_INTEGER',
+                                number: '1'
+                            }
+                        }
+                    }]
+                }
+            },
             'for loop iterating 3 times': {
                 code: 'for ($i = 0; $i < 2; $i++) { echo $i; }',
                 expectedAST: {
