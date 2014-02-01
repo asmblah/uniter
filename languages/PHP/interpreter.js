@@ -186,7 +186,7 @@ define([
         // Interpret statements first
         if (util.isArray(statementNodes)) {
             // TODO: Remove the need for this conditional by matching N_COMPOUND_STATEMENT for function bodies
-            util.each(hoistDeclarations(statementNodes), function (statement) {
+            util.each(statementNodes, function (statement) {
                 body += interpret(statement);
             });
         } else {

@@ -91,6 +91,25 @@ EOS
                 expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
                 expectedStdout: ''
             },
+            'instantiating a class before its definition where definition is inside of a function': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function doDeclare() {
+        var_dump(new FunTime);
+
+        class FunTime {}
+    }
+
+    doDeclare();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'FunTime' not found$/
+                },
+                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+                expectedStdout: ''
+            },
             'class with one public property': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
@@ -132,8 +151,10 @@ EOS
 EOS
 */) {})
             }
-        }, function (scenario) {
-            check(scenario);
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });

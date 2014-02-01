@@ -89,6 +89,25 @@ EOS
                 expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
                 expectedStdout: ''
             },
+            'calling a function before its definition where definition is inside of a function': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function declareFunc() {
+        secondFunc();
+
+        function secondFunc() {}
+    }
+
+    declareFunc();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function secondFunc\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function secondFunc()',
+                expectedStdout: ''
+            },
             'using the name "tools" for a function argument': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
