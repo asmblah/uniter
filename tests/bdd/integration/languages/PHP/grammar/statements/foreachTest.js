@@ -39,7 +39,10 @@ define([
                             name: 'N_VARIABLE',
                             variable: 'item'
                         },
-                        statements: []
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
                     }]
                 }
             },
@@ -61,7 +64,34 @@ define([
                             name: 'N_VARIABLE',
                             variable: 'item'
                         },
-                        statements: []
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
+                    }]
+                }
+            },
+            'simple foreach over variable with one body statement not wrapped in braces': {
+                code: 'foreach ($array as $item) echo 1;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOREACH_STATEMENT',
+                        array: {
+                            name: 'N_VARIABLE',
+                            variable: 'array'
+                        },
+                        value: {
+                            name: 'N_VARIABLE',
+                            variable: 'item'
+                        },
+                        body: {
+                            name: 'N_ECHO_STATEMENT',
+                            expression: {
+                                name: 'N_INTEGER',
+                                number: '1'
+                            }
+                        }
                     }]
                 }
             },
@@ -84,7 +114,10 @@ define([
                             reference: '&',
                             variable: 'item'
                         },
-                        statements: []
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
                     }]
                 }
             },
@@ -108,7 +141,10 @@ define([
                                 variable: 'second'
                             }]
                         },
-                        statements: []
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
                     }]
                 }
             },
@@ -130,13 +166,16 @@ define([
                             name: 'N_VARIABLE',
                             variable: 'item'
                         },
-                        statements: [{
-                            name: 'N_ECHO_STATEMENT',
-                            expression: {
-                                name: 'N_INTEGER',
-                                number: '3'
-                            }
-                        }]
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_ECHO_STATEMENT',
+                                expression: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
+                                }
+                            }]
+                        }
                     }]
                 }
             }

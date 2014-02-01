@@ -76,33 +76,36 @@ define([
                             name: 'N_VARIABLE',
                             variable: 'item'
                         },
-                        statements: [{
-                            name: 'N_EXPRESSION_STATEMENT',
-                            expression: {
-                                name: 'N_EXPRESSION',
-                                left: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'result'
-                                },
-                                right: [{
-                                    operator: '=',
-                                    operand: {
-                                        name: 'N_EXPRESSION',
-                                        left: {
-                                            name: 'N_VARIABLE',
-                                            variable: 'result'
-                                        },
-                                        right: [{
-                                            operator: '.',
-                                            operand: {
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_EXPRESSION_STATEMENT',
+                                expression: {
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'result'
+                                    },
+                                    right: [{
+                                        operator: '=',
+                                        operand: {
+                                            name: 'N_EXPRESSION',
+                                            left: {
                                                 name: 'N_VARIABLE',
-                                                variable: 'item'
-                                            }
-                                        }]
-                                    }
-                                }]
-                            }
-                        }]
+                                                variable: 'result'
+                                            },
+                                            right: [{
+                                                operator: '.',
+                                                operand: {
+                                                    name: 'N_VARIABLE',
+                                                    variable: 'item'
+                                                }
+                                            }]
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
                     }, {
                         name: 'N_RETURN_STATEMENT',
                         expression: {
