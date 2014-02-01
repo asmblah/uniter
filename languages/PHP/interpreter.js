@@ -596,15 +596,9 @@ define([
                 return interpret(node.object) + code;
             },
             'N_METHOD_DEFINITION': function (node, interpret) {
-                var body = '';
-
-                util.each(hoistDeclarations(node.statements), function (statement) {
-                    body += interpret(statement);
-                });
-
                 return {
                     name: interpret(node.func),
-                    body: interpretFunction(node.args, node.statements, interpret)
+                    body: interpretFunction(node.args, node.body, interpret)
                 };
             },
             'N_NAMESPACE_STATEMENT': function (node, interpret) {

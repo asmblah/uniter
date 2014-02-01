@@ -98,13 +98,52 @@ EOS
                                 name: 'N_VARIABLE',
                                 variable: 'what'
                             }],
-                            statements: [{
+                            body: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: [{
+                                    name: 'N_ECHO_STATEMENT',
+                                    expression: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'what'
+                                    }
+                                }]
+                            }
+                        }]
+                    }]
+                }
+            },
+            'class with one public instance method with one body statement not wrapped in braces': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class OneMethod {
+        public function printIt($what) echo $what;
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'OneMethod'
+                        },
+                        members: [{
+                            name: 'N_METHOD_DEFINITION',
+                            visibility: 'public',
+                            type: '',
+                            func: 'printIt',
+                            args: [{
+                                name: 'N_VARIABLE',
+                                variable: 'what'
+                            }],
+                            body: {
                                 name: 'N_ECHO_STATEMENT',
                                 expression: {
                                     name: 'N_VARIABLE',
                                     variable: 'what'
                                 }
-                            }]
+                            }
                         }]
                     }]
                 }
