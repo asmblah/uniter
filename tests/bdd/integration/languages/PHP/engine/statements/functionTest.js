@@ -108,6 +108,25 @@ EOS
                 expectedStderr: 'PHP Fatal error: Call to undefined function secondFunc()',
                 expectedStdout: ''
             },
+            'calling a function before its definition where definition is inside of a while loop': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $a = 1;
+
+    while ($a--) {
+        doSomething();
+
+        function doSomething () {}
+    }
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
+                expectedStdout: ''
+            },
             'using the name "tools" for a function argument': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

@@ -752,7 +752,7 @@ define([
                     throw new PHPFatalError(PHPFatalError.GOTO_DISALLOWED);
                 });
 
-                util.each(hoistDeclarations(node.statements), function (statement) {
+                util.each(node.statements, function (statement) {
                     code += interpret(statement);
                 });
 

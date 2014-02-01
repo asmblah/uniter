@@ -110,6 +110,25 @@ EOS
                 expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
                 expectedStdout: ''
             },
+            'instantiating a class before its definition where definition is inside of a while loop': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $a = 1;
+
+    while ($a--) {
+        var_dump(new FunTime);
+
+        class FunTime {}
+    }
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'FunTime' not found$/
+                },
+                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+                expectedStdout: ''
+            },
             'class with one public property': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
