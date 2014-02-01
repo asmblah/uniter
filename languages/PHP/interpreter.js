@@ -468,7 +468,7 @@ define([
                 // Set pointer to next element at start of loop body as per spec
                 code += pointerVariable + '++;';
 
-                util.each(hoistDeclarations(node.statements), function (statement) {
+                util.each(node.statements, function (statement) {
                     code += interpret(statement);
                 });
 
