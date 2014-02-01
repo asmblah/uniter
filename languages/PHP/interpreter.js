@@ -477,7 +477,7 @@ define([
                 return code;
             },
             'N_FUNCTION_STATEMENT': function (node, interpret) {
-                var func = interpretFunction(node.args, node.statements, interpret);
+                var func = interpretFunction(node.args, node.body, interpret);
 
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },
