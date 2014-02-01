@@ -173,25 +173,15 @@ define([
         return declarations.concat(nonDeclarations);
     }
 
-    function interpretFunction(argNodes, statementNodes, interpret) {
+    function interpretFunction(argNodes, statementNode, interpret) {
         var args = [],
             argumentAssignments = '',
-            body = '',
+            body = interpret(statementNode),
             variableDeclarations = '';
 
         util.each(argNodes, function (arg) {
             args.push(arg.variable);
         });
-
-        // Interpret statements first
-        if (util.isArray(statementNodes)) {
-            // TODO: Remove the need for this conditional by matching N_COMPOUND_STATEMENT for function bodies
-            util.each(statementNodes, function (statement) {
-                body += interpret(statement);
-            });
-        } else {
-            body = interpret(statementNodes);
-        }
 
         // Copy passed values for any arguments
         util.each(args, function (arg, index) {
