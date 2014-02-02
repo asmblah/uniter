@@ -139,17 +139,6 @@ define([
                 },
                 'boolean': {
                     right: {
-                        'array': [{
-                            left: 'true',
-                            right: 'array()',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'false',
-                            right: 'array()',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
                         'boolean': [{
                             left: 'true',
                             right: 'true',
@@ -229,38 +218,6 @@ define([
                 },
                 'float': {
                     right: {
-                        'array': [{
-                            left: '0.0',
-                            right: 'array()',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '0.0',
-                            right: 'array(0.0)',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'boolean': [{
-                            left: '0.0',
-                            right: 'false',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '0.1',
-                            right: 'false',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1.0',
-                            right: 'true',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1.1',
-                            right: 'true',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
                         'float': [{
                             left: '0.0',
                             right: '0.0',
@@ -352,60 +309,6 @@ define([
                 },
                 'integer': {
                     right: {
-                        'array': [{
-                            left: '0',
-                            right: 'array()',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '0',
-                            right: 'array(0.0)',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'boolean': [{
-                            left: '0',
-                            right: 'false',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1',
-                            right: 'false',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1',
-                            right: 'true',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '2',
-                            right: 'true',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
-                        'float': [{
-                            left: '0',
-                            right: '0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1',
-                            right: '1.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '0',
-                            right: '0.1',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            // Negative and positive zero are equal
-                            left: '-0',
-                            right: '0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
                         'integer': [{
                             left: '0',
                             right: '0',
@@ -465,67 +368,6 @@ define([
                 },
                 'null': {
                     right: {
-                        'array': [{
-                            left: 'null',
-                            right: 'array()',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'null',
-                            right: 'array(0.0)',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'boolean': [{
-                            left: 'null',
-                            right: 'false',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'null',
-                            right: 'true',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'float': [{
-                            left: 'null',
-                            right: '0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'null',
-                            right: '1.0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'null',
-                            right: '0.1',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            // Negative and positive zero are equal
-                            left: 'null',
-                            right: '-0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
-                        'integer': [{
-                            left: 'null',
-                            right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'null',
-                            right: '1',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            // Negative and positive zero are equal
-                            left: 'null',
-                            right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }],
                         'null': [{
                             left: 'null',
                             right: 'null',
@@ -542,66 +384,6 @@ define([
                 },
                 'object': {
                     right: {
-                        'array': [{
-                            left: 'new stdClass',
-                            right: 'array()',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'boolean': [{
-                            left: 'new stdClass',
-                            right: 'true',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: 'false',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'float': [{
-                            left: 'new stdClass',
-                            right: '0.0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: '0.1',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: '1.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: '1.1',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'integer': [{
-                            left: 'new stdClass',
-                            right: '0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: '1',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: 'new stdClass',
-                            right: '2',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
-                        'null': [{
-                            left: 'new stdClass',
-                            right: 'null',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }],
                         'object': [{
                             left: 'new stdClass',
                             right: 'new stdClass',
@@ -642,20 +424,40 @@ define([
                             var leftOperand = rightOperandData.left,
                                 rightOperand = rightOperandData.right;
 
-                            describe('for ' + leftOperandType + '(' + leftOperand + ') ' + scenario.operator + ' ' + rightOperandType + '(' + rightOperand + ')', function () {
-                                var expression = leftOperand + ' '  + scenario.operator + ' ' + rightOperand,
-                                    expectedResult = rightOperandData.expectedResult;
+                            util.from(0).to(1, function (index) {
+                                var scratch;
 
-                                if (scenario.invertExpectedResult) {
-                                    expectedResult = !expectedResult;
+                                // Test the reverse comparison as well, if needed
+                                if (index === 1) {
+                                    // Left and right operands are the same, no point testing the reverse
+                                    if (rightOperand === leftOperand) {
+                                        return;
+                                    }
+
+                                    scratch = leftOperand;
+                                    leftOperand = rightOperand;
+                                    rightOperand = scratch;
+
+                                    scratch = leftOperandType;
+                                    leftOperandType = rightOperandType;
+                                    rightOperandType = scratch;
                                 }
 
-                                check({
-                                    code: '<?php return ' + expression + ';',
-                                    expectedResult: expectedResult,
-                                    expectedResultType: rightOperandData.expectedResultType,
-                                    expectedStderr: rightOperandData.expectedStderr || '',
-                                    expectedStdout: rightOperandData.expectedStdout || ''
+                                describe('for ' + leftOperandType + '(' + leftOperand + ') ' + scenario.operator + ' ' + rightOperandType + '(' + rightOperand + ')', function () {
+                                    var expression = leftOperand + ' '  + scenario.operator + ' ' + rightOperand,
+                                        expectedResult = rightOperandData.expectedResult;
+
+                                    if (scenario.invertExpectedResult) {
+                                        expectedResult = !expectedResult;
+                                    }
+
+                                    check({
+                                        code: '<?php return ' + expression + ';',
+                                        expectedResult: expectedResult,
+                                        expectedResultType: rightOperandData.expectedResultType,
+                                        expectedStderr: rightOperandData.expectedStderr || '',
+                                        expectedStdout: rightOperandData.expectedStdout || ''
+                                    });
                                 });
                             });
                         });

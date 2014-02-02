@@ -43,7 +43,7 @@ define([
                 to: function (to, callback) {
                     var number;
 
-                    for (number = from; number < to; number += 1) {
+                    for (number = from; number <= to; number += 1) {
                         callback(number, number - from);
                     }
                 }
