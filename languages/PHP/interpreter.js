@@ -114,8 +114,14 @@ define([
                 popCall: function () {
                     callStack.pop();
                 },
-                pushCall: function () {
-                    var call = new Call(new Scope(callStack, valueFactory));
+                pushCall: function (thisObject) {
+                    var call;
+
+                    if (!valueFactory.isValue(thisObject)) {
+                        thisObject = null;
+                    }
+
+                    call = new Call(new Scope(callStack, valueFactory, thisObject));
 
                     callStack.push(call);
 
@@ -215,7 +221,7 @@ define([
         body = argumentAssignments + bindingAssignments + body;
 
         // Add scope handling logic
-        body = 'var scope = tools.pushCall().getScope(); try { ' + body + ' } finally { tools.popCall(); }';
+        body = 'var scope = tools.pushCall(this).getScope(); try { ' + body + ' } finally { tools.popCall(); }';
 
         // Build function expression
         body = 'function (' + args.join(', ') + ') {' + body + '}';

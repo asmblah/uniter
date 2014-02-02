@@ -100,6 +100,9 @@ define([
             var factory = this;
 
             return new StringValue(factory, factory.callStack, value);
+        },
+        isValue: function (object) {
+            return object instanceof Value;
         }
     });
 

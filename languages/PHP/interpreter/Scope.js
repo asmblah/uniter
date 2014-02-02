@@ -19,11 +19,19 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Scope(callStack, valueFactory) {
+    function Scope(callStack, valueFactory, thisObject) {
+        var thisObjectVariable;
+
         this.errorsSuppressed = false;
         this.callStack = callStack;
         this.valueFactory = valueFactory;
         this.variables = {};
+
+        if (thisObject) {
+            thisObjectVariable = new Variable(callStack, valueFactory, 'this');
+            thisObjectVariable.setValue(thisObject);
+            this.variables['this'] = thisObjectVariable;
+        }
     }
 
     util.extend(Scope.prototype, {

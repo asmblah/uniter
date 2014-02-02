@@ -189,6 +189,28 @@ EOS
 EOS
 */) {})
             },
+            'class with one public method using $this variable': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function dumpMe() {
+            var_dump($this);
+        }
+    }
+
+    $object = new Test();
+    $object->dumpMe();
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Test)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
             'class with magic __invoke(...) method': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
