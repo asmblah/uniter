@@ -94,6 +94,24 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'Hello and welcome!'
+            },
+            // Check that when passed by value, original variable in parent scope is not modified
+            'self-executed closure that modifies its local copy of the bound var (by value), no parentheses': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $result = 4;
+
+    function () use ($result) {
+        $result = 7;
+    }();
+
+    return $result;
+
+EOS
+*/) {}),
+                expectedResult: 4,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
