@@ -487,8 +487,12 @@ define([
 
                 return code;
             },
-            'N_FUNCTION_STATEMENT': function (node, interpret) {
-                var func = interpretFunction(node.args, null, node.body, interpret);
+            'N_FUNCTION_STATEMENT': function (node, interpret, context) {
+                var func;
+
+                context.labelRepository = new LabelRepository();
+
+                func = interpretFunction(node.args, null, node.body, interpret);
 
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },

@@ -299,6 +299,34 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'firstfifthsixththird'
             },
+            'reusing label name inside function': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo 'first';
+
+    function doIt() {
+        echo 'second';
+        goto myLabel;
+        echo 'third';
+myLabel:
+        echo 'fourth';
+    }
+
+    echo 'fifth';
+    doIt();
+    echo 'sixth';
+
+    goto myLabel;
+    echo 'seventh';
+myLabel:
+    echo 'eighth';
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'firstfifthsecondfourthsixtheighth'
+            },
             'invalid jump into while loop': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
