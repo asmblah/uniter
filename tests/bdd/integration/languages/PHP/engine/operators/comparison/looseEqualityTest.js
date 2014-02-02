@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null'/*, 'object', 'string'*/];
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object'/*, 'string'*/];
 
     describe('PHP Engine loose equality/inequality comparison operators integration', function () {
         function check(scenario) {
@@ -128,6 +128,12 @@ define([
                             right: 'null',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: 'array()',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -206,6 +212,17 @@ define([
                             left: 'false',
                             right: 'null',
                             expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: 'true',
+                            right: 'new stdClass',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'false',
+                            right: 'new stdClass',
+                            expectedResult: false,
                             expectedResultType: 'boolean'
                         }]
                     }
@@ -309,6 +326,27 @@ define([
                             right: 'null',
                             expectedResult: true,
                             expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: '0.0',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '0.1',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1.0',
+                            right: 'new stdClass',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1.1',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -406,6 +444,22 @@ define([
                             right: 'null',
                             expectedResult: true,
                             expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: '0',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1',
+                            right: 'new stdClass',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '2',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -476,6 +530,92 @@ define([
                             left: 'null',
                             right: 'null',
                             expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: 'null',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }]
+                    }
+                },
+                'object': {
+                    right: {
+                        'array': [{
+                            left: 'new stdClass',
+                            right: 'array()',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'boolean': [{
+                            left: 'new stdClass',
+                            right: 'true',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: 'false',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'float': [{
+                            left: 'new stdClass',
+                            right: '0.0',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: '0.1',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: '1.0',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: '1.1',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'integer': [{
+                            left: 'new stdClass',
+                            right: '0',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: '1',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'new stdClass',
+                            right: '2',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'null': [{
+                            left: 'new stdClass',
+                            right: 'null',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'object': [{
+                            left: 'new stdClass',
+                            right: 'new stdClass',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '(function () { $o = new stdClass; $o->prop = 1; return $o; })',
+                            right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '(function () { class FunTest {} return new FunTest; })',
+                            right: 'new stdClass',
+                            expectedResult: false,
                             expectedResultType: 'boolean'
                         }]
                     }

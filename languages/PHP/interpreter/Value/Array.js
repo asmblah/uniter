@@ -222,6 +222,10 @@ define([
             return this.factory.createBoolean(false);
         },
 
+        isEqualToObject: function () {
+            return this.factory.createBoolean(false);
+        },
+
         next: function () {
             this.pointer++;
         },

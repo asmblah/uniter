@@ -95,6 +95,10 @@ define([
             return leftValue.factory.createBoolean(leftValue.value === 0);
         },
 
+        isEqualToObject: function (objectValue) {
+            return objectValue.isEqualToFloat(this);
+        },
+
         onesComplement: function () {
             /*jshint bitwise: false */
             return this.factory.createInteger(~this.value);

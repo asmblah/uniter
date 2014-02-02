@@ -48,6 +48,10 @@ define([
             return this.factory.createBoolean(true);
         },
 
+        isEqualToObject: function (objectValue) {
+            return objectValue.isEqualToNull();
+        },
+
         isSet: function () {
             return false;
         }

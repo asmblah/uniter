@@ -101,6 +101,10 @@ define([
             return leftValue.factory.createBoolean(leftValue.value === 0);
         },
 
+        isEqualToObject: function (objectValue) {
+            return objectValue.isEqualToInteger(this);
+        },
+
         isLessThan: function (rightValue) {
             var leftValue = this,
                 factory = leftValue.factory;

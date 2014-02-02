@@ -58,6 +58,10 @@ define([
             return factory.createBoolean(rightValue.coerceToBoolean().value === leftValue.value);
         },
 
+        isEqualToObject: function () {
+            return this;
+        },
+
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },
