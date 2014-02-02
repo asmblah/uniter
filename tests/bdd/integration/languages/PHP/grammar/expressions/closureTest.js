@@ -67,6 +67,31 @@ define([
                     }]
                 }
             },
+            'empty closure in void context with two bound variables, second passed by reference': {
+                code: 'function () use ($a, &$b) {};',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_CLOSURE',
+                            args: [],
+                            bindings: [{
+                                name: 'N_VARIABLE',
+                                variable: 'a'
+                            }, {
+                                name: 'N_VARIABLE',
+                                reference: '&',
+                                variable: 'b'
+                            }],
+                            body: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }
+                    }]
+                }
+            },
             'empty closure in void context with two parameters': {
                 code: 'function ($a, $b) {};',
                 expectedAST: {

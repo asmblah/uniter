@@ -194,8 +194,10 @@ define([
         });
 
         util.each(bindingNodes, function (bindingNode) {
-            var variableName = bindingNode.variable;
-            bindingAssignments += 'scope.getVariable("' + variableName + '").setValue(parentScope.getVariable("' + variableName + '").getValue());';
+            var methodSuffix = bindingNode.reference ? 'Reference' : 'Value',
+                variableName = bindingNode.variable;
+
+            bindingAssignments += 'scope.getVariable("' + variableName + '").set' + methodSuffix + '(parentScope.getVariable("' + variableName + '").get' + methodSuffix + '());';
         });
 
         // Copy passed values for any arguments
