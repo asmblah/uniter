@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object'/*, 'string'*/];
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object', 'string'];
 
     describe('PHP Engine loose equality/inequality comparison operators integration', function () {
         function check(scenario) {
@@ -134,6 +134,18 @@ define([
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: 'array()',
+                            right: '""',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            // Casting array to string results in "Array", but they are not equal
+                            left: 'array()',
+                            right: '"Array"',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -211,6 +223,27 @@ define([
                         }, {
                             left: 'false',
                             right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: 'true',
+                            right: '""',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'false',
+                            right: '""',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'true',
+                            right: '"world"',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'false',
+                            right: '"world"',
                             expectedResult: false,
                             expectedResultType: 'boolean'
                         }]
@@ -304,6 +337,27 @@ define([
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: '0.0',
+                            right: '""',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '0.0',
+                            right: '"0.1"',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1.2',
+                            right: '"1.2"',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1.0',
+                            right: '"1"',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -363,6 +417,17 @@ define([
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: '1',
+                            right: '"1.0"',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '1',
+                            right: '"1.2"',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
                         }]
                     }
                 },
@@ -377,6 +442,17 @@ define([
                         'object': [{
                             left: 'null',
                             right: 'new stdClass',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: 'null',
+                            right: '""',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: 'null',
+                            right: '"null"',
                             expectedResult: false,
                             expectedResultType: 'boolean'
                         }]
@@ -398,6 +474,32 @@ define([
                             left: '(function () { class FunTest {} return new FunTest; })',
                             right: 'new stdClass',
                             expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }],
+                        'string': [{
+                            left: 'new stdClass',
+                            right: '""',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }]
+                    }
+                },
+                'string': {
+                    right: {
+                        'string': [{
+                            left: '"hello"',
+                            right: '"hello"',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '"hello"',
+                            right: '"world"',
+                            expectedResult: false,
+                            expectedResultType: 'boolean'
+                        }, {
+                            left: '""',
+                            right: '""',
+                            expectedResult: true,
                             expectedResultType: 'boolean'
                         }]
                     }

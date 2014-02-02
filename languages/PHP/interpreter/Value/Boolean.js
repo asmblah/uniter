@@ -62,6 +62,12 @@ define([
             return this;
         },
 
+        isEqualToString: function (stringValue) {
+            var booleanValue = this;
+
+            return stringValue.factory.createBoolean(stringValue.coerceToBoolean().getNative() === booleanValue.getNative());
+        },
+
         onesComplement: function () {
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },

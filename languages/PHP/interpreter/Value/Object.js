@@ -114,6 +114,10 @@ define([
             return factory.createBoolean(equal);
         },
 
+        isEqualToString: function () {
+            return this.factory.createBoolean(false);
+        },
+
         referToElement: function (key) {
             return 'property: ' + this.className + '::$' + key;
         }

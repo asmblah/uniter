@@ -99,6 +99,12 @@ define([
             return objectValue.isEqualToFloat(this);
         },
 
+        isEqualToString: function (stringValue) {
+            var floatValue = this;
+
+            return floatValue.factory.createBoolean(floatValue.value === stringValue.coerceToFloat().value);
+        },
+
         onesComplement: function () {
             /*jshint bitwise: false */
             return this.factory.createInteger(~this.value);

@@ -82,6 +82,10 @@ define([
             return this.isEqualTo(rightValue);
         },
 
+        isEqualToObject: function (rightValue) {
+            return this.isEqualTo(rightValue);
+        },
+
         isIdenticalTo: function (rightValue) {
             var leftValue = this;
 

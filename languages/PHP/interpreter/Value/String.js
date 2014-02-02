@@ -67,6 +67,20 @@ define([
             return this.value.length;
         },
 
+        isEqualTo: function (rightValue) {
+            return rightValue.isEqualToString(this);
+        },
+
+        isEqualToObject: function () {
+            return this.factory.createBoolean(false);
+        },
+
+        isEqualToString: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(leftValue.value === rightValue.value);
+        },
+
         onesComplement: function () {
             return this.factory.createString('?');
         }
