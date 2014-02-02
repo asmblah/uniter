@@ -18,7 +18,7 @@ define([
     'use strict';
 
     return function (internals) {
-        var scopeChain = internals.scopeChain,
+        var callStack = internals.callStack,
             valueFactory = internals.valueFactory;
 
         return {
@@ -37,7 +37,7 @@ define([
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference;
 
                 if (arrayValue.getType() !== 'array') {
-                    scopeChain.raiseError(PHPError.E_WARNING, 'next() expects parameter 1 to be array, ' + arrayValue.getType() + ' given');
+                    callStack.raiseError(PHPError.E_WARNING, 'next() expects parameter 1 to be array, ' + arrayValue.getType() + ' given');
                     return valueFactory.createNull();
                 }
 

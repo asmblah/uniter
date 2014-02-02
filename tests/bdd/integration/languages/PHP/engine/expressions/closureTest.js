@@ -79,6 +79,21 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'welcome!'
+            },
+            'self-executed closure that prints the bound var and the string passed to it, no parentheses': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $prefix = 'Hello and ';
+
+    function ($message) use ($prefix) {
+        echo $prefix . $message;
+    }('welcome!');
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'Hello and welcome!'
             }
         }, function (scenario, description) {
             describe(description, function () {

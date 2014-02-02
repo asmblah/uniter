@@ -19,10 +19,10 @@ define([
 ) {
     'use strict';
 
-    function Variable(scopeChain, valueFactory, name) {
+    function Variable(callStack, valueFactory, name) {
         this.name = name;
         this.reference = null;
-        this.scopeChain = scopeChain;
+        this.callStack = callStack;
         this.value = null;
         this.valueFactory = valueFactory;
     }
@@ -39,7 +39,7 @@ define([
                 return variable.reference.getValue();
             }
 
-            variable.scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined variable: ' + variable.name);
+            variable.callStack.raiseError(PHPError.E_NOTICE, 'Undefined variable: ' + variable.name);
 
             return variable.valueFactory.createNull();
         },

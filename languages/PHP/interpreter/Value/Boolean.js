@@ -19,8 +19,8 @@ define([
 ) {
     'use strict';
 
-    function BooleanValue(factory, scopeChain, value) {
-        Value.call(this, factory, scopeChain, 'boolean', !!value);
+    function BooleanValue(factory, callStack, value) {
+        Value.call(this, factory, callStack, 'boolean', !!value);
     }
 
     util.inherit(BooleanValue).from(Value);

@@ -17,41 +17,37 @@ define([
 ) {
     'use strict';
 
-    function ScopeChain(stderr) {
-        this.scopes = [];
+    function CallStack(stderr) {
+        this.calls = [];
         this.stderr = stderr;
     }
 
-    util.extend(ScopeChain.prototype, {
+    util.extend(CallStack.prototype, {
         getCurrent: function () {
             var chain = this;
 
-            return chain.scopes[chain.scopes.length - 1];
-        },
-
-        getGlobalScope: function () {
-            return this.scopes[0];
+            return chain.calls[chain.calls.length - 1];
         },
 
         pop: function () {
-            this.scopes.pop();
+            this.calls.pop();
         },
 
-        push: function (scope) {
-            this.scopes.push(scope);
+        push: function (call) {
+            this.calls.push(call);
         },
 
         raiseError: function (level, message) {
-            var chain = this,
+            var call,
+                chain = this,
+                calls = chain.calls,
                 error,
-                index = 0,
-                scope,
-                scopes = chain.scopes;
+                index = 0;
 
-            for (index = scopes.length - 1; index >= 0; --index) {
-                scope = scopes[index];
+            for (index = calls.length - 1; index >= 0; --index) {
+                call = calls[index];
 
-                if (scope.suppressesErrors()) {
+                if (call.getScope().suppressesErrors()) {
                     return;
                 }
             }
@@ -62,5 +58,5 @@ define([
         }
     });
 
-    return ScopeChain;
+    return CallStack;
 });

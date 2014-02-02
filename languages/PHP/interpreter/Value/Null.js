@@ -17,8 +17,8 @@ define([
 ) {
     'use strict';
 
-    function NullValue(factory, scopeChain) {
-        Value.call(this, factory, scopeChain, 'null', null);
+    function NullValue(factory, callStack) {
+        Value.call(this, factory, callStack, 'null', null);
     }
 
     util.inherit(NullValue).from(Value);

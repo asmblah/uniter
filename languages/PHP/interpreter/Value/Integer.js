@@ -17,8 +17,8 @@ define([
 ) {
     'use strict';
 
-    function IntegerValue(factory, scopeChain, value) {
-        Value.call(this, factory, scopeChain, 'integer', value);
+    function IntegerValue(factory, callStack, value) {
+        Value.call(this, factory, callStack, 'integer', value);
     }
 
     util.inherit(IntegerValue).from(Value);

@@ -19,9 +19,9 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Scope(scopeChain, valueFactory) {
+    function Scope(callStack, valueFactory) {
         this.errorsSuppressed = false;
-        this.scopeChain = scopeChain;
+        this.callStack = callStack;
         this.valueFactory = valueFactory;
         this.variables = {};
     }
@@ -29,7 +29,7 @@ define([
     util.extend(Scope.prototype, {
         defineVariable: function (name) {
             var scope = this,
-                variable = new Variable(scope.scopeChain, scope.valueFactory, name);
+                variable = new Variable(scope.callStack, scope.valueFactory, name);
 
             scope.variables[name] = variable;
 
@@ -56,7 +56,7 @@ define([
 
             if (!hasOwn.call(scope.variables, name)) {
                 // Implicitly define the variable
-                scope.variables[name] = new Variable(scope.scopeChain, scope.valueFactory, name);
+                scope.variables[name] = new Variable(scope.callStack, scope.valueFactory, name);
             }
 
             return scope.variables[name];

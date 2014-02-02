@@ -20,7 +20,7 @@ define([
     'use strict';
 
     return function (internals) {
-        var scopeChain = internals.scopeChain,
+        var callStack = internals.callStack,
             stdout = internals.stdout;
 
         return {
@@ -30,7 +30,7 @@ define([
                     objects = [];
 
                 if (!valueReference) {
-                    scopeChain.raiseError(PHPError.E_WARNING, 'var_dump() expects at least 1 parameter, 0 given');
+                    callStack.raiseError(PHPError.E_WARNING, 'var_dump() expects at least 1 parameter, 0 given');
                     return;
                 }
 

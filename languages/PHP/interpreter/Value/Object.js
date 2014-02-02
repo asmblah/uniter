@@ -21,8 +21,8 @@ define([
 ) {
     'use strict';
 
-    function ObjectValue(factory, scopeChain, object, className, id) {
-        ArrayValue.call(this, factory, scopeChain, object, 'object');
+    function ObjectValue(factory, callStack, object, className, id) {
+        ArrayValue.call(this, factory, callStack, object, 'object');
 
         this.className = className;
         this.id = id;
@@ -50,7 +50,7 @@ define([
         },
 
         coerceToKey: function () {
-            this.scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+            this.callStack.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         getClassName: function () {

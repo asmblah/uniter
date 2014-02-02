@@ -10,33 +10,38 @@
 /*global define */
 define([
     'js/util',
+    './CallStack',
     './Namespace',
     './ReferenceFactory',
     './Scope',
-    './ScopeChain',
     './ValueFactory'
 ], function (
     util,
+    CallStack,
     Namespace,
     ReferenceFactory,
     Scope,
-    ScopeChain,
     ValueFactory
 ) {
     'use strict';
 
     function PHPState(stderr) {
-        var scopeChain = new ScopeChain(stderr),
-            valueFactory = new ValueFactory(scopeChain);
+        var callStack = new CallStack(stderr),
+            valueFactory = new ValueFactory(callStack);
 
+        this.callStack = callStack;
         this.globalNamespace = new Namespace(null, '');
-        this.globalScope = new Scope(scopeChain, valueFactory);
+        this.globalScope = new Scope(callStack, valueFactory);
         this.referenceFactory = new ReferenceFactory(valueFactory);
-        this.scopeChain = scopeChain;
+        this.callStack = callStack;
         this.valueFactory = valueFactory;
     }
 
     util.extend(PHPState.prototype, {
+        getCallStack: function () {
+            return this.callStack;
+        },
+
         getGlobalNamespace: function () {
             return this.globalNamespace;
         },
@@ -47,10 +52,6 @@ define([
 
         getReferenceFactory: function () {
             return this.referenceFactory;
-        },
-
-        getScopeChain: function () {
-            return this.scopeChain;
         },
 
         getValueFactory: function () {

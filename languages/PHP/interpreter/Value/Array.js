@@ -29,7 +29,7 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function ArrayValue(factory, scopeChain, orderedElements, type) {
+    function ArrayValue(factory, callStack, orderedElements, type) {
         var elements = [],
             keysToElements = [],
             value = this;
@@ -48,13 +48,13 @@ define([
                 element = factory.coerce(element);
             }
 
-            element = new ElementReference(factory, scopeChain, value, key, element);
+            element = new ElementReference(factory, callStack, value, key, element);
 
             elements.push(element);
             keysToElements[key.getNative()] = element;
         });
 
-        Value.call(this, factory, scopeChain, type || 'array', elements);
+        Value.call(this, factory, callStack, type || 'array', elements);
 
         this.keysToElements = keysToElements;
         this.pointer = 0;
@@ -73,7 +73,7 @@ define([
                 }
             });
 
-            return new ArrayValue(arrayValue.factory, arrayValue.scopeChain, orderedElements, arrayValue.type);
+            return new ArrayValue(arrayValue.factory, arrayValue.callStack, orderedElements, arrayValue.type);
         },
 
         coerceToBoolean: function () {
@@ -89,7 +89,7 @@ define([
         },
 
         coerceToKey: function () {
-            this.scopeChain.raiseError(PHPError.E_WARNING, 'Illegal offset type');
+            this.callStack.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
         coerceToNumber: function () {
@@ -135,7 +135,7 @@ define([
                 keyValue,
                 value = this;
 
-            key = key.coerceToKey(value.scopeChain);
+            key = key.coerceToKey(value.callStack);
 
             if (!key) {
                 // Could not be coerced to a key: error will already have been handled, just return NULL
@@ -145,7 +145,7 @@ define([
             keyValue = key.getNative();
 
             if (!hasOwn.call(value.keysToElements, keyValue)) {
-                element = new ElementReference(value.factory, value.scopeChain, value, key, null);
+                element = new ElementReference(value.factory, value.callStack, value, key, null);
 
                 value.value.push(element);
                 value.keysToElements[keyValue] = element;
@@ -158,7 +158,7 @@ define([
             var value = this;
 
             return value.value[index] || (function () {
-                value.scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(index));
+                value.callStack.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(index));
 
                 return new NullReference(value.factory);
             }());

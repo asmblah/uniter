@@ -15,6 +15,7 @@
 define([
     './interpreter/builtin/builtins',
     'js/util',
+    './interpreter/Call',
     'js/Exception',
     './interpreter/KeyValuePair',
     './interpreter/LabelRepository',
@@ -28,6 +29,7 @@ define([
 ], function (
     builtinTypes,
     util,
+    Call,
     Exception,
     KeyValuePair,
     LabelRepository,
@@ -80,7 +82,8 @@ define([
             promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
             result,
-            scopeChain = state.getScopeChain(),
+            callStack = state.getCallStack(),
+            globalScope = state.getGlobalScope(),
             tools = {
                 createInstance: function (namespace, classNameValue) {
                     var className = classNameValue.getNative(),
@@ -103,21 +106,23 @@ define([
 
                     return variable.getValue();
                 },
-                popScope: function () {
-                    scopeChain.pop();
+                popCall: function () {
+                    callStack.pop();
                 },
-                pushScope: function () {
-                    scopeChain.push(new Scope(scopeChain, valueFactory));
+                pushCall: function () {
+                    var call = new Call(new Scope(callStack, valueFactory));
+
+                    callStack.push(call);
+
+                    return call;
                 },
                 referenceFactory: referenceFactory,
                 valueFactory: valueFactory
             };
 
-        scopeChain.push(state.getGlobalScope());
-
         (function () {
             var internals = {
-                    scopeChain: scopeChain,
+                    callStack: callStack,
                     stdout: stdout,
                     valueFactory: valueFactory
                 };
@@ -137,13 +142,18 @@ define([
             });
         }());
 
+        // Push the 'main' global scope call onto the stack
+        callStack.push(new Call(globalScope));
+
+        code = 'var scope = globalScope;' + code;
+
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
         try {
             /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools, scopeChain, namespace', code)(
-                stdin, stdout, stderr, tools, scopeChain, globalNamespace
+            result = new Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
+                stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
             );
         } catch (exception) {
             if (exception instanceof PHPError) {
@@ -173,30 +183,41 @@ define([
         return declarations.concat(nonDeclarations);
     }
 
-    function interpretFunction(argNodes, statementNode, interpret) {
+    function interpretFunction(argNodes, bindingNodes, statementNode, interpret) {
         var args = [],
             argumentAssignments = '',
-            body = interpret(statementNode),
-            variableDeclarations = '';
+            bindingAssignments = '',
+            body = interpret(statementNode);
 
         util.each(argNodes, function (arg) {
             args.push(arg.variable);
         });
 
+        util.each(bindingNodes, function (bindingNode) {
+            var variableName = bindingNode.variable;
+            bindingAssignments += 'scope.getVariable("' + variableName + '").setValue(parentScope.getVariable("' + variableName + '").getValue());';
+        });
+
         // Copy passed values for any arguments
         util.each(args, function (arg, index) {
-            argumentAssignments += 'scopeChain.getCurrent().getVariable("' + arg + '").setValue($' + arg + ');';
+            argumentAssignments += 'scope.getVariable("' + arg + '").setValue($' + arg + ');';
             args[index] = '$' + arg;
         });
 
         // Prepend parts in correct order
-        body = variableDeclarations + argumentAssignments + body;
+        body = argumentAssignments + bindingAssignments + body;
 
         // Add scope handling logic
-        body = 'try { tools.pushScope(); ' + body + ' } finally { tools.popScope(); }';
+        body = 'var scope = tools.pushCall().getScope(); try { ' + body + ' } finally { tools.popCall(); }';
 
         // Build function expression
-        return 'function (' + args.join(', ') + ') {' + body + '}';
+        body = 'function (' + args.join(', ') + ') {' + body + '}';
+
+        if (bindingNodes && bindingNodes.length > 0) {
+            body = '(function (parentScope) { return ' + body + '; }(scope))';
+        }
+
+        return body;
     }
 
     function processBlock(statements, interpret, context) {
@@ -342,7 +363,7 @@ define([
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
             'N_CLOSURE': function (node, interpret) {
-                var func = interpretFunction(node.args, node.body, interpret);
+                var func = interpretFunction(node.args, node.bindings, node.body, interpret);
 
                 return 'tools.valueFactory.createObject(' + func + ', "Closure")';
             },
@@ -465,7 +486,7 @@ define([
                 return code;
             },
             'N_FUNCTION_STATEMENT': function (node, interpret) {
-                var func = interpretFunction(node.args, node.body, interpret);
+                var func = interpretFunction(node.args, null, node.body, interpret);
 
                 return 'namespace.defineFunction(' + JSON.stringify(node.func) + ', ' + func + ');';
             },
@@ -547,7 +568,7 @@ define([
 
                 return '(function (scope) {scope.suppressErrors();' +
                     'var result = tools.valueFactory.createBoolean(' + issets.join(' && ') + ');' +
-                    'scope.unsuppressErrors(); return result;}(scopeChain.getCurrent()))';
+                    'scope.unsuppressErrors(); return result;}(scope))';
             },
             'N_KEY_VALUE_PAIR': function (node, interpret) {
                 return 'tools.createKeyValuePair(' + interpret(node.key) + ', ' + interpret(node.value) + ')';
@@ -586,7 +607,7 @@ define([
             'N_METHOD_DEFINITION': function (node, interpret) {
                 return {
                     name: interpret(node.func),
-                    body: interpretFunction(node.args, node.body, interpret)
+                    body: interpretFunction(node.args, null, node.body, interpret)
                 };
             },
             'N_NAMESPACE_STATEMENT': function (node, interpret) {
@@ -719,10 +740,10 @@ define([
                 return operand + '.' + unaryOperatorToMethod[node.prefix ? 'prefix' : 'suffix'][operator] + '()';
             },
             'N_VARIABLE': function (node, interpret, context) {
-                return 'scopeChain.getCurrent().getVariable("' + node.variable + '")' + (context.getValue !== false ? '.getValue()' : '');
+                return 'scope.getVariable("' + node.variable + '")' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VARIABLE_EXPRESSION': function (node, interpret, context) {
-                return 'scopeChain.getCurrent().getVariable(' + interpret(node.expression) + '.getNative())' + (context.getValue !== false ? '.getValue()' : '');
+                return 'scope.getVariable(' + interpret(node.expression) + '.getNative())' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';

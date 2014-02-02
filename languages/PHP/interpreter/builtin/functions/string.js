@@ -18,7 +18,7 @@ define([
     'use strict';
 
     return function (internals) {
-        var scopeChain = internals.scopeChain,
+        var callStack = internals.callStack,
             valueFactory = internals.valueFactory;
 
         return {
@@ -27,7 +27,7 @@ define([
                     stringValue = isReference ? stringReference.getValue() : stringReference;
 
                 if (stringValue.getType() === 'array' || stringValue.getType() === 'object') {
-                    scopeChain.raiseError(PHPError.E_WARNING, 'strlen() expects parameter 1 to be string, ' + stringValue.getType() + ' given');
+                    callStack.raiseError(PHPError.E_WARNING, 'strlen() expects parameter 1 to be string, ' + stringValue.getType() + ' given');
                     return valueFactory.createNull();
                 }
 

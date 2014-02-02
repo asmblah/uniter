@@ -17,11 +17,11 @@ define([
 ) {
     'use strict';
 
-    function ElementReference(valueFactory, scopeChain, arrayValue, key, value) {
+    function ElementReference(valueFactory, callStack, arrayValue, key, value) {
         this.arrayValue = arrayValue;
         this.key = key;
         this.reference = null;
-        this.scopeChain = scopeChain;
+        this.callStack = callStack;
         this.value = value;
         this.valueFactory = valueFactory;
     }
@@ -30,7 +30,7 @@ define([
         clone: function () {
             var element = this;
 
-            return new ElementReference(element.valueFactory, element.scopeChain, element.arrayValue, element.key, element.value);
+            return new ElementReference(element.valueFactory, element.callStack, element.arrayValue, element.key, element.value);
         },
 
         getKey: function () {
@@ -42,7 +42,7 @@ define([
 
             // Special value of native null (vs. NullValue) represents undefined
             if (!element.value && !element.reference) {
-                element.scopeChain.raiseError(PHPError.E_NOTICE, 'Undefined ' + element.arrayValue.referToElement(element.key.getNative()));
+                element.callStack.raiseError(PHPError.E_NOTICE, 'Undefined ' + element.arrayValue.referToElement(element.key.getNative()));
                 return element.valueFactory.createNull();
             }
 
