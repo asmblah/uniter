@@ -43,7 +43,8 @@ define([
 ) {
     'use strict';
 
-    var binaryOperatorToMethod = {
+    var INVOKE_MAGIC_METHOD = '__invoke',
+        binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
             '*': 'multiply',
@@ -85,6 +86,10 @@ define([
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             tools = {
+                createClosure: function (func) {
+                    func[INVOKE_MAGIC_METHOD] = func;
+                    return tools.valueFactory.createObject(func, 'Closure');
+                },
                 createInstance: function (namespace, classNameValue) {
                     var className = classNameValue.getNative(),
                         classData = namespace.getClass(className),
@@ -367,7 +372,7 @@ define([
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
 
-                return 'tools.valueFactory.createObject(' + func + ', "Closure")';
+                return 'tools.createClosure(' + func + ')';
             },
             'N_COMMA_EXPRESSION': function (node, interpret) {
                 var expressionCodes = [];
@@ -503,7 +508,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return '(namespace.getFunction(' + interpret(node.func, {getValue: true}) + '.getNative())(' + args.join(', ') + ') || tools.valueFactory.createNull())';
+                return '(' + interpret(node.func, {getValue: true}) + '.call([' + args.join(', ') + '], namespace) || tools.valueFactory.createNull())';
             },
             'N_GOTO_STATEMENT': function (node, interpret, context) {
                 var code = '',
@@ -605,7 +610,7 @@ define([
                         args.push(interpret(arg));
                     });
 
-                    code += '.callMethod(' + interpret(call.func) + ', [' + args.join(', ') + '])';
+                    code += '.callMethod(' + interpret(call.func) + '.getNative(), [' + args.join(', ') + '])';
                 });
 
                 return interpret(node.object) + code;

@@ -28,6 +28,10 @@ define([
             return rightValue.coerceToNumber().add(this.coerceToNumber());
         },
 
+        call: function (args, namespace) {
+            return namespace.getFunction(this.value).apply(null, args);
+        },
+
         coerceToBoolean: function () {
             return this.factory.createBoolean(this.value !== '' && this.value !== '0');
         },

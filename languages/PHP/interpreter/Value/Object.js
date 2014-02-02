@@ -34,11 +34,13 @@ define([
     util.inherit(ObjectValue).from(ArrayValue);
 
     util.extend(ObjectValue.prototype, {
+        call: function (args) {
+            return this.callMethod('__invoke', args);
+        },
+
         callMethod: function (name, args) {
             var value = this,
                 object = value.object;
-
-            name = name.getNative();
 
             if (!util.isFunction(object[name])) {
                 throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});

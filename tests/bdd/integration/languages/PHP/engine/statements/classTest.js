@@ -188,6 +188,26 @@ EOS
 21
 EOS
 */) {})
+            },
+            'class with magic __invoke(...) method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class CallableClass {
+        public function __invoke() {
+            echo 'in here';
+
+            return 7;
+        }
+    }
+
+    $object = new CallableClass();
+    return $object();
+EOS
+*/) {}),
+                expectedResult: 7,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: 'in here'
             }
         }, function (scenario, description) {
             describe(description, function () {
