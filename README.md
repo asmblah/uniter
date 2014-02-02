@@ -18,6 +18,7 @@ Features
     - `for` loop support
     - `foreach` loop support
     - `function` statements
+    - Closure `function` expressions
     - `switch` statements
     - Forward `goto` statements
     - Basic `class` object support using the `new` operator
