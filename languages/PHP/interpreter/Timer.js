@@ -15,19 +15,15 @@ define([
 ) {
     'use strict';
 
-    function PHPEnvironment(state) {
-        this.state = state;
+    function Timer() {
+
     }
 
-    util.extend(PHPEnvironment.prototype, {
-        getGlobalScope: function () {
-            return this.state.getGlobalScope();
-        },
-
-        getTimer: function () {
-            return this.state.getTimer();
+    util.extend(Timer.prototype, {
+        getMilliseconds: function () {
+            return util.getMilliseconds();
         }
     });
 
-    return PHPEnvironment;
+    return Timer;
 });

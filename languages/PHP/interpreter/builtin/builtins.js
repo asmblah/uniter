@@ -11,6 +11,7 @@
 define([
     './functions/array',
     './functions/constant',
+    './functions/option',
     './functions/spl',
     './classes/stdClass',
     './functions/string',
@@ -22,6 +23,7 @@ define([
 ], function (
     arrayFunctions,
     constantFunctions,
+    optionFunctions,
     splFunctions,
     stdClass,
     stringFunctions,
@@ -43,6 +45,7 @@ define([
         functionGroups: [
             arrayFunctions,
             constantFunctions,
+            optionFunctions,
             splFunctions,
             stringFunctions,
             timeFunctions,

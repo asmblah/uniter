@@ -37,6 +37,7 @@ define([
             17: 'Interface function ${className}::${methodName}() cannot contain body',
             18: 'Cannot use ${source} as ${alias} because the name is already in use',
             19: 'Call to a member function ${name}() on a non-object'
+            20: 'Maximum execution time of ${seconds} second${suffix} exceeded'
         };
 
     function PHPFatalError(code, variables) {
@@ -64,7 +65,8 @@ define([
         INTERFACE_PROPERTY_NOT_ALLOWED: 16,
         INTERFACE_METHOD_BODY_NOT_ALLOWED: 17,
         NAME_ALREADY_IN_USE: 18,
-        NON_OBJECT_METHOD_CALL: 19
+        NON_OBJECT_METHOD_CALL: 19,
+        MAX_EXEC_TIME_EXCEEDED: 20
     });
 
     return PHPFatalError;

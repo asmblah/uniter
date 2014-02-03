@@ -139,7 +139,20 @@ define([
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
             resumable = state.getResumable(),
+            timer = state.getTimer(),
             tools = {
+                checkTimeLimit: function () {
+                    var maxSeconds;
+
+                    if (timer.getMilliseconds() > state.getTimeoutTime()) {
+                        maxSeconds = state.getMaxSeconds();
+
+                        throw new PHPFatalError(PHPFatalError.MAX_EXEC_TIME_EXCEEDED, {
+                            seconds: maxSeconds,
+                            suffix: maxSeconds > 1 ? 's' : ''
+                        });
+                    }
+                },
                 createClosure: function (func, scope) {
                     func.scopeWhenCreated = scope;
 
@@ -537,7 +550,7 @@ define([
             'N_DO_WHILE_STATEMENT': function (node, interpret/*, context*/) {
                 var code = interpret(node.body);
 
-                return 'do {' + code + '} while (' + interpret(node.condition) + '.coerceToBoolean().getNative());';
+                return 'do {tools.checkTimeLimit();' + code + '} while (' + interpret(node.condition) + '.coerceToBoolean().getNative());';
             },
             'N_ECHO_STATEMENT': function (node, interpret) {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
@@ -1055,7 +1068,7 @@ define([
                     code += interpret(statement);
                 });
 
-                return 'while (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {' + code + '}';
+                return 'while (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {tools.checkTimeLimit();' + code + '}';
             }
         }
     };

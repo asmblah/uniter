@@ -19,6 +19,7 @@ define([
     'js/Resumable/Resumable',
     'js/Resumable/Transpiler',
     './Scope',
+    './Timer',
     './ValueFactory'
 ], function (
     builtinTypes,
@@ -31,6 +32,7 @@ define([
     Resumable,
     ResumableTranspiler,
     Scope,
+    Timer,
     ValueFactory
 ) {
     'use strict';
@@ -39,6 +41,7 @@ define([
 
     function PHPState(stdout, stderr, engine, options) {
         var callStack = new CallStack(stderr),
+            timer = new Timer(),
             valueFactory = new ValueFactory(callStack),
             classAutoloader = new ClassAutoloader(valueFactory),
             globalNamespace = new Namespace(callStack, valueFactory, classAutoloader, null, '');
@@ -50,6 +53,7 @@ define([
         this.engine = engine;
         this.globalNamespace = globalNamespace;
         this.globalScope = new Scope(callStack, valueFactory, null, null);
+        this.maxSeconds = 1;
         this.options = options;
         this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
@@ -57,6 +61,8 @@ define([
         this.classAutoloader = classAutoloader;
         this.resumable = new Resumable(new ResumableTranspiler());
         this.stdout = stdout;
+        this.timeoutTime = timer.getMilliseconds() + 1000;
+        this.timer = timer;
         this.valueFactory = valueFactory;
         this.PHPException = null;
 
@@ -80,6 +86,10 @@ define([
             return this.globalScope;
         },
 
+        getMaxSeconds: function () {
+            return this.maxSeconds;
+        },
+
         getOptions: function () {
             return this.options;
         },
@@ -100,6 +110,14 @@ define([
             return this.resumable;
         },
 
+        getTimeoutTime: function () {
+            return this.timeoutTime;
+        },
+
+        getTimer: function () {
+            return this.timer;
+        },
+
         getValueFactory: function () {
             return this.valueFactory;
         },
@@ -110,6 +128,13 @@ define([
 
         setPath: function (path) {
             this.path = path;
+        },
+
+        setTimeLimit: function (maxSeconds) {
+            var state = this;
+
+            state.maxSeconds = maxSeconds;
+            state.timeoutTime = state.timer.getMilliseconds() + maxSeconds * 1000;
         }
     });
 
@@ -120,6 +145,7 @@ define([
                 classAutoloader: state.classAutoloader,
                 globalNamespace: globalNamespace,
                 resumable: state.resumable,
+                state: state,
                 stdout: state.stdout,
                 valueFactory: state.valueFactory
             };
