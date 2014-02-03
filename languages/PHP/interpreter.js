@@ -43,7 +43,8 @@ define([
 ) {
     'use strict';
 
-    var INVOKE_MAGIC_METHOD = '__invoke',
+    var CONSTRUCT_MAGIC_METHOD = '__construct',
+        INVOKE_MAGIC_METHOD = '__invoke',
         binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
@@ -90,12 +91,19 @@ define([
                     func[INVOKE_MAGIC_METHOD] = func;
                     return tools.valueFactory.createObject(func, 'Closure');
                 },
-                createInstance: function (namespace, classNameValue) {
+                createInstance: function (namespace, classNameValue, args) {
                     var className = classNameValue.getNative(),
                         classData = namespace.getClass(className),
-                        object = new classData.Class();
+                        nativeObject = new classData.Class(),
+                        object = valueFactory.createObject(nativeObject, classData.name);
 
-                    return valueFactory.createObject(object, classData.name);
+                    if (util.isFunction(nativeObject[CONSTRUCT_MAGIC_METHOD])) {
+                        object.callMethod(CONSTRUCT_MAGIC_METHOD, args);
+                    } else if (util.isFunction(nativeObject[className])) {
+                        object.callMethod(className, args);
+                    }
+
+                    return object;
                 },
                 createKeyValuePair: function (key, value) {
                     return new KeyValuePair(key, value);
@@ -637,7 +645,13 @@ define([
                 return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + ');' + body + '}(namespace));';
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
-                return 'tools.createInstance(namespace, ' + interpret(node.className) + ')';
+                var args = [];
+
+                util.each(node.args, function (arg) {
+                    args.push(interpret(arg));
+                });
+
+                return 'tools.createInstance(namespace, ' + interpret(node.className) + ', [' + args.join(', ') + '])';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
                 var objectVariableCode,

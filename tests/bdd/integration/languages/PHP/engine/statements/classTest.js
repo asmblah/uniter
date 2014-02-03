@@ -211,6 +211,46 @@ object(Test)#1 (0) {
 EOS
 */) {})
             },
+            'class with magic __construct(...) method (PHP5-style constructor)': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Person {
+        public $name;
+
+        public function __construct($name) {
+            $this->name = $name;
+        }
+    }
+
+    $me = new Person('Dan');
+    return $me->name;
+EOS
+*/) {}),
+                expectedResult: 'Dan',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'class with PHP4-style constructor': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Person {
+        public $name;
+
+        public function Person($name) {
+            $this->name = $name;
+        }
+    }
+
+    $you = new Person('Fred');
+    return $you->name;
+EOS
+*/) {}),
+                expectedResult: 'Fred',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'class with magic __invoke(...) method': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
