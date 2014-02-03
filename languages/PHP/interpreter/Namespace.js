@@ -10,16 +10,19 @@
 /*global define */
 define([
     'js/util',
+    './Error',
     './Error/Fatal'
 ], function (
     util,
+    PHPError,
     PHPFatalError
 ) {
     'use strict';
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Namespace(parent, name) {
+    function Namespace(callStack, parent, name) {
+        this.callStack = callStack;
         this.children = {};
         this.classes = {};
         this.functions = {};
@@ -29,7 +32,8 @@ define([
 
     util.extend(Namespace.prototype, {
         defineClass: function (name, definition) {
-            var namespace = this;
+            var constructorName = null,
+                namespace = this;
 
             function Class() {
                 var instance = this;
@@ -39,11 +43,25 @@ define([
                 });
             }
 
-            util.each(definition.methods, function (method, name) {
-                Class.prototype[name] = method;
+            util.each(definition.methods, function (method, methodName) {
+                // PHP5-style __construct magic method takes precedence
+                if (methodName === '__construct') {
+                    if (constructorName) {
+                        namespace.callStack.raiseError(PHPError.E_STRICT, 'Redefining already defined constructor for class ' + name);
+                    }
+
+                    constructorName = methodName;
+                }
+
+                if (!constructorName && methodName === name) {
+                    constructorName = methodName;
+                }
+
+                Class.prototype[methodName] = method;
             });
 
             namespace.classes[name.toLowerCase()] = {
+                constructorName: constructorName,
                 name: namespace.getPrefix() + name,
                 Class: Class
             };
@@ -69,7 +87,7 @@ define([
 
             util.each(name.split('\\'), function (part) {
                 if (!hasOwn.call(namespace.children, part)) {
-                    namespace.children[part] = new Namespace(namespace, part);
+                    namespace.children[part] = new Namespace(namespace.callStack, namespace, part);
                 }
 
                 namespace = namespace.children[part];

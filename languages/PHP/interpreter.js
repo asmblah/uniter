@@ -43,8 +43,7 @@ define([
 ) {
     'use strict';
 
-    var CONSTRUCT_MAGIC_METHOD = '__construct',
-        INVOKE_MAGIC_METHOD = '__invoke',
+    var INVOKE_MAGIC_METHOD = '__invoke',
         binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
@@ -97,10 +96,8 @@ define([
                         nativeObject = new classData.Class(),
                         object = valueFactory.createObject(nativeObject, classData.name);
 
-                    if (util.isFunction(nativeObject[CONSTRUCT_MAGIC_METHOD])) {
-                        object.callMethod(CONSTRUCT_MAGIC_METHOD, args);
-                    } else if (util.isFunction(nativeObject[className])) {
-                        object.callMethod(className, args);
+                    if (classData.constructorName) {
+                        object.callMethod(classData.constructorName, args);
                     }
 
                     return object;

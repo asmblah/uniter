@@ -251,6 +251,65 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            // No errors when both used in this order: second method is just treated as a normal method
+            'instantiating class with PHP5-style constructor followed by PHP4-style': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function __construct() {
+            echo 1;
+        }
+
+        public function Test() {
+            echo 2;
+        }
+    }
+
+    new Test();
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: '1'
+            },
+            'instantiating class with PHP4-style constructor followed by PHP5-style': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function Test() {
+            echo 1;
+        }
+
+        public function __construct() {
+            echo 2;
+        }
+    }
+
+    new Test();
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test',
+                expectedStdout: '2'
+            },
+            'unused class with PHP4-style constructor followed by PHP5-style': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Test {
+        public function Test() {
+            echo 1;
+        }
+
+        public function __construct() {
+            echo 2;
+        }
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test',
+                expectedStdout: ''
+            },
             'class with magic __invoke(...) method': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
