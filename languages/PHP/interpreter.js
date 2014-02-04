@@ -364,7 +364,8 @@ define([
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,
                     methodCodes = [],
-                    propertyCodes = [];
+                    propertyCodes = [],
+                    superClassData = node.extend ? 'namespace.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
                 util.each(node.members, function (member) {
                     var data = interpret(member);
@@ -376,7 +377,7 @@ define([
                     }
                 });
 
-                code = '{properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
+                code = '{superClassData: ' + superClassData + ', properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },

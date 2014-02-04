@@ -38,9 +38,17 @@ define([
             function Class() {
                 var instance = this;
 
+                if (definition.superClassData) {
+                    definition.superClassData.Class.call(this);
+                }
+
                 util.each(definition.properties, function (value, name) {
                     instance[name] = value;
                 });
+            }
+
+            if (definition.superClassData) {
+                Class.prototype = Object.create(definition.superClassData.Class.prototype);
             }
 
             util.each(definition.methods, function (method, methodName) {
