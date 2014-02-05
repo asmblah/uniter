@@ -126,6 +126,7 @@ define({
             'bdd/integration/languages/PHP/grammar/statements/gotoTest',
             'bdd/integration/languages/PHP/grammar/statements/ifTest',
             'bdd/integration/languages/PHP/grammar/statements/switchTest',
+            'bdd/integration/languages/PHP/grammar/statements/useTest',
             'bdd/integration/languages/PHP/grammar/statements/whileTest',
             'bdd/integration/languages/PHP/grammar/smallTest',
             'bdd/integration/languages/PHP/grammar/syntax/errorTest',
