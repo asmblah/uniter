@@ -20,6 +20,7 @@ define([
     './interpreter/KeyValuePair',
     './interpreter/LabelRepository',
     './interpreter/List',
+    './interpreter/NamespaceScope',
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/Error/Fatal',
@@ -34,6 +35,7 @@ define([
     KeyValuePair,
     LabelRepository,
     List,
+    NamespaceScope,
     PHPEnvironment,
     PHPError,
     PHPFatalError,
@@ -90,9 +92,9 @@ define([
                     func[INVOKE_MAGIC_METHOD] = func;
                     return tools.valueFactory.createObject(func, 'Closure');
                 },
-                createInstance: function (namespace, classNameValue, args) {
+                createInstance: function (namespaceScope, classNameValue, args) {
                     var className = classNameValue.getNative(),
-                        classData = namespace.getClass(className),
+                        classData = namespaceScope.getClass(className),
                         nativeObject = new classData.Class(),
                         object = valueFactory.createObject(nativeObject, classData.name);
 
@@ -107,6 +109,9 @@ define([
                 },
                 createList: function (elements) {
                     return new List(elements);
+                },
+                createNamespaceScope: function (namespace) {
+                    return new NamespaceScope(globalNamespace, namespace);
                 },
                 implyArray: function (variable) {
                     // Undefined variables and variables containing null may be implicitly converted to arrays
@@ -161,7 +166,7 @@ define([
         // Push the 'main' global scope call onto the stack
         callStack.push(new Call(globalScope));
 
-        code = 'var scope = globalScope;' + code;
+        code = 'var namespaceScope = tools.createNamespaceScope(namespace), scope = globalScope;' + code;
 
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
@@ -365,7 +370,7 @@ define([
                 var code,
                     methodCodes = [],
                     propertyCodes = [],
-                    superClassData = node.extend ? 'namespace.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
+                    superClassData = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
                 util.each(node.members, function (member) {
                     var data = interpret(member);
@@ -520,7 +525,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return '(' + interpret(node.func, {getValue: true}) + '.call([' + args.join(', ') + '], namespace) || tools.valueFactory.createNull())';
+                return '(' + interpret(node.func, {getValue: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
             },
             'N_GOTO_STATEMENT': function (node, interpret, context) {
                 var code = '',
@@ -640,7 +645,7 @@ define([
                     body += interpret(statement);
                 });
 
-                return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + ');' + body + '}(namespace));';
+                return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace));';
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 var args = [];
@@ -649,7 +654,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return 'tools.createInstance(namespace, ' + interpret(node.className) + ', [' + args.join(', ') + '])';
+                return 'tools.createInstance(namespaceScope, ' + interpret(node.className) + ', [' + args.join(', ') + '])';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
                 var objectVariableCode,
@@ -767,6 +772,19 @@ define([
                     operand = interpret(node.operand, {getValue: operator !== '++' && operator !== '--'});
 
                 return operand + '.' + unaryOperatorToMethod[node.prefix ? 'prefix' : 'suffix'][operator] + '()';
+            },
+            'N_USE_STATEMENT': function (node, interpret) {
+                var code = '';
+
+                util.each(node.uses, function (use) {
+                    if (use.alias) {
+                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative(), ' + JSON.stringify(use.alias) + ');';
+                    } else {
+                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative())';
+                    }
+                });
+
+                return code;
             },
             'N_VARIABLE': function (node, interpret, context) {
                 return 'scope.getVariable("' + node.variable + '")' + (context.getValue !== false ? '.getValue()' : '');

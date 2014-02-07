@@ -100,6 +100,7 @@ define({
             'bdd/integration/languages/PHP/engine/statements/ifTest',
             'bdd/integration/languages/PHP/engine/statements/returnTest',
             'bdd/integration/languages/PHP/engine/statements/switchTest',
+            'bdd/integration/languages/PHP/engine/statements/useTest',
             'bdd/integration/languages/PHP/engine/statements/whileTest',
             'bdd/integration/languages/PHP/engine/smallTest',
             'bdd/integration/languages/PHP/grammar/constructs/issetTest',

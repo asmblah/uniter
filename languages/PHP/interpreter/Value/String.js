@@ -28,8 +28,8 @@ define([
             return rightValue.coerceToNumber().add(this.coerceToNumber());
         },
 
-        call: function (args, namespace) {
-            return namespace.getFunction(this.value).apply(null, args);
+        call: function (args, namespaceScope) {
+            return namespaceScope.getFunction(this.value).apply(null, args);
         },
 
         coerceToBoolean: function () {
