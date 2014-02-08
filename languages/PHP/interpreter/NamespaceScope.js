@@ -30,6 +30,7 @@ define([
 
             if (hasOwn.call(scope.imports, name)) {
                 name = scope.imports[name];
+                namespace = scope.globalNamespace;
             }
 
             return namespace.getClass(name);

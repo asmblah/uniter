@@ -52,6 +52,26 @@ object(stdClass)#1 (0) {
 
 EOS
 */) {})
+            },
+            'simple use for aliasing standard "stdClass" class when in a specific namespace scope': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Uniter\Tool;
+
+    use stdClass as EmptyClass;
+
+    var_dump(new EmptyClass);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (0) {
+}
+
+EOS
+*/) {})
             }
         }, function (scenario, description) {
             describe(description, function () {
