@@ -24,9 +24,8 @@ define([
             parser = tools.createParser();
         });
 
-        util.each([
-            {
-                // Simple function call test
+        util.each({
+            'simple function call test': {
                 code: 'now();',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -42,8 +41,8 @@ define([
                         }
                     }]
                 }
-            }, {
-                // Function call as term in expression with arguments including an expression
+            },
+            'function call as term in expression with arguments including an expression': {
                 code: '$a = doSomething(1, 4 + 2, "test");',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -89,13 +88,15 @@ define([
                     }]
                 }
             }
-        ], function (scenario) {
-            var code = '<?php ' + scenario.code;
+        }, function (scenario, description) {
+            describe(description, function () {
+                var code = '<?php ' + scenario.code;
 
-            // Pretty-print the code strings so any non-printable characters are readable
-            describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
-                it('should return the expected AST', function () {
-                    expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                // Pretty-print the code strings so any non-printable characters are readable
+                describe('when the code is ' + JSON.stringify(code) + ' ?>', function () {
+                    it('should return the expected AST', function () {
+                        expect(parser.parse(code)).to.deep.equal(scenario.expectedAST);
+                    });
                 });
             });
         });
