@@ -67,7 +67,39 @@ define([
         },
 
         getFunction: function (name) {
-            return this.namespace.getFunction(name);
+            var match,
+                scope = this,
+                namespace = scope.namespace,
+                path,
+                prefix;
+
+            // Check whether the function path is absolute, so no 'use's apply
+            if (name.charAt(0) === '\\') {
+                match = name.match(/^\\(.*?)\\([^\\]+)$/);
+
+                if (match) {
+                    path = match[1];
+                    name = match[2];
+                    namespace = scope.globalNamespace.getDescendant(path);
+                } else {
+                    name = name.substr(1);
+                }
+            // Check whether the namespace prefix is an alias
+            } else {
+                match = name.match(/^([^\\]+)(.*?)\\([^\\]+)$/);
+
+                if (match) {
+                    prefix = match[1];
+                    path = match[2];
+                    name = match[3];
+
+                    if (hasOwn.call(scope.imports, prefix)) {
+                        namespace = scope.globalNamespace.getDescendant(scope.imports[prefix].substr(1) + path);
+                    }
+                }
+            }
+
+            return namespace.getFunction(name);
         },
 
         use: function (source, alias) {

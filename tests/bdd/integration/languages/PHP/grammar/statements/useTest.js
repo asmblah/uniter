@@ -33,8 +33,8 @@ define([
                         name: 'N_USE_STATEMENT',
                         uses: [{
                             source: {
-                                name: 'N_CLASS_REFERENCE',
-                                path: 'Toolkit'
+                                name: 'N_STRING',
+                                string: 'Toolkit'
                             }
                         }]
                     }]
@@ -48,8 +48,8 @@ define([
                         name: 'N_USE_STATEMENT',
                         uses: [{
                             source: {
-                                name: 'N_CLASS_REFERENCE',
-                                path: 'Uniter'
+                                name: 'N_STRING',
+                                string: 'Uniter'
                             },
                             alias: 'Library'
                         }]
@@ -64,8 +64,8 @@ define([
                         name: 'N_USE_STATEMENT',
                         uses: [{
                             source: {
-                                name: 'N_CLASS_REFERENCE',
-                                path: 'Framework\\Network\\Http\\Request'
+                                name: 'N_STRING',
+                                string: 'Framework\\Network\\Http\\Request'
                             },
                             alias: 'MyFrameworkRequest'
                         }]

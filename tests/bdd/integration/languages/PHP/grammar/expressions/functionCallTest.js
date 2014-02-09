@@ -87,6 +87,23 @@ define([
                         }
                     }]
                 }
+            },
+            'calling function in global namespace with prefixed path': {
+                code: '\\now();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_FUNCTION_CALL',
+                            func: {
+                                name: 'N_STRING',
+                                string: '\\now'
+                            },
+                            args: []
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

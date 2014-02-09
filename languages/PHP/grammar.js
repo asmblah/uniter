@@ -219,7 +219,7 @@ define([
                 components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', what: 'N_CLASS_REFERENCE'}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
             'N_CLOSURE': {
                 components: ['T_FUNCTION', (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {oneOf: [['T_USE', (/\(/), {name: 'bindings', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)], {name: 'bindings', zeroOrMoreOf: {what: (/(?!)/)}}]}, {name: 'body', what: 'N_STATEMENT'}]
@@ -258,7 +258,7 @@ define([
                 components: {oneOf: [
                     [
                         {name: 'operator', what: 'T_NEW'},
-                        {name: 'className', what: 'N_CLASS_REFERENCE'},
+                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_0']},
                         {optionally: [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
@@ -268,9 +268,6 @@ define([
                     {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
                 ]},
                 ifNoMatch: {component: 'operator', capture: 'next'}
-            },
-            'N_CLASS_REFERENCE': {
-                components: {oneOf: [{name: 'path', what: [{optionally: 'T_NS_SEPARATOR'}, 'N_NAMESPACE']}, 'N_EXPRESSION_LEVEL_0']}
             },
             'N_DO_WHILE_STATEMENT': {
                 components: ['T_DO', {name: 'body', what: 'N_STATEMENT'}, 'T_WHILE', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/;/)]
@@ -296,7 +293,7 @@ define([
                 captureAs: 'N_FUNCTION_CALL',
                 components: {oneOf: [
                     [
-                        {name: 'func', what: 'N_EXPRESSION_LEVEL_1_B'},
+                        {name: 'func', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_1_B']},
                         [
                             (/\(/),
                             {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
@@ -498,10 +495,14 @@ define([
                 components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
             'N_NAMESPACE': {
-                components: ['T_STRING', {zeroOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
+                components: [{optionally: 'T_STRING'}, {oneOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
             },
             'N_NAMESPACE_STATEMENT': {
-                components: ['T_NAMESPACE', {name: 'namespace', what: 'N_NAMESPACE'}, (/;/), {name: 'statements', zeroOrMoreOf: 'N_NAMESPACE_SCOPED_STATEMENT'}]
+                components: ['T_NAMESPACE', {name: 'namespace', oneOf: ['N_NAMESPACE', 'T_STRING']}, (/;/), {name: 'statements', zeroOrMoreOf: 'N_NAMESPACE_SCOPED_STATEMENT'}]
+            },
+            'N_NAMESPACED_REFERENCE': {
+                captureAs: 'N_STRING',
+                components: {name: 'string', what: 'N_NAMESPACE'}
             },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, {oneOf: ['T_CLOSE_TAG', {what: '<EOF>'}]}]
@@ -555,7 +556,7 @@ define([
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_STRING']}
             },
             'N_USE_STATEMENT': {
-                components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', what: 'N_CLASS_REFERENCE'}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]
+                components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]
             },
             'N_VARIABLE': {
                 components: [

@@ -363,9 +363,6 @@ define([
 
                 return 'if (switchMatched_' + context.switchCase.depth + ' || switchExpression_' + context.switchCase.depth + '.isEqualTo(' + interpret(node.expression) + ').getNative()) {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
             },
-            'N_CLASS_REFERENCE': function (node, interpret) {
-                return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';
-            },
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,
                     methodCodes = [],
@@ -646,6 +643,9 @@ define([
                 });
 
                 return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace));';
+            },
+            'N_NAMESPACED_REFERENCE': function (node, interpret) {
+                return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';
             },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 var args = [];

@@ -173,11 +173,13 @@ EOS
 <?php
     namespace Uniter\Tool;
     class Drill {}
+    function getType() { echo 'A tool'; }
 
     namespace House\Garage;
     use Uniter\Tool;
 
     var_dump(new Tool\Drill);
+    Tool\getType();
 
 EOS
 */) {}),
@@ -186,7 +188,7 @@ EOS
                 expectedStdout: util.heredoc(function (/*<<<EOS
 object(Uniter\Tool\Drill)#1 (0) {
 }
-
+A tool
 EOS
 */) {})
             }

@@ -43,8 +43,8 @@ define([
                             string: 'Human'
                         },
                         extend: {
-                            name: 'N_CLASS_REFERENCE',
-                            path: 'Animal'
+                            name: 'N_STRING',
+                            string: 'Animal'
                         },
                         members: []
                     }]
@@ -61,8 +61,8 @@ define([
                             string: 'Drill'
                         },
                         extend: {
-                            name: 'N_CLASS_REFERENCE',
-                            path: '\\Vendor\\Toolbox\\Tool'
+                            name: 'N_STRING',
+                            string: '\\Vendor\\Toolbox\\Tool'
                         },
                         members: []
                     }]

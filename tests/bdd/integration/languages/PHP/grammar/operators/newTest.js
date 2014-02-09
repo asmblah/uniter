@@ -43,8 +43,8 @@ define([
                                     name: 'N_NEW_EXPRESSION',
                                     operator: 'new',
                                     className: {
-                                        name: 'N_CLASS_REFERENCE',
-                                        path: 'Worker'
+                                        name: 'N_STRING',
+                                        string: 'Worker'
                                     }
                                 }
                             }]
@@ -70,8 +70,8 @@ define([
                                     name: 'N_NEW_EXPRESSION',
                                     operator: 'new',
                                     className: {
-                                        name: 'N_CLASS_REFERENCE',
-                                        path: 'Worker'
+                                        name: 'N_STRING',
+                                        string: 'Worker'
                                     },
                                     args: []
                                 }
@@ -101,8 +101,8 @@ define([
                                         name: 'N_NEW_EXPRESSION',
                                         operator: 'new',
                                         className: {
-                                            name: 'N_CLASS_REFERENCE',
-                                            path: '\\stdClass'
+                                            name: 'N_STRING',
+                                            string: '\\stdClass'
                                         }
                                     }
                                 }]
