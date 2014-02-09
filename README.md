@@ -25,6 +25,7 @@ Features
     - `use` statement for `class`, `namespace` and `function` importing and aliasing
     - Magic `__autoload(...)` function
     - Ternary operator
+    - Loose equality `==` and inequality `!=` comparison operators
 
     And others... see [the `Engine` integration tests](https://github.com/asmblah/uniter/tree/master/tests/bdd/integration/languages/PHP/engine) for more info.
 
