@@ -22,6 +22,7 @@ Features
     - `switch` statements
     - Forward `goto` statements
     - Basic `class` object support using the `new` operator
+    - `use` statement for `class`, `namespace` and `function` importing and aliasing
     - Ternary operator
 
     And others... see [the `Engine` integration tests](https://github.com/asmblah/uniter/tree/master/tests/bdd/integration/languages/PHP/engine) for more info.
