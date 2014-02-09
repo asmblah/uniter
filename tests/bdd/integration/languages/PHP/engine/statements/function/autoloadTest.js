@@ -121,6 +121,26 @@ EOS
                 expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
                 expectedStdout: 'autoloading TeSt'
             },
+            'should be called when undefined class is used in a namespace, erroring if class is still not defined by autoloader': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function __autoload($class) {
+        echo 'autoloading ' . $class;
+    }
+
+    namespace My\Library;
+
+    $object = new TeSt;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'TeSt' not found$/
+                },
+                // Note additional check for case preservation in class name string passed to autoloader
+                expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
+                expectedStdout: 'autoloading My\\Library\\TeSt'
+            },
             'should be called when undefined class is used, not erroring if class is then defined with same case by autoloader': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

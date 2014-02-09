@@ -90,14 +90,15 @@ define([
         },
 
         getClass: function (name) {
-            var lowerName = name.toLowerCase(),
+            var globalNamespace,
+                lowerName = name.toLowerCase(),
                 namespace = this;
 
             if (!hasOwn.call(namespace.classes, lowerName)) {
-                if (namespace.name === '') {
-                    if (hasOwn.call(namespace.functions, MAGIC_AUTOLOAD_FUNCTION)) {
-                        namespace.functions[MAGIC_AUTOLOAD_FUNCTION](namespace.valueFactory.createString(name));
-                    }
+                globalNamespace = namespace.getGlobal();
+
+                if (hasOwn.call(globalNamespace.functions, MAGIC_AUTOLOAD_FUNCTION)) {
+                    globalNamespace.functions[MAGIC_AUTOLOAD_FUNCTION](namespace.valueFactory.createString(namespace.getPrefix() + name));
                 }
 
                 if (!hasOwn.call(namespace.classes, lowerName)) {
@@ -138,6 +139,12 @@ define([
             }
 
             return namespace.functions[name];
+        },
+
+        getGlobal: function () {
+            var namespace = this;
+
+            return namespace.name === '' ? namespace : namespace.getParent().getGlobal();
         },
 
         getParent: function () {
