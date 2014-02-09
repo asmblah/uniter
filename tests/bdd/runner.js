@@ -91,6 +91,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/syntax/errorTest',
             'bdd/integration/languages/PHP/engine/statements/class/extendsTest',
+            'bdd/integration/languages/PHP/engine/statements/function/autoloadTest',
             'bdd/integration/languages/PHP/engine/statements/classTest',
             'bdd/integration/languages/PHP/engine/statements/doWhileTest',
             'bdd/integration/languages/PHP/engine/statements/echoTest',

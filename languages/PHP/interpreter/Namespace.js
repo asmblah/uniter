@@ -76,7 +76,15 @@ define([
         },
 
         defineFunction: function (name, func) {
-            this.functions[name] = func;
+            var namespace = this;
+
+            if (namespace.name === '') {
+                if (/__autoload/i.test(name) && func.length !== 1) {
+                    throw new PHPFatalError(PHPFatalError.EXPECT_EXACTLY_1_ARG, {name: name.toLowerCase()});
+                }
+            }
+
+            namespace.functions[name] = func;
         },
 
         getClass: function (name) {
