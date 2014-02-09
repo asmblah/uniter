@@ -86,6 +86,72 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'should not be called when class used in global namespace is already defined': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function __autoload($class) {
+        echo 'autoloading';
+    }
+
+    class Test {}
+
+    $object = new Test;
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'should be called when undefined class is used, erroring if class is still not defined by autoloader': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function __autoload($class) {
+        echo 'autoloading ' . $class;
+    }
+
+    $object = new TeSt;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'TeSt' not found$/
+                },
+                // Note additional check for case preservation in class name string passed to autoloader
+                expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
+                expectedStdout: 'autoloading TeSt'
+            },
+            'should be called when undefined class is used, not erroring if class is then defined with same case by autoloader': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function __autoload($class) {
+        class Test {}
+
+        echo 'autoloaded ' . $class;
+    }
+
+    $object = new Test;
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'autoloaded Test'
+            },
+            'should be called when undefined class is used, not erroring if class is then defined with different case by autoloader': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function __autoload($class) {
+        class MyTESTClass {}
+
+        echo 'autoloaded ' . $class;
+    }
+
+    $object = new Mytestclass;
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'autoloaded Mytestclass'
             }
         }, function (scenario, description) {
             describe(description, function () {

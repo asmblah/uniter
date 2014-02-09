@@ -19,15 +19,17 @@ define([
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
+    var MAGIC_AUTOLOAD_FUNCTION = '__autoload',
+        hasOwn = {}.hasOwnProperty;
 
-    function Namespace(callStack, parent, name) {
+    function Namespace(callStack, valueFactory, parent, name) {
         this.callStack = callStack;
         this.children = {};
         this.classes = {};
         this.functions = {};
         this.name = name;
         this.parent = parent;
+        this.valueFactory = valueFactory;
     }
 
     util.extend(Namespace.prototype, {
@@ -92,7 +94,15 @@ define([
                 namespace = this;
 
             if (!hasOwn.call(namespace.classes, lowerName)) {
-                throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: name});
+                if (namespace.name === '') {
+                    if (hasOwn.call(namespace.functions, MAGIC_AUTOLOAD_FUNCTION)) {
+                        namespace.functions[MAGIC_AUTOLOAD_FUNCTION](namespace.valueFactory.createString(name));
+                    }
+                }
+
+                if (!hasOwn.call(namespace.classes, lowerName)) {
+                    throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: name});
+                }
             }
 
             return namespace.classes[lowerName];
@@ -103,7 +113,7 @@ define([
 
             util.each(name.split('\\'), function (part) {
                 if (!hasOwn.call(namespace.children, part)) {
-                    namespace.children[part] = new Namespace(namespace.callStack, namespace, part);
+                    namespace.children[part] = new Namespace(namespace.callStack, namespace.valueFactory, namespace, part);
                 }
 
                 namespace = namespace.children[part];

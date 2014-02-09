@@ -30,7 +30,7 @@ define([
             valueFactory = new ValueFactory(callStack);
 
         this.callStack = callStack;
-        this.globalNamespace = new Namespace(callStack, null, '');
+        this.globalNamespace = new Namespace(callStack, valueFactory, null, '');
         this.globalScope = new Scope(callStack, valueFactory, null);
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
