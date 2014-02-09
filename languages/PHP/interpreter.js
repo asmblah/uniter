@@ -780,7 +780,7 @@ define([
                     if (use.alias) {
                         code += 'namespaceScope.use(' + interpret(use.source) + '.getNative(), ' + JSON.stringify(use.alias) + ');';
                     } else {
-                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative())';
+                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative());';
                     }
                 });
 

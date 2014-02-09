@@ -72,7 +72,7 @@ define([
 
         use: function (source, alias) {
             if (!alias) {
-                alias = source.replace(/^.*?([^\\])$/, '$1');
+                alias = source.replace(/^.*?([^\\]+)$/, '$1');
             }
 
             if (source.charAt(0) !== '\\') {

@@ -145,6 +145,50 @@ object(stdClass)#1 (0) {
 
 EOS
 */) {})
+            },
+            'use for importing another namespace (with implicit alias name) using prefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Uniter\Tool;
+    class Drill {}
+
+    namespace House\Garage;
+    use \Uniter\Tool;
+
+    var_dump(new Tool\Drill);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Uniter\Tool\Drill)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
+            'use for importing another namespace (with implicit alias name) using unprefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Uniter\Tool;
+    class Drill {}
+
+    namespace House\Garage;
+    use Uniter\Tool;
+
+    var_dump(new Tool\Drill);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Uniter\Tool\Drill)#1 (0) {
+}
+
+EOS
+*/) {})
             }
         }, function (scenario, description) {
             describe(description, function () {
