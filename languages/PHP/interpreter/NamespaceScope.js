@@ -30,15 +30,21 @@ define([
                 namespace = scope.namespace,
                 path;
 
-            if (name.charAt(0) === '\\') {
-                match = name.match(/^\\(.*?)\\([^\\]+)$/);
-                path = match[1];
-                name = match[2];
-
-                namespace = scope.globalNamespace.getDescendant(path);
-            } else if (hasOwn.call(scope.imports, name)) {
+            if (hasOwn.call(scope.imports, name)) {
                 name = scope.imports[name];
                 namespace = scope.globalNamespace;
+            }
+
+            if (name.charAt(0) === '\\') {
+                match = name.match(/^\\(.*?)\\([^\\]+)$/);
+
+                if (match) {
+                    path = match[1];
+                    name = match[2];
+                    namespace = scope.globalNamespace.getDescendant(path);
+                } else {
+                    name = name.substr(1);
+                }
             }
 
             return namespace.getClass(name);
@@ -51,6 +57,10 @@ define([
         use: function (source, alias) {
             if (!alias) {
                 alias = source.replace(/^.*?([^\\])$/, '$1');
+            }
+
+            if (source.charAt(0) !== '\\') {
+                source = '\\' + source;
             }
 
             this.imports[alias] = source;

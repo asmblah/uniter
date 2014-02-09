@@ -53,12 +53,56 @@ object(stdClass)#1 (0) {
 EOS
 */) {})
             },
-            'simple use for aliasing standard "stdClass" class when in a specific namespace scope': {
+            'simple use for aliasing standard "stdClass" class when in a specific namespace scope using unprefixed path': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     namespace Uniter\Tool;
 
     use stdClass as EmptyClass;
+
+    var_dump(new EmptyClass);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(stdClass)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
+            'use for aliasing class from another namespace when in a specific namespace scope using unprefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Catalogue\Tool;
+
+    class Drill {}
+
+    namespace Tradesman\Certified\Electrician;
+
+    use Catalogue\Tool\Drill as CatalogueDrill;
+
+    var_dump(new CatalogueDrill);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Catalogue\Tool\Drill)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
+            'simple use for aliasing standard "stdClass" class when in a specific namespace scope using prefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Uniter\Tool;
+
+    use \stdClass as EmptyClass;
 
     var_dump(new EmptyClass);
 
