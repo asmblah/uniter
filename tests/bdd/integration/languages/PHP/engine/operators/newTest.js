@@ -56,6 +56,27 @@ object(Test)#1 (0) {
 EOS
 */) {})
             },
+            'creating instance of class from other namespace with no argument brackets': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace You;
+    class Test {}
+
+    namespace Me;
+    $object = new \You\Test;
+
+    var_dump($object);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(You\Test)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
             'creating instance of class with argument brackets but no arguments': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
