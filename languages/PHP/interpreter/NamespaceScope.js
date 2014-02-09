@@ -28,13 +28,16 @@ define([
             var match,
                 scope = this,
                 namespace = scope.namespace,
-                path;
+                path,
+                prefix;
 
+            // Check whether the entire class name is aliased
             if (hasOwn.call(scope.imports, name)) {
                 name = scope.imports[name];
                 namespace = scope.globalNamespace;
             }
 
+            // Check whether the class path is absolute, so no 'use's apply
             if (name.charAt(0) === '\\') {
                 match = name.match(/^\\(.*?)\\([^\\]+)$/);
 
@@ -44,6 +47,19 @@ define([
                     namespace = scope.globalNamespace.getDescendant(path);
                 } else {
                     name = name.substr(1);
+                }
+            // Check whether the namespace prefix is an alias
+            } else {
+                match = name.match(/^([^\\]+)(.*?)\\([^\\]+)$/);
+
+                if (match) {
+                    prefix = match[1];
+                    path = match[2];
+                    name = match[3];
+
+                    if (hasOwn.call(scope.imports, prefix)) {
+                        namespace = scope.globalNamespace.getDescendant(scope.imports[prefix].substr(1) + path);
+                    }
                 }
             }
 

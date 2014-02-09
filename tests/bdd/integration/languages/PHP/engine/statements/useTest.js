@@ -97,6 +97,35 @@ object(Catalogue\Tool\Drill)#1 (0) {
 EOS
 */) {})
             },
+            'use for aliasing entire other namespace when in a specific namespace scope using unprefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Catalogue\Tool;
+    class Drill {}
+
+    namespace Catalogue\Tool\Wrench;
+    class Torque {}
+
+    namespace Tradesman\Certified\Electrician;
+
+    use Catalogue\Tool as CatalogueTool;
+
+    var_dump(new CatalogueTool\Drill);
+    var_dump(new CatalogueTool\Wrench\Torque);
+
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(Catalogue\Tool\Drill)#1 (0) {
+}
+object(Catalogue\Tool\Wrench\Torque)#2 (0) {
+}
+
+EOS
+*/) {})
+            },
             'simple use for aliasing standard "stdClass" class when in a specific namespace scope using prefixed path': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
