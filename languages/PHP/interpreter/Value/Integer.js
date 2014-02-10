@@ -105,6 +105,12 @@ define([
             return objectValue.isEqualToInteger(this);
         },
 
+        isEqualToString: function (stringValue) {
+            var integerValue = this;
+
+            return integerValue.factory.createBoolean(integerValue.getNative() === parseFloat(stringValue.getNative()));
+        },
+
         isLessThan: function (rightValue) {
             var leftValue = this,
                 factory = leftValue.factory;

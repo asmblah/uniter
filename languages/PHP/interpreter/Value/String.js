@@ -75,6 +75,12 @@ define([
             return rightValue.isEqualToString(this);
         },
 
+        isEqualToNull: function () {
+            var value = this;
+
+            return value.factory.createBoolean(value.getNative() === '');
+        },
+
         isEqualToObject: function () {
             return this.factory.createBoolean(false);
         },

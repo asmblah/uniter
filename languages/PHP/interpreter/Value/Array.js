@@ -226,6 +226,10 @@ define([
             return this.factory.createBoolean(false);
         },
 
+        isEqualToString: function () {
+            return this.factory.createBoolean(false);
+        },
+
         isIdenticalTo: function (rightValue) {
             return rightValue.isIdenticalToArray(this);
         },

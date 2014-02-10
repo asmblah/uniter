@@ -52,6 +52,10 @@ define([
             return objectValue.isEqualToNull();
         },
 
+        isEqualToString: function (stringValue) {
+            return stringValue.isEqualToNull();
+        },
+
         isSet: function () {
             return false;
         }
