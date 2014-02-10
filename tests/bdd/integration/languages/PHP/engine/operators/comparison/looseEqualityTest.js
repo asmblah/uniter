@@ -474,6 +474,12 @@ define([
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
+                        }, {
+                            setup: '$object = new stdClass;',
+                            left: '$object',
+                            right: '$object',
+                            expectedResult: true,
+                            expectedResultType: 'boolean'
                         }],
                         'string': [{
                             left: 'new stdClass',
