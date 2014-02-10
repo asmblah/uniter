@@ -522,8 +522,11 @@ define([
                             rightOperandDatas = leftOperandData.right[rightOperandType];
 
                         util.each(rightOperandDatas, function (rightOperandData) {
-                            var leftOperand = rightOperandData.left,
-                                rightOperand = rightOperandData.right;
+                            var effectiveLeftOperandType = leftOperandType,
+                                effectiveRightOperandType = rightOperandType,
+                                leftOperand = rightOperandData.left,
+                                rightOperand = rightOperandData.right,
+                                setup = rightOperandData.setup || '';
 
                             util.from(0).to(1, function (index) {
                                 var scratch;
@@ -539,13 +542,13 @@ define([
                                     leftOperand = rightOperand;
                                     rightOperand = scratch;
 
-                                    scratch = leftOperandType;
-                                    leftOperandType = rightOperandType;
-                                    rightOperandType = scratch;
+                                    scratch = effectiveLeftOperandType;
+                                    effectiveLeftOperandType = effectiveRightOperandType;
+                                    effectiveRightOperandType = scratch;
                                 }
 
-                                describe('for ' + leftOperandType + '(' + leftOperand + ') ' + scenario.operator + ' ' + rightOperandType + '(' + rightOperand + ')', function () {
-                                    var expression = leftOperand + ' '  + scenario.operator + ' ' + rightOperand,
+                                describe('for ' + effectiveLeftOperandType + '(' + leftOperand + ') ' + scenario.operator + ' ' + effectiveRightOperandType + '(' + rightOperand + ')', function () {
+                                    var expression = leftOperand + ' ' + scenario.operator + ' ' + rightOperand,
                                         expectedResult = rightOperandData.expectedResult;
 
                                     if (scenario.invertExpectedResult) {
@@ -553,7 +556,7 @@ define([
                                     }
 
                                     check({
-                                        code: '<?php return ' + expression + ';',
+                                        code: '<?php ' + setup + 'return ' + expression + ';',
                                         expectedResult: expectedResult,
                                         expectedResultType: rightOperandData.expectedResultType,
                                         expectedStderr: rightOperandData.expectedStderr || '',
