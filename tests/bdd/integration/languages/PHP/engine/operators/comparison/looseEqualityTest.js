@@ -311,7 +311,6 @@ define([
                             expectedResult: false,
                             expectedResultType: 'boolean'
                         }, {
-                            // Negative and positive zero are equal
                             left: '-0.0',
                             right: 'null',
                             expectedResult: true,
@@ -466,12 +465,12 @@ define([
                             expectedResult: true,
                             expectedResultType: 'boolean'
                         }, {
-                            left: '(function () { $o = new stdClass; $o->prop = 1; return $o; })',
+                            left: '(function () { $o = new stdClass; $o->prop = 1; return $o; }())',
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
                         }, {
-                            left: '(function () { class FunTest {} return new FunTest; })',
+                            left: '(function () { class FunTest {} return new FunTest; }())',
                             right: 'new stdClass',
                             expectedResult: false,
                             expectedResultType: 'boolean'
