@@ -121,7 +121,7 @@ define([
         toNegative: function () {
             var value = this;
 
-            return value.factory.createInteger(-value.value);
+            return value.factory.createFloat(-value.value);
         },
 
         toPositive: function () {

@@ -226,6 +226,32 @@ define([
             return this.factory.createBoolean(false);
         },
 
+        isIdenticalTo: function (rightValue) {
+            return rightValue.isIdenticalToArray(this);
+        },
+
+        isIdenticalToArray: function (rightValue) {
+            var identical = true,
+                leftValue = this,
+                factory = leftValue.factory;
+
+            if (rightValue.value.length !== leftValue.value.length) {
+                return factory.createBoolean(false);
+            }
+
+            util.each(rightValue.value, function (element, index) {
+                if (
+                    leftValue.value[index].getKey().isNotIdenticalTo(element.getKey()).getNative() ||
+                    leftValue.value[index].getValue().isNotIdenticalTo(element.getValue()).getNative()
+                ) {
+                    identical = false;
+                    return false;
+                }
+            });
+
+            return factory.createBoolean(identical);
+        },
+
         next: function () {
             this.pointer++;
         },

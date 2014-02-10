@@ -92,10 +92,24 @@ define([
             return leftValue.factory.createBoolean(rightValue.type === leftValue.type && rightValue.value === leftValue.value);
         },
 
+        isIdenticalToArray: function (rightValue) {
+            return this.isIdenticalTo(rightValue);
+        },
+
+        isIdenticalToObject: function (rightValue) {
+            return this.isIdenticalTo(rightValue);
+        },
+
         isNotEqualTo: function (rightValue) {
             var leftValue = this;
 
             return leftValue.factory.createBoolean(!leftValue.isEqualTo(rightValue).getNative());
+        },
+
+        isNotIdenticalTo: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(!leftValue.isIdenticalTo(rightValue).getNative());
         },
 
         isSet: function () {

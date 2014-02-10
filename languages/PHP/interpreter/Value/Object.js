@@ -120,6 +120,21 @@ define([
             return this.factory.createBoolean(false);
         },
 
+        isIdenticalTo: function (rightValue) {
+            return rightValue.isIdenticalToObject(this);
+        },
+
+        isIdenticalToArray: function () {
+            return this.factory.createBoolean(false);
+        },
+
+        isIdenticalToObject: function (rightValue) {
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            return factory.createBoolean(rightValue.value === leftValue.value);
+        },
+
         referToElement: function (key) {
             return 'property: ' + this.className + '::$' + key;
         }

@@ -81,6 +81,7 @@ define({
             'bdd/integration/languages/PHP/engine/expressions/methodCallTest',
             'bdd/integration/languages/PHP/engine/expressions/printTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/looseEqualityTest',
+            'bdd/integration/languages/PHP/engine/operators/comparison/strictEqualityTest',
             'bdd/integration/languages/PHP/engine/operators/arrayAccessTest',
             'bdd/integration/languages/PHP/engine/operators/assignmentTest',
             'bdd/integration/languages/PHP/engine/operators/bitwiseTest',
