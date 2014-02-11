@@ -25,13 +25,15 @@ define([
 ) {
     'use strict';
 
-    function PHPState(stderr) {
+    function PHPState(stderr, engine, options) {
         var callStack = new CallStack(stderr),
             valueFactory = new ValueFactory(callStack);
 
         this.callStack = callStack;
+        this.engine = engine;
         this.globalNamespace = new Namespace(callStack, valueFactory, null, '');
         this.globalScope = new Scope(callStack, valueFactory, null);
+        this.options = options;
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
         this.valueFactory = valueFactory;
@@ -42,12 +44,20 @@ define([
             return this.callStack;
         },
 
+        getEngine: function () {
+            return this.engine;
+        },
+
         getGlobalNamespace: function () {
             return this.globalNamespace;
         },
 
         getGlobalScope: function () {
             return this.globalScope;
+        },
+
+        getOptions: function () {
+            return this.options;
         },
 
         getReferenceFactory: function () {

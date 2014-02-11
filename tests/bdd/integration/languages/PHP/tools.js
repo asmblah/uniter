@@ -31,14 +31,17 @@ define([
                 stderr = new Stream(),
                 stdin = new Stream(),
                 stdout = new Stream(),
-                interpreter = tools.createInterpreter(stdin, stdout, stderr),
-                parser = new Parser(phpGrammarSpec, stderr);
+                interpreter = tools.createInterpreter(stdin, stdout, stderr, options),
+                parser = new Parser(phpGrammarSpec, stderr),
+                engine = new Engine(parser, interpreter);
 
-            return new Engine(parser, interpreter, options);
+            interpreter.setEngine(engine);
+
+            return engine;
         },
 
-        createInterpreter: function (stdin, stdout, stderr) {
-            return new Interpreter(phpInterpreterSpec, stdin, stdout, stderr);
+        createInterpreter: function (stdin, stdout, stderr, options) {
+            return new Interpreter(phpInterpreterSpec, stdin, stdout, stderr, options);
         },
 
         createParser: function () {

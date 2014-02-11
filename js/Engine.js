@@ -19,13 +19,16 @@ define([
 ) {
     'use strict';
 
-    function Engine(parser, interpreter, options) {
+    function Engine(parser, interpreter) {
         this.interpreter = interpreter;
-        this.options = options;
         this.parser = parser;
     }
 
     util.extend(Engine.prototype, {
+        configure: function (options) {
+            this.interpreter.configure(options);
+        },
+
         execute: function (code) {
             var ast,
                 engine = this,

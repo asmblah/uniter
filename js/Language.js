@@ -35,10 +35,13 @@ define([
                 stderr = new Stream(),
                 stdin = new Stream(),
                 stdout = new Stream(),
-                interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr),
-                parser = new Parser(language.grammarSpec, stderr);
+                interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr, options),
+                parser = new Parser(language.grammarSpec, stderr),
+                engine = new Engine(parser, interpreter);
 
-            return new Engine(parser, interpreter, options);
+            interpreter.setEngine(engine);
+
+            return engine;
         },
 
         getName: function () {

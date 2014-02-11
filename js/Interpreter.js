@@ -19,8 +19,10 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Interpreter(spec, stdin, stdout, stderr) {
+    function Interpreter(spec, stdin, stdout, stderr, options) {
+        this.engine = null;
         this.environment = null;
+        this.options = options || {};
         this.spec = spec;
         this.state = null;
         this.stderr = stderr;
@@ -29,6 +31,10 @@ define([
     }
 
     util.extend(Interpreter.prototype, {
+        configure: function (options) {
+            util.extend(this.options, options);
+        },
+
         expose: function (object, name) {
             var globalScope = this.getEnvironment().getGlobalScope();
 
@@ -50,7 +56,7 @@ define([
                 spec = interpreter.spec;
 
             if (!interpreter.state && spec.State) {
-                interpreter.state = new spec.State(interpreter.stderr);
+                interpreter.state = new spec.State(interpreter.stderr, interpreter.engine, interpreter.options);
             }
 
             return interpreter.state;
@@ -91,6 +97,10 @@ define([
                     return interpreter.interpret(node, newData);
                 }
             }, data, stdin, stdout, stderr);
+        },
+
+        setEngine: function (engine) {
+            this.engine = engine;
         }
     });
 

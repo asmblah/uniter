@@ -28,6 +28,10 @@ define([
                     util.each(scenario.expose, function (object, name) {
                         engine.expose(object, name);
                     });
+
+                    if (scenario.options) {
+                        engine.configure(scenario.options);
+                    }
                 });
 
                 if (scenario.expectedException) {

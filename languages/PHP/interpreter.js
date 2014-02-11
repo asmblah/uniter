@@ -46,6 +46,7 @@ define([
     'use strict';
 
     var INVOKE_MAGIC_METHOD = '__invoke',
+        INCLUDE_OPTION = 'include',
         binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
@@ -80,13 +81,15 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        var globalNamespace = state.getGlobalNamespace(),
+        var engine = state.getEngine(),
+            globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
             promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
             result,
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
+            options = state.getOptions(),
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
@@ -138,6 +141,36 @@ define([
                     return call;
                 },
                 referenceFactory: referenceFactory,
+                requireOnce: function (path) {
+                    var done = false,
+                        promise = new Promise(),
+                        result;
+
+                    promise.done(function (contents) {
+                        done = true;
+
+                        engine.execute(contents).done(function (resultNative) {
+                            // TODO: This is inefficient, we should just have access to the Value object
+                            result = valueFactory.coerce(resultNative);
+                        }).fail(function (exception) {
+                            throw exception;
+                        });
+                    }).fail(function (exception) {
+                        throw exception;
+                    });
+
+                    if (!options[INCLUDE_OPTION]) {
+                        throw new Exception('requireOnce() :: No "include" transport is available for loading the module.');
+                    }
+
+                    options[INCLUDE_OPTION](path, promise);
+
+                    if (!done) {
+                        throw new Exception('requireOnce() :: Must be called synchronously for now.');
+                    }
+
+                    return result;
+                },
                 valueFactory: valueFactory
             };
 
@@ -713,6 +746,9 @@ define([
                     name: node.variable.variable,
                     value: node.value ? interpret(node.value) : 'null'
                 };
+            },
+            'N_REQUIRE_ONCE_EXPRESSION': function (node, interpret) {
+                return 'tools.requireOnce(' + interpret(node.path) + '.getNative())';
             },
             'N_RETURN_STATEMENT': function (node, interpret) {
                 var expression = interpret(node.expression);

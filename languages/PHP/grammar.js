@@ -243,7 +243,7 @@ define([
                 components: (/;/)
             },
             'N_EXPRESSION': {
-                components: 'N_EXPRESSION_LEVEL_21'
+                components: {oneOf: ['N_REQUIRE_ONCE_EXPRESSION', 'N_EXPRESSION_LEVEL_21']}
             },
 
             /*
@@ -518,6 +518,9 @@ define([
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
                 components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_CONTINUE_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_DO_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT', 'N_USE_STATEMENT']}
+            },
+            'N_REQUIRE_ONCE_EXPRESSION': {
+                components: ['T_REQUIRE_ONCE', {name: 'path', what: 'N_EXPRESSION'}]
             },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
