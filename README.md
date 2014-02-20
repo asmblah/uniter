@@ -20,7 +20,7 @@ Features
     - `function` statements
     - Closure `function` expressions
     - `switch` statements
-    - Forward `goto` statements
+    - Forward and backward `goto` statements (but no overlap support yet)
     - Basic `class` object support using the `new` operator
     - `use` statement for `class`, `namespace` and `function` importing and aliasing
     - Magic `__autoload(...)` function
