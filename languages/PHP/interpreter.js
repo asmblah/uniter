@@ -117,7 +117,7 @@ define([
                     return new NamespaceScope(globalNamespace, namespace);
                 },
                 getPath: function () {
-                    return valueFactory.createString(state.getPath());
+                    return valueFactory.createString(context.path);
                 },
                 getPathDirectory: function () {
                     return valueFactory.createString(state.getPath().replace(/\/[^\/]+$/, ''));
@@ -734,7 +734,8 @@ define([
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
                     context = {
-                        labelRepository: new LabelRepository()
+                        labelRepository: new LabelRepository(),
+                        path: state.getPath()
                     },
                     labels;
 

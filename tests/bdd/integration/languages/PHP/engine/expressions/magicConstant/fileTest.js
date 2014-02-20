@@ -66,6 +66,31 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'get_file.php'
+            },
+            // Ensure the state is not shared between main program and required module
+            'capturing current file in main program before and after required module': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    echo __FILE__;
+    require_once 'get_file.php';
+    echo __FILE__;
+
+EOS
+*/) {}),
+                options: {
+                    include: function (path, promise) {
+                        promise.resolve(util.heredoc(function (/*<<<EOS
+<?php
+
+    echo __FILE__;
+
+EOS
+*/) {}));
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: '(program)get_file.php(program)'
             }
         }, function (scenario, description) {
             describe(description, function () {
