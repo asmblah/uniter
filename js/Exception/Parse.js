@@ -30,8 +30,14 @@ define([
     util.inherit(ParseException).from(Exception);
 
     util.extend(ParseException.prototype, {
-        getFurthestMatch: function () {
-            return this.furthestMatch;
+        getFurthestMatchEnd: function () {
+            var exception = this;
+
+            if (exception.furthestIgnoreMatchOffset > exception.furthestMatchOffset) {
+                return exception.furthestIgnoreMatchOffset + exception.furthestIgnoreMatch.textLength;
+            }
+
+            return exception.furthestMatchOffset + exception.furthestMatch.textLength;
         },
 
         getLineNumber: function () {
@@ -45,7 +51,9 @@ define([
         },
 
         unexpectedEndOfInput: function () {
-            return Math.max(this.furthestMatchOffset, this.furthestIgnoreMatchOffset) === this.text.length - 1;
+            var exception = this;
+
+            return Math.max(exception.furthestMatchOffset, exception.furthestIgnoreMatchOffset) === exception.text.length - 1;
         }
     });
 

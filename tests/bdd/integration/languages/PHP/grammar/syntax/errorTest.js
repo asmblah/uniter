@@ -65,6 +65,20 @@ EOS
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected '.' in \(program\) on line 4$/
                 }
+            },
+            'concatenation with invalid comma before dot operator and followed by whitespace': {
+                code: '<?php $a = 1 ,. 2; ',
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected ',' in \(program\) on line 1$/
+                }
+            },
+            'concatenation with invalid comma after dot operator and followed by whitespace': {
+                code: '<?php $a = 1 ., 2; ',
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected ',' in \(program\) on line 1$/
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
