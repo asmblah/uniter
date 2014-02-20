@@ -24,6 +24,35 @@ define([
             expect(Object.getPrototypeOf(util)).to.equal(modular.util);
         });
 
+        describe('getLineNumber()', function () {
+            util.each({
+                'the empty string': {
+                    text: '',
+                    offset: 0,
+                    expectedLineNumber: 1
+                },
+                'a blank line followed by text on the next line': {
+                    text: '\nabc',
+                    offset: 0,
+                    expectedLineNumber: 1
+                },
+                'a blank line also followed by text on the next line': {
+                    text: '\ndef',
+                    offset: 2,
+                    expectedLineNumber: 2
+                },
+                'three blank lines followed by text on the next line': {
+                    text: '\n\n\nmememe',
+                    offset: 3,
+                    expectedLineNumber: 4
+                }
+            }, function (scenario, description) {
+                it('should return the correct line number for ' + description + ', offset ' + scenario.offset, function () {
+                    expect(util.getLineNumber(scenario.text, scenario.offset)).to.equal(scenario.expectedLineNumber);
+                });
+            });
+        });
+
         describe('heredoc()', function () {
             util.each([
                 {

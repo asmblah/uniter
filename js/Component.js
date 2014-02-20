@@ -59,12 +59,8 @@ define([
 
                 if (component.args.captureOffsetAs) {
                     (function (offset) {
-                        function getCount(string, substring) {
-                            return string.split(substring).length;
-                        }
-
                         match.components[component.args.captureOffsetAs] = {
-                            line: getCount(text.substr(0, offset), '\n'),
+                            line: util.getLineNumber(text, offset),
                             offset: offset
                         };
                     }(offset + match.textOffset));

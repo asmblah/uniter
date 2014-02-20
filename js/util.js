@@ -82,6 +82,14 @@ define([
             return promise;
         },
 
+        getLineNumber: function (text, offset) {
+            function getCount(string, substring) {
+                return string.split(substring).length;
+            }
+
+            return getCount(text.substr(0, offset), '\n');
+        },
+
         heredoc: function (fn, variables) {
             var match = function () {}.toString.call(fn).match(/\/\*<<<(\w+)[\r\n](?:([\s\S]*)[\r\n])?\1\s*\*\//),
                 string;
