@@ -27,6 +27,9 @@ define([
 
     function Parser(grammarSpec, stderr) {
         this.errorHandler = null;
+        this.furthestIgnoreMatch = null;
+        this.furthestIgnoreMatchOffset = -1;
+        this.furthestMatch = null;
         this.furthestMatchOffset = -1;
         this.grammarSpec = grammarSpec;
         this.matchCaches = [];
@@ -398,10 +401,20 @@ define([
             return parser.state;
         },
 
-        logFurthestMatchOffset: function (offset) {
+        logFurthestIgnoreMatch: function (match, offset) {
             var parser = this;
 
-            if (offset > parser.furthestMatchOffset) {
+            if (offset >= parser.furthestIgnoreMatchOffset && match.textLength > 0) {
+                parser.furthestIgnoreMatch = match;
+                parser.furthestIgnoreMatchOffset = offset;
+            }
+        },
+
+        logFurthestMatch: function (match, offset) {
+            var parser = this;
+
+            if (offset >= parser.furthestMatchOffset && match.textLength > 0) {
+                parser.furthestMatch = match;
                 parser.furthestMatchOffset = offset;
             }
         },
@@ -418,12 +431,15 @@ define([
                 });
             });
 
+            parser.furthestIgnoreMatch = null;
+            parser.furthestIgnoreMatchOffset = -1;
+            parser.furthestMatch = null;
             parser.furthestMatchOffset = -1;
 
             match = rule.match(text, 0, options);
 
             if (errorHandler && (match === null || match.textLength < text.length)) {
-                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, match, parser.furthestMatchOffset));
+                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, parser.furthestMatch, parser.furthestMatchOffset, parser.furthestIgnoreMatch, parser.furthestIgnoreMatchOffset));
             }
 
             return match !== null ? match.components : null;

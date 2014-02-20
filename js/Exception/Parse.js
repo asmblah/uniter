@@ -17,21 +17,35 @@ define([
 ) {
     'use strict';
 
-    function ParseException(message, text, match, furthestMatchOffset) {
+    function ParseException(message, text, furthestMatch, furthestMatchOffset, furthestIgnoreMatch, furthestIgnoreMatchOffset) {
         Exception.call(this, message);
 
+        this.furthestIgnoreMatch = furthestIgnoreMatch;
+        this.furthestIgnoreMatchOffset = furthestIgnoreMatchOffset;
+        this.furthestMatch = furthestMatch;
         this.furthestMatchOffset = furthestMatchOffset;
-        this.match = match;
         this.text = text;
     }
 
     util.inherit(ParseException).from(Exception);
 
     util.extend(ParseException.prototype, {
+        getFurthestMatch: function () {
+            return this.furthestMatch;
+        },
+
         getLineNumber: function () {
             var exception = this;
 
             return util.getLineNumber(exception.text, exception.furthestMatchOffset);
+        },
+
+        getText: function () {
+            return this.text;
+        },
+
+        unexpectedEndOfInput: function () {
+            return Math.max(this.furthestMatchOffset, this.furthestIgnoreMatchOffset) === this.text.length - 1;
         }
     });
 

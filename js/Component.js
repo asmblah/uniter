@@ -44,7 +44,11 @@ define([
                 return null;
             }
 
-            component.parser.logFurthestMatchOffset(offset + subMatch.textOffset);
+            if (options.ignoreWhitespace !== false) {
+                component.parser.logFurthestMatch(subMatch, offset + subMatch.textOffset);
+            } else {
+                component.parser.logFurthestIgnoreMatch(subMatch, offset + subMatch.textOffset);
+            }
 
             if (component.name !== null || component.args.allowMerge === false || component.args.captureOffsetAs) {
                 // Component is named: don't attempt to merge an array in

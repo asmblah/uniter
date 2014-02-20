@@ -43,6 +43,28 @@ define([
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 1$/
                 }
+            },
+            'function call missing end semicolon and followed by whitespace': {
+                code: '<?php open() ',
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 1$/
+                }
+            },
+            'concatenation expression with superfluous dot preceded by whitespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    print 'hello and ';
+
+    print 'welcome to ' .
+          .'my website!';
+
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected '.' in \(program\) on line 4$/
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

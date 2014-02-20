@@ -25,9 +25,11 @@ define([
     util.extend(ErrorHandler.prototype, {
         handle: function (parseException) {
             var handler = this,
-                error = new PHPParseError(PHPParseError.SYNTAX_UNEXPECTED_END, {
+                furthestMatch = parseException.getFurthestMatch(),
+                error = new PHPParseError(PHPParseError.SYNTAX_UNEXPECTED, {
                     'file': handler.state.getPath(),
-                    'line': parseException.getLineNumber()
+                    'line': parseException.getLineNumber(),
+                    'what': parseException.unexpectedEndOfInput() ? '$end' : '\'' + furthestMatch.components + '\''
                 });
 
             if (handler.state.isMainProgram()) {
