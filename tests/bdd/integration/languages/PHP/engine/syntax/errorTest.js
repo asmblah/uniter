@@ -45,9 +45,9 @@ EOS
 */) {}),
                 expectedException: {
                     instanceOf: PHPParseError,
-                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\)$/
+                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 2$/
                 },
-                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in (program)',
+                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in (program) on line 2',
                 expectedStdout: ''
             },
             'function call missing end semicolon in required module': {
@@ -63,9 +63,9 @@ EOS
                 },
                 expectedException: {
                     instanceOf: PHPParseError,
-                    match: /^PHP Parse error: syntax error, unexpected \$end in syntax_error\.php$/
+                    match: /^PHP Parse error: syntax error, unexpected \$end in syntax_error\.php on line 1$/
                 },
-                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in syntax_error.php',
+                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in syntax_error.php on line 1',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

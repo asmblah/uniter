@@ -23,10 +23,11 @@ define([
     }
 
     util.extend(ErrorHandler.prototype, {
-        handle: function () {
+        handle: function (parseException) {
             var handler = this,
                 error = new PHPParseError(PHPParseError.SYNTAX_UNEXPECTED_END, {
-                    'file': handler.state.getPath()
+                    'file': handler.state.getPath(),
+                    'line': parseException.getLineNumber()
                 });
 
             if (handler.state.isMainProgram()) {

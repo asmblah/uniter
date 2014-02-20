@@ -17,9 +17,10 @@ define([
 ) {
     'use strict';
 
-    function ParseException(message, text, match) {
+    function ParseException(message, text, match, furthestMatchOffset) {
         Exception.call(this, message);
 
+        this.furthestMatchOffset = furthestMatchOffset;
         this.match = match;
         this.text = text;
     }
@@ -27,7 +28,11 @@ define([
     util.inherit(ParseException).from(Exception);
 
     util.extend(ParseException.prototype, {
+        getLineNumber: function () {
+            var exception = this;
 
+            return util.getLineNumber(exception.text, exception.furthestMatchOffset);
+        }
     });
 
     return ParseException;

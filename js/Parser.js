@@ -27,6 +27,7 @@ define([
 
     function Parser(grammarSpec, stderr) {
         this.errorHandler = null;
+        this.furthestMatchOffset = -1;
         this.grammarSpec = grammarSpec;
         this.matchCaches = [];
         this.state = null;
@@ -251,7 +252,7 @@ define([
 
             // Special BeginningOfFile rule
             rules['<BOF>'] = new Rule('<BOF>', null, null);
-            rules['<BOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
+            rules['<BOF>'].setComponent(new Component(parser, createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
                 return offset === 0 ? {
                     components: '',
                     textLength: 0,
@@ -261,7 +262,7 @@ define([
 
             // Special EndOfFile rule
             rules['<EOF>'] = new Rule('<EOF>', null, null);
-            rules['<EOF>'].setComponent(new Component(createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
+            rules['<EOF>'].setComponent(new Component(parser, createMatchCache(), 'what', qualifiers.what, function (text, offset, textOffset) {
                 return offset + textOffset === text.length ? {
                     components: '',
                     textLength: 0,
@@ -365,7 +366,7 @@ define([
                         throw new Exception('Parser :: Invalid component - qualifier name "' + qualifierName + '" is invalid');
                     }
 
-                    return new Component(createMatchCache(), qualifierName, qualifiers[qualifierName], arg, args, name);
+                    return new Component(parser, createMatchCache(), qualifierName, qualifiers[qualifierName], arg, args, name);
                 }
 
                 rules[name].setComponent(createComponent(ruleSpec.components || ruleSpec));
@@ -397,6 +398,14 @@ define([
             return parser.state;
         },
 
+        logFurthestMatchOffset: function (offset) {
+            var parser = this;
+
+            if (offset > parser.furthestMatchOffset) {
+                parser.furthestMatchOffset = offset;
+            }
+        },
+
         parse: function (text, options) {
             var parser = this,
                 errorHandler = parser.getErrorHandler(),
@@ -409,10 +418,12 @@ define([
                 });
             });
 
+            parser.furthestMatchOffset = -1;
+
             match = rule.match(text, 0, options);
 
             if (errorHandler && (match === null || match.textLength < text.length)) {
-                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, match));
+                errorHandler.handle(new ParseException('Parser.parse() :: Unexpected ' + (match ? '"' + text.charAt(match.textLength) + '"' : '$end'), text, match, parser.furthestMatchOffset));
             }
 
             return match !== null ? match.components : null;

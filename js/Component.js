@@ -17,11 +17,12 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Component(matchCache, qualifierName, qualifier, arg, args, name) {
+    function Component(parser, matchCache, qualifierName, qualifier, arg, args, name) {
         this.arg = arg;
         this.args = args;
         this.matchCache = matchCache;
         this.name = name;
+        this.parser = parser;
         this.qualifier = qualifier;
         this.qualifierName = qualifierName;
     }
@@ -42,6 +43,8 @@ define([
                 component.matchCache[offset] = null;
                 return null;
             }
+
+            component.parser.logFurthestMatchOffset(offset + subMatch.textOffset);
 
             if (component.name !== null || component.args.allowMerge === false || component.args.captureOffsetAs) {
                 // Component is named: don't attempt to merge an array in
