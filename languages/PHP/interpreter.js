@@ -116,6 +116,9 @@ define([
                 createNamespaceScope: function (namespace) {
                     return new NamespaceScope(globalNamespace, namespace);
                 },
+                getPath: function () {
+                    return valueFactory.createString(state.getPath());
+                },
                 implyArray: function (variable) {
                     // Undefined variables and variables containing null may be implicitly converted to arrays
                     if (!variable.isDefined() || variable.getValue().getType() === 'null') {
@@ -149,7 +152,7 @@ define([
                     promise.done(function (contents) {
                         done = true;
 
-                        engine.execute(contents).done(function (resultNative) {
+                        engine.execute(contents, path).done(function (resultNative) {
                             // TODO: This is inefficient, we should just have access to the Value object
                             result = valueFactory.coerce(resultNative);
                         }).fail(function (exception) {
@@ -646,6 +649,9 @@ define([
                 });
 
                 return 'tools.createList([' + elementsCodes.join(',') + '])';
+            },
+            'N_MAGIC_FILE_CONSTANT': function () {
+                return 'tools.getPath()';
             },
             'N_MAGIC_LINE_CONSTANT': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.offset.line + ')';

@@ -29,10 +29,12 @@ define([
             this.interpreter.configure(options);
         },
 
-        execute: function (code) {
+        execute: function (code, path) {
             var ast,
                 engine = this,
                 promise = new Promise();
+
+            engine.interpreter.getState().setPath(arguments.length > 0 ? path : null);
 
             try {
                 ast = engine.parser.parse(code);

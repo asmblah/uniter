@@ -34,6 +34,7 @@ define([
         this.globalNamespace = new Namespace(callStack, valueFactory, null, '');
         this.globalScope = new Scope(callStack, valueFactory, null);
         this.options = options;
+        this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
         this.valueFactory = valueFactory;
@@ -60,12 +61,20 @@ define([
             return this.options;
         },
 
+        getPath: function () {
+            return this.path;
+        },
+
         getReferenceFactory: function () {
             return this.referenceFactory;
         },
 
         getValueFactory: function () {
             return this.valueFactory;
+        },
+
+        setPath: function (path) {
+            this.path = path || '(program)';
         }
     });
 
