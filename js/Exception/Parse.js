@@ -43,7 +43,7 @@ define([
         getLineNumber: function () {
             var exception = this;
 
-            return util.getLineNumber(exception.text, exception.furthestMatchOffset);
+            return util.getLineNumber(exception.text, exception.getFurthestMatchEnd());
         },
 
         getText: function () {

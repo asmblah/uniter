@@ -63,7 +63,7 @@ EOS
 */) {}),
                 expectedException: {
                     instanceOf: PHPParseError,
-                    match: /^PHP Parse error: syntax error, unexpected '.' in \(program\) on line 4$/
+                    match: /^PHP Parse error: syntax error, unexpected '.' in \(program\) on line 5$/
                 }
             },
             'concatenation with invalid comma before dot operator and followed by whitespace': {
@@ -78,6 +78,20 @@ EOS
                 expectedException: {
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected ',' in \(program\) on line 1$/
+                }
+            },
+            // Ensure the invalid token's line is referred to, not the last valid token's line
+            'concatenation with invalid comma after dot operator preceded by newlines': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    print 'hello and ' .
+
+    ,
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected ',' in \(program\) on line 4$/
                 }
             }
         }, function (scenario, description) {
