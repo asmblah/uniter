@@ -23,7 +23,13 @@ define([
      * Elimination of left-recursion: http://web.cs.wpi.edu/~kal/PLT/PLT4.1.2.html
      */
 
-    var stringEscapeReplacements = [{
+    var uppercaseReplacements = [{
+            pattern: /.*/g,
+            replacement: function (all) {
+                return all.toUpperCase();
+            }
+        }],
+        stringEscapeReplacements = [{
             pattern: /\\([\$efnrtv\\"])/g,
             replacement: function (all, chr) {
                 return {
@@ -488,6 +494,9 @@ define([
             'N_LIST': {
                 components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]
             },
+            'N_MAGIC_CONSTANT': {
+                components: {name: 'constant', what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
+            },
             'N_MEMBER': {
                 components: {oneOf: ['N_STRING', 'N_VARIABLE', [(/\{/), 'N_EXPRESSION', (/\}/)]]}
             },
@@ -556,7 +565,7 @@ define([
                 components: ['T_SWITCH', (/\(/), {name: 'expression', what: 'N_EXPRESSION'}, (/\)/), (/\{/), {name: 'cases', zeroOrMoreOf: {oneOf: ['N_CASE', 'N_DEFAULT_CASE']}}, (/\}/)]
             },
             'N_TERM': {
-                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_STRING']}
+                components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_MAGIC_CONSTANT', 'N_STRING']}
             },
             'N_USE_STATEMENT': {
                 components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]

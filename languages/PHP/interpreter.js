@@ -647,6 +647,9 @@ define([
 
                 return 'tools.createList([' + elementsCodes.join(',') + '])';
             },
+            'N_MAGIC_CONSTANT': function (node) {
+                return 'tools.valueFactory.createInteger(' + node.offset.line + ')';
+            },
             'N_METHOD_CALL': function (node, interpret) {
                 var code = '';
 
