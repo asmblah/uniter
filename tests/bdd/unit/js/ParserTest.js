@@ -394,6 +394,46 @@ define([
                 });
             });
 
+            describe('"allowMerge" arg', function () {
+                var parser;
+
+                util.each({
+                    'when "what" arg is a rule reference': {
+                        grammarSpec: {
+                            ignore: 'whitespace',
+                            rules: {
+                                'add_operator': {
+                                    components: {what: /\+/, allowMerge: false}
+                                },
+                                'number': /\d(?:\.\d+)?/,
+                                'whitespace': /\s+/,
+                                'expression': {
+                                    components: [{name: 'left', what: 'number'}, {name: 'operator', what: 'add_operator'}, {name: 'right', what: 'number'}]
+                                }
+                            },
+                            start: 'expression'
+                        },
+                        text: '1 + 2',
+                        expectedAST: {
+                            name: 'expression',
+                            left: '1',
+                            operator: {name: 'add_operator'},
+                            right: '2'
+                        }
+                    }
+                }, function (scenario, description) {
+                    describe(description, function () {
+                        beforeEach(function () {
+                            parser = new Parser(scenario.grammarSpec);
+                        });
+
+                        it('should return the correct AST when the text is "' + scenario.text + '"', function () {
+                            expect(parser.parse(scenario.text)).to.deep.equal(scenario.expectedAST);
+                        });
+                    });
+                });
+            });
+
             describe('"captureOffsetAs" arg', function () {
                 var parser;
 
@@ -417,6 +457,30 @@ define([
                             left: '1',
                             operator: '+',
                             right: '2',
+                            capturedRightOffset: {
+                                offset: 6,
+                                line: 3
+                            }
+                        }
+                    },
+                    'when "what" arg text is not captured, only its offset': {
+                        grammarSpec: {
+                            ignore: 'whitespace',
+                            rules: {
+                                'operator': /\+/,
+                                'number': /\d(?:\.\d+)?/,
+                                'whitespace': /\s+/,
+                                'expression': {
+                                    components: [{name: 'left', what: 'number'}, {name: 'operator', what: 'operator'}, {what: 'number', captureOffsetAs: 'capturedRightOffset'}]
+                                }
+                            },
+                            start: 'expression'
+                        },
+                        text: '\n\n1 + 2',
+                        expectedAST: {
+                            name: 'expression',
+                            left: '1',
+                            operator: '+',
                             capturedRightOffset: {
                                 offset: 6,
                                 line: 3

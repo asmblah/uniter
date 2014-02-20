@@ -43,7 +43,7 @@ define([
                 return null;
             }
 
-            if (component.name !== null) {
+            if (component.name !== null || component.args.allowMerge === false || component.args.captureOffsetAs) {
                 // Component is named: don't attempt to merge an array in
                 match = {
                     components: {},
@@ -53,7 +53,9 @@ define([
                 if (subMatch.name) {
                     match.components.name = subMatch.name;
                 }
-                match.components[component.name] = subMatch.components;
+                if (component.name !== null) {
+                    match.components[component.name] = subMatch.components;
+                }
 
                 if (component.args.captureOffsetAs) {
                     (function (offset) {
