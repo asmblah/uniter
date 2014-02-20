@@ -54,6 +54,19 @@ define([
                     match.components.name = subMatch.name;
                 }
                 match.components[component.name] = subMatch.components;
+
+                if (component.args.captureOffsetAs) {
+                    (function (offset) {
+                        function getCount(string, substring) {
+                            return string.split(substring).length;
+                        }
+
+                        match.components[component.args.captureOffsetAs] = {
+                            line: getCount(text.substr(0, offset), '\n'),
+                            offset: offset
+                        };
+                    }(offset + match.textOffset));
+                }
             } else {
                 // Component is not named: merge its captures in if an array
                 if (util.isArray(subMatch.components)) {

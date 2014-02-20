@@ -394,6 +394,48 @@ define([
                 });
             });
 
+            describe('"captureOffsetAs" arg', function () {
+                var parser;
+
+                util.each({
+                    'when "what" arg is a rule reference and there are two earlier blank lines': {
+                        grammarSpec: {
+                            ignore: 'whitespace',
+                            rules: {
+                                'operator': /\+/,
+                                'number': /\d(?:\.\d+)?/,
+                                'whitespace': /\s+/,
+                                'expression': {
+                                    components: [{name: 'left', what: 'number'}, {name: 'operator', what: 'operator'}, {name: 'right', what: 'number', captureOffsetAs: 'capturedRightOffset'}]
+                                }
+                            },
+                            start: 'expression'
+                        },
+                        text: '\n\n1 + 2',
+                        expectedAST: {
+                            name: 'expression',
+                            left: '1',
+                            operator: '+',
+                            right: '2',
+                            capturedRightOffset: {
+                                offset: 6,
+                                line: 3
+                            }
+                        }
+                    }
+                }, function (scenario, description) {
+                    describe(description, function () {
+                        beforeEach(function () {
+                            parser = new Parser(scenario.grammarSpec);
+                        });
+
+                        it('should return the correct AST when the text is "' + scenario.text + '"', function () {
+                            expect(parser.parse(scenario.text)).to.deep.equal(scenario.expectedAST);
+                        });
+                    });
+                });
+            });
+
             describe('when using grammar spec #1', function () {
                 var grammarSpec,
                     parser;
