@@ -24,6 +24,7 @@ Features
     - Basic `class` object support using the `new` operator
     - `use` statement for `class`, `namespace` and `function` importing and aliasing
     - Magic `__autoload(...)` function
+    - Magic `__DIR__`, `__FILE__` and `__LINE__` constants
     - Ternary operator
     - Loose equality `==` and inequality `!=` comparison operators
 
