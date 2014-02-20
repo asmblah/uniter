@@ -119,6 +119,9 @@ define([
                 getPath: function () {
                     return valueFactory.createString(state.getPath());
                 },
+                getPathDirectory: function () {
+                    return valueFactory.createString(state.getPath().replace(/\/[^\/]+$/, ''));
+                },
                 implyArray: function (variable) {
                     // Undefined variables and variables containing null may be implicitly converted to arrays
                     if (!variable.isDefined() || variable.getValue().getType() === 'null') {
@@ -649,6 +652,9 @@ define([
                 });
 
                 return 'tools.createList([' + elementsCodes.join(',') + '])';
+            },
+            'N_MAGIC_DIR_CONSTANT': function () {
+                return 'tools.getPathDirectory()';
             },
             'N_MAGIC_FILE_CONSTANT': function () {
                 return 'tools.getPath()';

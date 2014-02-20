@@ -76,6 +76,7 @@ define({
             'bdd/integration/languages/PHP/engine/constructs/namespaceTest',
             'bdd/integration/languages/PHP/engine/constructs/singleQuotedStringTest',
             'bdd/integration/languages/PHP/engine/constructs/stringInterpolationTest',
+            'bdd/integration/languages/PHP/engine/expressions/magicConstant/dirTest',
             'bdd/integration/languages/PHP/engine/expressions/magicConstant/fileTest',
             'bdd/integration/languages/PHP/engine/expressions/magicConstant/lineTest',
             'bdd/integration/languages/PHP/engine/expressions/arrayLiteralTest',
