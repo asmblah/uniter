@@ -17,15 +17,21 @@ define([
 ) {
     'use strict';
 
-    function ErrorHandler(stderr) {
+    function ErrorHandler(stderr, state) {
+        this.state = state;
         this.stderr = stderr;
     }
 
     util.extend(ErrorHandler.prototype, {
         handle: function () {
-            var error = new PHPParseError(PHPParseError.SYNTAX_UNEXPECTED_END);
+            var handler = this,
+                error = new PHPParseError(PHPParseError.SYNTAX_UNEXPECTED_END, {
+                    'file': handler.state.getPath()
+                });
 
-            this.stderr.write(error.message);
+            if (handler.state.isMainProgram()) {
+                handler.stderr.write(error.message);
+            }
 
             throw error;
         }

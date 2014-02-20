@@ -34,7 +34,10 @@ define([
                 engine = this,
                 promise = new Promise();
 
-            engine.interpreter.getState().setPath(arguments.length > 0 ? path : null);
+            path = arguments.length > 1 ? path : null;
+
+            engine.parser.getState().setPath(path);
+            engine.interpreter.getState().setPath(path);
 
             try {
                 ast = engine.parser.parse(code);

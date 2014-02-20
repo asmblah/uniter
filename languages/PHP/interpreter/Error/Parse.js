@@ -18,7 +18,7 @@ define([
     'use strict';
 
     var MESSAGE_PREFIXES = {
-            1: 'syntax error, unexpected $end'
+            1: 'syntax error, unexpected $end in ${file}'
         };
 
     function PHPParseError(code, variables) {

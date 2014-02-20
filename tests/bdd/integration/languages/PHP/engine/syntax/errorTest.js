@@ -45,9 +45,27 @@ EOS
 */) {}),
                 expectedException: {
                     instanceOf: PHPParseError,
-                    match: /^PHP Parse error: syntax error, unexpected \$end$/
+                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\)$/
                 },
-                expectedStderr: 'PHP Parse error: syntax error, unexpected $end',
+                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in (program)',
+                expectedStdout: ''
+            },
+            'function call missing end semicolon in required module': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    require_once 'syntax_error.php';
+EOS
+*/) {}),
+                options: {
+                    'include': function (path, promise) {
+                        promise.resolve('<?php open()');
+                    }
+                },
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected \$end in syntax_error\.php$/
+                },
+                expectedStderr: 'PHP Parse error: syntax error, unexpected $end in syntax_error.php',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

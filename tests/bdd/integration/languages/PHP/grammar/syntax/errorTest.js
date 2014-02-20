@@ -41,7 +41,7 @@ define([
                 code: '<?php open()',
                 expectedException: {
                     instanceOf: PHPParseError,
-                    match: /^PHP Parse error: syntax error, unexpected \$end$/
+                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\)$/
                 }
             }
         }, function (scenario, description) {

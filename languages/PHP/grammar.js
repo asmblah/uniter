@@ -13,9 +13,11 @@
 
 /*global define */
 define([
-    './grammar/ErrorHandler'
+    './grammar/ErrorHandler',
+    './grammar/State'
 ], function (
-    PHPErrorHandler
+    PHPErrorHandler,
+    PHPGrammarState
 ) {
     'use strict';
 
@@ -48,6 +50,7 @@ define([
 
     return {
         ErrorHandler: PHPErrorHandler,
+        State: PHPGrammarState,
         ignore: 'N_IGNORE',
         rules: {
             'T_ABSTRACT': /abstract\b/i,

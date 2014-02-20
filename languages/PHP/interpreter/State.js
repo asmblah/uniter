@@ -9,6 +9,7 @@
 
 /*global define */
 define([
+    '../util',
     'js/util',
     './CallStack',
     './Namespace',
@@ -16,6 +17,7 @@ define([
     './Scope',
     './ValueFactory'
 ], function (
+    phpUtil,
     util,
     CallStack,
     Namespace,
@@ -62,7 +64,7 @@ define([
         },
 
         getPath: function () {
-            return this.path;
+            return phpUtil.normalizeModulePath(this.path);
         },
 
         getReferenceFactory: function () {
@@ -73,8 +75,12 @@ define([
             return this.valueFactory;
         },
 
+        isMainProgram: function () {
+            return this.path === null;
+        },
+
         setPath: function (path) {
-            this.path = path || '(program)';
+            this.path = path;
         }
     });
 

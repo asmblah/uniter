@@ -29,6 +29,7 @@ define([
         this.errorHandler = null;
         this.grammarSpec = grammarSpec;
         this.matchCaches = [];
+        this.state = null;
         this.stderr = stderr;
 
         (function (parser) {
@@ -380,10 +381,20 @@ define([
             var parser = this;
 
             if (!parser.errorHandler && parser.grammarSpec.ErrorHandler) {
-                parser.errorHandler = new parser.grammarSpec.ErrorHandler(parser.stderr);
+                parser.errorHandler = new parser.grammarSpec.ErrorHandler(parser.stderr, parser.getState());
             }
 
             return parser.errorHandler;
+        },
+
+        getState: function () {
+            var parser = this;
+
+            if (!parser.state && parser.grammarSpec.State) {
+                parser.state = new parser.grammarSpec.State();
+            }
+
+            return parser.state;
         },
 
         parse: function (text, options) {

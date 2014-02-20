@@ -217,7 +217,9 @@ define([
             );
         } catch (exception) {
             if (exception instanceof PHPError) {
-                stderr.write(exception.message);
+                if (context.mainProgram) {
+                    stderr.write(exception.message);
+                }
 
                 return promise.reject(exception);
             }
@@ -735,6 +737,7 @@ define([
                 var body = '',
                     context = {
                         labelRepository: new LabelRepository(),
+                        mainProgram: state.isMainProgram(),
                         path: state.getPath()
                     },
                     labels;
