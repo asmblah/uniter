@@ -113,6 +113,7 @@ define({
             'bdd/integration/languages/PHP/grammar/constructs/namespaceTest',
             'bdd/integration/languages/PHP/grammar/constructs/singleQuotedStringTest',
             'bdd/integration/languages/PHP/grammar/constructs/stringInterpolationTest',
+            'bdd/integration/languages/PHP/grammar/expressions/magicConstant/fileTest',
             'bdd/integration/languages/PHP/grammar/expressions/magicConstant/lineTest',
             'bdd/integration/languages/PHP/grammar/expressions/arrayLiteralTest',
             'bdd/integration/languages/PHP/grammar/expressions/closureTest',

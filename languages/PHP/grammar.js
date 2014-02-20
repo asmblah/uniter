@@ -495,7 +495,13 @@ define([
                 components: ['T_LIST', (/\(/), {name: 'elements', zeroOrMoreOf: {oneOf: [[{oneOf: ['N_VARIABLE', 'N_ARRAY_INDEX']}, {what: (/(,|(?=\)))()/), captureIndex: 2}], 'N_VOID']}}, (/\)/)]
             },
             'N_MAGIC_CONSTANT': {
-                components: {name: 'constant', what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
+                components: {oneOf: ['N_MAGIC_FILE_CONSTANT', 'N_MAGIC_LINE_CONSTANT']}
+            },
+            'N_MAGIC_FILE_CONSTANT': {
+                components: {what: 'T_FILE', replace: uppercaseReplacements, allowMerge: false}
+            },
+            'N_MAGIC_LINE_CONSTANT': {
+                components: {what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
             },
             'N_MEMBER': {
                 components: {oneOf: ['N_STRING', 'N_VARIABLE', [(/\{/), 'N_EXPRESSION', (/\}/)]]}

@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar __LINE__ magic constant expression integration', function () {
+    describe('PHP Parser grammar __FILE__ magic constant expression integration', function () {
         var parser;
 
         beforeEach(function () {
@@ -25,40 +25,32 @@ define([
         });
 
         util.each({
-            'simple echo of current line using correct case': {
-                code: 'echo __LINE__;',
+            'simple echo of current file using correct case': {
+                code: 'echo __FILE__;',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ECHO_STATEMENT',
                         expression: {
-                            name: 'N_MAGIC_LINE_CONSTANT',
-                            offset: {
-                                line: 1,
-                                offset: 11
-                            }
+                            name: 'N_MAGIC_FILE_CONSTANT'
                         }
                     }]
                 }
             },
-            'simple echo of current line using weird case': {
-                code: 'echo __LinE__;',
+            'simple echo of current file using weird case': {
+                code: 'echo __FilE__;',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_ECHO_STATEMENT',
                         expression: {
-                            name: 'N_MAGIC_LINE_CONSTANT',
-                            offset: {
-                                line: 1,
-                                offset: 11
-                            }
+                            name: 'N_MAGIC_FILE_CONSTANT'
                         }
                     }]
                 }
             },
-            'assignment of current line to variable using correct case': {
-                code: '$line = __LINE__;',
+            'assignment of current file to variable using correct case': {
+                code: '$file = __FILE__;',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -67,16 +59,12 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: 'line'
+                                variable: 'file'
                             },
                             right: [{
                                 operator: '=',
                                 operand: {
-                                    name: 'N_MAGIC_LINE_CONSTANT',
-                                    offset: {
-                                        line: 1,
-                                        offset: 14
-                                    }
+                                    name: 'N_MAGIC_FILE_CONSTANT'
                                 }
                             }]
                         }
