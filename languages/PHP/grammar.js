@@ -228,7 +228,7 @@ define([
                 components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_STATIC_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
             },
             'N_CLOSURE': {
                 components: ['T_FUNCTION', (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {oneOf: [['T_USE', (/\(/), {name: 'bindings', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)], {name: 'bindings', zeroOrMoreOf: {what: (/(?!)/)}}]}, {name: 'body', what: 'N_STATEMENT'}]
@@ -543,6 +543,16 @@ define([
             'N_REQUIRE_ONCE_EXPRESSION': {
                 components: ['T_REQUIRE_ONCE', {name: 'path', what: 'N_EXPRESSION'}]
             },
+            'N_STATIC_PROPERTY_DEFINITION': {
+                components: [
+                    {oneOf: [
+                        [{name: 'visibility', rule: 'N_VISIBILITY'}, 'T_STATIC'],
+                        ['T_STATIC', {name: 'visibility', rule: 'N_VISIBILITY'}],
+                        'T_STATIC'
+                    ]},
+                    {name: 'variable', what: 'N_VARIABLE'}, {optionally: [(/=/), {name: 'value', what: 'N_TERM'}]}, (/;/)
+                ]
+            },
             'N_STRING': {
                 components: {name: 'string', what: 'T_STRING'}
             },
@@ -590,6 +600,9 @@ define([
                         {name: 'variable', what: (/\$\{([a-z0-9_]+)\}/i), captureIndex: 1}
                     ]}
                 ]
+            },
+            'N_VISIBILITY': {
+                oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']
             },
             'N_VOID': {
                 components: {name: 'value', what: (/,()/), captureIndex: 1}

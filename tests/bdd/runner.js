@@ -130,6 +130,7 @@ define({
             'bdd/integration/languages/PHP/grammar/operators/newTest',
             'bdd/integration/languages/PHP/grammar/operators/objectAccessTest',
             'bdd/integration/languages/PHP/grammar/statements/class/extendsTest',
+            'bdd/integration/languages/PHP/grammar/statements/class/staticPropertyTest',
             'bdd/integration/languages/PHP/grammar/statements/classTest',
             'bdd/integration/languages/PHP/grammar/statements/doWhileTest',
             'bdd/integration/languages/PHP/grammar/statements/foreachTest',
