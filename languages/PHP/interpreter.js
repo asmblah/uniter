@@ -413,7 +413,7 @@ define([
                 util.each(node.members, function (member) {
                     var data = interpret(member);
 
-                    if (member.name === 'N_PROPERTY_DEFINITION') {
+                    if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
@@ -622,6 +622,12 @@ define([
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';
             },
+            'N_INSTANCE_PROPERTY_DEFINITION': function (node, interpret) {
+                return {
+                    name: node.variable.variable,
+                    value: node.value ? interpret(node.value) : 'null'
+                };
+            },
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
             },
@@ -759,12 +765,6 @@ define([
                 }
 
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
-            },
-            'N_PROPERTY_DEFINITION': function (node, interpret) {
-                return {
-                    name: node.variable.variable,
-                    value: node.value ? interpret(node.value) : 'null'
-                };
             },
             'N_REQUIRE_ONCE_EXPRESSION': function (node, interpret) {
                 return 'tools.requireOnce(' + interpret(node.path) + '.getNative())';

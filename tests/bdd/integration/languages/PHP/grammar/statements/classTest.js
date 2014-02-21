@@ -56,9 +56,8 @@ EOS
                             string: 'OnePub'
                         },
                         members: [{
-                            name: 'N_PROPERTY_DEFINITION',
+                            name: 'N_INSTANCE_PROPERTY_DEFINITION',
                             visibility: 'public',
-                            type: '',
                             variable: {
                                 name: 'N_VARIABLE',
                                 variable: 'aPublicProp'
