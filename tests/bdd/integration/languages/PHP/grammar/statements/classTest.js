@@ -39,7 +39,34 @@ define([
                     }]
                 }
             },
-            'class with one public instance property': {
+            'class with one public instance property with no value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class OnePub {
+        public $aPublicProp;
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'OnePub'
+                        },
+                        members: [{
+                            name: 'N_INSTANCE_PROPERTY_DEFINITION',
+                            visibility: 'public',
+                            variable: {
+                                name: 'N_VARIABLE',
+                                variable: 'aPublicProp'
+                            }
+                        }]
+                    }]
+                }
+            },
+            'class with one public instance property with string value': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class OnePub {
