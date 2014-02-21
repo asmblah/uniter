@@ -327,7 +327,7 @@ define([
             },
             'N_EXPRESSION_LEVEL_2_B': {
                 captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_MEMBER'}]}],
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_INSTANCE_MEMBER'}]}],
                 ifNoMatch: {component: 'properties', capture: 'object'}
             },
             // Second occurrence of N_ARRAY_INDEX (see above)
@@ -336,18 +336,30 @@ define([
                 components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
+            'N_EXPRESSION_LEVEL_2_D': {
+                captureAs: 'N_STATIC_PROPERTY',
+                components: {oneOf: [
+                    [
+                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_C']},
+                        'T_DOUBLE_COLON',
+                        {name: 'property', what: 'N_STATIC_MEMBER'}
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_C'}
+                ]},
+                ifNoMatch: {component: 'property', capture: 'next'}
+            },
             'N_EXPRESSION_LEVEL_3': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_C']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_D']
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_C'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_D'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_C'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_D'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },
@@ -477,6 +489,9 @@ define([
                 components: {oneOrMoreOf: {oneOf: ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT']}}
             },
             'N_INLINE_HTML_STATEMENT': [{oneOf: ['T_CLOSE_TAG', '<BOF>']}, {name: 'html', what: 'T_INLINE_HTML'}, {oneOf: ['T_OPEN_TAG', '<EOF>']}],
+            'N_INSTANCE_MEMBER': {
+                components: {oneOf: ['N_STRING', 'N_VARIABLE', [(/\{/), 'N_EXPRESSION', (/\}/)]]}
+            },
             'N_INSTANCE_PROPERTY_DEFINITION': {
                 components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'variable', what: 'N_VARIABLE'}, {optionally: [(/=/), {name: 'value', what: 'N_TERM'}]}, (/;/)]
             },
@@ -512,9 +527,6 @@ define([
             'N_MAGIC_LINE_CONSTANT': {
                 components: {what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
             },
-            'N_MEMBER': {
-                components: {oneOf: ['N_STRING', 'N_VARIABLE', [(/\{/), 'N_EXPRESSION', (/\}/)]]}
-            },
             'N_METHOD_DEFINITION': {
                 components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
@@ -542,6 +554,18 @@ define([
             },
             'N_REQUIRE_ONCE_EXPRESSION': {
                 components: ['T_REQUIRE_ONCE', {name: 'path', what: 'N_EXPRESSION'}]
+            },
+            'N_STATIC_MEMBER': {
+                components: {oneOf: ['N_VARIABLE', 'N_STATIC_VARIABLE_EXPRESSION']}
+            },
+            'N_STATIC_VARIABLE_EXPRESSION': {
+                captureAs: 'N_VARIABLE_EXPRESSION',
+                components: [
+                    {oneOf: [
+                        {name: 'expression', what: [(/\$/), 'N_VARIABLE']},
+                        {name: 'expression', what: [(/\$\{/), 'N_EXPRESSION', (/\}/)]}
+                    ]}
+                ]
             },
             'N_STATIC_PROPERTY_DEFINITION': {
                 components: [
