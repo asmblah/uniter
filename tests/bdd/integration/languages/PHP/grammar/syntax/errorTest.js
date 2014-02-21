@@ -44,6 +44,13 @@ define([
                     match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 1$/
                 }
             },
+            'echo missing argument or end semicolon': {
+                code: '<?php echo',
+                expectedException: {
+                    instanceOf: PHPParseError,
+                    match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 1$/
+                }
+            },
             'function call missing end semicolon and followed by whitespace': {
                 code: '<?php open() ',
                 expectedException: {

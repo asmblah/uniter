@@ -53,7 +53,7 @@ define([
         unexpectedEndOfInput: function () {
             var exception = this;
 
-            return Math.max(exception.furthestMatchOffset, exception.furthestIgnoreMatchOffset) === exception.text.length - 1;
+            return exception.getFurthestMatchEnd() === exception.text.length;
         }
     });
 
