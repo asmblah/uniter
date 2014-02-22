@@ -134,6 +134,7 @@ define({
             'bdd/integration/languages/PHP/grammar/operators/scopeResolution/staticMethodTest',
             'bdd/integration/languages/PHP/grammar/operators/scopeResolution/staticPropertyTest',
             'bdd/integration/languages/PHP/grammar/statements/class/extendsTest',
+            'bdd/integration/languages/PHP/grammar/statements/class/staticMethodTest',
             'bdd/integration/languages/PHP/grammar/statements/class/staticPropertyTest',
             'bdd/integration/languages/PHP/grammar/statements/classTest',
             'bdd/integration/languages/PHP/grammar/statements/doWhileTest',

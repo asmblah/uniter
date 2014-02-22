@@ -228,7 +228,7 @@ define([
                 components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_STATIC_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION']}}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', what: 'N_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_STATIC_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION', 'N_STATIC_METHOD_DEFINITION']}}, (/\}/)]
             },
             'N_CLOSURE': {
                 components: ['T_FUNCTION', (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {oneOf: [['T_USE', (/\(/), {name: 'bindings', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)], {name: 'bindings', zeroOrMoreOf: {what: (/(?!)/)}}]}, {name: 'body', what: 'N_STATEMENT'}]
@@ -543,7 +543,7 @@ define([
                 components: {what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
             },
             'N_METHOD_DEFINITION': {
-                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, {name: 'type', optionally: 'T_STATIC'}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
+                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
             'N_NAMESPACE': {
                 components: [{optionally: 'T_STRING'}, {oneOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
@@ -572,6 +572,21 @@ define([
             },
             'N_STATIC_MEMBER': {
                 components: {oneOf: ['N_STATIC_VARIABLE', 'N_STATIC_VARIABLE_EXPRESSION']}
+            },
+            'N_STATIC_METHOD_DEFINITION': {
+                components: [
+                    {oneOf: [
+                        [{name: 'visibility', rule: 'N_VISIBILITY'}, 'T_STATIC'],
+                        ['T_STATIC', {name: 'visibility', rule: 'N_VISIBILITY'}],
+                        'T_STATIC'
+                    ]},
+                    'T_FUNCTION',
+                    {name: 'method', what: 'T_STRING'},
+                    (/\(/),
+                    {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                    (/\)/),
+                    {name: 'body', what: 'N_STATEMENT'}
+                ]
             },
             'N_STATIC_VARIABLE': {
                 captureAs: 'N_STRING',

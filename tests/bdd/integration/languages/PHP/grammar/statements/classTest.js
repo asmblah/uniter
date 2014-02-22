@@ -118,7 +118,6 @@ EOS
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             visibility: 'public',
-                            type: '',
                             func: 'printIt',
                             args: [{
                                 name: 'N_VARIABLE',
@@ -157,7 +156,6 @@ EOS
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             visibility: 'public',
-                            type: '',
                             func: 'printIt',
                             args: [{
                                 name: 'N_VARIABLE',
