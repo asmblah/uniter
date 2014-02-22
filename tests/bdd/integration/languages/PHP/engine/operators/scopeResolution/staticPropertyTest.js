@@ -52,6 +52,23 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'reading dynamically referenced static property\'s initial value from class referenced statically': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static $planet = 'Earth';
+    }
+
+    $propertyName = 'planet';
+
+    return Animal::$$propertyName;
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'attempting to read static property from array value': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

@@ -54,6 +54,25 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'calling dynamically referenced static method from class referenced statically': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static function getPlanet() {
+            return 'Earth';
+        }
+    }
+
+    $methodName = 'getPlanet';
+
+    return Animal::$methodName();
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'attempting to call static method from array value': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
