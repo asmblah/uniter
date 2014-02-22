@@ -162,6 +162,23 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'reading static property\'s initial value from class referenced via a string containing class name': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static $planet = 'Earth';
+    }
+
+    $myClassName = 'Animal';
+
+    return $myClassName::$planet;
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
