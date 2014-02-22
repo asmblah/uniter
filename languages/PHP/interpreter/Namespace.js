@@ -77,7 +77,8 @@ define([
                 namespace.getPrefix() + name,
                 constructorName,
                 InternalClass,
-                definition.staticProperties
+                definition.staticProperties,
+                definition.staticMethods
             );
         },
 

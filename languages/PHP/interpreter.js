@@ -402,6 +402,7 @@ define([
                 var code,
                     methodCodes = [],
                     propertyCodes = [],
+                    staticMethodCodes = [],
                     staticPropertyCodes = [],
                     superClass = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
@@ -414,10 +415,12 @@ define([
                         staticPropertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
+                    } else if (member.name === 'N_STATIC_METHOD_DEFINITION') {
+                        staticMethodCodes.push('"' + data.name + '": ' + data.body);
                     }
                 });
 
-                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
+                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, staticMethods: {' + staticMethodCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
@@ -770,6 +773,21 @@ define([
                 var expression = interpret(node.expression);
 
                 return 'return ' + (expression ? expression : 'tools.valueFactory.createNull()') + ';';
+            },
+            'N_STATIC_METHOD_CALL': function (node, interpret) {
+                var args = [];
+
+                util.each(node.args, function (arg) {
+                    args.push(interpret(arg));
+                });
+
+                return interpret(node.className) + '.callStaticMethod(' + interpret(node.method) + ', [' + args.join(', ') + '], namespaceScope)';
+            },
+            'N_STATIC_METHOD_DEFINITION': function (node, interpret) {
+                return {
+                    name: interpret(node.method),
+                    body: interpretFunction(node.args, null, node.body, interpret)
+                };
             },
             'N_STATIC_PROPERTY': function (node, interpret, context) {
                 var classVariableCode = interpret(node.className, {getValue: true}),

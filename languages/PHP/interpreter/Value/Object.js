@@ -49,6 +49,13 @@ define([
             return value.factory.coerce(object[name].apply(value, args));
         },
 
+        callStaticMethod: function (nameValue, args, namespaceScope) {
+            var value = this,
+                classObject = namespaceScope.getClass(value.className);
+
+            return classObject.callStaticMethod(nameValue.getNative(), args);
+        },
+
         clone: function () {
             throw new Error('Unimplemented');
         },

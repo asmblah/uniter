@@ -29,6 +29,10 @@ define([
     }
 
     util.extend(Value.prototype, {
+        callStaticMethod: function () {
+            throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
+        },
+
         concat: function (rightValue) {
             var leftValue = this;
 

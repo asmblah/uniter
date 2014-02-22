@@ -92,6 +92,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/functionCallTest',
             'bdd/integration/languages/PHP/engine/operators/newTest',
             'bdd/integration/languages/PHP/engine/operators/objectAccessTest',
+            'bdd/integration/languages/PHP/engine/operators/scopeResolution/staticMethodTest',
             'bdd/integration/languages/PHP/engine/operators/scopeResolution/staticPropertyTest',
             'bdd/integration/languages/PHP/engine/operators/ternaryTest',
             'bdd/integration/languages/PHP/engine/operators/updateTest',

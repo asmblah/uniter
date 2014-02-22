@@ -32,6 +32,13 @@ define([
             return namespaceScope.getFunction(this.value).apply(null, args);
         },
 
+        callStaticMethod: function (nameValue, args, namespaceScope) {
+            var value = this,
+                classObject = namespaceScope.getClass(value.value);
+
+            return classObject.callStaticMethod(nameValue.getNative(), args);
+        },
+
         coerceToBoolean: function () {
             return this.factory.createBoolean(this.value !== '' && this.value !== '0');
         },

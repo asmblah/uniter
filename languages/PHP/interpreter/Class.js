@@ -21,13 +21,14 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Class(valueFactory, name, constructorName, InternalClass, staticPropertiesData) {
+    function Class(valueFactory, name, constructorName, InternalClass, staticPropertiesData, staticMethods) {
         var classObject = this,
             staticProperties = {};
 
         this.constructorName = constructorName;
         this.InternalClass = InternalClass;
         this.name = name;
+        this.staticMethods = staticMethods;
         this.staticProperties = staticProperties;
         this.valueFactory = valueFactory;
 
@@ -37,6 +38,19 @@ define([
     }
 
     util.extend(Class.prototype, {
+        callStaticMethod: function (name, args) {
+            var classObject = this;
+
+            if (!hasOwn.call(classObject.staticMethods, name)) {
+                throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_METHOD, {
+                    className: classObject.name,
+                    methodName: name
+                });
+            }
+
+            return classObject.valueFactory.coerce(classObject.staticMethods[name].apply(null, args));
+        },
+
         getInternalClass: function () {
             return this.InternalClass;
         },
