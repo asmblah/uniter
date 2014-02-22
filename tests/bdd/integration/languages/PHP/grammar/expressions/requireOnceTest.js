@@ -40,6 +40,32 @@ define([
                         }
                     }]
                 }
+            },
+            'assigning result of require to variable': {
+                code: '$map = require_once "abc.php";',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'map'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_REQUIRE_ONCE_EXPRESSION',
+                                    path: {
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'abc.php'
+                                    }
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
