@@ -179,6 +179,21 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'attempting to read static property from string containing non-existent class name': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $myClassName = 'Person';
+
+    return $myClassName::$planet;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'Person' not found$/
+                },
+                expectedStderr: 'PHP Fatal error: Class \'Person\' not found',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
