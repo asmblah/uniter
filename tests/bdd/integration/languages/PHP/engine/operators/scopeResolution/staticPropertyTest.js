@@ -210,6 +210,22 @@ EOS
                 expectedStderr: 'PHP Fatal error: Access to undeclared static property: Earth::$legLength',
                 expectedStdout: ''
             },
+            // Ensure we use .hasOwnProperty(...) checks internally
+            'attempting to read undefined static property called "constructor" from class referenced statically': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Earth {}
+
+    return Earth::$constructor;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Access to undeclared static property: Earth::\$constructor$/
+                },
+                expectedStderr: 'PHP Fatal error: Access to undeclared static property: Earth::$constructor',
+                expectedStdout: ''
+            },
             'storing reference in static property': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

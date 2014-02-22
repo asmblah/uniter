@@ -19,6 +19,8 @@ define([
 ) {
     'use strict';
 
+    var hasOwn = {}.hasOwnProperty;
+
     function Class(valueFactory, name, constructorName, InternalClass, staticPropertiesData) {
         var classObject = this,
             staticProperties = {};
@@ -46,7 +48,7 @@ define([
         getStaticPropertyByName: function (name) {
             var classObject = this;
 
-            if (!classObject.staticProperties[name]) {
+            if (!hasOwn.call(classObject.staticProperties, name)) {
                 throw new PHPFatalError(PHPFatalError.UNDECLARED_STATIC_PROPERTY, {
                     className: classObject.name,
                     propertyName: name
