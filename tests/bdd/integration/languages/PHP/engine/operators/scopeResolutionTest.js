@@ -66,6 +66,25 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'writing then reading static property from class referenced via an instance': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static $planet = 'Earth';
+    }
+
+    $animal = new Animal;
+
+    $animal::$planet = 'Mars';
+
+    return $animal::$planet;
+EOS
+*/) {}),
+                expectedResult: 'Mars',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

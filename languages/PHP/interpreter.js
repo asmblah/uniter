@@ -772,18 +772,13 @@ define([
                 return 'return ' + (expression ? expression : 'tools.valueFactory.createNull()') + ';';
             },
             'N_STATIC_PROPERTY': function (node, interpret, context) {
-                var classVariableCode,
-                    propertyCode = '',
+                var classVariableCode = interpret(node.className, {getValue: true}),
+                    propertyCode = '.getStaticPropertyByName(' + interpret(node.property, {assignment: false, getValue: true}) + ', namespaceScope)',
                     suffix = '';
 
-                if (context.assignment) {
-                    classVariableCode = interpret(node.className, {getValue: false});
-                } else {
+                if (!context.assignment) {
                     suffix = '.getValue()';
-                    classVariableCode = interpret(node.className, {getValue: true});
                 }
-
-                propertyCode += '.getStaticPropertyByName(' + interpret(node.property, {assignment: false, getValue: true}) + ', namespaceScope)';
 
                 return classVariableCode + propertyCode + suffix;
             },
