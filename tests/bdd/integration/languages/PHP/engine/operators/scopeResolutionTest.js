@@ -209,6 +209,25 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Access to undeclared static property: Earth::$legLength',
                 expectedStdout: ''
+            },
+            'storing reference in static property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Human {
+        static $planet;
+    }
+
+    Human::$planet =& $world;
+
+    $world = 'Earth';
+
+    return Human::$planet;
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
