@@ -11,11 +11,13 @@
 define([
     'js/util',
     './Reference/Null',
-    './Error'
+    './Error',
+    './Error/Fatal'
 ], function (
     util,
     NullReference,
-    PHPError
+    PHPError,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -53,6 +55,10 @@ define([
 
         getNative: function () {
             return this.value;
+        },
+
+        getStaticPropertyByName: function () {
+            throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
         },
 
         getType: function () {

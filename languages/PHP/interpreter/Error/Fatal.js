@@ -23,7 +23,8 @@ define([
             3: 'Class \'${name}\' not found',
             4: 'Call to undefined method ${className}::${methodName}()',
             5: '\'goto\' into loop or switch statement is disallowed',
-            6: '${name}() must take exactly 1 argument'
+            6: '${name}() must take exactly 1 argument',
+            7: 'Class name must be a valid object or a string'
         };
 
     function PHPFatalError(code, variables) {
@@ -38,7 +39,8 @@ define([
         CLASS_NOT_FOUND: 3,
         UNDEFINED_METHOD: 4,
         GOTO_DISALLOWED: 5,
-        EXPECT_EXACTLY_1_ARG: 6
+        EXPECT_EXACTLY_1_ARG: 6,
+        CLASS_NAME_NOT_VALID: 7
     });
 
     return PHPFatalError;

@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -84,6 +86,21 @@ EOS
                 expectedResult: 'Mars',
                 expectedResultType: 'string',
                 expectedStderr: '',
+                expectedStdout: ''
+            },
+            'attempting to read static property from null value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = null;
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
                 expectedStdout: ''
             }
         }, function (scenario, description) {
