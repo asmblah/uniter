@@ -790,7 +790,7 @@ define([
             'N_STATIC_PROPERTY_DEFINITION': function (node, interpret) {
                 return {
                     name: node.variable.variable,
-                    value: node.value ? interpret(node.value) : 'null'
+                    value: node.value ? interpret(node.value) : 'tools.valueFactory.createNull()'
                 };
             },
             'N_STRING': function (node) {
