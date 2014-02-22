@@ -21,7 +21,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine require_once(...) expression integration', function () {
+    describe('PHP Engine require(...) expression integration', function () {
         var engine;
 
         function check(scenario) {
@@ -40,7 +40,7 @@ define([
             'requiring a file where include transport resolves promise with empty string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'test_file.php';
+    require 'test_file.php';
 
 EOS
 */) {}),
@@ -56,7 +56,7 @@ EOS
             'requiring a file where no include transport is specified': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'test_file.php';
+    require 'test_file.php';
 
 EOS
 */) {}),
@@ -70,7 +70,7 @@ EOS
             'requiring a file where include transport resolves promise with code that just contains inline HTML': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'print_hello_world.php';
+    require 'print_hello_world.php';
 
 EOS
 */) {}),
@@ -87,7 +87,7 @@ EOS
             'requiring a file where include transport resolves promise with code that contains PHP code to echo a string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'print_hello.php';
+    require 'print_hello.php';
 
 EOS
 */) {}),
@@ -104,7 +104,7 @@ EOS
             'requiring a file where include transport resolves promise with code that returns a string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    print 'and ' . (require_once 'print_hello.php') . '!';
+    print 'and ' . (require 'print_hello.php') . '!';
 
 EOS
 */) {}),

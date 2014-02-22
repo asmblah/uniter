@@ -81,6 +81,37 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
+        function require(path) {
+            var done = false,
+                promise = new Promise(),
+                result;
+
+            promise.done(function (contents) {
+                done = true;
+
+                engine.execute(contents, path).done(function (resultNative) {
+                    // TODO: This is inefficient, we should just have access to the Value object
+                    result = valueFactory.coerce(resultNative);
+                }).fail(function (exception) {
+                    throw exception;
+                });
+            }).fail(function (exception) {
+                throw exception;
+            });
+
+            if (!options[INCLUDE_OPTION]) {
+                throw new Exception('require() :: No "include" transport is available for loading the module.');
+            }
+
+            options[INCLUDE_OPTION](path, promise);
+
+            if (!done) {
+                throw new Exception('require() :: Must be called synchronously for now.');
+            }
+
+            return result;
+        }
+
         var engine = state.getEngine(),
             globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
@@ -141,36 +172,8 @@ define([
                     return call;
                 },
                 referenceFactory: referenceFactory,
-                requireOnce: function (path) {
-                    var done = false,
-                        promise = new Promise(),
-                        result;
-
-                    promise.done(function (contents) {
-                        done = true;
-
-                        engine.execute(contents, path).done(function (resultNative) {
-                            // TODO: This is inefficient, we should just have access to the Value object
-                            result = valueFactory.coerce(resultNative);
-                        }).fail(function (exception) {
-                            throw exception;
-                        });
-                    }).fail(function (exception) {
-                        throw exception;
-                    });
-
-                    if (!options[INCLUDE_OPTION]) {
-                        throw new Exception('requireOnce() :: No "include" transport is available for loading the module.');
-                    }
-
-                    options[INCLUDE_OPTION](path, promise);
-
-                    if (!done) {
-                        throw new Exception('requireOnce() :: Must be called synchronously for now.');
-                    }
-
-                    return result;
-                },
+                requireOnce: require,
+                require: require,
                 valueFactory: valueFactory
             };
 
@@ -762,6 +765,9 @@ define([
                 }
 
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
+            },
+            'N_REQUIRE_EXPRESSION': function (node, interpret) {
+                return 'tools.require(' + interpret(node.path) + '.getNative())';
             },
             'N_REQUIRE_ONCE_EXPRESSION': function (node, interpret) {
                 return 'tools.requireOnce(' + interpret(node.path) + '.getNative())';
