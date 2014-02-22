@@ -556,15 +556,16 @@ define([
                 components: ['T_REQUIRE_ONCE', {name: 'path', what: 'N_EXPRESSION'}]
             },
             'N_STATIC_MEMBER': {
-                components: {oneOf: ['N_VARIABLE', 'N_STATIC_VARIABLE_EXPRESSION']}
+                components: {oneOf: ['N_STATIC_VARIABLE', 'N_STATIC_VARIABLE_EXPRESSION']}
+            },
+            'N_STATIC_VARIABLE': {
+                captureAs: 'N_STRING',
+                components: {name: 'string', rule: 'T_VARIABLE'}
             },
             'N_STATIC_VARIABLE_EXPRESSION': {
-                captureAs: 'N_VARIABLE_EXPRESSION',
-                components: [
-                    {oneOf: [
-                        {name: 'expression', what: [(/\$/), 'N_VARIABLE']},
-                        {name: 'expression', what: [(/\$\{/), 'N_EXPRESSION', (/\}/)]}
-                    ]}
+                oneOf: [
+                    [(/\$/), 'N_VARIABLE'],
+                    [(/\$\{/), 'N_EXPRESSION', (/\}/)]
                 ]
             },
             'N_STATIC_PROPERTY_DEFINITION': {

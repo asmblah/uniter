@@ -40,8 +40,8 @@ define([
                                     string: 'MyClass'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'prop'
+                                    name: 'N_STRING',
+                                    string: 'prop'
                                 }
                             },
                             right: [{
@@ -70,8 +70,8 @@ define([
                                     string: '\\My\\Awesome\\Stuff'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'prop'
+                                    name: 'N_STRING',
+                                    string: 'prop'
                                 }
                             },
                             right: [{
@@ -100,8 +100,8 @@ define([
                                     variable: 'myClassName'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'prop'
+                                    name: 'N_STRING',
+                                    string: 'prop'
                                 }
                             },
                             right: [{
@@ -139,8 +139,8 @@ define([
                                     }]
                                 },
                                 property: {
-                                    name: 'N_VARIABLE',
-                                    variable: 'prop'
+                                    name: 'N_STRING',
+                                    string: 'prop'
                                 }
                             },
                             right: [{
@@ -169,11 +169,8 @@ define([
                                     variable: 'myClass'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE_EXPRESSION',
-                                    expression: {
-                                        name: 'N_VARIABLE',
-                                        variable: 'prop'
-                                    }
+                                    name: 'N_VARIABLE',
+                                    variable: 'prop'
                                 }
                             },
                             right: [{
@@ -202,11 +199,8 @@ define([
                                     variable: 'myClass'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE_EXPRESSION',
-                                    expression: {
-                                        name: 'N_VARIABLE',
-                                        variable: 'prop'
-                                    }
+                                    name: 'N_VARIABLE',
+                                    variable: 'prop'
                                 }
                             },
                             right: [{
@@ -235,11 +229,8 @@ define([
                                     variable: 'myClass'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE_EXPRESSION',
-                                    expression: {
-                                        name: 'N_STRING_LITERAL',
-                                        string: 'prop name'
-                                    }
+                                    name: 'N_STRING_LITERAL',
+                                    string: 'prop name'
                                 }
                             },
                             right: [{
@@ -268,21 +259,18 @@ define([
                                     variable: 'myClass'
                                 },
                                 property: {
-                                    name: 'N_VARIABLE_EXPRESSION',
-                                    expression: {
-                                        name: 'N_EXPRESSION',
-                                        left: {
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_STRING_LITERAL',
+                                        string: 'my'
+                                    },
+                                    right: [{
+                                        operator: '.',
+                                        operand: {
                                             name: 'N_STRING_LITERAL',
-                                            string: 'my'
-                                        },
-                                        right: [{
-                                            operator: '.',
-                                            operand: {
-                                                name: 'N_STRING_LITERAL',
-                                                string: 'prop'
-                                            }
-                                        }]
-                                    }
+                                            string: 'prop'
+                                        }
+                                    }]
                                 }
                             },
                             right: [{
