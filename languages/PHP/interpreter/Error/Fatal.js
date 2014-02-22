@@ -24,7 +24,8 @@ define([
             4: 'Call to undefined method ${className}::${methodName}()',
             5: '\'goto\' into loop or switch statement is disallowed',
             6: '${name}() must take exactly 1 argument',
-            7: 'Class name must be a valid object or a string'
+            7: 'Class name must be a valid object or a string',
+            8: 'Access to undeclared static property: ${className}::$${propertyName}'
         };
 
     function PHPFatalError(code, variables) {
@@ -40,7 +41,8 @@ define([
         UNDEFINED_METHOD: 4,
         GOTO_DISALLOWED: 5,
         EXPECT_EXACTLY_1_ARG: 6,
-        CLASS_NAME_NOT_VALID: 7
+        CLASS_NAME_NOT_VALID: 7,
+        UNDECLARED_STATIC_PROPERTY: 8
     });
 
     return PHPFatalError;

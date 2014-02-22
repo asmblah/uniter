@@ -194,6 +194,21 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Class \'Person\' not found',
                 expectedStdout: ''
+            },
+            'attempting to read undefined static property from class referenced statically': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Earth {}
+
+    return Earth::$legLength;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Access to undeclared static property: Earth::\$legLength$/
+                },
+                expectedStderr: 'PHP Fatal error: Access to undeclared static property: Earth::$legLength',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

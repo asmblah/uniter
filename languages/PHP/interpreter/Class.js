@@ -10,9 +10,11 @@
 /*global define */
 define([
     'js/util',
+    './Error/Fatal',
     './Reference/StaticProperty'
 ], function (
     util,
+    PHPFatalError,
     StaticPropertyReference
 ) {
     'use strict';
@@ -42,7 +44,16 @@ define([
         },
 
         getStaticPropertyByName: function (name) {
-            return this.staticProperties[name];
+            var classObject = this;
+
+            if (!classObject.staticProperties[name]) {
+                throw new PHPFatalError(PHPFatalError.UNDECLARED_STATIC_PROPERTY, {
+                    className: classObject.name,
+                    propertyName: name
+                });
+            }
+
+            return classObject.staticProperties[name];
         },
 
         instantiate: function (args) {
