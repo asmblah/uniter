@@ -231,6 +231,23 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
                 expectedStdout: ''
+            },
+            'calling instance method as static method from class referenced via an instance': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public function getPlanet() {
+            return 'Earth';
+        }
+    }
+
+    return Animal::getPlanet();
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: 'PHP Strict standards: Non-static method Animal::getPlanet() should not be called statically',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

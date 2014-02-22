@@ -90,8 +90,30 @@ object(stdClass)#1 (1) {
 EOS
 */) {})
             },
-        }, function (scenario) {
-            check(scenario);
+            'calling static method as instance method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static function getPlanet() {
+            return 'Earth';
+        }
+    }
+
+    $animal = new Animal();
+
+    return $animal->getPlanet();
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                // Note that no notices are generated at all
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
         });
     });
 });

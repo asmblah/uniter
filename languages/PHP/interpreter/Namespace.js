@@ -21,7 +21,8 @@ define([
 ) {
     'use strict';
 
-    var MAGIC_AUTOLOAD_FUNCTION = '__autoload',
+    var IS_STATIC = 'isStatic',
+        MAGIC_AUTOLOAD_FUNCTION = '__autoload',
         hasOwn = {}.hasOwnProperty;
 
     function Namespace(callStack, valueFactory, parent, name) {
@@ -51,11 +52,14 @@ define([
                 });
             }
 
+            // Prevent native 'constructor' property from erroneously being detected as PHP class method
+            delete InternalClass.prototype.constructor;
+
             if (definition.superClass) {
                 InternalClass.prototype = Object.create(definition.superClass.getInternalClass().prototype);
             }
 
-            util.each(definition.methods, function (method, methodName) {
+            util.each(definition.methods, function (data, methodName) {
                 // PHP5-style __construct magic method takes precedence
                 if (methodName === '__construct') {
                     if (constructorName) {
@@ -69,16 +73,18 @@ define([
                     constructorName = methodName;
                 }
 
-                InternalClass.prototype[methodName] = method;
+                data.method[IS_STATIC] = data[IS_STATIC];
+
+                InternalClass.prototype[methodName] = data.method;
             });
 
             namespace.classes[name.toLowerCase()] = new Class(
                 namespace.valueFactory,
+                namespace.callStack,
                 namespace.getPrefix() + name,
                 constructorName,
                 InternalClass,
-                definition.staticProperties,
-                definition.staticMethods
+                definition.staticProperties
             );
         },
 

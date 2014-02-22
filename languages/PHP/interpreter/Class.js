@@ -10,25 +10,28 @@
 /*global define */
 define([
     'js/util',
+    './Error',
     './Error/Fatal',
     './Reference/StaticProperty'
 ], function (
     util,
+    PHPError,
     PHPFatalError,
     StaticPropertyReference
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
+    var IS_STATIC = 'isStatic',
+        hasOwn = {}.hasOwnProperty;
 
-    function Class(valueFactory, name, constructorName, InternalClass, staticPropertiesData, staticMethods) {
+    function Class(valueFactory, callStack, name, constructorName, InternalClass, staticPropertiesData) {
         var classObject = this,
             staticProperties = {};
 
+        this.callStack = callStack;
         this.constructorName = constructorName;
         this.InternalClass = InternalClass;
         this.name = name;
-        this.staticMethods = staticMethods;
         this.staticProperties = staticProperties;
         this.valueFactory = valueFactory;
 
@@ -39,16 +42,21 @@ define([
 
     util.extend(Class.prototype, {
         callStaticMethod: function (name, args) {
-            var classObject = this;
+            var classObject = this,
+                prototype = classObject.InternalClass.prototype;
 
-            if (!hasOwn.call(classObject.staticMethods, name)) {
+            if (!hasOwn.call(prototype, name)) {
                 throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_METHOD, {
                     className: classObject.name,
                     methodName: name
                 });
             }
 
-            return classObject.valueFactory.coerce(classObject.staticMethods[name].apply(null, args));
+            if (!prototype[name][IS_STATIC]) {
+                classObject.callStack.raiseError(PHPError.E_STRICT, 'Non-static method ' + classObject.name + '::' + name + '() should not be called statically');
+            }
+
+            return classObject.valueFactory.coerce(prototype[name].apply(null, args));
         },
 
         getInternalClass: function () {

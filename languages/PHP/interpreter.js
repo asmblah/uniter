@@ -402,7 +402,6 @@ define([
                 var code,
                     methodCodes = [],
                     propertyCodes = [],
-                    staticMethodCodes = [],
                     staticPropertyCodes = [],
                     superClass = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
@@ -413,14 +412,12 @@ define([
                         propertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_STATIC_PROPERTY_DEFINITION') {
                         staticPropertyCodes.push('"' + data.name + '": ' + data.value);
-                    } else if (member.name === 'N_METHOD_DEFINITION') {
+                    } else if (member.name === 'N_METHOD_DEFINITION' || member.name === 'N_STATIC_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
-                    } else if (member.name === 'N_STATIC_METHOD_DEFINITION') {
-                        staticMethodCodes.push('"' + data.name + '": ' + data.body);
                     }
                 });
 
-                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, staticMethods: {' + staticMethodCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
+                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
@@ -688,7 +685,7 @@ define([
             'N_METHOD_DEFINITION': function (node, interpret) {
                 return {
                     name: interpret(node.func),
-                    body: interpretFunction(node.args, null, node.body, interpret)
+                    body: '{isStatic: false, method: ' + interpretFunction(node.args, null, node.body, interpret) + '}'
                 };
             },
             'N_NAMESPACE_STATEMENT': function (node, interpret) {
@@ -786,7 +783,7 @@ define([
             'N_STATIC_METHOD_DEFINITION': function (node, interpret) {
                 return {
                     name: interpret(node.method),
-                    body: interpretFunction(node.args, null, node.body, interpret)
+                    body: '{isStatic: true, method: ' + interpretFunction(node.args, null, node.body, interpret) + '}'
                 };
             },
             'N_STATIC_PROPERTY': function (node, interpret, context) {
