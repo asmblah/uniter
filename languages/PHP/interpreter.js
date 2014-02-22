@@ -97,15 +97,9 @@ define([
                 },
                 createInstance: function (namespaceScope, classNameValue, args) {
                     var className = classNameValue.getNative(),
-                        classData = namespaceScope.getClass(className),
-                        nativeObject = new classData.Class(),
-                        object = valueFactory.createObject(nativeObject, classData.name);
+                        classObject = namespaceScope.getClass(className);
 
-                    if (classData.constructorName) {
-                        object.callMethod(classData.constructorName, args);
-                    }
-
-                    return object;
+                    return classObject.instantiate(args);
                 },
                 createKeyValuePair: function (key, value) {
                     return new KeyValuePair(key, value);
@@ -408,19 +402,22 @@ define([
                 var code,
                     methodCodes = [],
                     propertyCodes = [],
-                    superClassData = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
+                    staticPropertyCodes = [],
+                    superClass = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
                 util.each(node.members, function (member) {
                     var data = interpret(member);
 
                     if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
+                    } else if (member.name === 'N_STATIC_PROPERTY_DEFINITION') {
+                        staticPropertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
                     }
                 });
 
-                code = '{superClassData: ' + superClassData + ', properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
+                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
                 return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
             },
@@ -773,6 +770,28 @@ define([
                 var expression = interpret(node.expression);
 
                 return 'return ' + (expression ? expression : 'tools.valueFactory.createNull()') + ';';
+            },
+            'N_STATIC_PROPERTY': function (node, interpret, context) {
+                var classVariableCode,
+                    propertyCode = '',
+                    suffix = '';
+
+                if (context.assignment) {
+                    classVariableCode = interpret(node.className, {getValue: false});
+                } else {
+                    suffix = '.getValue()';
+                    classVariableCode = interpret(node.className, {getValue: true});
+                }
+
+                propertyCode += '.getStaticPropertyByName(' + interpret(node.property, {assignment: false, getValue: true}) + ', namespaceScope)';
+
+                return classVariableCode + propertyCode + suffix;
+            },
+            'N_STATIC_PROPERTY_DEFINITION': function (node, interpret) {
+                return {
+                    name: node.variable.variable,
+                    value: node.value ? interpret(node.value) : 'null'
+                };
             },
             'N_STRING': function (node) {
                 switch (node.string) {

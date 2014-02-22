@@ -71,6 +71,13 @@ define([
             return this.value.length;
         },
 
+        getStaticPropertyByName: function (nameValue, namespaceScope) {
+            var value = this,
+                classObject = namespaceScope.getClass(value.value);
+
+            return classObject.getStaticPropertyByName(nameValue.getNative());
+        },
+
         isEqualTo: function (rightValue) {
             return rightValue.isEqualToString(this);
         },

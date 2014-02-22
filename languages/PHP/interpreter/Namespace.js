@@ -10,10 +10,12 @@
 /*global define */
 define([
     'js/util',
+    './Class',
     './Error',
     './Error/Fatal'
 ], function (
     util,
+    Class,
     PHPError,
     PHPFatalError
 ) {
@@ -37,11 +39,11 @@ define([
             var constructorName = null,
                 namespace = this;
 
-            function Class() {
+            function InternalClass() {
                 var instance = this;
 
-                if (definition.superClassData) {
-                    definition.superClassData.Class.call(this);
+                if (definition.superClass) {
+                    definition.superClass.getInternalClass().call(this);
                 }
 
                 util.each(definition.properties, function (value, name) {
@@ -49,8 +51,8 @@ define([
                 });
             }
 
-            if (definition.superClassData) {
-                Class.prototype = Object.create(definition.superClassData.Class.prototype);
+            if (definition.superClass) {
+                InternalClass.prototype = Object.create(definition.superClass.getInternalClass().prototype);
             }
 
             util.each(definition.methods, function (method, methodName) {
@@ -67,14 +69,16 @@ define([
                     constructorName = methodName;
                 }
 
-                Class.prototype[methodName] = method;
+                InternalClass.prototype[methodName] = method;
             });
 
-            namespace.classes[name.toLowerCase()] = {
-                constructorName: constructorName,
-                name: namespace.getPrefix() + name,
-                Class: Class
-            };
+            namespace.classes[name.toLowerCase()] = new Class(
+                namespace.valueFactory,
+                namespace.getPrefix() + name,
+                constructorName,
+                InternalClass,
+                definition.staticProperties
+            );
         },
 
         defineFunction: function (name, func) {
