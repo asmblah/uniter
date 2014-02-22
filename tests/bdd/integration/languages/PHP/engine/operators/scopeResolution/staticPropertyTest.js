@@ -9,8 +9,8 @@
 
 /*global define */
 define([
-    '../tools',
     '../../tools',
+    '../../../tools',
     'js/util',
     'languages/PHP/interpreter/Error/Fatal'
 ], function (
@@ -21,7 +21,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine scope resolution operator "::" integration', function () {
+    describe('PHP Engine scope resolution operator "::" static property integration', function () {
         var engine;
 
         function check(scenario) {
