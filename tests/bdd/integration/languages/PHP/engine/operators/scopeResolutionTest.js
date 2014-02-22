@@ -52,6 +52,81 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'attempting to read static property from array value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = array(1, 2);
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
+                expectedStdout: ''
+            },
+            'attempting to read static property from boolean value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = true;
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
+                expectedStdout: ''
+            },
+            'attempting to read static property from float value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = 4.1;
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
+                expectedStdout: ''
+            },
+            'attempting to read static property from integer value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = 7;
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
+                expectedStdout: ''
+            },
+            'attempting to read static property from null value': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $value = null;
+
+    return $value::$prop;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
+                expectedStdout: ''
+            },
             'reading static property\'s initial value from class referenced via an instance': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
@@ -86,21 +161,6 @@ EOS
                 expectedResult: 'Mars',
                 expectedResultType: 'string',
                 expectedStderr: '',
-                expectedStdout: ''
-            },
-            'attempting to read static property from null value': {
-                code: util.heredoc(function (/*<<<EOS
-<?php
-    $value = null;
-
-    return $value::$prop;
-EOS
-*/) {}),
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class name must be a valid object or a string$/
-                },
-                expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
                 expectedStdout: ''
             }
         }, function (scenario, description) {
