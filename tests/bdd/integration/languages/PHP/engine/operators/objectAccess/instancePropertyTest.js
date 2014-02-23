@@ -9,8 +9,8 @@
 
 /*global define */
 define([
-    '../tools',
     '../../tools',
+    '../../../tools',
     'js/util'
 ], function (
     engineTools,
@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine object access operator "->" integration', function () {
+    describe('PHP Engine object access operator "->" instance property integration', function () {
         var engine;
 
         function check(scenario) {
@@ -89,26 +89,6 @@ object(stdClass)#1 (1) {
 
 EOS
 */) {})
-            },
-            'calling static method as instance method': {
-                code: util.heredoc(function (/*<<<EOS
-<?php
-    class Animal {
-        public static function getPlanet() {
-            return 'Earth';
-        }
-    }
-
-    $animal = new Animal();
-
-    return $animal->getPlanet();
-EOS
-*/) {}),
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                // Note that no notices are generated at all
-                expectedStderr: '',
-                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

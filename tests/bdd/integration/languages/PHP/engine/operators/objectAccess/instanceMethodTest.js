@@ -9,8 +9,8 @@
 
 /*global define */
 define([
-    '../tools',
     '../../tools',
+    '../../../tools',
     'js/util',
     'languages/PHP/interpreter/Error/Fatal'
 ], function (
@@ -21,7 +21,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine method call expression integration', function () {
+    describe('PHP Engine object access operator "->" instance method integration', function () {
         var engine;
 
         function check(scenario) {
@@ -146,6 +146,26 @@ EOS
                 expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
                 expectedStdout: ''
             },
+            'calling static method as instance method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static function getPlanet() {
+            return 'Earth';
+        }
+    }
+
+    $animal = new Animal();
+
+    return $animal->getPlanet();
+EOS
+*/) {}),
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                // Note that no notices are generated at all
+                expectedStderr: '',
+                expectedStdout: ''
+            }
         }, function (scenario, description) {
             describe(description, function () {
                 check(scenario);
