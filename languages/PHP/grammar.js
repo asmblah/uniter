@@ -212,6 +212,9 @@ define([
             'T_XOR_EQUAL': /\^=/i,
             'T_YIELD': /yield\b/i,
 
+            'N_ARGUMENT': {
+                oneOf: ['N_VARIABLE', 'N_TYPE_HINT']
+            },
             'N_ARRAY_INDEX': {
                 components: 'N_EXPRESSION_LEVEL_2_A'
             },
@@ -492,7 +495,7 @@ define([
                 components: ['T_FOREACH', (/\(/), {name: 'array', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_AS', {optionally: [{name: 'key', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, 'T_DOUBLE_ARROW']}, {name: 'value', oneOf: ['N_ARRAY_INDEX', 'N_VARIABLE']}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
             'N_FUNCTION_STATEMENT': {
-                components: ['T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
+                components: ['T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
             'N_GOTO_STATEMENT': {
                 components: ['T_GOTO', {name: 'label', what: 'T_STRING'}, (/;/)]
@@ -543,7 +546,7 @@ define([
                 components: {what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
             },
             'N_METHOD_DEFINITION': {
-                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
+                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
             },
             'N_NAMESPACE': {
                 components: [{optionally: 'T_STRING'}, {oneOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
@@ -650,6 +653,9 @@ define([
             },
             'N_TERM': {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_MAGIC_CONSTANT', 'N_REQUIRE_EXPRESSION', 'N_REQUIRE_ONCE_EXPRESSION', 'N_SELF', 'N_STRING']}
+            },
+            'N_TYPE_HINT': {
+                components: [{name: 'type', rule: 'T_ARRAY'}, {name: 'variable', rule: 'N_VARIABLE'}]
             },
             'N_USE_STATEMENT': {
                 components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]
