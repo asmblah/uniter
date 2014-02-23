@@ -593,7 +593,7 @@ define([
                     'T_FUNCTION',
                     {name: 'method', what: 'T_STRING'},
                     (/\(/),
-                    {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                    {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
                     (/\)/),
                     {name: 'body', what: 'N_STATEMENT'}
                 ]

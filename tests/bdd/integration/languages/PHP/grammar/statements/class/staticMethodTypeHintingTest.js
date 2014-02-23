@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar class definition statement method type hinting integration', function () {
+    describe('PHP Parser grammar class definition statement static method type hinting integration', function () {
         var parser;
 
         beforeEach(function () {
@@ -29,7 +29,7 @@ define([
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Thing {
-        public function doNothing(array $items) {}
+        public static function doNothing(array $items) {}
     }
 EOS
 */) {}),
@@ -42,8 +42,8 @@ EOS
                             string: 'Thing'
                         },
                         members: [{
-                            name: 'N_METHOD_DEFINITION',
-                            func: 'doNothing',
+                            name: 'N_STATIC_METHOD_DEFINITION',
+                            method: 'doNothing',
                             visibility: 'public',
                             args: [{
                                 name: 'N_TYPE_HINT',
@@ -65,7 +65,7 @@ EOS
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Thing {
-        public function doNothing(ItemList $items) {}
+        public static function doNothing(ItemList $items) {}
     }
 EOS
 */) {}),
@@ -78,8 +78,8 @@ EOS
                             string: 'Thing'
                         },
                         members: [{
-                            name: 'N_METHOD_DEFINITION',
-                            func: 'doNothing',
+                            name: 'N_STATIC_METHOD_DEFINITION',
+                            method: 'doNothing',
                             visibility: 'public',
                             args: [{
                                 name: 'N_TYPE_HINT',
@@ -101,7 +101,7 @@ EOS
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Thing {
-        public function doNothing(\Creator\Framework\Request $items) {}
+        public static function doNothing(\Creator\Framework\Request $items) {}
     }
 EOS
 */) {}),
@@ -114,8 +114,8 @@ EOS
                             string: 'Thing'
                         },
                         members: [{
-                            name: 'N_METHOD_DEFINITION',
-                            func: 'doNothing',
+                            name: 'N_STATIC_METHOD_DEFINITION',
+                            method: 'doNothing',
                             visibility: 'public',
                             args: [{
                                 name: 'N_TYPE_HINT',
