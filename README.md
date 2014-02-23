@@ -27,6 +27,7 @@ Features
     - Magic `__DIR__`, `__FILE__` and `__LINE__` constants
     - Ternary operator
     - Loose equality `==` and inequality `!=` comparison operators
+    - Strict equality `===` and inequality `!==` comparison operators
 
     And others... see [the `Engine` integration tests](https://github.com/asmblah/uniter/tree/master/tests/bdd/integration/languages/PHP/engine) for more info.
 
