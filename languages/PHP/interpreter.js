@@ -252,7 +252,9 @@ define([
             body = interpret(statementNode);
 
         util.each(argNodes, function (arg) {
-            args.push(arg.variable);
+            var variable = (arg.name === 'N_TYPE_HINT') ? arg.variable : arg;
+
+            args.push(variable.variable);
         });
 
         util.each(bindingNodes, function (bindingNode) {
