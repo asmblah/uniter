@@ -9,7 +9,7 @@
 
 /*global define */
 define([
-    '../../tools',
+    '../../../tools',
     'js/util'
 ], function (
     tools,
@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar object access operator "->" integration', function () {
+    describe('PHP Parser grammar object access operator "->" instance property integration', function () {
         var parser;
 
         beforeEach(function () {
