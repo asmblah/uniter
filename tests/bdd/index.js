@@ -7,49 +7,32 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global __dirname, global, process, require */
+/*global __dirname, process, require */
 (function () {
     'use strict';
 
-    var modular = require('modular-amd'),
+    var requirejs = require('requirejs'),
         optionsManager = require('node-getopt').create([
             ['g', 'grep=<pattern>', 'Optional filter grep to restrict tests to run']
         ]),
         parsedOptions = optionsManager.parseSystem();
 
-    // FIXME: Modular.js is reading the wrong value as "global" ("this" object is not global in Node.js)
-    modular.util.global = global;
-
-    modular.define('chai/chai', function () {
-        return require('chai');
-    });
-    modular.define('test-environment', {
-        node: {
-            require: require,
-            rootPath: __dirname + '/../..'
-        }
-    });
-    modular.define('Mocha', function () {
-        return require('mocha');
-    });
-    modular.define('sinon/sinon', function () {
-        return require('sinon');
-    });
-    modular.define('sinon-chai/sinon-chai', function () {
-        return require('sinon-chai');
-    });
-
-    // FIXME!! (In Modular)
-    modular.configure({
+    requirejs({
+        baseUrl: __dirname + '/../..',
         paths: {
-            'Modular': '/../../node_modules/modular-amd'
-        }
-    });
-
-    modular.require({
-        baseUrl: __dirname
+            'Mocha': 'mocha'
+        },
+        config: {
+            'test-environment': {
+                node: {
+                    require: require,
+                    rootPath: __dirname + '/../..'
+                }
+            }
+        },
+        nodeRequire: require
     }, [
-        './runner'
+        'bower_components/package/package!tests/bdd/package'
     ], function (
         runner
     ) {

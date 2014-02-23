@@ -8,15 +8,7 @@
  */
 
 /*global define */
-define({
-    paths: {
-        'ace': '../vendor/ace',
-        'uniter': '../uniter',
-
-        // Work around bug in Modular
-        'Modular': '../node_modules/modular-amd'
-    }
-}, [
+define([
     'require',
     '../js/util',
     'ace/src-min-noconflict/ace'
@@ -36,7 +28,9 @@ define({
     ], function () {
         var ace = global.ace,
             javascriptCode = util.heredoc(function () {/*<<<EOS
-require([
+require({
+    baseUrl: '..'
+}, [
     'uniter'
 ], function (
     uniter
@@ -107,7 +101,7 @@ EOS
 
             try {
                 /*jshint evil: true */
-                new Function('require, phpCode, print', javascriptCode)(require, phpCode, print);
+                new Function('require, phpCode, print', javascriptCode)(global.require, phpCode, print);
             } catch (error) {
                 printText('<JavaScript error> ' + error.toString());
             }

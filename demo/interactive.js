@@ -9,11 +9,5 @@
 
 /*global define */
 define([
-    'bower_components/package/package!./package'
-], function (
-    uniter
-) {
-    'use strict';
-
-    return uniter;
-});
+    '../bower_components/package/package!interactive-package'
+], function () {});

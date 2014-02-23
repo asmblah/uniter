@@ -9,11 +9,9 @@
 
 /*global define */
 define([
-    'sinon/sinon',
     'js/util',
     'js/Interpreter'
 ], function (
-    sinon,
     util,
     Interpreter
 ) {

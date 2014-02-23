@@ -1,0 +1,18 @@
+{
+  "name": "package",
+  "version": "0.1.0",
+  "main": "package",
+  "ignore": [
+    ".jshintrc"
+  ],
+  "homepage": "https://github.com/asmblah/package",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "da7d7e397363888b2856016141ffab37d7f5695a"
+  },
+  "_source": "git://github.com/asmblah/package.git",
+  "_target": "0.1.x",
+  "_originalSource": "package"
+}

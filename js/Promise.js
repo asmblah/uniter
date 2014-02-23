@@ -10,21 +10,21 @@
 /*global define */
 define([
     'js/util',
-    'Modular/js/Promise'
+    './SimplePromise'
 ], function (
     util,
-    ModularPromise
+    SimplePromise
 ) {
     'use strict';
 
-    var parent = ModularPromise.prototype,
+    var parent = SimplePromise.prototype,
         slice = [].slice;
 
     function Promise() {
-        ModularPromise.call(this);
+        SimplePromise.call(this);
     }
 
-    util.inherit(Promise).from(ModularPromise);
+    util.inherit(Promise).from(SimplePromise);
 
     util.extend(Promise.prototype, {
         always: function (callback) {

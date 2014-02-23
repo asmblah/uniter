@@ -9,19 +9,19 @@
 
 /*global define, describe, expect, it */
 define([
-    'modular',
+    'package/util',
     'require',
     'js/util'
 ], function (
-    modular,
+    packageUtil,
     require,
     util
 ) {
     'use strict';
 
     describe('Util', function () {
-        it('should inherit from modular.util', function () {
-            expect(Object.getPrototypeOf(util)).to.equal(modular.util);
+        it('should inherit from package/util', function () {
+            expect(Object.getPrototypeOf(util)).to.equal(packageUtil);
         });
 
         describe('getLineNumber()', function () {

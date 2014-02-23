@@ -7,25 +7,23 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, require */
+/*global define */
 define([
-    'modular',
-    'require'
+    'package/util'
 ], function (
-    modular,
-    scopedRequire
+    packageUtil
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty,
+    var global = /*jshint evil: true */new Function('return this;')()/*jshint evil: false */,
+        hasOwn = {}.hasOwnProperty,
         inheritFrom = Object.create || function (from) {
             function F() {}
             F.prototype = from;
             return new F();
         },
         toString = {}.toString,
-        util = inheritFrom(modular.util),
-        Promise;
+        util = inheritFrom(packageUtil);
 
     return util.extend(util, {
         copy: function (to, from) {
@@ -50,37 +48,7 @@ define([
             };
         },
 
-        get: util.global.process ? function (path) {
-            var fs = require('fs'),
-                promise = new Promise();
-
-            fs.fs.readFile(fs.basePath + path, function (error, data) {
-                if (error) {
-                    promise.reject(error);
-                } else {
-                    promise.resolve(data.toString());
-                }
-            });
-
-            return promise;
-        } : function (uri) {
-            var promise = new Promise(),
-                xhr = new util.global.XMLHttpRequest();
-
-            xhr.open('GET', uri, true);
-            xhr.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    if (this.status === 200) {
-                        promise.resolve(this.responseText);
-                    } else {
-                        promise.reject();
-                    }
-                }
-            };
-            xhr.send('');
-
-            return promise;
-        },
+        global: global,
 
         getLineNumber: function (text, offset) {
             function getCount(string, substring) {
@@ -112,18 +80,6 @@ define([
                     To.prototype.constructor = To;
                 }
             };
-        },
-
-        // Breaks the circular dependency between js/Uniter.js<->js/util.js
-        init: function (callback) {
-            scopedRequire([
-                'js/Promise'
-            ], function (
-                PromiseClass
-            ) {
-                Promise = PromiseClass;
-                callback();
-            });
         },
 
         isNumber: function (value) {

@@ -9,13 +9,11 @@
 
 /*global define */
 define([
-    'module',
     'js/util',
     'js/Engine',
     'js/Exception',
     'js/Language'
 ], function (
-    module,
     util,
     Engine,
     Exception,
@@ -23,8 +21,7 @@ define([
 ) {
     'use strict';
 
-    var callback = module.defer(),
-        hasOwn = {}.hasOwnProperty;
+    var hasOwn = {}.hasOwnProperty;
 
     function Uniter(options) {
         this.languages = {};
@@ -96,8 +93,5 @@ define([
         }
     });
 
-    // Breaks the circular dependency between js/Uniter.js<->js/util.js
-    util.init(function () {
-        callback(Uniter);
-    });
+    return Uniter;
 });

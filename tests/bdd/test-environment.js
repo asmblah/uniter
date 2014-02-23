@@ -9,11 +9,11 @@
 
 /*global define */
 define([
-    'bower_components/package/package!./package'
+    'module'
 ], function (
-    uniter
+    module
 ) {
     'use strict';
 
-    return uniter;
+    return module.config();
 });

@@ -7,19 +7,19 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global module, require */
+/*global __dirname, module, require */
 (function () {
     'use strict';
 
-    var modular = require('modular-amd');
+    var requirejs = require('requirejs');
 
-    modular.require({
-        async: false
-    }, [
-        'uniter'
-    ], function (
-        uniter
-    ) {
-        module.exports = uniter;
+    requirejs.nextTick = function (fn) {
+        fn();
+    };
+
+    requirejs.config({
+        baseUrl: __dirname
     });
+
+    module.exports = requirejs('uniter');
 }());

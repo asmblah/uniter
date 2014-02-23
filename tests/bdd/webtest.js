@@ -39,7 +39,7 @@
 
     mapPaths({
         '/acceptance': bddPath + '/acceptance/',
-        '/chai': nodeModulesPath + '/chai/',
+        '/chai.js': nodeModulesPath + '/chai/chai.js',
         '/index.html': bddPath + '/index.html',
         '/integration': bddPath + '/integration/',
         '/js': rootPath + '/js/',
@@ -48,8 +48,8 @@
         '/mocha': nodeModulesPath + '/mocha/',
         '/modular': nodeModulesPath + '/modular-amd/',
         '/runner.js': bddPath + '/runner.js',
-        '/sinon': vendorPath + '/sinon/',
-        '/sinon-chai': nodeModulesPath + '/sinon-chai/lib/',
+        '/sinon.js': vendorPath + '/sinon/sinon.js',
+        '/sinon-chai.js': nodeModulesPath + '/sinon-chai/lib/sinon-chai.js',
         '/unit': bddPath + '/unit/'
     });
 
