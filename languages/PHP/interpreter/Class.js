@@ -43,20 +43,38 @@ define([
     util.extend(Class.prototype, {
         callStaticMethod: function (name, args) {
             var classObject = this,
-                prototype = classObject.InternalClass.prototype;
+                defined = true,
+                method,
+                prototype = classObject.InternalClass.prototype,
+                otherPrototype;
 
+            // Allow methods inherited via the prototype chain up to but not including Object.prototype
             if (!hasOwn.call(prototype, name)) {
+                otherPrototype = prototype;
+
+                do {
+                    otherPrototype = Object.getPrototypeOf(otherPrototype);
+                    if (!otherPrototype || otherPrototype === Object.prototype) {
+                        defined = false;
+                        break;
+                    }
+                } while (!hasOwn.call(otherPrototype, name));
+            }
+
+            method = prototype[name];
+
+            if (!defined || !util.isFunction(method)) {
                 throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_METHOD, {
                     className: classObject.name,
                     methodName: name
                 });
             }
 
-            if (!prototype[name][IS_STATIC]) {
-                classObject.callStack.raiseError(PHPError.E_STRICT, 'Non-static method ' + classObject.name + '::' + name + '() should not be called statically');
+            if (!method[IS_STATIC]) {
+                classObject.callStack.raiseError(PHPError.E_STRICT, 'Non-static method ' + method.data.classObject.name + '::' + name + '() should not be called statically');
             }
 
-            return classObject.valueFactory.coerce(prototype[name].apply(null, args));
+            return classObject.valueFactory.coerce(method.apply(null, args));
         },
 
         getInternalClass: function () {

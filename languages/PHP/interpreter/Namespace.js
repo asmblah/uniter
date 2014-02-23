@@ -37,7 +37,9 @@ define([
 
     util.extend(Namespace.prototype, {
         defineClass: function (name, definition) {
-            var constructorName = null,
+            var classObject,
+                constructorName = null,
+                methodData = {},
                 namespace = this;
 
             function InternalClass() {
@@ -74,11 +76,12 @@ define([
                 }
 
                 data.method[IS_STATIC] = data[IS_STATIC];
+                data.method.data = methodData;
 
                 InternalClass.prototype[methodName] = data.method;
             });
 
-            namespace.classes[name.toLowerCase()] = new Class(
+            classObject = new Class(
                 namespace.valueFactory,
                 namespace.callStack,
                 namespace.getPrefix() + name,
@@ -86,6 +89,10 @@ define([
                 InternalClass,
                 definition.staticProperties
             );
+
+            methodData.classObject = classObject;
+
+            namespace.classes[name.toLowerCase()] = classObject;
         },
 
         defineFunction: function (name, func) {

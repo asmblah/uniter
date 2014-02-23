@@ -127,7 +127,25 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist()',
                 expectedStdout: ''
-            }
+            },
+            // Ensure we use .hasOwnProperty(...) checks internally
+            'call to undefined instance method called "constructor"': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Earth {}
+
+    $planet = new Earth;
+
+    return $planet->constructor();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
+                expectedStdout: ''
+            },
         }, function (scenario, description) {
             describe(description, function () {
                 check(scenario);

@@ -54,7 +54,7 @@ object(Human)#1 (0) {
 EOS
 */) {})
             },
-            'calling inherited public method': {
+            'calling inherited public method as instance method': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Animal {
@@ -72,6 +72,26 @@ EOS
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 expectedStderr: '',
+                expectedStdout: ''
+            },
+            'calling inherited public method as static method': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public function getAge() {
+            return 24;
+        }
+    }
+
+    class Human extends Animal {}
+
+    return Human::getAge();
+EOS
+*/) {}),
+                expectedResult: 24,
+                expectedResultType: 'integer',
+                // Note that the method's actual owner class Animal is referred to
+                expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically',
                 expectedStdout: ''
             },
             'reading inherited public property': {

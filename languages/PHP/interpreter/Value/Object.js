@@ -39,10 +39,25 @@ define([
         },
 
         callMethod: function (name, args) {
-            var value = this,
-                object = value.object;
+            var defined = true,
+                value = this,
+                object = value.object,
+                otherObject;
 
-            if (!util.isFunction(object[name])) {
+            // Allow methods inherited via the prototype chain up to but not including Object.prototype
+            if (!hasOwn.call(object, name)) {
+                otherObject = object;
+
+                do {
+                    otherObject = Object.getPrototypeOf(otherObject);
+                    if (!otherObject || otherObject === Object.prototype) {
+                        defined = false;
+                        break;
+                    }
+                } while (!hasOwn.call(otherObject, name));
+            }
+
+            if (!defined || !util.isFunction(object[name])) {
                 throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
             }
 
