@@ -266,7 +266,7 @@ define([
                 captureAs: 'N_NEW_EXPRESSION',
                 components: {oneOf: [
                     [
-                        {name: 'operator', what: 'T_NEW'},
+                        'T_NEW',
                         {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_0']},
                         {optionally: [
                             (/\(/),
@@ -276,7 +276,7 @@ define([
                     ],
                     {name: 'next', what: 'N_EXPRESSION_LEVEL_0'}
                 ]},
-                ifNoMatch: {component: 'operator', capture: 'next'}
+                ifNoMatch: {component: 'className', capture: 'next'}
             },
             'N_DO_WHILE_STATEMENT': {
                 components: ['T_DO', {name: 'body', what: 'N_STATEMENT'}, 'T_WHILE', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/;/)]
@@ -553,7 +553,7 @@ define([
             },
             'N_NAMESPACED_REFERENCE': {
                 captureAs: 'N_STRING',
-                components: {name: 'string', what: 'N_NAMESPACE'}
+                components: [(/(?!new\b)/i), {name: 'string', what: 'N_NAMESPACE'}]
             },
             'N_PROGRAM': {
                 components: [{optionally: 'T_OPEN_TAG'}, {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, {oneOf: ['T_CLOSE_TAG', {what: '<EOF>'}]}]

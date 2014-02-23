@@ -41,7 +41,6 @@ define([
                                 operator: '=',
                                 operand: {
                                     name: 'N_NEW_EXPRESSION',
-                                    operator: 'new',
                                     className: {
                                         name: 'N_STRING',
                                         string: 'Worker'
@@ -68,7 +67,6 @@ define([
                                 operator: '=',
                                 operand: {
                                     name: 'N_NEW_EXPRESSION',
-                                    operator: 'new',
                                     className: {
                                         name: 'N_STRING',
                                         string: 'Worker'
@@ -99,7 +97,6 @@ define([
                                     operator: '=',
                                     operand: {
                                         name: 'N_NEW_EXPRESSION',
-                                        operator: 'new',
                                         className: {
                                             name: 'N_STRING',
                                             string: '\\stdClass'
@@ -108,6 +105,60 @@ define([
                                 }]
                             }
                         }]
+                    }]
+                }
+            },
+            'referring to class in global namespace with parentheses': {
+                code: '$object = new \\stdClass();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'object'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_NEW_EXPRESSION',
+                                    className: {
+                                        name: 'N_STRING',
+                                        string: '\\stdClass'
+                                    },
+                                    args: []
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'referring to class in global namespace with "new" keyword touching namespace path and with parentheses': {
+                code: '$object = new\\stdClass();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'object'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_NEW_EXPRESSION',
+                                    className: {
+                                        name: 'N_STRING',
+                                        string: '\\stdClass'
+                                    },
+                                    args: []
+                                }
+                            }]
+                        }
                     }]
                 }
             },
@@ -127,7 +178,6 @@ define([
                                 operator: '=',
                                 operand: {
                                     name: 'N_NEW_EXPRESSION',
-                                    operator: 'new',
                                     className: {
                                         name: 'N_VARIABLE',
                                         variable: 'className'
