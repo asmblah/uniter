@@ -17,6 +17,7 @@
         ".jshintrc",
         ".travis.yml",
         "bin",
+        "bower_components",
         "demo",
         "index.html",
         "index.js",

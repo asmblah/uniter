@@ -23,14 +23,12 @@ define([
 
     return {
         load: function (name, req, onLoad, requirejsConfig) {
-            var contextName = 'other';
-
             require({
                 'baseUrl': requirejsConfig.baseUrl,
                 //'context': 'other'
             }, [name], function (packageConfig) {
                 var baseID,
-                    paths = util.extend({}, requirejsConfig.paths, packageConfig.paths);
+                    paths = util.extend({}, packageConfig.paths);
 
                 // Process relative path mappings relative to package file
                 baseID = (name || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
@@ -45,13 +43,11 @@ define([
 
                 require({
                     'baseUrl': requirejsConfig.baseUrl,
-                    'config': requirejsConfig.config,
                     'paths': paths,
-                    'context': contextName
+                    'context': 'other'
                 }, [
                     packageConfig.main
                 ], function (value) {
-                    //debugger;
                     onLoad(value);
                 }, onLoad.error);
             }, onLoad.error);
