@@ -135,10 +135,10 @@ EOS
 */) {}),
                 expectedException: {
                     instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'TeSt' not found$/
+                    match: /^PHP Fatal error: Class 'My\\Library\\TeSt' not found$/
                 },
                 // Note additional check for case preservation in class name string passed to autoloader
-                expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
+                expectedStderr: 'PHP Fatal error: Class \'My\\Library\\TeSt\' not found',
                 expectedStdout: 'autoloading My\\Library\\TeSt'
             },
             'should be called when undefined class is used, not erroring if class is then defined with same case by autoloader': {

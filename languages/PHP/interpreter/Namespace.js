@@ -122,7 +122,7 @@ define([
                 }
 
                 if (!hasOwn.call(namespace.classes, lowerName)) {
-                    throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: name});
+                    throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: namespace.getPrefix() + name});
                 }
             }
 

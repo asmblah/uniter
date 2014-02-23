@@ -111,6 +111,21 @@ EOS
                 expectedStderr: 'PHP Fatal error: Class \'IDontExist\' not found',
                 expectedStdout: ''
             },
+            'creating instance of class that does not exist in namespace with no argument brackets': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new \Creator\Autoload\ClassLoader;
+
+    var_dump($object);
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'Creator\\Autoload\\ClassLoader' not found$/
+                },
+                expectedStderr: 'PHP Fatal error: Class \'Creator\\Autoload\\ClassLoader\' not found',
+                expectedStdout: ''
+            },
             'creating instance of class using variable class': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
