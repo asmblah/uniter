@@ -15,47 +15,20 @@
         http = require('http'),
         app = express(),
         bddPath = __dirname,
-        modular = require('modular-amd'),
         rootPath = bddPath + '/../..',
-        nodeModulesPath = rootPath + '/node_modules',
         port = 6700,
-        server = http.createServer(app),
-        util = modular.util,
-        vendorPath = rootPath + '/vendor';
+        server = http.createServer(app);
 
-    function mapPaths(map) {
-        util.each(map, function (realPath, virtualPath) {
-            if (/\/$/.test(realPath)) {
-                app.use(virtualPath, express.static(realPath));
-            } else {
-                app.get(virtualPath, function (request, response) {
-                    response.sendfile(realPath);
-                });
-            }
-        });
-    }
-
-    server.listen(port);
-
-    mapPaths({
-        '/acceptance': bddPath + '/acceptance/',
-        '/chai.js': nodeModulesPath + '/chai/chai.js',
-        '/index.html': bddPath + '/index.html',
-        '/integration': bddPath + '/integration/',
-        '/js': rootPath + '/js/',
-        '/languages': rootPath + '/languages/',
-        '/main.js': bddPath + '/main.js',
-        '/mocha': nodeModulesPath + '/mocha/',
-        '/modular': nodeModulesPath + '/modular-amd/',
-        '/runner.js': bddPath + '/runner.js',
-        '/sinon.js': vendorPath + '/sinon/sinon.js',
-        '/sinon-chai.js': nodeModulesPath + '/sinon-chai/lib/sinon-chai.js',
-        '/unit': bddPath + '/unit/'
-    });
+    app.use('/', express.static(bddPath));
+    app.use('/bower_components', express.static(rootPath + '/bower_components'));
+    app.use('/js', express.static(rootPath + '/js'));
+    app.use('/languages', express.static(rootPath + '/languages'));
 
     app.get('/', function (request, response) {
         response.redirect('/index.html');
     });
+
+    server.listen(port);
 
     console.log('Started server, visit http://127.0.0.1:' + port + '/ to run the tests');
 }());

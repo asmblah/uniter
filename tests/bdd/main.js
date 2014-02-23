@@ -7,29 +7,30 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-// FIXME!! (In Modular)
+/*global define, require */
 require.config({
     paths: {
-        'Modular': '/../../modular'
-    }
+        'bdd': '.',
+        'chai': 'bower_components/chai/chai',
+        'package/util': 'bower_components/package/util',
+        'sinon': 'bower_components/sinonjs-built/pkg/sinon',
+        'sinon-chai': 'bower_components/sinon-chai/lib/sinon-chai'
+    },
+    // Defeat caching
+    urlArgs: '__r=' + Math.random()
 });
 
-/*global define */
-define({
-    cache: false
-}, [
-    'modular',
+define([
     'require',
 
     // Mocha has to be handled specially as it is not an AMD module
-    'mocha/mocha'
+    'bower_components/mocha/mocha'
 ], function (
-    modular,
     require
 ) {
     'use strict';
 
-    var global = modular.util.global,
+    var global = /*jshint evil:true */new Function('return this;')()/*jshint evil:false */,
         query = global.Mocha.utils.parseQuery(global.location.search || '');
 
     define('test-environment', {});
