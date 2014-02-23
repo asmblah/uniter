@@ -17,7 +17,7 @@ Features
     - `while` loop support
     - `for` loop support
     - `foreach` loop support
-    - `function` statements
+    - `function` statements with type hinting (as syntatic sugar only: no enforcement is performed yet)
     - Closure `function` expressions
     - `switch` statements
     - Forward and backward `goto` statements (but no overlap support yet)
