@@ -46,6 +46,50 @@ define([
                         }
                     }]
                 }
+            },
+            'empty function definition with one unnamespaced class type hinted arg but no statements': {
+                code: 'function doNothing(Response $a) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FUNCTION_STATEMENT',
+                        func: 'doNothing',
+                        args: [{
+                            name: 'N_TYPE_HINT',
+                            type: 'Response',
+                            variable: {
+                                name: 'N_VARIABLE',
+                                variable: 'a'
+                            }
+                        }],
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
+                    }]
+                }
+            },
+            'empty function definition with one namespaced class type hinted arg but no statements': {
+                code: 'function doNothing(\\Creator\\Framework\\Request $a) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FUNCTION_STATEMENT',
+                        func: 'doNothing',
+                        args: [{
+                            name: 'N_TYPE_HINT',
+                            type: '\\Creator\\Framework\\Request',
+                            variable: {
+                                name: 'N_VARIABLE',
+                                variable: 'a'
+                            }
+                        }],
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

@@ -60,6 +60,78 @@ EOS
                         }]
                     }]
                 }
+            },
+            'empty method definition with one unnamespaced class type hinted arg but no statements': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Thing {
+        public function doNothing(ItemList $items) {}
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'Thing'
+                        },
+                        members: [{
+                            name: 'N_METHOD_DEFINITION',
+                            func: 'doNothing',
+                            visibility: 'public',
+                            args: [{
+                                name: 'N_TYPE_HINT',
+                                type: 'ItemList',
+                                variable: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'items'
+                                }
+                            }],
+                            body: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }]
+                    }]
+                }
+            },
+            'empty method definition with one namespaced class type hinted arg but no statements': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Thing {
+        public function doNothing(\Creator\Framework\Request $items) {}
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: {
+                            name: 'N_STRING',
+                            string: 'Thing'
+                        },
+                        members: [{
+                            name: 'N_METHOD_DEFINITION',
+                            func: 'doNothing',
+                            visibility: 'public',
+                            args: [{
+                                name: 'N_TYPE_HINT',
+                                type: '\\Creator\\Framework\\Request',
+                                variable: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'items'
+                                }
+                            }],
+                            body: {
+                                name: 'N_COMPOUND_STATEMENT',
+                                statements: []
+                            }
+                        }]
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

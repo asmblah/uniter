@@ -655,7 +655,7 @@ define([
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_MAGIC_CONSTANT', 'N_REQUIRE_EXPRESSION', 'N_REQUIRE_ONCE_EXPRESSION', 'N_SELF', 'N_STRING']}
             },
             'N_TYPE_HINT': {
-                components: [{name: 'type', rule: 'T_ARRAY'}, {name: 'variable', rule: 'N_VARIABLE'}]
+                components: [{name: 'type', oneOf: ['N_NAMESPACE', 'T_STRING']}, {name: 'variable', rule: 'N_VARIABLE'}]
             },
             'N_USE_STATEMENT': {
                 components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]
