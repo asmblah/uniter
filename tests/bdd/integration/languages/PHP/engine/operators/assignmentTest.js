@@ -142,6 +142,13 @@ NULL
 
 EOS
 */) {}),
+                },
+                'assignment of result of assignment to variable': {
+                    code: '<?php $value = $result = 7; return $value + $result;',
+                    expectedResult: 14,
+                    expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

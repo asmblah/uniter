@@ -466,10 +466,12 @@ define([
             },
             'N_EXPRESSION': function (node, interpret) {
                 var isAssignment = node.right[0].operator === '=',
-                    expression = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
+                    expressionEnd = '',
+                    expressionStart = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
 
-                util.each(node.right, function (operation) {
-                    var isReference = false,
+                util.each(node.right, function (operation, index) {
+                    var getValueIfApplicable,
+                        isReference = false,
                         method,
                         valuePostProcess = '';
 
@@ -484,10 +486,13 @@ define([
                         method = method[isReference];
                     }
 
-                    expression += '.' + method + '(' + interpret(operation.operand, {getValue: !isReference}) + valuePostProcess + ')';
+                    getValueIfApplicable = (!isAssignment || index === node.right.length - 1) && !isReference;
+
+                    expressionStart += '.' + method + '(' + interpret(operation.operand, {getValue: getValueIfApplicable}) + valuePostProcess;
+                    expressionEnd += ')';
                 });
 
-                return expression;
+                return expressionStart + expressionEnd;
             },
             'N_EXPRESSION_STATEMENT': function (node, interpret) {
                 return interpret(node.expression) + ';';
