@@ -174,6 +174,9 @@ define([
                 referenceFactory: referenceFactory,
                 requireOnce: require,
                 require: require,
+                throwNoActiveClassScope: function () {
+                    throw new PHPFatalError(PHPFatalError.SELF_WHEN_NO_ACTIVE_CLASS);
+                },
                 valueFactory: valueFactory
             };
 
@@ -409,7 +412,7 @@ define([
                     superClass = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
 
                 util.each(node.members, function (member) {
-                    var data = interpret(member);
+                    var data = interpret(member, {inClass: true});
 
                     if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
@@ -422,7 +425,7 @@ define([
 
                 code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
-                return 'namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');';
+                return '(function () {var currentClass = namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');}());';
             },
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
@@ -776,6 +779,13 @@ define([
                 var expression = interpret(node.expression);
 
                 return 'return ' + (expression ? expression : 'tools.valueFactory.createNull()') + ';';
+            },
+            'N_SELF': function (node, interpret, context) {
+                if (context.inClass) {
+                    return 'tools.valueFactory.createString(currentClass.getName())';
+                }
+
+                return 'tools.throwNoActiveClassScope()';
             },
             'N_STATIC_METHOD_CALL': function (node, interpret) {
                 var args = [];

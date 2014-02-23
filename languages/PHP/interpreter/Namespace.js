@@ -93,6 +93,8 @@ define([
             methodData.classObject = classObject;
 
             namespace.classes[name.toLowerCase()] = classObject;
+
+            return classObject;
         },
 
         defineFunction: function (name, func) {

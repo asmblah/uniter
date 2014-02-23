@@ -26,7 +26,8 @@ define([
             6: '${name}() must take exactly 1 argument',
             7: 'Class name must be a valid object or a string',
             8: 'Access to undeclared static property: ${className}::$${propertyName}',
-            9: 'Call to undefined method ${className}::${methodName}()'
+            9: 'Call to undefined method ${className}::${methodName}()',
+            10: 'Cannot access self:: when no class scope is active'
         };
 
     function PHPFatalError(code, variables) {
@@ -44,7 +45,8 @@ define([
         EXPECT_EXACTLY_1_ARG: 6,
         CLASS_NAME_NOT_VALID: 7,
         UNDECLARED_STATIC_PROPERTY: 8,
-        CALL_TO_UNDEFINED_METHOD: 9
+        CALL_TO_UNDEFINED_METHOD: 9,
+        SELF_WHEN_NO_ACTIVE_CLASS: 10
     });
 
     return PHPFatalError;
