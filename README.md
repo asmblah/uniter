@@ -21,7 +21,9 @@ Features
     - Closure `function` expressions
     - `switch` statements
     - Forward and backward `goto` statements (but no overlap support yet)
-    - Basic `class` object support using the `new` operator
+    - `class` object support (`new` operator, `extends` support etc.)
+    - Instance property/method access (`->` operator)
+    - Static class property/method access (`::` operator), `self::` construct
     - `use` statement for `class`, `namespace` and `function` importing and aliasing
     - Magic `__autoload(...)` function
     - Magic `__DIR__`, `__FILE__` and `__LINE__` constants
