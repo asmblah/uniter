@@ -40,6 +40,7 @@ require({
     var phpEngine = uniter.createEngine('PHP');
 
     function output() {
+        clear();
         print(phpEngine.getStdout().readAll());
         print(phpEngine.getStderr().readAll());
     }
@@ -89,6 +90,10 @@ EOS
                 resultIframe = global.document.getElementById('result'),
                 resultBody = resultIframe.contentWindow.document.body;
 
+            function clear() {
+                resultBody.innerHTML = '';
+            }
+
             function print(html) {
                 resultBody.insertAdjacentHTML('beforeEnd', html);
             }
@@ -97,11 +102,9 @@ EOS
                 resultBody.appendChild(global.document.createTextNode(text));
             }
 
-            resultBody.innerHTML = '';
-
             try {
                 /*jshint evil: true */
-                new Function('require, phpCode, print', javascriptCode)(global.require, phpCode, print);
+                new Function('require, phpCode, print, clear', javascriptCode)(global.require, phpCode, print, clear);
             } catch (error) {
                 printText('<JavaScript error> ' + error.toString());
             }
