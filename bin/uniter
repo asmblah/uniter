@@ -9,7 +9,7 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global process, require */
+/*global __dirname, process, require */
 (function () {
     'use strict';
 
@@ -22,7 +22,7 @@
         phpCode,
         phpEngine,
         phpParser,
-        uniter = require('requirejs')('.');
+        uniter = require(__dirname + '/..');
 
     function output() {
         process.stdout.write(phpEngine.getStdout().readAll());
