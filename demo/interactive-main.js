@@ -28,10 +28,8 @@ define([
     ], function () {
         var ace = global.ace,
             javascriptCode = util.heredoc(function () {/*<<<EOS
-require({
-    baseUrl: '..'
-}, [
-    'uniter'
+require([
+    '../uniter'
 ], function (
     uniter
 ) {
@@ -104,7 +102,7 @@ EOS
 
             try {
                 /*jshint evil: true */
-                new Function('require, phpCode, print, clear', javascriptCode)(global.require, phpCode, print, clear);
+                new Function('require, phpCode, print, clear', javascriptCode)(require, phpCode, print, clear);
             } catch (error) {
                 printText('<JavaScript error> ' + error.toString());
             }

@@ -9,5 +9,5 @@
 
 /*global define */
 define([
-    '../bower_components/package/package!interactive-package'
+    '../bower_components/package/package!./interactive-package'
 ], function () {});

@@ -11,9 +11,7 @@
 define({
     'paths': {
         'ace': '../vendor/ace',
-        'bower_components': '../bower_components',
-        'uniter': '../uniter',
-        'vendor': '../vendor'
+        'bower_components': '../bower_components'
     },
     'main': 'interactive-main'
 });
