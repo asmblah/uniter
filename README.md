@@ -1,7 +1,7 @@
 Uniter
 ======
 
-[![Build Status](https://secure.travis-ci.org/asmblah/uniter.png)](http://travis-ci.org/asmblah/uniter)
+[![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
 
 Uniter allows you to execute PHP in the browser or in Node.js.
 
