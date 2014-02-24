@@ -17,21 +17,30 @@ define([
 ) {
     'use strict';
 
-    var specialPaths = {
-            'package/util': module.id.replace(/[^\/]+$/, '') + 'util'
-        };
+    var pluginPath = module.id.replace(/[^\/]+$/, '');
+
+    // Expose util as a special named dependency for reuse
+    define('package/util', util);
 
     return {
         load: function (name, req, onLoad, requirejsConfig) {
+            var isolatedContextName = 'package-' + Math.random();
+
+            // Path is normalized relative to this plugin file, prefix with path too
+            if (/^\.\.?\//.test(name)) {
+                name = pluginPath + name;
+            }
+
             require({
-                'baseUrl': requirejsConfig.baseUrl,
-                //'context': 'other'
+                // Use an isolated context to load package manifest file, plugin path prefix needs path mappings
+                'paths': requirejsConfig.paths,
+                'context': isolatedContextName
             }, [name], function (packageConfig) {
                 var baseID,
                     paths = util.extend({}, packageConfig.paths);
 
                 // Process relative path mappings relative to package file
-                baseID = (name || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
+                baseID = (req.toUrl(name) || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
 
                 util.each(paths, function (path, index, paths) {
                     if (/^\.\.?\//.test(path)) {
@@ -39,12 +48,10 @@ define([
                     }
                 });
 
-                util.extend(paths, specialPaths);
-
                 require({
-                    'baseUrl': requirejsConfig.baseUrl,
+                    // Use another isolated context to set the path mappings configured in package manifest
                     'paths': paths,
-                    'context': 'other'
+                    'context': isolatedContextName
                 }, [
                     packageConfig.main
                 ], function (value) {
