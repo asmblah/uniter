@@ -251,12 +251,6 @@ define([
             bindingAssignments = '',
             body = interpret(statementNode);
 
-        util.each(argNodes, function (arg) {
-            var variable = (arg.name === 'N_TYPE_HINT') ? arg.variable : arg;
-
-            args.push(variable.variable);
-        });
-
         util.each(bindingNodes, function (bindingNode) {
             var methodSuffix = bindingNode.reference ? 'Reference' : 'Value',
                 variableName = bindingNode.variable;
@@ -265,9 +259,24 @@ define([
         });
 
         // Copy passed values for any arguments
-        util.each(args, function (arg, index) {
-            argumentAssignments += 'scope.getVariable("' + arg + '").setValue($' + arg + ');';
-            args[index] = '$' + arg;
+        util.each(argNodes, function (argNode, index) {
+            var valueCode = '$',
+                variable;
+
+            if (argNode.name === 'N_ARGUMENT') {
+                variable = argNode.variable.variable;
+                valueCode += variable;
+
+                if (argNode.value) {
+                    valueCode += ' || ' + interpret(argNode.value);
+                }
+            } else {
+                variable = argNode.variable;
+                valueCode += variable;
+            }
+
+            argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
+            args[index] = '$' + variable;
         });
 
         // Prepend parts in correct order

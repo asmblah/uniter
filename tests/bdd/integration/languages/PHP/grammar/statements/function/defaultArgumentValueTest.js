@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar function definition statement type hinting integration', function () {
+    describe('PHP Parser grammar function definition statement default argument value integration', function () {
         var parser;
 
         beforeEach(function () {
@@ -25,8 +25,33 @@ define([
         });
 
         util.each({
-            'empty function definition with one "array" type hinted arg but no statements': {
-                code: 'function doNothing(array $a) {}',
+            'empty function definition with argument with no type hint but a default value of null': {
+                code: 'function doNothing($value = null) {}',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FUNCTION_STATEMENT',
+                        func: 'doNothing',
+                        args: [{
+                            name: 'N_ARGUMENT',
+                            variable: {
+                                name: 'N_VARIABLE',
+                                variable: 'value'
+                            },
+                            value: {
+                                name: 'N_STRING',
+                                string: 'null'
+                            }
+                        }],
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: []
+                        }
+                    }]
+                }
+            },
+            'empty function definition with "array" type hinted argument with a default value of null': {
+                code: 'function doNothing(array $value = null) {}',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -37,51 +62,11 @@ define([
                             type: 'array',
                             variable: {
                                 name: 'N_VARIABLE',
-                                variable: 'a'
-                            }
-                        }],
-                        body: {
-                            name: 'N_COMPOUND_STATEMENT',
-                            statements: []
-                        }
-                    }]
-                }
-            },
-            'empty function definition with one unnamespaced class type hinted arg but no statements': {
-                code: 'function doNothing(Response $a) {}',
-                expectedAST: {
-                    name: 'N_PROGRAM',
-                    statements: [{
-                        name: 'N_FUNCTION_STATEMENT',
-                        func: 'doNothing',
-                        args: [{
-                            name: 'N_ARGUMENT',
-                            type: 'Response',
-                            variable: {
-                                name: 'N_VARIABLE',
-                                variable: 'a'
-                            }
-                        }],
-                        body: {
-                            name: 'N_COMPOUND_STATEMENT',
-                            statements: []
-                        }
-                    }]
-                }
-            },
-            'empty function definition with one namespaced class type hinted arg but no statements': {
-                code: 'function doNothing(\\Creator\\Framework\\Request $a) {}',
-                expectedAST: {
-                    name: 'N_PROGRAM',
-                    statements: [{
-                        name: 'N_FUNCTION_STATEMENT',
-                        func: 'doNothing',
-                        args: [{
-                            name: 'N_ARGUMENT',
-                            type: '\\Creator\\Framework\\Request',
-                            variable: {
-                                name: 'N_VARIABLE',
-                                variable: 'a'
+                                variable: 'value'
+                            },
+                            value: {
+                                name: 'N_STRING',
+                                string: 'null'
                             }
                         }],
                         body: {

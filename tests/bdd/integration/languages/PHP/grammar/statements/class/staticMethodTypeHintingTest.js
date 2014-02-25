@@ -46,7 +46,7 @@ EOS
                             method: 'doNothing',
                             visibility: 'public',
                             args: [{
-                                name: 'N_TYPE_HINT',
+                                name: 'N_ARGUMENT',
                                 type: 'array',
                                 variable: {
                                     name: 'N_VARIABLE',
@@ -82,7 +82,7 @@ EOS
                             method: 'doNothing',
                             visibility: 'public',
                             args: [{
-                                name: 'N_TYPE_HINT',
+                                name: 'N_ARGUMENT',
                                 type: 'ItemList',
                                 variable: {
                                     name: 'N_VARIABLE',
@@ -118,7 +118,7 @@ EOS
                             method: 'doNothing',
                             visibility: 'public',
                             args: [{
-                                name: 'N_TYPE_HINT',
+                                name: 'N_ARGUMENT',
                                 type: '\\Creator\\Framework\\Request',
                                 variable: {
                                     name: 'N_VARIABLE',

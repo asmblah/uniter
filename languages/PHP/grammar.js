@@ -213,7 +213,15 @@ define([
             'T_YIELD': /yield\b/i,
 
             'N_ARGUMENT': {
-                oneOf: ['N_VARIABLE', 'N_TYPE_HINT']
+                oneOf: ['N_DECORATED_ARGUMENT', 'N_VARIABLE']
+            },
+            'N_DECORATED_ARGUMENT': {
+                captureAs: 'N_ARGUMENT',
+                components: {oneOf: [
+                    [{name: 'variable', rule: 'N_VARIABLE'}, (/=/), {name: 'value', rule: 'N_TERM'}],
+                    [{name: 'type', oneOf: ['N_NAMESPACE', 'T_STRING']}, {name: 'variable', rule: 'N_VARIABLE'}, (/=/), {name: 'value', rule: 'N_TERM'}],
+                    [{name: 'type', oneOf: ['N_NAMESPACE', 'T_STRING']}, {name: 'variable', rule: 'N_VARIABLE'}]
+                ]}
             },
             'N_ARRAY_INDEX': {
                 components: 'N_EXPRESSION_LEVEL_2_A'
@@ -653,9 +661,6 @@ define([
             },
             'N_TERM': {
                 components: {oneOf: ['N_VARIABLE', 'N_FLOAT', 'N_INTEGER', 'N_BOOLEAN', 'N_STRING_LITERAL', 'N_ARRAY_LITERAL', 'N_LIST', 'N_ISSET', 'N_CLOSURE', 'N_MAGIC_CONSTANT', 'N_REQUIRE_EXPRESSION', 'N_REQUIRE_ONCE_EXPRESSION', 'N_SELF', 'N_STRING']}
-            },
-            'N_TYPE_HINT': {
-                components: [{name: 'type', oneOf: ['N_NAMESPACE', 'T_STRING']}, {name: 'variable', rule: 'N_VARIABLE'}]
             },
             'N_USE_STATEMENT': {
                 components: ['T_USE', {name: 'uses', oneOrMoreOf: [{name: 'source', oneOf: ['N_NAMESPACED_REFERENCE', 'N_STRING']}, {optionally: ['T_AS', {name: 'alias', what: 'T_STRING'}]}]}, (/;/)]
