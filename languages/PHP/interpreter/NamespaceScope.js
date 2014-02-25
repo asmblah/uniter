@@ -95,6 +95,10 @@ define([
 
                     if (hasOwn.call(scope.imports, prefix)) {
                         namespace = scope.globalNamespace.getDescendant(scope.imports[prefix].substr(1) + path);
+                    } else {
+                        // Not an alias: look up the namespace path relative to this namespace
+                        // (ie. 'namespace Test { Our\Func(); }' -> '\Test\Our\Func();')
+                        namespace = scope.globalNamespace.getDescendant(namespace.getPrefix() + prefix + path);
                     }
                 }
             }

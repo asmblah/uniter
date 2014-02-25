@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -64,6 +66,73 @@ EOS
 */) {}),
                 expectedStderr: '',
                 expectedStdout: 'it'
+            },
+            'call to function that is defined in current namespace should not fall back to global namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function printIt() {
+        echo 'global-it';
+    }
+
+    namespace MyStuff;
+    function printIt() {
+        echo 'MyStuff-it';
+    }
+
+    namespace MyStuff;
+    printIt();
+EOS
+*/) {}),
+                expectedStderr: '',
+                expectedStdout: 'MyStuff-it'
+            },
+            'call to function not defined in current namespace should fall back to global and not a parent namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function printIt() {
+        echo 'global-it';
+    }
+
+    namespace MyStuff;
+    function printIt() {
+        echo 'MyStuff-it';
+    }
+
+    namespace MyStuff\Tools;
+
+    printIt();
+EOS
+*/) {}),
+                expectedStderr: '',
+                expectedStdout: 'global-it'
+            },
+            'call to undefined function in another namespace with prefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Test;
+    \Creator\Stuff\doSomething();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function Creator\\Stuff\\doSomething\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function Creator\\Stuff\\doSomething()',
+                expectedStdout: ''
+            },
+            'call to undefined function in another namespace with unprefixed path': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Test;
+    Creator\Stuff\doSomething();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function Test\\Creator\\Stuff\\doSomething\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function Test\\Creator\\Stuff\\doSomething()',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

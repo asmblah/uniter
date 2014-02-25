@@ -144,21 +144,24 @@ define([
         },
 
         getFunction: function (name) {
-            var namespace = this;
+            var globalNamespace,
+                namespace = this;
 
             if (util.isFunction(name)) {
                 return name;
             }
 
-            while (namespace && !hasOwn.call(namespace.functions, name)) {
-                namespace = namespace.getParent();
+            if (hasOwn.call(namespace.functions, name)) {
+                return namespace.functions[name];
             }
 
-            if (!namespace) {
-                throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_FUNCTION, {name: name});
+            globalNamespace = namespace.getGlobal();
+
+            if (hasOwn.call(globalNamespace.functions, name)) {
+                return globalNamespace.functions[name];
             }
 
-            return namespace.functions[name];
+            throw new PHPFatalError(PHPFatalError.CALL_TO_UNDEFINED_FUNCTION, {name: namespace.getPrefix() + name});
         },
 
         getGlobal: function () {
