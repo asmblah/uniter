@@ -37,10 +37,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -64,10 +61,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -95,10 +89,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -122,10 +113,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -153,10 +141,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             variable: {
@@ -179,10 +164,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneProperty'
-                        },
+                        className: 'OneProperty',
                         members: [{
                             name: 'N_STATIC_PROPERTY_DEFINITION',
                             variable: {

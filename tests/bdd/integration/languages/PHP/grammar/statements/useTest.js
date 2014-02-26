@@ -32,10 +32,7 @@ define([
                     statements: [{
                         name: 'N_USE_STATEMENT',
                         uses: [{
-                            source: {
-                                name: 'N_STRING',
-                                string: 'Toolkit'
-                            }
+                            source: 'Toolkit'
                         }]
                     }]
                 }
@@ -47,10 +44,7 @@ define([
                     statements: [{
                         name: 'N_USE_STATEMENT',
                         uses: [{
-                            source: {
-                                name: 'N_STRING',
-                                string: 'Uniter'
-                            },
+                            source: 'Uniter',
                             alias: 'Library'
                         }]
                     }]
@@ -63,10 +57,7 @@ define([
                     statements: [{
                         name: 'N_USE_STATEMENT',
                         uses: [{
-                            source: {
-                                name: 'N_STRING',
-                                string: 'Framework\\Network\\Http\\Request'
-                            },
+                            source: 'Framework\\Network\\Http\\Request',
                             alias: 'MyFrameworkRequest'
                         }]
                     }]

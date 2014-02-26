@@ -129,6 +129,14 @@ define([
             return namespace.classes[lowerName];
         },
 
+        getConstant: function (name) {
+            var namespace = this;
+
+            namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+
+            return this.valueFactory.createString(name);
+        },
+
         getDescendant: function (name) {
             var namespace = this;
 

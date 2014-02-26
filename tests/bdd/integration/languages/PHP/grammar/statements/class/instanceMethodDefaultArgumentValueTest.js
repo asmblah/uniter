@@ -37,10 +37,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Thing'
-                        },
+                        className: 'Thing',
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             func: 'doNothing',
@@ -52,8 +49,7 @@ EOS
                                     variable: 'items'
                                 },
                                 value: {
-                                    name: 'N_STRING',
-                                    string: 'null'
+                                    name: 'N_NULL'
                                 }
                             }],
                             body: {
@@ -76,10 +72,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Thing'
-                        },
+                        className: 'Thing',
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             func: 'doNothing',

@@ -66,6 +66,10 @@ define([
             return namespace.getClass(name);
         },
 
+        getConstant: function (name) {
+            return this.namespace.getConstant(name);
+        },
+
         getFunction: function (name) {
             var match,
                 scope = this,

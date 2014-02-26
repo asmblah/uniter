@@ -32,8 +32,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: []
                     }]
@@ -46,8 +45,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: [{
                             name: 'N_CASE',
@@ -67,8 +65,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: [{
                             name: 'N_CASE',
@@ -104,8 +101,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: [{
                             name: 'N_CASE',
@@ -147,8 +143,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: [{
                             name: 'N_CASE',
@@ -193,8 +188,7 @@ define([
                     statements: [{
                         name: 'N_SWITCH_STATEMENT',
                         expression: {
-                            name: 'N_STRING',
-                            string: 'null'
+                            name: 'N_NULL'
                         },
                         cases: [{
                             name: 'N_CASE',

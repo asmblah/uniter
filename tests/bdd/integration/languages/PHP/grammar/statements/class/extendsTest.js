@@ -31,21 +31,12 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Animal'
-                        },
+                        className: 'Animal',
                         members: []
                     }, {
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Human'
-                        },
-                        extend: {
-                            name: 'N_STRING',
-                            string: 'Animal'
-                        },
+                        className: 'Human',
+                        extend: 'Animal',
                         members: []
                     }]
                 }
@@ -56,14 +47,8 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Drill'
-                        },
-                        extend: {
-                            name: 'N_STRING',
-                            string: '\\Vendor\\Toolbox\\Tool'
-                        },
+                        className: 'Drill',
+                        extend: '\\Vendor\\Toolbox\\Tool',
                         members: []
                     }]
                 }

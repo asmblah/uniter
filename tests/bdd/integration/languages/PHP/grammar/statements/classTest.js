@@ -31,10 +31,7 @@ define([
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'Test'
-                        },
+                        className: 'Test',
                         members: []
                     }]
                 }
@@ -51,10 +48,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OnePub'
-                        },
+                        className: 'OnePub',
                         members: [{
                             name: 'N_INSTANCE_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -78,10 +72,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OnePub'
-                        },
+                        className: 'OnePub',
                         members: [{
                             name: 'N_INSTANCE_PROPERTY_DEFINITION',
                             visibility: 'public',
@@ -111,10 +102,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneMethod'
-                        },
+                        className: 'OneMethod',
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             visibility: 'public',
@@ -149,10 +137,7 @@ EOS
                     name: 'N_PROGRAM',
                     statements: [{
                         name: 'N_CLASS_STATEMENT',
-                        className: {
-                            name: 'N_STRING',
-                            string: 'OneMethod'
-                        },
+                        className: 'OneMethod',
                         members: [{
                             name: 'N_METHOD_DEFINITION',
                             visibility: 'public',

@@ -39,8 +39,7 @@ define([
                                 variable: 'value'
                             },
                             value: {
-                                name: 'N_STRING',
-                                string: 'null'
+                                name: 'N_NULL'
                             }
                         }],
                         body: {
@@ -65,8 +64,7 @@ define([
                                 variable: 'value'
                             },
                             value: {
-                                name: 'N_STRING',
-                                string: 'null'
+                                name: 'N_NULL'
                             }
                         }],
                         body: {

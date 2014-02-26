@@ -77,10 +77,10 @@ define([
                         expectedStdout: ''
                     }],
                     'string': [{
-                        operand: 'hello',
+                        operand: '"hello"',
                         expectedStdout: 'hello'
                     }, {
-                        operand: 'world',
+                        operand: '"world"',
                         expectedStdout: 'world'
                     }]
                 }

@@ -420,7 +420,7 @@ define([
                     methodCodes = [],
                     propertyCodes = [],
                     staticPropertyCodes = [],
-                    superClass = node.extend ? 'namespaceScope.getClass(' + interpret(node.extend) + '.getNative())' : 'null';
+                    superClass = node.extend ? 'namespaceScope.getClass(' + JSON.stringify(node.extend) + ')' : 'null';
 
                 util.each(node.members, function (member) {
                     var data = interpret(member, {inClass: true});
@@ -436,7 +436,7 @@ define([
 
                 code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
 
-                return '(function () {var currentClass = namespace.defineClass(' + interpret(node.className) + '.getNative(), ' + code + ');}());';
+                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.className) + ', ' + code + ');}());';
             },
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
@@ -582,7 +582,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return '(' + interpret(node.func, {getValue: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
+                return '(' + interpret(node.func, {getValue: true, allowBareword: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
             },
             'N_GOTO_STATEMENT': function (node, interpret, context) {
                 var code = '',
@@ -699,7 +699,7 @@ define([
                         args.push(interpret(arg));
                     });
 
-                    code += '.callMethod(' + interpret(call.func) + '.getNative(), [' + args.join(', ') + '])';
+                    code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.getNative(), [' + args.join(', ') + '])';
                 });
 
                 return interpret(node.object) + code;
@@ -729,7 +729,10 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return 'tools.createInstance(namespaceScope, ' + interpret(node.className) + ', [' + args.join(', ') + '])';
+                return 'tools.createInstance(namespaceScope, ' + interpret(node.className, {allowBareword: true}) + ', [' + args.join(', ') + '])';
+            },
+            'N_NULL': function () {
+                return 'tools.valueFactory.createNull()';
             },
             'N_OBJECT_PROPERTY': function (node, interpret, context) {
                 var objectVariableCode,
@@ -744,7 +747,7 @@ define([
                 }
 
                 util.each(node.properties, function (property, index) {
-                    var keyValue = interpret(property.property, {assignment: false, getValue: false});
+                    var keyValue = interpret(property.property, {assignment: false, getValue: false, allowBareword: true});
 
                     propertyCode += '.getElementByKey(' + keyValue + ')';
 
@@ -810,7 +813,7 @@ define([
                     args.push(interpret(arg));
                 });
 
-                return interpret(node.className) + '.callStaticMethod(' + interpret(node.method) + ', [' + args.join(', ') + '], namespaceScope)';
+                return interpret(node.className, {allowBareword: true}) + '.callStaticMethod(' + interpret(node.method, {allowBareword: true}) + ', [' + args.join(', ') + '], namespaceScope)';
             },
             'N_STATIC_METHOD_DEFINITION': function (node, interpret) {
                 return {
@@ -819,8 +822,8 @@ define([
                 };
             },
             'N_STATIC_PROPERTY': function (node, interpret, context) {
-                var classVariableCode = interpret(node.className, {getValue: true}),
-                    propertyCode = '.getStaticPropertyByName(' + interpret(node.property, {assignment: false, getValue: true}) + ', namespaceScope)',
+                var classVariableCode = interpret(node.className, {getValue: true, allowBareword: true}),
+                    propertyCode = '.getStaticPropertyByName(' + interpret(node.property, {assignment: false, getValue: true, allowBareword: true}) + ', namespaceScope)',
                     suffix = '';
 
                 if (!context.assignment) {
@@ -835,13 +838,12 @@ define([
                     value: node.value ? interpret(node.value) : 'tools.valueFactory.createNull()'
                 };
             },
-            'N_STRING': function (node) {
-                switch (node.string) {
-                case 'null':
-                    return 'tools.valueFactory.createNull()';
-                default:
+            'N_STRING': function (node, interpret, context) {
+                if (context.allowBareword) {
                     return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
                 }
+
+                return 'namespaceScope.getConstant(' + JSON.stringify(node.string) + ')';
             },
             'N_STRING_EXPRESSION': function (node, interpret) {
                 var codes = [];
@@ -889,14 +891,14 @@ define([
 
                 return operand + '.' + unaryOperatorToMethod[node.prefix ? 'prefix' : 'suffix'][operator] + '()';
             },
-            'N_USE_STATEMENT': function (node, interpret) {
+            'N_USE_STATEMENT': function (node) {
                 var code = '';
 
                 util.each(node.uses, function (use) {
                     if (use.alias) {
-                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative(), ' + JSON.stringify(use.alias) + ');';
+                        code += 'namespaceScope.use(' + JSON.stringify(use.source) + ', ' + JSON.stringify(use.alias) + ');';
                     } else {
-                        code += 'namespaceScope.use(' + interpret(use.source) + '.getNative());';
+                        code += 'namespaceScope.use(' + JSON.stringify(use.source) + ');';
                     }
                 });
 

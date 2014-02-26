@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar null expression integration', function () {
+    describe('PHP Parser grammar constant expression integration', function () {
         var parser;
 
         beforeEach(function () {
@@ -25,8 +25,8 @@ define([
         });
 
         util.each({
-            'assignment of null to variable': {
-                code: '$nothing = null;',
+            'assignment of constant to variable': {
+                code: '$name = MY_NAME;',
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -35,12 +35,36 @@ define([
                             name: 'N_EXPRESSION',
                             left: {
                                 name: 'N_VARIABLE',
-                                variable: 'nothing'
+                                variable: 'name'
                             },
                             right: [{
                                 operator: '=',
                                 operand: {
-                                    name: 'N_NULL'
+                                    name: 'N_STRING',
+                                    string: 'MY_NAME'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            '"self" should be a valid constant name': {
+                code: '$string = self;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'string'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_STRING',
+                                    string: 'self'
                                 }
                             }]
                         }
