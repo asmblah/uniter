@@ -29,6 +29,7 @@ define([
         this.callStack = callStack;
         this.children = {};
         this.classes = {};
+        this.constants = {};
         this.functions = {};
         this.name = name;
         this.parent = parent;
@@ -97,6 +98,10 @@ define([
             return classObject;
         },
 
+        defineConstant: function (name, value) {
+            this.constants[name] = value;
+        },
+
         defineFunction: function (name, func) {
             var namespace = this;
 
@@ -132,9 +137,13 @@ define([
         getConstant: function (name) {
             var namespace = this;
 
-            namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+            if (!hasOwn.call(namespace.constants, name)) {
+                namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
 
-            return this.valueFactory.createString(name);
+                return this.valueFactory.createString(name);
+            }
+
+            return namespace.constants[name];
         },
 
         getDescendant: function (name) {

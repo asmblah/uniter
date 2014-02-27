@@ -10,11 +10,13 @@
 /*global define */
 define([
     './functions/array',
+    './functions/constant',
     './classes/stdClass',
     './functions/string',
     './functions/variableHandling'
 ], function (
     arrayFunctions,
+    constantFunctions,
     stdClass,
     stringFunctions,
     variableHandlingFunctions
@@ -27,6 +29,7 @@ define([
         },
         functionGroups: [
             arrayFunctions,
+            constantFunctions,
             stringFunctions,
             variableHandlingFunctions
         ]

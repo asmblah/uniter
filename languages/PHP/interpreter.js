@@ -183,6 +183,7 @@ define([
         (function () {
             var internals = {
                     callStack: callStack,
+                    globalNamespace: globalNamespace,
                     stdout: stdout,
                     valueFactory: valueFactory
                 };
