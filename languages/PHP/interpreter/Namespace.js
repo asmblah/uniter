@@ -98,8 +98,21 @@ define([
             return classObject;
         },
 
-        defineConstant: function (name, value) {
-            this.constants[name] = value;
+        defineConstant: function (name, value, options) {
+            var caseInsensitive;
+
+            options = options || {};
+
+            caseInsensitive = options.caseInsensitive;
+
+            if (caseInsensitive) {
+                name = name.toLowerCase();
+            }
+
+            this.constants[name] = {
+                caseInsensitive: caseInsensitive,
+                value: value
+            };
         },
 
         defineFunction: function (name, func) {
@@ -135,15 +148,22 @@ define([
         },
 
         getConstant: function (name) {
-            var namespace = this;
+            var lowercaseName,
+                namespace = this;
 
             if (!hasOwn.call(namespace.constants, name)) {
-                namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+                lowercaseName = name.toLowerCase();
 
-                return this.valueFactory.createString(name);
+                if (!hasOwn.call(namespace.constants, lowercaseName) || !namespace.constants[lowercaseName].caseInsensitive) {
+                    namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+
+                    return this.valueFactory.createString(name);
+                }
+
+                name = lowercaseName;
             }
 
-            return namespace.constants[name];
+            return namespace.constants[name].value;
         },
 
         getDescendant: function (name) {

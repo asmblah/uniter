@@ -139,6 +139,10 @@ define([
 
         toInteger: function () {
             return this.value.toInteger();
+        },
+
+        toValue: function () {
+            return this.getValue();
         }
     });
 

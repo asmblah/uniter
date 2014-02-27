@@ -8,22 +8,21 @@
  */
 
 /*global define */
-define([
-    'languages/PHP/interpreter/Variable'
-], function (
-    Variable
-) {
+define(function () {
     'use strict';
 
     return function (internals) {
         var globalNamespace = internals.globalNamespace;
 
         return {
-            'define': function (nameReference, value) {
-                var isReference = (nameReference instanceof Variable),
-                    nameValue = isReference ? nameReference.getValue() : nameReference;
+            'define': function (name, value, isCaseInsensitive) {
+                name = name.toValue().getNative();
+                isCaseInsensitive = isCaseInsensitive ? isCaseInsensitive.toValue().getNative() : false;
+                value = value.toValue();
 
-                globalNamespace.defineConstant(nameValue.getNative(), value);
+                globalNamespace.defineConstant(name, value, {
+                    caseInsensitive: isCaseInsensitive
+                });
             }
         };
     };

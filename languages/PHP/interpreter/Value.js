@@ -125,6 +125,10 @@ define([
         isSet: function () {
             // All values except NULL are classed as 'set'
             return true;
+        },
+
+        toValue: function () {
+            return this;
         }
     });
 
