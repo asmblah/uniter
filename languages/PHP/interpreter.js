@@ -206,7 +206,7 @@ define([
         // Push the 'main' global scope call onto the stack
         callStack.push(new Call(globalScope));
 
-        code = 'var namespaceScope = tools.createNamespaceScope(namespace), scope = globalScope;' + code;
+        code = 'var namespaceScope = tools.createNamespaceScope(namespace), namespaceResult, scope = globalScope;' + code;
 
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
@@ -718,7 +718,7 @@ define([
                     body += interpret(statement);
                 });
 
-                return '(function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace));';
+                return 'if (namespaceResult = (function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace))) { return namespaceResult; }';
             },
             'N_NAMESPACED_REFERENCE': function (node, interpret) {
                 return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';

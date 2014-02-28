@@ -84,6 +84,19 @@ object(Here\Me)#2 (0) {
 
 EOS
 */) {})
+            },
+            'return from non-global namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace There;
+
+    return 7;
+EOS
+*/) {}),
+                expectedResult: 7,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
