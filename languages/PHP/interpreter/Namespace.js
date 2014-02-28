@@ -147,7 +147,7 @@ define([
             return namespace.classes[lowerName];
         },
 
-        getConstant: function (name) {
+        getConstant: function (name, usesNamespace) {
             var lowercaseName,
                 namespace = this;
 
@@ -155,9 +155,13 @@ define([
                 lowercaseName = name.toLowerCase();
 
                 if (!hasOwn.call(namespace.constants, lowercaseName) || !namespace.constants[lowercaseName].caseInsensitive) {
-                    namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+                    if (usesNamespace) {
+                        throw new PHPFatalError(PHPFatalError.UNDEFINED_CONSTANT, {name: namespace.getPrefix() + name});
+                    } else {
+                        namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
 
-                    return this.valueFactory.createString(name);
+                        return this.valueFactory.createString(name);
+                    }
                 }
 
                 name = lowercaseName;

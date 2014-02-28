@@ -71,10 +71,12 @@ define([
                 scope = this,
                 namespace = scope.namespace,
                 path,
-                prefix;
+                prefix,
+                usesNamespace;
 
             // Check whether the constant path is absolute, so no 'use's apply
             if (name.charAt(0) === '\\') {
+                usesNamespace = true;
                 match = name.match(/^\\(.*?)\\([^\\]+)$/);
 
                 if (match) {
@@ -89,6 +91,7 @@ define([
                 match = name.match(/^([^\\]+)(.*?)\\([^\\]+)$/);
 
                 if (match) {
+                    usesNamespace = true;
                     prefix = match[1];
                     path = match[2];
                     name = match[3];
@@ -103,7 +106,7 @@ define([
                 }
             }
 
-            return namespace.getConstant(name);
+            return namespace.getConstant(name, usesNamespace);
         },
 
         getFunction: function (name) {

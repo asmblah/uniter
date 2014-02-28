@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -35,7 +37,7 @@ define([
         });
 
         util.each({
-            'assigning undefined constant called "MY_CONST" to variable': {
+            'assigning undefined constant called "MY_CONST" to variable in global namespace': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $value = MY_CONST;
@@ -49,7 +51,7 @@ EOS
                 expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'',
                 expectedStdout: ''
             },
-            'assigning undefined constant called "YOUR_CONST" to variable': {
+            'assigning undefined constant called "YOUR_CONST" to variable in global namespace': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     $value = YOUR_CONST;
@@ -61,6 +63,22 @@ EOS
                 expectedResult: 'YOUR_CONST',
                 expectedResultType: 'string',
                 expectedStderr: 'PHP Notice: Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\'',
+                expectedStdout: ''
+            },
+            'assigning undefined constant called "MY_CONST" to variable in a namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Us;
+
+    $value = MY_CONST;
+
+    return $value;
+EOS
+*/) {}),
+                // Undefined constant should be interpreted as bareword string literal
+                expectedResult: 'MY_CONST',
+                expectedResultType: 'string',
+                expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'',
                 expectedStdout: ''
             },
             'undefined constant as default argument value when not called': {
@@ -175,6 +193,35 @@ EOS
                 expectedResultType: 'string',
                 // No notice should be raised
                 expectedStderr: '',
+                expectedStdout: ''
+            },
+            'attempting to read undefined constant from global namespace with prefix': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    return \NAME;
+EOS
+*/) {}),
+                // Note that when using namespaces, use of undefined constant is a fatal error not just a notice
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Undefined constant 'NAME'$/
+                },
+                expectedStderr: 'PHP Fatal error: Undefined constant \'NAME\'',
+                expectedStdout: ''
+            },
+            'attempting to read undefined constant from another namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Fun;
+
+    return My\Stuff\NAME;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Undefined constant 'Fun\\My\\Stuff\\NAME'$/
+                },
+                expectedStderr: 'PHP Fatal error: Undefined constant \'Fun\\My\\Stuff\\NAME\'',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

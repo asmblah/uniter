@@ -27,7 +27,8 @@ define([
             7: 'Class name must be a valid object or a string',
             8: 'Access to undeclared static property: ${className}::$${propertyName}',
             9: 'Call to undefined method ${className}::${methodName}()',
-            10: 'Cannot access self:: when no class scope is active'
+            10: 'Cannot access self:: when no class scope is active',
+            11: 'Undefined constant \'${name}\''
         };
 
     function PHPFatalError(code, variables) {
@@ -46,7 +47,8 @@ define([
         CLASS_NAME_NOT_VALID: 7,
         UNDECLARED_STATIC_PROPERTY: 8,
         CALL_TO_UNDEFINED_METHOD: 9,
-        SELF_WHEN_NO_ACTIVE_CLASS: 10
+        SELF_WHEN_NO_ACTIVE_CLASS: 10,
+        UNDEFINED_CONSTANT: 11
     });
 
     return PHPFatalError;
