@@ -16,11 +16,26 @@ define(function () {
 
         return {
             'define': function (name, value, isCaseInsensitive) {
+                var match,
+                    namespace,
+                    path;
+
                 name = name.toValue().getNative();
                 isCaseInsensitive = isCaseInsensitive ? isCaseInsensitive.toValue().getNative() : false;
                 value = value.toValue();
 
-                globalNamespace.defineConstant(name, value, {
+                name = name.replace(/^\//, '');
+                match = name.match(/^(.*?)\\([^\\]+)$/);
+
+                if (match) {
+                    path = match[1];
+                    name = match[2];
+                    namespace = globalNamespace.getDescendant(path);
+                } else {
+                    namespace = globalNamespace;
+                }
+
+                namespace.defineConstant(name, value, {
                     caseInsensitive: isCaseInsensitive
                 });
             }

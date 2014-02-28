@@ -140,6 +140,42 @@ EOS
                 // No notice should be raised
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'defined constant in namespace read from another namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Test;
+
+    define('Test\NAME', 'Dan');
+
+    namespace Fun;
+
+    return \Test\NAME;
+EOS
+*/) {}),
+                expectedResult: 'Dan',
+                expectedResultType: 'string',
+                // No notice should be raised
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'defined constant in namespace read from another namespace via import': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace Test;
+
+    use My as Me;
+
+    define('My\NAME', 'Dan');
+
+    return Me\NAME;
+EOS
+*/) {}),
+                expectedResult: 'Dan',
+                expectedResultType: 'string',
+                // No notice should be raised
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
