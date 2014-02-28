@@ -11,14 +11,18 @@
 define([
     'languages/PHP/grammar',
     'languages/PHP/interpreter',
+    'test-environment',
     'js/Engine',
+    'js/HostEnvironment',
     'js/Interpreter',
     'js/Parser',
     'js/Stream'
 ], function (
     phpGrammarSpec,
     phpInterpreterSpec,
+    testEnvironment,
     Engine,
+    HostEnvironment,
     Interpreter,
     Parser,
     Stream
@@ -31,7 +35,8 @@ define([
                 stderr = new Stream(),
                 stdin = new Stream(),
                 stdout = new Stream(),
-                interpreter = tools.createInterpreter(stdin, stdout, stderr, options),
+                hostEnvironment = tools.createHostEnvironment(),
+                interpreter = tools.createInterpreter(hostEnvironment, stdin, stdout, stderr, options),
                 parser = new Parser(phpGrammarSpec, stderr),
                 engine = new Engine(parser, interpreter);
 
@@ -40,8 +45,14 @@ define([
             return engine;
         },
 
-        createInterpreter: function (stdin, stdout, stderr, options) {
-            return new Interpreter(phpInterpreterSpec, stdin, stdout, stderr, options);
+        createHostEnvironment: function () {
+            return new HostEnvironment(function () {
+                return testEnvironment.sandboxGlobal;
+            });
+        },
+
+        createInterpreter: function (hostEnvironment, stdin, stdout, stderr, options) {
+            return new Interpreter(phpInterpreterSpec, hostEnvironment, stdin, stdout, stderr, options);
         },
 
         createParser: function () {

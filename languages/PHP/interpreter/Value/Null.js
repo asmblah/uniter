@@ -9,57 +9,63 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Value'
+    'js/util'
 ], function (
-    util,
-    Value
+    util
 ) {
     'use strict';
 
-    function NullValue(factory, callStack) {
-        Value.call(this, factory, callStack, 'null', null);
-    }
+    /*
+     * Null has no prototype, so we have to represent it with a custom class.
+     */
 
-    util.inherit(NullValue).from(Value);
+    return function (internals, Value) {
+        var valueFactory = internals.valueFactory;
 
-    util.extend(NullValue.prototype, {
-        coerceToBoolean: function () {
-            return this.factory.createBoolean(false);
-        },
+        function Null() {}
 
-        coerceToKey: function () {
-            return this.factory.createString('');
-        },
+        util.extend(Null.prototype, Value.prototype, {
+            coerceToBoolean: function () {
+                return valueFactory.createBoolean(false);
+            },
 
-        coerceToString: function () {
-            return this.factory.createString('');
-        },
+            coerceToString: function () {
+                return valueFactory.createString('');
+            },
 
-        isEqualTo: function (rightValue) {
-            return rightValue.isEqualToNull(this);
-        },
+            getType: function () {
+                return 'null';
+            },
 
-        isEqualToFloat: function (floatValue) {
-            return floatValue.isEqualToNull();
-        },
+            isEqualTo: function (rightValue) {
+                return rightValue.isEqualToNull(this);
+            },
 
-        isEqualToNull: function () {
-            return this.factory.createBoolean(true);
-        },
+            isEqualToFloat: function (floatValue) {
+                return floatValue.isEqualToNull();
+            },
 
-        isEqualToObject: function (objectValue) {
-            return objectValue.isEqualToNull();
-        },
+            isEqualToNull: function () {
+                return valueFactory.createBoolean(true);
+            },
 
-        isEqualToString: function (stringValue) {
-            return stringValue.isEqualToNull();
-        },
+            isEqualToObject: function (objectValue) {
+                return objectValue.isEqualToNull();
+            },
 
-        isSet: function () {
-            return false;
-        }
-    });
+            isEqualToString: function (stringValue) {
+                return stringValue.isEqualToNull();
+            },
 
-    return NullValue;
+            isSet: function () {
+                return false;
+            },
+
+            valueOf: function () {
+                return null;
+            }
+        });
+
+        return Null;
+    };
 });

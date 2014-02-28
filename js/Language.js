@@ -30,12 +30,12 @@ define([
     }
 
     util.extend(Language.prototype, {
-        createEngine: function (options) {
+        createEngine: function (hostEnvironment, options) {
             var language = this,
                 stderr = new Stream(),
                 stdin = new Stream(),
                 stdout = new Stream(),
-                interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr, options),
+                interpreter = new Interpreter(language.interpreterSpec, hostEnvironment, stdin, stdout, stderr, options),
                 parser = new Parser(language.grammarSpec, stderr),
                 engine = new Engine(parser, interpreter);
 

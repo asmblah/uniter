@@ -10,164 +10,239 @@
 /*global define */
 define([
     'js/util',
-    './Array',
-    '../Error',
-    '../Error/Fatal'
+    '../Reference/Element',
+    '../KeyValuePair',
+    '../Reference/Null',
+    'languages/PHP/interpreter/Error',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     util,
-    ArrayValue,
+    ElementReference,
+    KeyValuePair,
+    NullReference,
     PHPError,
     PHPFatalError
 ) {
     'use strict';
 
+    /*
+     *
+     */
+
     var hasOwn = {}.hasOwnProperty;
 
-    function ObjectValue(factory, callStack, object, className, id) {
-        ArrayValue.call(this, factory, callStack, object, 'object');
+    return function (internals, Value) {
+        var callStack = internals.callStack,
+            valueFactory = internals.valueFactory;
 
-        this.className = className;
-        this.id = id;
-        this.object = object;
-    }
+        function ObjectValue(nativeObject, className, id) {
+            var elements = [],
+                keysToElements = [],
+                value = this;
 
-    util.inherit(ObjectValue).from(ArrayValue);
-
-    util.extend(ObjectValue.prototype, {
-        call: function (args) {
-            return this.callMethod('__invoke', args);
-        },
-
-        callMethod: function (name, args) {
-            var defined = true,
-                value = this,
-                object = value.object,
-                otherObject;
-
-            // Allow methods inherited via the prototype chain up to but not including Object.prototype
-            if (!hasOwn.call(object, name)) {
-                otherObject = object;
-
-                do {
-                    otherObject = Object.getPrototypeOf(otherObject);
-                    if (!otherObject || otherObject === Object.prototype) {
-                        defined = false;
-                        break;
+            util.each(nativeObject, function (element, key) {
+                if (element instanceof KeyValuePair) {
+                    key = element.getKey();
+                    element = element.getValue();
+                } else {
+                    if (util.isNumber(key)) {
+                        key = valueFactory.createInteger(keysToElements.length);
+                    } else {
+                        key = valueFactory.createFromNative(key);
                     }
-                } while (!hasOwn.call(otherObject, name));
-            }
 
-            if (!defined || !util.isFunction(object[name])) {
-                throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
-            }
-
-            return value.factory.coerce(object[name].apply(value, args));
-        },
-
-        callStaticMethod: function (nameValue, args, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.className);
-
-            return classObject.callStaticMethod(nameValue.getNative(), args);
-        },
-
-        clone: function () {
-            throw new Error('Unimplemented');
-        },
-
-        coerceToBoolean: function () {
-            return this.factory.createBoolean(true);
-        },
-
-        coerceToKey: function () {
-            this.callStack.raiseError(PHPError.E_WARNING, 'Illegal offset type');
-        },
-
-        getClassName: function () {
-            return this.className;
-        },
-
-        getForAssignment: function () {
-            return this;
-        },
-
-        getID: function () {
-            return this.id;
-        },
-
-        getNative: function () {
-            return this.object;
-        },
-
-        getStaticPropertyByName: function (nameValue, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.className);
-
-            return classObject.getStaticPropertyByName(nameValue.getNative());
-        },
-
-        isEqualTo: function (rightValue) {
-            return rightValue.isEqualToObject(this);
-        },
-
-        isEqualToArray: function () {
-            return this.factory.createBoolean(false);
-        },
-
-        isEqualToFloat: function (floatValue) {
-            return this.factory.createBoolean(floatValue.getNative() === 1);
-        },
-
-        isEqualToInteger: function (integerValue) {
-            return this.factory.createBoolean(integerValue.getNative() === 1);
-        },
-
-        isEqualToNull: function () {
-            return this.factory.createBoolean(false);
-        },
-
-        isEqualToObject: function (rightValue) {
-            var equal = true,
-                leftValue = this,
-                factory = leftValue.factory;
-
-            if (rightValue.value.length !== leftValue.value.length || rightValue.className !== leftValue.className) {
-                return factory.createBoolean(false);
-            }
-
-            util.each(rightValue.keysToElements, function (element, nativeKey) {
-                if (!hasOwn.call(leftValue.keysToElements, nativeKey) || element.getValue().isNotEqualTo(leftValue.keysToElements[nativeKey].getValue()).getNative()) {
-                    equal = false;
-                    return false;
+                    element = valueFactory.coerce(element);
                 }
-            }, {keys: true});
 
-            return factory.createBoolean(equal);
-        },
+                element = new ElementReference(valueFactory, callStack, value, key, element);
 
-        isEqualToString: function () {
-            return this.factory.createBoolean(false);
-        },
+                elements.push(element);
+                keysToElements[key.valueOf()] = element;
+            });
 
-        isIdenticalTo: function (rightValue) {
-            return rightValue.isIdenticalToObject(this);
-        },
-
-        isIdenticalToArray: function () {
-            return this.factory.createBoolean(false);
-        },
-
-        isIdenticalToObject: function (rightValue) {
-            var leftValue = this,
-                factory = leftValue.factory;
-
-            return factory.createBoolean(rightValue.value === leftValue.value);
-        },
-
-        referToElement: function (key) {
-            return 'property: ' + this.className + '::$' + key;
+            value.className = className;
+            value.elements = elements;
+            value.id = id;
+            value.keysToElements = keysToElements;
+            value.nativeObject = nativeObject;
+            value.pointer = 0;
         }
-    });
 
-    return ObjectValue;
+        util.extend(ObjectValue.prototype, Value.prototype, {
+            call: function (args) {
+                return this.callMethod('__invoke', args);
+            },
+
+            callMethod: function (name, args) {
+                var defined = true,
+                    value = this,
+                    object = value.nativeObject,
+                    otherObject;
+
+                // Allow methods inherited via the prototype chain up to but not including Object.prototype
+                if (!hasOwn.call(object, name)) {
+                    otherObject = object;
+
+                    do {
+                        otherObject = Object.getPrototypeOf(otherObject);
+                        if (!otherObject || otherObject === Object.prototype) {
+                            defined = false;
+                            break;
+                        }
+                    } while (!hasOwn.call(otherObject, name));
+                }
+
+                if (!defined || !util.isFunction(object[name])) {
+                    throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
+                }
+
+                return valueFactory.coerce(object[name].apply(value, args));
+            },
+
+            callStaticMethod: function (nameValue, args, namespaceScope) {
+                var value = this,
+                    classObject = namespaceScope.getClass(value.className);
+
+                return classObject.callStaticMethod(nameValue.valueOf(), args);
+            },
+
+            coerceToBoolean: function () {
+                return valueFactory.createBoolean(true);
+            },
+
+            getClassName: function () {
+                return this.className;
+            },
+
+            getElementByIndex: function (index) {
+                var value = this;
+
+                return value.elements[index] || (function () {
+                    callStack.raiseError(PHPError.E_NOTICE, 'Undefined ' + value.referToElement(index));
+
+                    return new NullReference(valueFactory);
+                }());
+            },
+
+            getElementByKey: function (key) {
+                var element,
+                    keyValue,
+                    value = this;
+
+                key = key.coerceToKey(callStack);
+
+                if (!key) {
+                    // Could not be coerced to a key: error will already have been handled, just return NULL
+                    return new NullReference(valueFactory);
+                }
+
+                keyValue = key.valueOf();
+
+                if (!hasOwn.call(value.keysToElements, keyValue)) {
+                    element = new ElementReference(valueFactory, callStack, value, key, null);
+
+                    value.elements.push(element);
+                    value.keysToElements[keyValue] = element;
+                }
+
+                return value.keysToElements[keyValue];
+            },
+
+            getID: function () {
+                return this.id;
+            },
+
+            getKeyByIndex: function (index) {
+                var value = this,
+                    element = value.elements[index];
+
+                return element ? element.key : null;
+            },
+
+            getLength: function () {
+                return this.elements.length;
+            },
+
+            getPropertyNames: function () {
+                var keys = [];
+
+                util.each(this.elements, function (element) {
+                    keys.push(element.getKey());
+                });
+
+                return keys;
+            },
+
+            getStaticPropertyByName: function (nameValue, namespaceScope) {
+                var value = this,
+                    classObject = namespaceScope.getClass(value.className);
+
+                return classObject.getStaticPropertyByName(nameValue.valueOf());
+            },
+
+            getType: function () {
+                return 'object';
+            },
+
+            isEqualTo: function (rightValue) {
+                return rightValue.isEqualToObject(this);
+            },
+
+            isEqualToArray: function () {
+                return valueFactory.createBoolean(false);
+            },
+
+            isEqualToFloat: function (floatValue) {
+                return valueFactory.createBoolean(floatValue.valueOf() === 1);
+            },
+
+            isEqualToInteger: function (integerValue) {
+                return valueFactory.createBoolean(integerValue.valueOf() === 1);
+            },
+
+            isEqualToNull: function () {
+                return valueFactory.createBoolean(false);
+            },
+
+            isEqualToObject: function (rightValue) {
+                var equal = true,
+                    leftValue = this;
+
+                if (rightValue.elements.length !== leftValue.elements.length || rightValue.className !== leftValue.className) {
+                    return valueFactory.createBoolean(false);
+                }
+
+                util.each(rightValue.keysToElements, function (element, nativeKey) {
+                    if (!hasOwn.call(leftValue.keysToElements, nativeKey) || element.getValue().isNotEqualTo(leftValue.keysToElements[nativeKey].getValue()).valueOf()) {
+                        equal = false;
+                        return false;
+                    }
+                }, {keys: true});
+
+                return valueFactory.createBoolean(equal);
+            },
+
+            isEqualToString: function () {
+                return valueFactory.createBoolean(false);
+            },
+
+            referToElement: function (key) {
+                return 'property: ' + this.className + '::$' + key;
+            },
+
+            reset: function () {
+                var value = this;
+
+                value.pointer = 0;
+
+                return value;
+            },
+
+            valueOf: function () {
+                return this.elements;
+            }
+        });
+
+        return ObjectValue;
+    };
 });

@@ -52,7 +52,7 @@ define([
             '-': 'subtract',
             '*': 'multiply',
             '/': 'divide',
-            '.': 'concat',
+            '.': 'concatenate',
             '<<': 'shiftLeftBy',
             '>>': 'shiftRightBy',
             '==': 'isEqualTo',
@@ -121,13 +121,14 @@ define([
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
+            sandboxGlobal = state.getSandboxGlobal(),
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
                     return tools.valueFactory.createObject(func, 'Closure');
                 },
                 createInstance: function (namespaceScope, classNameValue, args) {
-                    var className = classNameValue.getNative(),
+                    var className = classNameValue.valueOf(),
                         classObject = namespaceScope.getClass(className);
 
                     return classObject.instantiate(args);
@@ -212,8 +213,8 @@ define([
         code += 'return tools.valueFactory.createNull();';
 
         try {
-            /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
+            // Evaluate in the sandbox's scope so the sandbox scope's native classes are used
+            result = new sandboxGlobal.Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
                 stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
             );
         } catch (exception) {
@@ -228,7 +229,7 @@ define([
             throw exception;
         }
 
-        return promise.resolve(result.getNative(), result.getType());
+        return promise.resolve(result.valueOf(), result.getType());
     }
 
     function hoistDeclarations(statements) {
@@ -414,7 +415,7 @@ define([
                     body += interpret(statement);
                 });
 
-                return 'if (switchMatched_' + context.switchCase.depth + ' || switchExpression_' + context.switchCase.depth + '.isEqualTo(' + interpret(node.expression) + ').getNative()) {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
+                return 'if (switchMatched_' + context.switchCase.depth + ' || switchExpression_' + context.switchCase.depth + '.isEqualTo(' + interpret(node.expression) + ').valueOf()) {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
             },
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,
@@ -471,10 +472,10 @@ define([
             'N_DO_WHILE_STATEMENT': function (node, interpret/*, context*/) {
                 var code = interpret(node.body);
 
-                return 'do {' + code + '} while (' + interpret(node.condition) + '.coerceToBoolean().getNative());';
+                return 'do {' + code + '} while (' + interpret(node.condition) + '.coerceToBoolean().valueOf());';
             },
             'N_ECHO_STATEMENT': function (node, interpret) {
-                return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
+                return 'stdout.write(' + interpret(node.expression) + '.coerceToString().valueOf());';
             },
             'N_EXPRESSION': function (node, interpret) {
                 var isAssignment = node.right[0].operator === '=',
@@ -514,7 +515,7 @@ define([
             },
             'N_FOR_STATEMENT': function (node, interpret) {
                 var bodyCode = interpret(node.body),
-                    conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
+                    conditionCode = interpret(node.condition) + '.coerceToBoolean().valueOf()',
                     initializerCode = interpret(node.initializer),
                     updateCode = interpret(node.update);
 
@@ -606,7 +607,7 @@ define([
                 // Alternate statements are executed if the condition is falsy
                 var alternateCode,
                     code = '',
-                    conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
+                    conditionCode = interpret(node.condition) + '.coerceToBoolean().valueOf()',
                     consequentCode,
                     consequentPrefix = '',
                     gotosJumpingIn = {},
@@ -700,7 +701,7 @@ define([
                         args.push(interpret(arg));
                     });
 
-                    code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.getNative(), [' + args.join(', ') + '])';
+                    code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.valueOf(), [' + args.join(', ') + '])';
                 });
 
                 return interpret(node.object) + code;
@@ -760,7 +761,7 @@ define([
                 return objectVariableCode + propertyCode + suffix;
             },
             'N_PRINT_EXPRESSION': function (node, interpret) {
-                return '(stdout.write(' + interpret(node.operand) + '.coerceToString().getNative()), tools.valueFactory.createInteger(1))';
+                return '(stdout.write(' + interpret(node.operand) + '.coerceToString().valueOf()), tools.valueFactory.createInteger(1))';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
@@ -790,10 +791,10 @@ define([
                 return evaluateModule(state, body, context, stdin, stdout, stderr);
             },
             'N_REQUIRE_EXPRESSION': function (node, interpret) {
-                return 'tools.require(' + interpret(node.path) + '.getNative())';
+                return 'tools.require(' + interpret(node.path) + '.valueOf())';
             },
             'N_REQUIRE_ONCE_EXPRESSION': function (node, interpret) {
-                return 'tools.requireOnce(' + interpret(node.path) + '.getNative())';
+                return 'tools.requireOnce(' + interpret(node.path) + '.valueOf())';
             },
             'N_RETURN_STATEMENT': function (node, interpret) {
                 var expression = interpret(node.expression);
@@ -850,7 +851,7 @@ define([
                 var codes = [];
 
                 util.each(node.parts, function (part) {
-                    codes.push(interpret(part) + '.coerceToString().getNative()');
+                    codes.push(interpret(part) + '.coerceToString().valueOf()');
                 });
 
                 return 'tools.valueFactory.createString(' + codes.join(' + ') + ')';
@@ -881,7 +882,7 @@ define([
                 var expression = '(' + interpret(node.condition) + ')';
 
                 util.each(node.options, function (option) {
-                    expression = '(' + expression + '.coerceToBoolean().getNative() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
+                    expression = '(' + expression + '.coerceToBoolean().valueOf() ? ' + interpret(option.consequent) + ' : ' + interpret(option.alternate) + ')';
                 });
 
                 return expression;
@@ -909,7 +910,7 @@ define([
                 return 'scope.getVariable("' + node.variable + '")' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VARIABLE_EXPRESSION': function (node, interpret, context) {
-                return 'scope.getVariable(' + interpret(node.expression) + '.getNative())' + (context.getValue !== false ? '.getValue()' : '');
+                return 'scope.getVariable(' + interpret(node.expression) + '.valueOf())' + (context.getValue !== false ? '.getValue()' : '');
             },
             'N_VOID': function () {
                 return 'tools.referenceFactory.createNull()';
@@ -925,7 +926,7 @@ define([
                     code += interpret(statement);
                 });
 
-                return 'while (' + interpret(node.condition) + '.coerceToBoolean().getNative()) {' + code + '}';
+                return 'while (' + interpret(node.condition) + '.coerceToBoolean().valueOf()) {' + code + '}';
             }
         }
     };

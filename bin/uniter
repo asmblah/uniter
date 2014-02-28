@@ -13,45 +13,31 @@
 (function () {
     'use strict';
 
-    var modular = require('modular-amd'),
+    var hasOwn = {}.hasOwnProperty,
         optionsManager = require('node-getopt').create([
             ['r', 'run=<code>', 'Run PHP <code> without using script tags <? ... ?>']
         ]),
-        parsedOptions = optionsManager.parseSystem();
+        parsedOptions = optionsManager.parseSystem(),
+        phpEngine,
+        uniter = require(__dirname + '/..');
 
-    // FIXME!! (In Modular)
-    modular.configure({
-        paths: {
-            'Modular': '/node_modules/modular-amd'
-        }
-    });
+    function output() {
+        process.stdout.write(phpEngine.getStdout().readAll());
+        process.stderr.write(phpEngine.getStderr().readAll());
+    }
 
-    modular.require([
-        'uniter'
-    ], function (
-        uniter
-    ) {
-        var hasOwn = {}.hasOwnProperty,
-            phpEngine;
+    if (hasOwn.call(parsedOptions.options, 'run')) {
+        phpEngine = uniter.createEngine('PHP');
 
-        function output() {
-            process.stdout.write(phpEngine.getStdout().readAll());
-            process.stderr.write(phpEngine.getStderr().readAll());
-        }
-
-        if (hasOwn.call(parsedOptions.options, 'run')) {
-            phpEngine = uniter.createEngine('PHP');
-
-            phpEngine.execute('<?php ' + parsedOptions.options.run).done(function () {
-                output();
-            }).fail(function (exception) {
-                output();
-                process.stderr.write(exception.getMessage());
-                process.stdout.write('\n');
-            });
-        } else {
-            optionsManager.showHelp();
-            process.exit(1);
-        }
-    });
+        phpEngine.execute('<?php ' + parsedOptions.options.run).done(function () {
+            output();
+        }).fail(function (exception) {
+            output();
+            process.stderr.write(exception.getMessage());
+            process.stdout.write('\n');
+        });
+    } else {
+        optionsManager.showHelp();
+        process.exit(1);
+    }
 }());

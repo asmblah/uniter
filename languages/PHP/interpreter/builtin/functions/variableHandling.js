@@ -10,12 +10,10 @@
 /*global define */
 define([
     'js/util',
-    'languages/PHP/interpreter/Error',
-    'languages/PHP/interpreter/Variable'
+    'languages/PHP/interpreter/Error'
 ], function (
     util,
-    PHPError,
-    Variable
+    PHPError
 ) {
     'use strict';
 
@@ -25,8 +23,7 @@ define([
 
         return {
             'var_dump': function (valueReference) {
-                var isReference,
-                    value,
+                var value,
                     objects = [];
 
                 if (!valueReference) {
@@ -34,8 +31,7 @@ define([
                     return;
                 }
 
-                isReference = (valueReference instanceof Variable);
-                value = isReference ? valueReference.getValue() : valueReference;
+                value = valueReference.toValue();
 
                 function dump(value, depth, isReference) {
                     var currentIndentation = new Array(depth).join('  '),
@@ -58,27 +54,28 @@ define([
                     case 'array':
                         representation += 'array(' + value.getLength() + ') {\n';
 
-                        util.each(value.getKeys(), function (key) {
-                            var element = value.getElementByKey(key);
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
+                        util.each(value, function (element) {
+                            if (element) {
+                                representation += nextIndentation + '[' + JSON.stringify(element.getKey().valueOf()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
+                            }
                         });
 
                         representation += currentIndentation + '}';
                         break;
                     case 'boolean':
-                        representation += 'bool(' + (value.getNative() ? 'true' : 'false') + ')';
+                        representation += 'bool(' + (value.valueOf() ? 'true' : 'false') + ')';
                         break;
                     case 'float':
-                        representation += 'float(' + value.getNative() + ')';
+                        representation += 'float(' + value.valueOf() + ')';
                         break;
                     case 'integer':
-                        representation += 'int(' + value.getNative() + ')';
+                        representation += 'int(' + value.valueOf() + ')';
                         break;
                     case 'null':
                         representation += 'NULL';
                         break;
                     case 'object':
-                        keys = value.getKeys();
+                        keys = value.getPropertyNames();
 
                         representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + keys.length + ') {\n';
 
@@ -86,13 +83,13 @@ define([
 
                         util.each(keys, function (key) {
                             var element = value.getElementByKey(key);
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
+                            representation += nextIndentation + '[' + JSON.stringify(key.valueOf()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
                         });
 
                         representation += currentIndentation + '}';
                         break;
                     case 'string':
-                        nativeValue = value.getNative();
+                        nativeValue = value.valueOf();
                         representation += 'string(' + nativeValue.length + ') "' + nativeValue + '"';
                         break;
                     }

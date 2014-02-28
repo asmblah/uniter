@@ -20,45 +20,68 @@ define([
     './Value'
 ], function (
     util,
-    ArrayValue,
-    BooleanValue,
-    FloatValue,
-    IntegerValue,
-    NullValue,
-    ObjectValue,
-    StringValue,
-    Value
+    arrayValueClassFactory,
+    booleanValueClassFactory,
+    floatValueClassFactory,
+    integerValueClassFactory,
+    nullValueClassFactory,
+    objectValueClassFactory,
+    stringValueClassFactory,
+    valueClassFactory
 ) {
     'use strict';
 
-    function ValueFactory(callStack) {
+    function ValueFactory(callStack, sandboxGlobal) {
+        var internals = {
+                callStack: callStack,
+                sandboxGlobal: sandboxGlobal,
+                valueFactory: this
+            },
+            Value = valueClassFactory(internals);
+
         this.nextObjectID = 1;
-        this.callStack = callStack;
+
+        this.Array = arrayValueClassFactory(internals, Value);
+        this.Boolean = booleanValueClassFactory(internals, Value);
+        this.Float = floatValueClassFactory(internals, Value);
+        this.Integer = integerValueClassFactory(internals, Value);
+        this.Null = nullValueClassFactory(internals, Value);
+        this.Object = objectValueClassFactory(internals, Value);
+        this.String = stringValueClassFactory(internals, Value);
     }
 
     util.extend(ValueFactory.prototype, {
         coerce: function (value) {
-            if (value instanceof Value) {
+            var factory = this;
+
+            if (factory.isValue(value)) {
                 return value;
             }
 
-            return this.createFromNative(value);
+            return factory.createFromNative(value);
         },
-        createArray: function (value) {
-            var factory = this;
 
-            return new ArrayValue(factory, factory.callStack, value);
-        },
-        createBoolean: function (value) {
-            var factory = this;
+        createArray: function (array) {
+            var Array = this.Array;
 
-            return new BooleanValue(factory, factory.callStack, value);
-        },
-        createFloat: function (value) {
-            var factory = this;
+            if (!(array instanceof Array)) {
+                array = Array.prototype.slice.call(array);
+            }
 
-            return new FloatValue(factory, factory.callStack, value);
+            array.init();
+
+            return array;
         },
+
+        createBoolean: function (nativeBoolean) {
+            /*jshint -W053 */
+            return new this.Boolean(nativeBoolean);
+        },
+
+        createFloat: function (nativeNumber) {
+            return new this.Float(nativeNumber);
+        },
+
         createFromNative: function (nativeValue) {
             var factory = this;
 
@@ -80,29 +103,39 @@ define([
 
             return factory.createObject(nativeValue, 'Object');
         },
-        createInteger: function (value) {
-            var factory = this;
 
-            return new IntegerValue(factory, factory.callStack, value);
+        createInteger: function (nativeNumber) {
+            return new this.Integer(nativeNumber);
         },
+
         createNull: function () {
+            return new this.Null();
+        },
+
+        createObject: function (nativeObject, className) {
+            var factory = this,
+                // Object ID tracking is incomplete: ID should be freed when all references are lost
+                object = new factory.Object(nativeObject, className, factory.nextObjectID++);
+
+            return object;
+        },
+
+        createString: function (nativeString) {
+            return new this.String(nativeString);
+        },
+
+        isValue: function (value) {
             var factory = this;
 
-            return new NullValue(factory, factory.callStack);
-        },
-        createObject: function (value, className) {
-            var factory = this;
-
-            // Object ID tracking is incomplete: ID should be freed when all references are lost
-            return new ObjectValue(factory, factory.callStack, value, className, factory.nextObjectID++);
-        },
-        createString: function (value) {
-            var factory = this;
-
-            return new StringValue(factory, factory.callStack, value);
-        },
-        isValue: function (object) {
-            return object instanceof Value;
+            return (
+                value instanceof factory.Array ||
+                value instanceof factory.Boolean ||
+                value instanceof factory.Float ||
+                value instanceof factory.Integer ||
+                value instanceof factory.Null ||
+                value instanceof factory.Object ||
+                value instanceof factory.String
+            );
         }
     });
 

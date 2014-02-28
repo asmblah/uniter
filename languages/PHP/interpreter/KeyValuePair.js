@@ -24,6 +24,7 @@ define([
         getKey: function () {
             return this.key;
         },
+
         getValue: function () {
             return this.value;
         }

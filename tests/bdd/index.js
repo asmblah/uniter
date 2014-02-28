@@ -24,6 +24,20 @@
         return require('chai');
     });
     modular.define('test-environment', {
+        sandboxGlobal: (function () {
+            var imports = ['Array', 'Boolean', 'Function', 'Number', 'Object', 'String'],
+                sandbox = {
+                    result: null
+                };
+
+            imports.forEach(function (name, index) {
+                imports[index] = name + ': ' + name;
+            });
+
+            require('vm').runInNewContext('result = {' + imports.join(', ') + '};', sandbox);
+
+            return sandbox.result;
+        }()),
         node: {
             require: require,
             rootPath: __dirname + '/../..'
@@ -42,14 +56,14 @@
     // FIXME!! (In Modular)
     modular.configure({
         paths: {
-            'Modular': '/../../node_modules/modular-amd'
+            'Modular': '/node_modules/modular-amd'
         }
     });
 
     modular.require({
-        baseUrl: __dirname
+        baseUrl: __dirname + '/../..'
     }, [
-        './runner'
+        'tests/bdd/runner'
     ], function (
         runner
     ) {

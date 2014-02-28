@@ -29,7 +29,7 @@ define([
             stderr = new Stream();
             stdin = new Stream();
             stdout = new Stream();
-            interpreter = tools.createInterpreter(stdin, stdout, stderr);
+            interpreter = tools.createInterpreter(tools.createHostEnvironment(), stdin, stdout, stderr);
         });
 
         util.each([

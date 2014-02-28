@@ -19,9 +19,10 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Interpreter(spec, stdin, stdout, stderr, options) {
+    function Interpreter(spec, hostEnvironment, stdin, stdout, stderr, options) {
         this.engine = null;
         this.environment = null;
+        this.hostEnvironment = hostEnvironment;
         this.options = options || {};
         this.spec = spec;
         this.state = null;
@@ -56,7 +57,7 @@ define([
                 spec = interpreter.spec;
 
             if (!interpreter.state && spec.State) {
-                interpreter.state = new spec.State(interpreter.stderr, interpreter.engine, interpreter.options);
+                interpreter.state = new spec.State(interpreter.stderr, interpreter.engine, interpreter.hostEnvironment, interpreter.options);
             }
 
             return interpreter.state;

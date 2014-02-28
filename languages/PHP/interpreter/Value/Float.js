@@ -9,127 +9,87 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Value'
+    'js/util'
 ], function (
-    util,
-    Value
+    util
 ) {
     'use strict';
 
-    function FloatValue(factory, callStack, value) {
-        Value.call(this, factory, callStack, 'float', value);
-    }
+    return function (internals, Value) {
+        var valueFactory = internals.valueFactory;
 
-    util.inherit(FloatValue).from(Value);
-
-    util.extend(FloatValue.prototype, {
-        add: function (rightValue) {
-            var leftValue = this,
-                factory = leftValue.factory,
-                rightType = rightValue.getType();
-
-            // Coerce to float and return a float if either operand is a float
-            if (rightType === 'float') {
-                return factory.createFloat(leftValue.coerceToFloat().getNative() + rightValue.coerceToFloat().getNative());
-            }
-
-            return factory.createInteger(leftValue.getNative() + rightValue.getNative());
-        },
-
-        coerceToBoolean: function () {
-            var value = this;
-
-            return value.factory.createBoolean(!!value.value);
-        },
-
-        coerceToFloat: function () {
-            return this;
-        },
-
-        coerceToInteger: function () {
-            /*jshint bitwise: false */
-            var value = this;
-
-            return value.factory.createInteger(value.value >> 0);
-        },
-
-        coerceToKey: function () {
-            return this.coerceToInteger();
-        },
-
-        coerceToNumber: function () {
-            return this;
-        },
-
-        coerceToString: function () {
-            var value = this;
-
-            return value.factory.createString(value.value + '');
-        },
-
-        getElement: function () {
-            // Array access on floats always returns null, no notice or warning is raised
-            return this.factory.createNull();
-        },
-
-        isEqualTo: function (rightValue) {
-            return rightValue.isEqualToFloat(this);
-        },
-
-        isEqualToFloat: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(rightValue.value === leftValue.value);
-        },
-
-        isEqualToInteger: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(rightValue.coerceToFloat().value === leftValue.value);
-        },
-
-        isEqualToNull: function () {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(leftValue.value === 0);
-        },
-
-        isEqualToObject: function (objectValue) {
-            return objectValue.isEqualToFloat(this);
-        },
-
-        isEqualToString: function (stringValue) {
-            var floatValue = this;
-
-            return floatValue.factory.createBoolean(floatValue.value === stringValue.coerceToFloat().value);
-        },
-
-        onesComplement: function () {
-            /*jshint bitwise: false */
-            return this.factory.createInteger(~this.value);
-        },
-
-        shiftLeftBy: function (rightValue) {
-            return this.coerceToInteger().shiftLeftBy(rightValue);
-        },
-
-        shiftRightBy: function (rightValue) {
-            return this.coerceToInteger().shiftRightBy(rightValue);
-        },
-
-        toNegative: function () {
-            var value = this;
-
-            return value.factory.createFloat(-value.value);
-        },
-
-        toPositive: function () {
-            var value = this;
-
-            return value.factory.createInteger(+value.value);
+        function Float(nativeValue) {
+            this.nativeValue = nativeValue;
         }
-    });
 
-    return FloatValue;
+        util.extend(Float.prototype, Value.prototype, {
+            coerceToBoolean: function () {
+                return valueFactory.createBoolean(!!this.nativeValue);
+            },
+
+            coerceToInteger: function () {
+                /*jshint bitwise: false */
+                return valueFactory.createInteger(this.nativeValue >> 0);
+            },
+
+            coerceToKey: function () {
+                return this.coerceToInteger();
+            },
+
+            coerceToString: function () {
+                return valueFactory.createString(this.nativeValue + '');
+            },
+
+            getType: function () {
+                return 'float';
+            },
+
+            isEqualTo: function (rightValue) {
+                return rightValue.isEqualToFloat(this);
+            },
+
+            isEqualToFloat: function (rightValue) {
+                return valueFactory.createBoolean(rightValue.nativeValue === this.nativeValue);
+            },
+
+            isEqualToInteger: function (rightValue) {
+                return valueFactory.createBoolean(rightValue.coerceToFloat().valueOf() === this.nativeValue);
+            },
+
+            isEqualToNull: function () {
+                return valueFactory.createBoolean(this.nativeValue === 0);
+            },
+
+            isEqualToObject: function (objectValue) {
+                return objectValue.isEqualToFloat(this);
+            },
+
+            isEqualToString: function (stringValue) {
+                return valueFactory.createBoolean(this.nativeValue === stringValue.coerceToFloat().valueOf());
+            },
+
+            onesComplement: function () {
+                /*jshint bitwise: false */
+                return valueFactory.createInteger(~this.nativeValue);
+            },
+
+            shiftLeftBy: function (rightValue) {
+                return this.coerceToInteger().shiftLeftBy(rightValue);
+            },
+
+            shiftRightBy: function (rightValue) {
+                return this.coerceToInteger().shiftRightBy(rightValue);
+            },
+
+            toNegative: function () {
+                return valueFactory.createFloat(-this.valueOf());
+            },
+
+            valueOf: function () {
+                return this.nativeValue;
+            }
+        });
+
+        return Float;
+    };
 });

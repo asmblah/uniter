@@ -21,116 +21,99 @@ define([
 ) {
     'use strict';
 
-    function Value(factory, callStack, type, value) {
-        this.factory = factory;
-        this.callStack = callStack;
-        this.type = type;
-        this.value = value;
-    }
+    return function (internals) {
+        var callStack = internals.callStack,
+            valueFactory = internals.valueFactory;
 
-    util.extend(Value.prototype, {
-        callStaticMethod: function () {
-            throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
-        },
+        // NB: Constructor is not used
+        function Value() {}
 
-        concat: function (rightValue) {
-            var leftValue = this;
+        util.extend(Value.prototype, {
+            callStaticMethod: function () {
+                throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
+            },
 
-            return leftValue.factory.createString(leftValue.coerceToString().getNative() + rightValue.coerceToString().getNative());
-        },
+            concatenate: function (rightValue) {
+                return valueFactory.createString(this.coerceToString() + rightValue.coerceToString());
+            },
 
-        getElementByKey: function () {
-            var callStack = this.callStack;
+            getElementByKey: function () {
+                return new NullReference(valueFactory, {
+                    onSet: function () {
+                        callStack.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
+                    }
+                });
+            },
 
-            return new NullReference(this.factory, {
-                onSet: function () {
-                    callStack.raiseError(PHPError.E_WARNING, 'Cannot use a scalar value as an array');
-                }
-            });
-        },
+            getForAssignment: function () {
+                return this;
+            },
 
-        getForAssignment: function () {
-            return this;
-        },
+            getLength: function () {
+                return this.coerceToString().getLength();
+            },
 
-        getLength: function () {
-            return this.coerceToString().getLength();
-        },
+            getStaticPropertyByName: function () {
+                throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
+            },
 
-        getNative: function () {
-            return this.value;
-        },
+            isEqualTo: function (rightValue) {
+                /*jshint eqeqeq:false */
+                return valueFactory.createBoolean(rightValue.valueOf() == this.valueOf());
+            },
 
-        getStaticPropertyByName: function () {
-            throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
-        },
+            isEqualToArray: function (rightValue) {
+                return this.isEqualTo(rightValue);
+            },
 
-        getType: function () {
-            return this.type;
-        },
+            isEqualToFloat: function (rightValue) {
+                return this.isEqualTo(rightValue);
+            },
 
-        isEqualTo: function (rightValue) {
-            /*jshint eqeqeq:false */
-            var leftValue = this;
+            isEqualToInteger: function (rightValue) {
+                return this.isEqualTo(rightValue);
+            },
 
-            return leftValue.factory.createBoolean(rightValue.value == leftValue.value);
-        },
+            isEqualToNull: function (rightValue) {
+                return this.isEqualTo(rightValue);
+            },
 
-        isEqualToArray: function (rightValue) {
-            return this.isEqualTo(rightValue);
-        },
+            isEqualToObject: function (rightValue) {
+                return this.isEqualTo(rightValue);
+            },
 
-        isEqualToFloat: function (rightValue) {
-            return this.isEqualTo(rightValue);
-        },
+            isIdenticalTo: function (rightValue) {
+                var leftValue = this;
 
-        isEqualToInteger: function (rightValue) {
-            return this.isEqualTo(rightValue);
-        },
+                return valueFactory.createBoolean(rightValue.getType() === leftValue.getType() && rightValue.valueOf() === leftValue.valueOf());
+            },
 
-        isEqualToNull: function (rightValue) {
-            return this.isEqualTo(rightValue);
-        },
+            isIdenticalToArray: function (rightValue) {
+                return this.isIdenticalTo(rightValue);
+            },
 
-        isEqualToObject: function (rightValue) {
-            return this.isEqualTo(rightValue);
-        },
+            isIdenticalToObject: function (rightValue) {
+                return this.isIdenticalTo(rightValue);
+            },
 
-        isIdenticalTo: function (rightValue) {
-            var leftValue = this;
+            isNotEqualTo: function (rightValue) {
+                return valueFactory.createBoolean(!this.isEqualTo(rightValue).valueOf());
+            },
 
-            return leftValue.factory.createBoolean(rightValue.type === leftValue.type && rightValue.value === leftValue.value);
-        },
+            isNotIdenticalTo: function (rightValue) {
+                return valueFactory.createBoolean(!this.isIdenticalTo(rightValue).valueOf());
+            },
 
-        isIdenticalToArray: function (rightValue) {
-            return this.isIdenticalTo(rightValue);
-        },
+            isSet: function () {
+                // All values except NULL are classed as 'set'
+                return true;
+            },
 
-        isIdenticalToObject: function (rightValue) {
-            return this.isIdenticalTo(rightValue);
-        },
+            toValue: function () {
+                return this;
+            }
+        });
 
-        isNotEqualTo: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(!leftValue.isEqualTo(rightValue).getNative());
-        },
-
-        isNotIdenticalTo: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(!leftValue.isIdenticalTo(rightValue).getNative());
-        },
-
-        isSet: function () {
-            // All values except NULL are classed as 'set'
-            return true;
-        },
-
-        toValue: function () {
-            return this;
-        }
-    });
-
-    return Value;
+        return Value;
+    };
 });

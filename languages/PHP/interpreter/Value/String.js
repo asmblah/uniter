@@ -9,106 +9,84 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Value'
+    'js/util'
 ], function (
-    util,
-    Value
+    util
 ) {
     'use strict';
 
-    function StringValue(factory, callStack, value) {
-        Value.call(this, factory, callStack, 'string', value);
-    }
+    /*
+     *
+     */
 
-    util.inherit(StringValue).from(Value);
+    return function (internals, Value) {
+        var sandboxGlobal = internals.sandboxGlobal,
+            valueFactory = internals.valueFactory,
+            String = sandboxGlobal.String;
 
-    util.extend(StringValue.prototype, {
-        add: function (rightValue) {
-            return rightValue.coerceToNumber().add(this.coerceToNumber());
-        },
+        util.extend(String.prototype, Value.prototype, {
+            call: function (args, namespaceScope) {
+                return namespaceScope.getFunction(this.valueOf()).apply(null, args);
+            },
 
-        call: function (args, namespaceScope) {
-            return namespaceScope.getFunction(this.value).apply(null, args);
-        },
+            callStaticMethod: function (nameValue, args, namespaceScope) {
+                var value = this,
+                    classObject = namespaceScope.getClass(value.valueOf());
 
-        callStaticMethod: function (nameValue, args, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.value);
+                return classObject.callStaticMethod(nameValue.valueOf(), args);
+            },
 
-            return classObject.callStaticMethod(nameValue.getNative(), args);
-        },
+            coerceToBoolean: function () {
+                var nativeValue = this.valueOf();
 
-        coerceToBoolean: function () {
-            return this.factory.createBoolean(this.value !== '' && this.value !== '0');
-        },
+                return valueFactory.createBoolean(nativeValue !== '' && nativeValue !== '0');
+            },
 
-        coerceToFloat: function () {
-            var value = this;
+            coerceToFloat: function () {
+                var nativeValue = this.valueOf();
 
-            return value.factory.createFloat(/^(\d|-\d)/.test(value.value) ? parseFloat(value.value) : 0);
-        },
+                return valueFactory.createFloat(/^(\d|-\d)/.test(nativeValue) ? parseFloat(nativeValue) : 0);
+            },
 
-        coerceToInteger: function () {
-            var value = this;
+            coerceToKey: function () {
+                return this;
+            },
 
-            return value.factory.createInteger(/^(\d|-\d)/.test(value.value) ? parseInt(value.value, 10) : 0);
-        },
+            coerceToString: function () {
+                return this;
+            },
 
-        coerceToKey: function () {
-            return this;
-        },
+            getLength: function () {
+                return this.length;
+            },
 
-        coerceToNumber: function () {
-            var value = this,
-                isInteger = !/^[.eE]+$/.test(value.value);
+            getStaticPropertyByName: function (nameValue, namespaceScope) {
+                var classObject = namespaceScope.getClass(this.valueOf());
 
-            if (isInteger) {
-                return value.coerceToInteger();
-            } else {
-                return value.coerceToFloat();
+                return classObject.getStaticPropertyByName(nameValue.valueOf());
+            },
+
+            getType: function () {
+                return 'string';
+            },
+
+            isEqualTo: function (rightValue) {
+                return rightValue.isEqualToString(this);
+            },
+
+            isEqualToNull: function () {
+                return valueFactory.createBoolean(this.valueOf() === '');
+            },
+
+            isEqualToObject: function () {
+                return valueFactory.createBoolean(false);
+            },
+
+            isEqualToString: function (rightValue) {
+                return valueFactory.createBoolean(this.valueOf() === rightValue.valueOf());
             }
-        },
+        });
 
-        coerceToString: function () {
-            return this;
-        },
-
-        getLength: function () {
-            return this.value.length;
-        },
-
-        getStaticPropertyByName: function (nameValue, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.value);
-
-            return classObject.getStaticPropertyByName(nameValue.getNative());
-        },
-
-        isEqualTo: function (rightValue) {
-            return rightValue.isEqualToString(this);
-        },
-
-        isEqualToNull: function () {
-            var value = this;
-
-            return value.factory.createBoolean(value.getNative() === '');
-        },
-
-        isEqualToObject: function () {
-            return this.factory.createBoolean(false);
-        },
-
-        isEqualToString: function (rightValue) {
-            var leftValue = this;
-
-            return leftValue.factory.createBoolean(leftValue.value === rightValue.value);
-        },
-
-        onesComplement: function () {
-            return this.factory.createString('?');
-        }
-    });
-
-    return StringValue;
+        return String;
+    };
 });

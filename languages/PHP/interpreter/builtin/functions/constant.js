@@ -16,8 +16,8 @@ define(function () {
 
         return {
             'define': function (name, value, isCaseInsensitive) {
-                name = name.toValue().getNative();
-                isCaseInsensitive = isCaseInsensitive ? isCaseInsensitive.toValue().getNative() : false;
+                name = name.toValue().valueOf();
+                isCaseInsensitive = isCaseInsensitive ? isCaseInsensitive.toValue().valueOf() : false;
                 value = value.toValue();
 
                 globalNamespace.defineConstant(name, value, {

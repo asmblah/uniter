@@ -9,11 +9,9 @@
 
 /*global define */
 define([
-    'languages/PHP/interpreter/Error',
-    'languages/PHP/interpreter/Variable'
+    'languages/PHP/interpreter/Error'
 ], function (
-    PHPError,
-    Variable
+    PHPError
 ) {
     'use strict';
 
@@ -22,16 +20,15 @@ define([
             valueFactory = internals.valueFactory;
 
         return {
-            'strlen': function (stringReference) {
-                var isReference = (stringReference instanceof Variable),
-                    stringValue = isReference ? stringReference.getValue() : stringReference;
+            'strlen': function (string) {
+                string = string.toValue();
 
-                if (stringValue.getType() === 'array' || stringValue.getType() === 'object') {
-                    callStack.raiseError(PHPError.E_WARNING, 'strlen() expects parameter 1 to be string, ' + stringValue.getType() + ' given');
+                if (string.getType() === 'array' || string.getType() === 'object') {
+                    callStack.raiseError(PHPError.E_WARNING, 'strlen() expects parameter 1 to be string, ' + string.getType() + ' given');
                     return valueFactory.createNull();
                 }
 
-                return valueFactory.createInteger(stringValue.getLength());
+                return valueFactory.createInteger(string.getLength());
             }
         };
     };

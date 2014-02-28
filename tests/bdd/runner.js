@@ -11,14 +11,14 @@
 define({
     cache: false,
     paths: {
-        'bdd': '.',
-        'js': '/../../js',
-        'languages': '/../../languages',
+        'bdd': 'tests/bdd',
+        'js': '../../js',
+        'languages': '../../languages',
 
         // FIXME!! (In Modular)
         'Modular': require.config().paths.Modular,
 
-        'vendor': '/../../vendor'
+        'vendor': '../../vendor'
     }
 }, [
     'chai/chai',

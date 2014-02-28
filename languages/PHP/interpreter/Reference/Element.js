@@ -17,8 +17,8 @@ define([
 ) {
     'use strict';
 
-    function ElementReference(valueFactory, callStack, arrayValue, key, value) {
-        this.arrayValue = arrayValue;
+    function ElementReference(valueFactory, callStack, array, key, value) {
+        this.array = array;
         this.key = key;
         this.reference = null;
         this.callStack = callStack;
@@ -30,7 +30,7 @@ define([
         clone: function () {
             var element = this;
 
-            return new ElementReference(element.valueFactory, element.callStack, element.arrayValue, element.key, element.value);
+            return new ElementReference(element.valueFactory, element.callStack, element.array, element.key, element.value);
         },
 
         getKey: function () {
@@ -42,7 +42,7 @@ define([
 
             // Special value of native null (vs. NullValue) represents undefined
             if (!element.value && !element.reference) {
-                element.callStack.raiseError(PHPError.E_NOTICE, 'Undefined ' + element.arrayValue.referToElement(element.key.getNative()));
+                element.callStack.raiseError(PHPError.E_NOTICE, 'Undefined ' + element.array.referToElement(element.key.valueOf()));
                 return element.valueFactory.createNull();
             }
 
@@ -68,7 +68,7 @@ define([
 
         setValue: function (value) {
             var element = this,
-                isFirstElement = (element.arrayValue.getLength() === 0);
+                isFirstElement = (element.array.length === 0);
 
             if (element.reference) {
                 element.reference.setValue(value);
@@ -77,7 +77,7 @@ define([
             }
 
             if (isFirstElement) {
-                element.arrayValue.setPointer(element.arrayValue.getKeys().indexOf(element.key.getNative().toString()));
+                element.array.setPointer(element.array.getKeys().indexOf(element.key.getNative().toString()));
             }
         }
     });

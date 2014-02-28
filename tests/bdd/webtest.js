@@ -38,19 +38,15 @@
     server.listen(port);
 
     mapPaths({
-        '/acceptance': bddPath + '/acceptance/',
         '/chai': nodeModulesPath + '/chai/',
         '/index.html': bddPath + '/index.html',
-        '/integration': bddPath + '/integration/',
+        '/tests': rootPath + '/tests/',
         '/js': rootPath + '/js/',
         '/languages': rootPath + '/languages/',
-        '/main.js': bddPath + '/main.js',
         '/mocha': nodeModulesPath + '/mocha/',
         '/modular': nodeModulesPath + '/modular-amd/',
-        '/runner.js': bddPath + '/runner.js',
         '/sinon': vendorPath + '/sinon/',
-        '/sinon-chai': nodeModulesPath + '/sinon-chai/lib/',
-        '/unit': bddPath + '/unit/'
+        '/sinon-chai': nodeModulesPath + '/sinon-chai/lib/'
     });
 
     app.get('/', function (request, response) {

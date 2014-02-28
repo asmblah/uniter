@@ -27,9 +27,10 @@ define([
 ) {
     'use strict';
 
-    function PHPState(stderr, engine, options) {
+    function PHPState(stderr, engine, hostEnvironment, options) {
         var callStack = new CallStack(stderr),
-            valueFactory = new ValueFactory(callStack);
+            sandboxGlobal = hostEnvironment.getSandboxGlobal(),
+            valueFactory = new ValueFactory(callStack, sandboxGlobal);
 
         this.callStack = callStack;
         this.engine = engine;
@@ -38,7 +39,7 @@ define([
         this.options = options;
         this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
-        this.callStack = callStack;
+        this.sandboxGlobal = sandboxGlobal;
         this.valueFactory = valueFactory;
     }
 
@@ -69,6 +70,10 @@ define([
 
         getReferenceFactory: function () {
             return this.referenceFactory;
+        },
+
+        getSandboxGlobal: function () {
+            return this.sandboxGlobal;
         },
 
         getValueFactory: function () {

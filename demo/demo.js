@@ -11,7 +11,7 @@
 define({
     paths: {
         'ace': '../vendor/ace',
-        'uniter': '../uniter',
+        'uniter': '../browser',
 
         // Work around bug in Modular
         'Modular': '../node_modules/modular-amd'

@@ -13,12 +13,14 @@ define([
     'js/util',
     'js/Engine',
     'js/Exception',
+    'js/HostEnvironment',
     'js/Language'
 ], function (
     module,
     util,
     Engine,
     Exception,
+    HostEnvironment,
     Language
 ) {
     'use strict';
@@ -27,6 +29,7 @@ define([
         hasOwn = {}.hasOwnProperty;
 
     function Uniter(options) {
+        this.hostEnvironment = null;
         this.languages = {};
         this.options = options || {};
     }
@@ -62,7 +65,11 @@ define([
                 }
             });*/
 
-            return language.createEngine(options);
+            return language.createEngine(uniter.hostEnvironment, options);
+        },
+
+        createHostEnvironment: function (sandboxGlobalFactory) {
+            return new HostEnvironment(sandboxGlobalFactory);
         },
 
         registerLanguage: function (language) {
@@ -80,6 +87,10 @@ define([
             }
 
             uniter.languages[name] = language;
+        },
+
+        setHostEnvironment: function (hostEnvironment) {
+            this.hostEnvironment = hostEnvironment;
         }
     });
 

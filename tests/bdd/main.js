@@ -14,9 +14,10 @@ require.config({
     }
 });
 
-/*global define */
+/*global define, document */
 define({
-    cache: false
+    cache: false,
+    baseUrl: '../'
 }, [
     'modular',
     'require',
@@ -30,9 +31,18 @@ define({
     'use strict';
 
     var global = modular.util.global,
-        query = global.Mocha.utils.parseQuery(global.location.search || '');
+        iframe = document.createElement('iframe'),
+        query = global.Mocha.utils.parseQuery(global.location.search || ''),
+        sandboxGlobal;
 
-    define('test-environment', {});
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    sandboxGlobal = iframe.contentWindow;
+
+    define('test-environment', {
+        sandboxGlobal: sandboxGlobal
+    });
 
     define('Mocha', function () {
         return global.Mocha;

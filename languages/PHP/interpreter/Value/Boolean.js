@@ -10,76 +10,64 @@
 /*global define */
 define([
     'js/util',
-    '../Error/Fatal',
-    '../Value'
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     util,
-    PHPFatalError,
-    Value
+    PHPFatalError
 ) {
     'use strict';
 
-    function BooleanValue(factory, callStack, value) {
-        Value.call(this, factory, callStack, 'boolean', !!value);
-    }
+    return function (internals, Value) {
+        var sandboxGlobal = internals.sandboxGlobal,
+            valueFactory = internals.valueFactory,
+            Boolean = sandboxGlobal.Boolean;
 
-    util.inherit(BooleanValue).from(Value);
+        util.extend(Boolean.prototype, Value.prototype, {
+            coerceToBoolean: function () {
+                return this;
+            },
 
-    util.extend(BooleanValue.prototype, {
-        coerceToBoolean: function () {
-            return this;
-        },
+            coerceToInteger: function () {
+                return valueFactory.createInteger(this.valueOf() ? 1 : 0);
+            },
 
-        coerceToInteger: function () {
-            var value = this;
+            coerceToKey: function () {
+                return this.coerceToInteger();
+            },
 
-            return value.factory.createInteger(value.value ? 1 : 0);
-        },
+            coerceToString: function () {
+                return valueFactory.createString(this.valueOf() ? '1' : '');
+            },
 
-        coerceToKey: function () {
-            return this.coerceToInteger();
-        },
+            getType: function () {
+                return 'boolean';
+            },
 
-        coerceToString: function () {
-            var value = this;
+            isEqualTo: function (rightValue) {
+                return valueFactory.createBoolean(this.valueOf() === rightValue.coerceToBoolean().valueOf());
+            },
 
-            return value.factory.createString(value.value ? '1' : '');
-        },
+            isEqualToObject: function () {
+                return this;
+            },
 
-        getElement: function () {
-            // Array access on booleans always returns null, no notice or warning is raised
-            return this.factory.createNull();
-        },
+            isEqualToString: function (stringValue) {
+                return valueFactory.createBoolean(stringValue.coerceToBoolean().valueOf() === this.valueOf());
+            },
 
-        isEqualTo: function (rightValue) {
-            var leftValue = this,
-                factory = leftValue.factory;
+            onesComplement: function () {
+                throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+            },
 
-            return factory.createBoolean(rightValue.coerceToBoolean().value === leftValue.value);
-        },
+            shiftLeftBy: function (rightValue) {
+                return this.coerceToInteger().shiftLeftBy(rightValue);
+            },
 
-        isEqualToObject: function () {
-            return this;
-        },
+            shiftRightBy: function (rightValue) {
+                return this.coerceToInteger().shiftRightBy(rightValue);
+            }
+        });
 
-        isEqualToString: function (stringValue) {
-            var booleanValue = this;
-
-            return stringValue.factory.createBoolean(stringValue.coerceToBoolean().getNative() === booleanValue.getNative());
-        },
-
-        onesComplement: function () {
-            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
-        },
-
-        shiftLeftBy: function (rightValue) {
-            return this.coerceToInteger().shiftLeftBy(rightValue);
-        },
-
-        shiftRightBy: function (rightValue) {
-            return this.coerceToInteger().shiftRightBy(rightValue);
-        }
-    });
-
-    return BooleanValue;
+        return Boolean;
+    };
 });
