@@ -24,6 +24,7 @@ define([
             stdout = internals.stdout;
 
         return {
+            // NB: This output matches that of PHP with XDebug disabled
             'var_dump': function (valueReference) {
                 var isReference,
                     value,

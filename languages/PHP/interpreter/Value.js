@@ -33,6 +33,12 @@ define([
             throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
         },
 
+        coerceToArray: function () {
+            var value = this;
+
+            return value.factory.createArray([value]);
+        },
+
         concat: function (rightValue) {
             var leftValue = this;
 

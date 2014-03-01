@@ -374,8 +374,14 @@ define([
                 ]},
                 ifNoMatch: {component: 'property', capture: 'next'}
             },
-            'N_EXPRESSION_LEVEL_3': {
+            'N_EXPRESSION_LEVEL_3_A': {
                 oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_E']
+            },
+            'N_EXPRESSION_LEVEL_3_B': {
+                oneOf: ['N_ARRAY_CAST', 'N_EXPRESSION_LEVEL_3_A']
+            },
+            'N_ARRAY_CAST': {
+                components: ['T_ARRAY_CAST', {name: 'value', rule: 'N_EXPRESSION_LEVEL_3_A'}]
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
@@ -391,7 +397,7 @@ define([
             },
             'N_EXPRESSION_LEVEL_4': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: 'T_INSTANCEOF'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_3_B'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: 'T_INSTANCEOF'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_3_B'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_5': {

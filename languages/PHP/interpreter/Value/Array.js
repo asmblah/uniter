@@ -76,6 +76,10 @@ define([
             return new ArrayValue(arrayValue.factory, arrayValue.callStack, orderedElements, arrayValue.type);
         },
 
+        coerceToArray: function () {
+            return this;
+        },
+
         coerceToBoolean: function () {
             var value = this;
 

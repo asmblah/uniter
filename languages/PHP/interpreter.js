@@ -374,6 +374,9 @@ define([
         Environment: PHPEnvironment,
         State: PHPState,
         nodes: {
+            'N_ARRAY_CAST': function (node, interpret) {
+                return interpret(node.value) + '.coerceToArray()';
+            },
             'N_ARRAY_INDEX': function (node, interpret, context) {
                 var arrayVariableCode,
                     indexValues = [],

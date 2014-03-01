@@ -11,11 +11,13 @@
 define([
     'js/util',
     './Array',
+    '../KeyValuePair',
     '../Error',
     '../Error/Fatal'
 ], function (
     util,
     ArrayValue,
+    KeyValuePair,
     PHPError,
     PHPFatalError
 ) {
@@ -73,6 +75,17 @@ define([
 
         clone: function () {
             throw new Error('Unimplemented');
+        },
+
+        coerceToArray: function () {
+            var elements = [],
+                value = this;
+
+            util.each(value.getKeys(), function (key) {
+                elements.push(new KeyValuePair(key, value.getElementByKey(key).getValue()));
+            });
+
+            return value.factory.createArray(elements);
         },
 
         coerceToBoolean: function () {

@@ -24,6 +24,11 @@ define([
     util.inherit(NullValue).from(Value);
 
     util.extend(NullValue.prototype, {
+        coerceToArray: function () {
+            // Null just casts to an empty array
+            return this.factory.createArray();
+        },
+
         coerceToBoolean: function () {
             return this.factory.createBoolean(false);
         },
