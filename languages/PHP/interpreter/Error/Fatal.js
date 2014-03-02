@@ -28,7 +28,8 @@ define([
             8: 'Access to undeclared static property: ${className}::$${propertyName}',
             9: 'Call to undefined method ${className}::${methodName}()',
             10: 'Cannot access self:: when no class scope is active',
-            11: 'Undefined constant \'${name}\''
+            11: 'Undefined constant \'${name}\'',
+            12: 'Uncaught exception \'${name}\''
         };
 
     function PHPFatalError(code, variables) {
@@ -48,7 +49,8 @@ define([
         UNDECLARED_STATIC_PROPERTY: 8,
         CALL_TO_UNDEFINED_METHOD: 9,
         SELF_WHEN_NO_ACTIVE_CLASS: 10,
-        UNDEFINED_CONSTANT: 11
+        UNDEFINED_CONSTANT: 11,
+        UNCAUGHT_EXCEPTION: 12
     });
 
     return PHPFatalError;

@@ -13,19 +13,22 @@ define([
     './functions/constant',
     './classes/stdClass',
     './functions/string',
-    './functions/variableHandling'
+    './functions/variableHandling',
+    './classes/Exception'
 ], function (
     arrayFunctions,
     constantFunctions,
     stdClass,
     stringFunctions,
-    variableHandlingFunctions
+    variableHandlingFunctions,
+    Exception
 ) {
     'use strict';
 
     return {
         classes: {
-            'stdClass': stdClass
+            'stdClass': stdClass,
+            'Exception': Exception
         },
         functionGroups: [
             arrayFunctions,

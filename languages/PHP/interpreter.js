@@ -21,6 +21,7 @@ define([
     './interpreter/LabelRepository',
     './interpreter/List',
     './interpreter/NamespaceScope',
+    './interpreter/Value/Object',
     './interpreter/Environment',
     './interpreter/Error',
     './interpreter/Error/Fatal',
@@ -36,6 +37,7 @@ define([
     LabelRepository,
     List,
     NamespaceScope,
+    ObjectValue,
     PHPEnvironment,
     PHPError,
     PHPFatalError,
@@ -45,7 +47,8 @@ define([
 ) {
     'use strict';
 
-    var INVOKE_MAGIC_METHOD = '__invoke',
+    var EXCEPTION_CLASS = 'Exception',
+        INVOKE_MAGIC_METHOD = '__invoke',
         INCLUDE_OPTION = 'include',
         binaryOperatorToMethod = {
             '+': 'add',
@@ -178,7 +181,8 @@ define([
                     throw new PHPFatalError(PHPFatalError.SELF_WHEN_NO_ACTIVE_CLASS);
                 },
                 valueFactory: valueFactory
-            };
+            },
+            PHPException;
 
         (function () {
             var internals = {
@@ -199,6 +203,10 @@ define([
             util.each(builtinTypes.classes, function (classFactory, name) {
                 var Class = classFactory(internals);
 
+                if (name === EXCEPTION_CLASS) {
+                    PHPException = Class;
+                }
+
                 globalNamespace.defineClass(name, Class);
             });
         }());
@@ -217,6 +225,27 @@ define([
                 stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
             );
         } catch (exception) {
+            if (exception instanceof ObjectValue) {
+                // Uncaught PHP Exceptions become E_FATAL errors
+                (function (value) {
+                    var exception = value.getNative();
+
+                    if (!exception instanceof PHPException) {
+                        throw new Exception('Weird value class thrown: ' + value.getClassName());
+                    }
+
+                    exception = new PHPFatalError(PHPFatalError.UNCAUGHT_EXCEPTION, {name: value.getClassName()});
+
+                    if (context.mainProgram) {
+                        stderr.write(exception.message);
+                    }
+
+                    promise.reject(exception);
+                }(exception));
+
+                return promise;
+            }
+
             if (exception instanceof PHPError) {
                 if (context.mainProgram) {
                     stderr.write(exception.message);
@@ -888,6 +917,9 @@ define([
                 });
 
                 return expression;
+            },
+            'N_THROW_STATEMENT': function (node, interpret) {
+                return 'throw ' + interpret(node.expression) + ';';
             },
             'N_UNARY_EXPRESSION': function (node, interpret) {
                 var operator = node.operator,

@@ -41,46 +41,54 @@ define([
             var classObject,
                 constructorName = null,
                 methodData = {},
-                namespace = this;
+                namespace = this,
+                staticProperties,
+                InternalClass;
 
-            function InternalClass() {
-                var instance = this;
+            if (util.isFunction(definition)) {
+                InternalClass = definition;
+            } else {
+                InternalClass = function () {
+                    var instance = this;
 
-                if (definition.superClass) {
-                    definition.superClass.getInternalClass().call(this);
-                }
-
-                util.each(definition.properties, function (value, name) {
-                    instance[name] = value;
-                });
-            }
-
-            // Prevent native 'constructor' property from erroneously being detected as PHP class method
-            delete InternalClass.prototype.constructor;
-
-            if (definition.superClass) {
-                InternalClass.prototype = Object.create(definition.superClass.getInternalClass().prototype);
-            }
-
-            util.each(definition.methods, function (data, methodName) {
-                // PHP5-style __construct magic method takes precedence
-                if (methodName === '__construct') {
-                    if (constructorName) {
-                        namespace.callStack.raiseError(PHPError.E_STRICT, 'Redefining already defined constructor for class ' + name);
+                    if (definition.superClass) {
+                        definition.superClass.getInternalClass().call(this);
                     }
 
-                    constructorName = methodName;
+                    util.each(definition.properties, function (value, name) {
+                        instance[name] = value;
+                    });
+                };
+
+                // Prevent native 'constructor' property from erroneously being detected as PHP class method
+                delete InternalClass.prototype.constructor;
+
+                if (definition.superClass) {
+                    InternalClass.prototype = Object.create(definition.superClass.getInternalClass().prototype);
                 }
 
-                if (!constructorName && methodName === name) {
-                    constructorName = methodName;
-                }
+                util.each(definition.methods, function (data, methodName) {
+                    // PHP5-style __construct magic method takes precedence
+                    if (methodName === '__construct') {
+                        if (constructorName) {
+                            namespace.callStack.raiseError(PHPError.E_STRICT, 'Redefining already defined constructor for class ' + name);
+                        }
 
-                data.method[IS_STATIC] = data[IS_STATIC];
-                data.method.data = methodData;
+                        constructorName = methodName;
+                    }
 
-                InternalClass.prototype[methodName] = data.method;
-            });
+                    if (!constructorName && methodName === name) {
+                        constructorName = methodName;
+                    }
+
+                    data.method[IS_STATIC] = data[IS_STATIC];
+                    data.method.data = methodData;
+
+                    InternalClass.prototype[methodName] = data.method;
+                });
+
+                staticProperties = definition.staticProperties;
+            }
 
             classObject = new Class(
                 namespace.valueFactory,
@@ -88,7 +96,7 @@ define([
                 namespace.getPrefix() + name,
                 constructorName,
                 InternalClass,
-                definition.staticProperties
+                staticProperties
             );
 
             methodData.classObject = classObject;
