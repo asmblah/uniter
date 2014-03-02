@@ -84,7 +84,7 @@ define([
         };
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
-        function require(path) {
+        function include(path) {
             var done = false,
                 promise = new Promise(),
                 result;
@@ -98,18 +98,23 @@ define([
                 }).fail(function (exception) {
                     throw exception;
                 });
-            }).fail(function (exception) {
-                throw exception;
+            }).fail(function () {
+                done = true;
+
+                callStack.raiseError(PHPError.E_WARNING, 'include(' + path + '): failed to open stream: No such file or directory');
+                callStack.raiseError(PHPError.E_WARNING, 'include(): Failed opening \'' + path + '\' for inclusion');
+
+                result = valueFactory.createNull();
             });
 
             if (!options[INCLUDE_OPTION]) {
-                throw new Exception('require() :: No "include" transport is available for loading the module.');
+                throw new Exception('include() :: No "include" transport is available for loading the module.');
             }
 
             options[INCLUDE_OPTION](path, promise);
 
             if (!done) {
-                throw new Exception('require() :: Must be called synchronously for now.');
+                throw new Exception('include() :: Must be called synchronously for now.');
             }
 
             return result;
@@ -158,6 +163,7 @@ define([
 
                     return variable.getValue();
                 },
+                include: include,
                 popCall: function () {
                     callStack.pop();
                 },
@@ -175,8 +181,8 @@ define([
                     return call;
                 },
                 referenceFactory: referenceFactory,
-                requireOnce: require,
-                require: require,
+                requireOnce: include,
+                require: include,
                 throwNoActiveClassScope: function () {
                     throw new PHPFatalError(PHPFatalError.SELF_WHEN_NO_ACTIVE_CLASS);
                 },
@@ -670,6 +676,9 @@ define([
                 code += 'if (' + conditionCode + ') ' + consequentCode + alternateCode;
 
                 return code;
+            },
+            'N_INCLUDE_EXPRESSION': function (node, interpret) {
+                return 'tools.include(' + interpret(node.path) + '.getNative())';
             },
             'N_INLINE_HTML_STATEMENT': function (node) {
                 return 'stdout.write(' + JSON.stringify(node.html) + ');';

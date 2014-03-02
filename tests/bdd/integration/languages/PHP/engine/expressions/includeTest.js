@@ -21,7 +21,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine require_once(...) expression integration', function () {
+    describe('PHP Engine include(...) expression integration', function () {
         var engine;
 
         function check(scenario) {
@@ -37,10 +37,10 @@ define([
         });
 
         util.each({
-            'requiring a file where include transport resolves promise with empty string': {
+            'including a file where include transport resolves promise with empty string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'test_file.php';
+    include 'test_file.php';
 
 EOS
 */) {}),
@@ -53,10 +53,10 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
-            'requiring a file where no include transport is specified': {
+            'including a file where no include transport is specified': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'test_file.php';
+    include 'test_file.php';
 
 EOS
 */) {}),
@@ -67,10 +67,10 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
-            'requiring a file where include transport resolves promise with code that just contains inline HTML': {
+            'including a file where include transport resolves promise with code that just contains inline HTML': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'print_hello_world.php';
+    include 'print_hello_world.php';
 
 EOS
 */) {}),
@@ -84,10 +84,10 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'hello world from print_hello_world.php!'
             },
-            'requiring a file where include transport resolves promise with code that contains PHP code to echo a string': {
+            'including a file where include transport resolves promise with code that contains PHP code to echo a string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    require_once 'print_hello.php';
+    include 'print_hello.php';
 
 EOS
 */) {}),
@@ -101,10 +101,10 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'hello from print_hello.php!'
             },
-            'requiring a file where include transport resolves promise with code that returns a string': {
+            'including a file where include transport resolves promise with code that returns a string': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
-    print 'and ' . (require_once 'print_hello.php') . '!';
+    print 'and ' . (include 'print_hello.php') . '!';
 
 EOS
 */) {}),
@@ -117,6 +117,51 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'and welcome back!'
+            },
+            'including a file where include transport rejects promise to indicate module "i_do_not_exist.php" cannot be loaded': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    print 'and ' . (include 'i_do_not_exist.php') . '!';
+
+    echo 'Done';
+EOS
+*/) {}),
+                options: {
+                    include: function (path, promise) {
+                        promise.reject();
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Warning: include(i_do_not_exist.php): failed to open stream: No such file or directory
+PHP Warning: include(): Failed opening 'i_do_not_exist.php' for inclusion
+
+EOS
+*/) {}),
+                expectedStdout: 'and !Done'
+            },
+            'including a file where include transport rejects promise to indicate module "i_also_do_not_exist.php" cannot be loaded': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    print 'and ' . (include 'i_also_do_not_exist.php') . '!';
+
+    echo 'Done';
+EOS
+*/) {}),
+                options: {
+                    include: function (path, promise) {
+                        promise.reject();
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Warning: include(i_also_do_not_exist.php): failed to open stream: No such file or directory
+PHP Warning: include(): Failed opening 'i_also_do_not_exist.php' for inclusion
+
+EOS
+*/) {}),
+                // Note that the 'Done' echo following the include must be executed, this is only a warning
+                expectedStdout: 'and !Done'
             }
         }, function (scenario, description) {
             describe(description, function () {

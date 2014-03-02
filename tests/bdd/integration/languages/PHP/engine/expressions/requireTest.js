@@ -62,7 +62,7 @@ EOS
 */) {}),
                 expectedException: {
                     instanceOf: Exception,
-                    match: /^require\(\) :: No "include" transport is available for loading the module\.$/
+                    match: /^include\(\) :: No "include" transport is available for loading the module\.$/
                 },
                 expectedStderr: '',
                 expectedStdout: ''
