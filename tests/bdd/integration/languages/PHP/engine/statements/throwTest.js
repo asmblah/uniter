@@ -77,6 +77,21 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Uncaught exception \'MyException\'',
                 expectedStdout: ''
+            },
+            'throwing instance of Exception stored in variable': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $exception = new Exception;
+
+    throw $exception;
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Uncaught exception 'Exception'$/
+                },
+                expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
