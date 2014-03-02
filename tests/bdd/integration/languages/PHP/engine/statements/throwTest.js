@@ -21,7 +21,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine throw operator integration', function () {
+    describe('PHP Engine throw statement integration', function () {
         var engine;
 
         function check(scenario) {

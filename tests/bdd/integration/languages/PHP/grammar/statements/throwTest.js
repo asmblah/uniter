@@ -17,7 +17,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Parser grammar throw operator integration', function () {
+    describe('PHP Parser grammar throw statement integration', function () {
         var parser;
 
         beforeEach(function () {
