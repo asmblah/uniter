@@ -38,7 +38,7 @@ define([
             'getting length of array': {
                 code: '<?php return strlen(array());',
                 expectedResult: null,
-                expectedStderr: 'PHP Warning: strlen() expects parameter 1 to be string, array given',
+                expectedStderr: 'PHP Warning: strlen() expects parameter 1 to be string, array given\n',
                 expectedStdout: ''
             },
             'getting length of bool(true)': {
@@ -79,7 +79,7 @@ define([
             'getting length of stdClass instance': {
                 code: '<?php return strlen(new stdClass);',
                 expectedResult: null,
-                expectedStderr: 'PHP Warning: strlen() expects parameter 1 to be string, object given',
+                expectedStderr: 'PHP Warning: strlen() expects parameter 1 to be string, object given\n',
                 expectedStdout: ''
             },
             'getting length of empty string': {

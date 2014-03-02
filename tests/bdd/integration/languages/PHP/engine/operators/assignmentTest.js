@@ -114,7 +114,7 @@ define([
                 'assignment of integer value to index of non-array element': {
                     code: '<?php $notAnArray = 2; $notAnArray[0] = 3; return $notAnArray;',
                     expectedResult: 2,
-                    expectedStderr: 'PHP Warning: Cannot use a scalar value as an array',
+                    expectedStderr: 'PHP Warning: Cannot use a scalar value as an array\n',
                     expectedStdout: ''
                 },
                 'assignment of integer value to variable after variable has been read: definitions should not be hoisted': {
@@ -122,6 +122,7 @@ define([
                     expectedResult: null,
                     expectedStderr: util.heredoc(function (/*<<<EOS
 PHP Notice: Undefined variable: value
+
 EOS
 */) {}),
                     expectedStdout: util.heredoc(function (/*<<<EOS
@@ -135,6 +136,7 @@ EOS
                     expectedResult: null,
                     expectedStderr: util.heredoc(function (/*<<<EOS
 PHP Notice: Undefined variable: value
+
 EOS
 */) {}),
                     expectedStdout: util.heredoc(function (/*<<<EOS

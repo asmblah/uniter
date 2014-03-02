@@ -54,7 +54,7 @@ define([
 
             error = new PHPError(level, message);
 
-            chain.stderr.write(error.getMessage());
+            chain.stderr.write(error.getMessage() + '\n');
         }
     });
 

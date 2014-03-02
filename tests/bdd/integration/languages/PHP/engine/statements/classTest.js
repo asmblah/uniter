@@ -289,7 +289,7 @@ EOS
 EOS
 */) {}),
                 expectedResult: null,
-                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test',
+                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
                 expectedStdout: '2'
             },
             'unused class with PHP4-style constructor followed by PHP5-style': {
@@ -307,7 +307,7 @@ EOS
 EOS
 */) {}),
                 expectedResult: null,
-                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test',
+                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
                 expectedStdout: ''
             },
             'class with magic __invoke(...) method': {

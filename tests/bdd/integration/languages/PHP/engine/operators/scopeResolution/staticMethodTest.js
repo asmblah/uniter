@@ -246,7 +246,7 @@ EOS
 */) {}),
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Strict standards: Non-static method Animal::getPlanet() should not be called statically',
+                expectedStderr: 'PHP Strict standards: Non-static method Animal::getPlanet() should not be called statically\n',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

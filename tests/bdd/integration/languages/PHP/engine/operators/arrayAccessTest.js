@@ -46,14 +46,14 @@ define([
                                 right: 'array()',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Warning: Illegal offset type'
+                                expectedStderr: 'PHP Warning: Illegal offset type\n'
                             }],
                             'boolean': [{
                                 left: 'array()',
                                 right: 'false',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 0'
+                                expectedStderr: 'PHP Notice: Undefined offset: 0\n'
                             }, {
                                 left: 'array(2)',
                                 right: 'false',
@@ -64,40 +64,40 @@ define([
                                 right: 'true',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 1'
+                                expectedStderr: 'PHP Notice: Undefined offset: 1\n'
                             }, {
                                 left: 'array(2)',
                                 right: 'true',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 1'
+                                expectedStderr: 'PHP Notice: Undefined offset: 1\n'
                             }],
                             'float': [{
                                 left: 'array()',
                                 right: '2.0',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 2'
+                                expectedStderr: 'PHP Notice: Undefined offset: 2\n'
                             }, {
                                 left: 'array(1)',
                                 right: '4.2',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 4'
+                                expectedStderr: 'PHP Notice: Undefined offset: 4\n'
                             }, {
                                 left: 'array(1)',
                                 right: '5.8',
                                 expectedResult: null,
                                 expectedResultType: 'null',
                                 // Note that float is coerced to 5, not 6 as it is truncated
-                                expectedStderr: 'PHP Notice: Undefined offset: 5'
+                                expectedStderr: 'PHP Notice: Undefined offset: 5\n'
                             }],
                             'integer': [{
                                 left: 'array()',
                                 right: '4',
                                 expectedResult: null,
                                 expectedResultType: 'null',
-                                expectedStderr: 'PHP Notice: Undefined offset: 4'
+                                expectedStderr: 'PHP Notice: Undefined offset: 4\n'
                             }, {
                                 left: 'array(1)',
                                 right: '0',

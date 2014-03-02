@@ -38,7 +38,7 @@ define([
             check({
                 code: '<?php return var_dump();',
                 expectedResult: null,
-                expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given',
+                expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given\n',
                 expectedStdout: ''
             });
         });

@@ -65,7 +65,7 @@ EOS
 EOS
 */) {}),
                 expectedResult: null,
-                expectedStderr: 'PHP Notice: Undefined property: stdClass::$anUndefinedProperty',
+                expectedStderr: 'PHP Notice: Undefined property: stdClass::$anUndefinedProperty\n',
                 expectedStdout: 'NULL\n'
             },
             'setting dynamically referenced property of object with expression for key': {

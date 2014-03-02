@@ -58,7 +58,7 @@ EOS
 */) {}),
                 expectedResult: 'NaME',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant NaME - assumed \'NaME\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant NaME - assumed \'NaME\'\n',
                 expectedStdout: ''
             },
             'defining case-insensitive constant in global namespace then referencing with correct case from global namespace': {
@@ -97,7 +97,7 @@ EOS
 */) {}),
                 expectedResult: 'NAME',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant NAME - assumed \'NAME\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant NAME - assumed \'NAME\'\n',
                 expectedStdout: ''
             }
         }, function (scenario, description) {

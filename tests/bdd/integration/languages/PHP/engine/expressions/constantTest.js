@@ -48,7 +48,7 @@ EOS
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'MY_CONST',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'\n',
                 expectedStdout: ''
             },
             'assigning undefined constant called "YOUR_CONST" to variable in global namespace': {
@@ -62,7 +62,7 @@ EOS
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'YOUR_CONST',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\'\n',
                 expectedStdout: ''
             },
             'assigning undefined constant called "MY_CONST" to variable in a namespace': {
@@ -78,7 +78,7 @@ EOS
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'MY_CONST',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'\n',
                 expectedStdout: ''
             },
             'undefined constant as default argument value when not called': {
@@ -105,7 +105,7 @@ EOS
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'UNDEF_CONST',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant UNDEF_CONST - assumed \'UNDEF_CONST\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant UNDEF_CONST - assumed \'UNDEF_CONST\'\n',
                 expectedStdout: ''
             },
             // Ensure we use .hasOwnProperty(...) checks internally
@@ -122,7 +122,7 @@ EOS
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'constructor',
                 expectedResultType: 'string',
-                expectedStderr: 'PHP Notice: Use of undefined constant constructor - assumed \'constructor\'',
+                expectedStderr: 'PHP Notice: Use of undefined constant constructor - assumed \'constructor\'\n',
                 expectedStdout: ''
             },
             'undefined constant as default argument value when called but not used': {

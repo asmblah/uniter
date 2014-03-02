@@ -91,7 +91,7 @@ EOS
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 // Note that the method's actual owner class Animal is referred to
-                expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically',
+                expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically\n',
                 expectedStdout: ''
             },
             'reading inherited public property': {
