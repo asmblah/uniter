@@ -15,6 +15,7 @@
 
     var modular = require('modular-amd'),
         optionsManager = require('node-getopt').create([
+            ['d', 'dump-ast', 'Dump AST of PHP code instead of executing it'],
             ['r', 'run=<code>', 'Run PHP <code> without using script tags <? ... ?>']
         ]),
         parsedOptions = optionsManager.parseSystem();
@@ -32,7 +33,9 @@
         uniter
     ) {
         var hasOwn = {}.hasOwnProperty,
-            phpEngine;
+            phpCode,
+            phpEngine,
+            phpParser;
 
         function output() {
             process.stdout.write(phpEngine.getStdout().readAll());
@@ -40,15 +43,24 @@
         }
 
         if (hasOwn.call(parsedOptions.options, 'run')) {
-            phpEngine = uniter.createEngine('PHP');
+            phpCode = '<?php ' + parsedOptions.options.run;
 
-            phpEngine.execute('<?php ' + parsedOptions.options.run).done(function () {
-                output();
-            }).fail(function (exception) {
-                output();
-                process.stderr.write(exception.getMessage());
-                process.stdout.write('\n');
-            });
+            // Only dump the AST to stdout if requested
+            if (hasOwn.call(parsedOptions.options, 'dump-ast')) {
+                phpParser = uniter.createParser('PHP');
+
+                process.stdout.write(JSON.stringify(phpParser.parse(phpCode), null, 4) + '\n');
+            } else {
+                phpEngine = uniter.createEngine('PHP');
+
+                phpEngine.execute(phpCode).done(function () {
+                    output();
+                }).fail(function (exception) {
+                    output();
+                    process.stderr.write(exception.getMessage());
+                    process.stdout.write('\n');
+                });
+            }
         } else {
             optionsManager.showHelp();
             process.exit(1);

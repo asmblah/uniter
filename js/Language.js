@@ -44,6 +44,14 @@ define([
             return engine;
         },
 
+        createParser: function () {
+            var language = this,
+                stderr = new Stream(),
+                parser = new Parser(language.grammarSpec, stderr);
+
+            return parser;
+        },
+
         getName: function () {
             return this.name;
         }

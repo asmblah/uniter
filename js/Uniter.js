@@ -65,6 +65,19 @@ define([
             return language.createEngine(options);
         },
 
+        createParser: function (name) {
+            var language,
+                uniter = this;
+
+            if (!hasOwn.call(uniter.languages, name)) {
+                throw new Exception('Uniter.createParser() :: Language with name "' + name + '" is not registered');
+            }
+
+            language = uniter.languages[name];
+
+            return language.createParser();
+        },
+
         registerLanguage: function (language) {
             var name,
                 uniter = this;
