@@ -38,6 +38,46 @@ Can I try it now?
 
 [Sure you can](http://asmblah.github.io/uniter/demo/interactive.html).
 
+Using on the command line
+-------------------------
+You can use Uniter from the command line after installing it via NPM, eg.:
+
+```sh
+# Install Uniter globally
+$ npm install -g uniter
+
+# Execute PHP code
+$ uniter -r 'echo 7 + 2;'
+9
+
+# Parse PHP but just dump the AST as JSON, don't attempt to execute
+$ uniter -r 'echo 7 + 2;' --dump-ast
+{
+    "statements": [
+        {
+            "expression": {
+                "left": {
+                    "number": "7",
+                    "name": "N_INTEGER"
+                },
+                "right": [
+                    {
+                        "operator": "+",
+                        "operand": {
+                            "number": "2",
+                            "name": "N_INTEGER"
+                        }
+                    }
+                ],
+                "name": "N_EXPRESSION"
+            },
+            "name": "N_ECHO_STATEMENT"
+        }
+    ],
+    "name": "N_PROGRAM"
+}
+```
+
 Keeping up to date
 ------------------
 - [Follow me on Twitter](https://twitter.com/@asmblah) for updates: [https://twitter.com/@asmblah](https://twitter.com/@asmblah)
