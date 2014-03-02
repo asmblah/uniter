@@ -401,9 +401,10 @@ define([
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_5': {
-                captureAs: 'N_EXPRESSION',
+                captureAs: 'N_UNARY_EXPRESSION',
                 components: [{name: 'operator', optionally: (/!/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_4'}],
-                ifNoMatch: {component: 'operator', capture: 'operand'}
+                ifNoMatch: {component: 'operator', capture: 'operand'},
+                options: {prefix: true}
             },
             'N_EXPRESSION_LEVEL_6': {
                 captureAs: 'N_EXPRESSION',

@@ -145,6 +145,7 @@ define({
             'bdd/integration/languages/PHP/grammar/expressions/requireOnceTest',
             'bdd/integration/languages/PHP/grammar/expressions/requireTest',
             'bdd/integration/languages/PHP/grammar/operators/cast/arrayTest',
+            'bdd/integration/languages/PHP/grammar/operators/logical/notTest',
             'bdd/integration/languages/PHP/grammar/operators/objectAccess/instanceMethodTest',
             'bdd/integration/languages/PHP/grammar/operators/objectAccess/instancePropertyTest',
             'bdd/integration/languages/PHP/grammar/operators/scopeResolution/staticMethodTest',
