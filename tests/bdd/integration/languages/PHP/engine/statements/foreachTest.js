@@ -175,6 +175,21 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '2:3,5:7,'
+            },
+            'foreach over element of array stored in property': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $object = new stdClass;
+    $object->array = array(array(1, 2), array(5, 6));
+
+    foreach ($object->array[1] as $number) {
+        print $number . ',';
+    }
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: '5,6,'
             }
         }, function (scenario, description) {
             describe(description, function () {

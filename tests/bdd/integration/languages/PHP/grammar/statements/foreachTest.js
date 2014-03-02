@@ -178,6 +178,55 @@ define([
                         }
                     }]
                 }
+            },
+            'foreach over element of array stored in property': {
+                code: 'foreach ($object->array[7] as $key => $item) { echo 3; }',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_FOREACH_STATEMENT',
+                        array: {
+                            name: 'N_ARRAY_INDEX',
+                            array: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'object'
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'array'
+                                    }
+                                }]
+                            },
+                            indices: [{
+                                index: {
+                                    name: 'N_INTEGER',
+                                    number: '7'
+                                }
+                            }]
+                        },
+                        key: {
+                            name: 'N_VARIABLE',
+                            variable: 'key'
+                        },
+                        value: {
+                            name: 'N_VARIABLE',
+                            variable: 'item'
+                        },
+                        body: {
+                            name: 'N_COMPOUND_STATEMENT',
+                            statements: [{
+                                name: 'N_ECHO_STATEMENT',
+                                expression: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
