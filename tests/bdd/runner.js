@@ -91,6 +91,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/cast/arrayTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/looseEqualityTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/strictEqualityTest',
+            'bdd/integration/languages/PHP/engine/operators/logical/notTest',
             'bdd/integration/languages/PHP/engine/operators/objectAccess/instanceMethodTest',
             'bdd/integration/languages/PHP/engine/operators/objectAccess/instancePropertyTest',
             'bdd/integration/languages/PHP/engine/operators/scopeResolution/staticMethodTest',

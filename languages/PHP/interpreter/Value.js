@@ -133,6 +133,12 @@ define([
             return true;
         },
 
+        logicalNot: function () {
+            var value = this;
+
+            return value.factory.createBoolean(!value.coerceToBoolean().getNative());
+        },
+
         toValue: function () {
             return this;
         }

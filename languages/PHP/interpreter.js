@@ -75,7 +75,8 @@ define([
                 '-': 'toNegative',
                 '++': 'preIncrement',
                 '--': 'preDecrement',
-                '~': 'onesComplement'
+                '~': 'onesComplement',
+                '!': 'logicalNot'
             },
             suffix: {
                 '++': 'postIncrement',
