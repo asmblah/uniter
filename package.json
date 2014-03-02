@@ -37,7 +37,7 @@
     "devDependencies": {
         "chai": "1.7.x",
         "express": "3.2.x",
-        "mocha": "1.12.x",
+        "mocha": "1.17.x",
         "sinon-chai": "2.4.x"
     },
     "engines": {
