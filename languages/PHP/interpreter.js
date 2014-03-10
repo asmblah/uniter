@@ -419,7 +419,7 @@ define([
                     suffix = '';
 
                 util.each(node.indices, function (index) {
-                    indexValues.push(interpret(index.index, {assignment: false, getValue: false}));
+                    indexValues.push(interpret(index.index, {assignment: false, getValue: true}));
                 });
 
                 if (context.assignment) {

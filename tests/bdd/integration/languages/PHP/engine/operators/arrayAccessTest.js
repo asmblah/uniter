@@ -322,6 +322,20 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'array access with key in variable': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array(2, 5, 6);
+    $key = 1;
+
+    return $array[$key];
+EOS
+*/) {}),
+                expectedResult: 5,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
