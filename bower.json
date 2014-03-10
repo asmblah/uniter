@@ -1,6 +1,6 @@
 {
     "name": "uniter",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "main": "uniter",
     "ignore": [
         ".gitignore",
