@@ -25,17 +25,19 @@ define([
 
     util.extend(IntegerValue.prototype, {
         add: function (rightValue) {
-            var leftValue = this,
-                factory = leftValue.factory;
+            return rightValue.addToInteger(this);
+        },
 
-            rightValue = rightValue.coerceToNumber();
+        addToBoolean: function (booleanValue) {
+            var value = this;
 
-            // Coerce to float and return a float if either operand is a float
-            if (rightValue.getType() === 'float') {
-                return factory.createFloat(leftValue.coerceToFloat().getNative() + rightValue.getNative());
-            }
+            return value.factory.createInteger(value.value + booleanValue.value);
+        },
 
-            return factory.createInteger(leftValue.getNative() + rightValue.getNative());
+        addToInteger: function (rightValue) {
+            var value = this;
+
+            return value.factory.createInteger(value.value + rightValue.value);
         },
 
         coerceToBoolean: function () {

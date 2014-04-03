@@ -29,6 +29,21 @@ define([
     }
 
     util.extend(Value.prototype, {
+        addToArray: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToFloat: function (floatValue) {
+            var leftValue = this;
+
+            // Coerce to float and return a float if either operand is a float
+            return leftValue.factory.createFloat(leftValue.coerceToFloat().getNative() + floatValue.getNative());
+        },
+
+        addToString: function (stringValue) {
+            return stringValue.coerceToNumber().add(this.coerceToNumber());
+        },
+
         callStaticMethod: function () {
             throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
         },
@@ -37,6 +52,12 @@ define([
             var value = this;
 
             return value.factory.createArray([value]);
+        },
+
+        coerceToFloat: function () {
+            var value = this;
+
+            return value.factory.createFloat(Number(value.value));
         },
 
         concat: function (rightValue) {

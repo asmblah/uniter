@@ -88,6 +88,7 @@ define({
             'bdd/integration/languages/PHP/engine/expressions/printTest',
             'bdd/integration/languages/PHP/engine/expressions/requireOnceTest',
             'bdd/integration/languages/PHP/engine/expressions/requireTest',
+            'bdd/integration/languages/PHP/engine/operators/arithmetic/additionTest',
             'bdd/integration/languages/PHP/engine/operators/cast/arrayTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/looseEqualityTest',
             'bdd/integration/languages/PHP/engine/operators/comparison/strictEqualityTest',

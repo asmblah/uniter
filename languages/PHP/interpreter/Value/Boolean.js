@@ -26,6 +26,28 @@ define([
     util.inherit(BooleanValue).from(Value);
 
     util.extend(BooleanValue.prototype, {
+        add: function (rightValue) {
+            return rightValue.addToBoolean(this);
+        },
+
+        addToBoolean: function (rightValue) {
+            var value = this;
+
+            return value.factory.createInteger(value.value + rightValue.value);
+        },
+
+        addToInteger: function (integerValue) {
+            return integerValue.addToBoolean(this);
+        },
+
+        addToNull: function () {
+            return this.coerceToInteger();
+        },
+
+        addToObject: function (objectValue) {
+            return objectValue.addToBoolean(this);
+        },
+
         coerceToBoolean: function () {
             return this;
         },
@@ -37,6 +59,10 @@ define([
         },
 
         coerceToKey: function () {
+            return this.coerceToInteger();
+        },
+
+        coerceToNumber: function () {
             return this.coerceToInteger();
         },
 

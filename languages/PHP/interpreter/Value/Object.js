@@ -36,6 +36,26 @@ define([
     util.inherit(ObjectValue).from(ArrayValue);
 
     util.extend(ObjectValue.prototype, {
+        add: function (rightValue) {
+            return rightValue.addToObject(this);
+        },
+
+        addToArray: function () {
+            var value = this;
+
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToBoolean: function (booleanValue) {
+            var value = this;
+
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+
+            return value.factory.createInteger((booleanValue.value ? 1 : 0) + 1);
+        },
+
         call: function (args) {
             return this.callMethod('__invoke', args);
         },

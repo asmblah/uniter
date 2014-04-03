@@ -63,6 +63,47 @@ define([
     util.inherit(ArrayValue).from(Value);
 
     util.extend(ArrayValue.prototype, {
+        add: function (rightValue) {
+            return rightValue.addToArray(this);
+        },
+
+        addToArray: function (leftValue) {
+            var rightValue = this,
+                resultArray = leftValue.clone();
+
+            util.each(rightValue.keysToElements, function (element, key) {
+                if (!hasOwn.call(resultArray.keysToElements, key)) {
+                    resultArray.getElementByKey(element.getKey()).setValue(element.getValue());
+                }
+            }, {keys: true});
+
+            return resultArray;
+        },
+
+        addToBoolean: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToFloat: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToInteger: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToNull: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
+        addToObject: function (objectValue) {
+            return objectValue.addToArray(this);
+        },
+
+        addToString: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
         clone: function () {
             var arrayValue = this,
                 orderedElements = [];

@@ -25,7 +25,11 @@ define([
 
     util.extend(StringValue.prototype, {
         add: function (rightValue) {
-            return rightValue.coerceToNumber().add(this.coerceToNumber());
+            return rightValue.addToString(this);
+        },
+
+        addToBoolean: function (booleanValue) {
+            return this.coerceToNumber().add(booleanValue);
         },
 
         call: function (args, namespaceScope) {
@@ -61,7 +65,7 @@ define([
 
         coerceToNumber: function () {
             var value = this,
-                isInteger = !/^[.eE]+$/.test(value.value);
+                isInteger = /^[^.eE]*$/.test(value.value);
 
             if (isInteger) {
                 return value.coerceToInteger();

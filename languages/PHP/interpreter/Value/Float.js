@@ -25,16 +25,13 @@ define([
 
     util.extend(FloatValue.prototype, {
         add: function (rightValue) {
-            var leftValue = this,
-                factory = leftValue.factory,
-                rightType = rightValue.getType();
+            return rightValue.addToFloat(this);
+        },
 
-            // Coerce to float and return a float if either operand is a float
-            if (rightType === 'float') {
-                return factory.createFloat(leftValue.coerceToFloat().getNative() + rightValue.coerceToFloat().getNative());
-            }
+        addToBoolean: function (booleanValue) {
+            var value = this;
 
-            return factory.createInteger(leftValue.getNative() + rightValue.getNative());
+            return value.factory.createFloat(value.value + Number(booleanValue.value));
         },
 
         coerceToBoolean: function () {
