@@ -399,50 +399,43 @@ EOS
                 },
                 'float': {
                     right: {
-                        'float': [/*{
+                        'float': [{
                             left: '0.0',
                             right: '0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0,
+                            expectedResultType: 'float'
                         }, {
                             left: '1.1',
                             right: '1.1',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 2.2,
+                            expectedResultType: 'float'
                         }, {
                             left: '0.1',
                             right: '0.0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0.1,
+                            expectedResultType: 'float'
                         }, {
-                            // Negative and positive zero are equal
                             left: '-0.0',
                             right: '0.0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }*/],
-                        'integer': [/*{
+                            expectedResult: 0,
+                            expectedResultType: 'float'
+                        }],
+                        'integer': [{
                             left: '0.0',
                             right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0,
+                            expectedResultType: 'float'
                         }, {
                             left: '1.0',
                             right: '1',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 2,
+                            expectedResultType: 'float'
                         }, {
                             left: '0.1',
                             right: '0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }, {
-                            // Negative and positive zero are equal
-                            left: '-0.0',
-                            right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }*/],
+                            expectedResult: 0.1,
+                            expectedResultType: 'float'
+                        }],
                         'null': [/*{
                             left: '0.0',
                             right: 'null',

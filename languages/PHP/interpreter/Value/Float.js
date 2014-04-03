@@ -34,6 +34,12 @@ define([
             return value.factory.createFloat(value.value + Number(booleanValue.value));
         },
 
+        addToInteger: function (integerValue) {
+            var value = this;
+
+            return value.factory.createFloat(value.value + integerValue.value);
+        },
+
         coerceToBoolean: function () {
             var value = this;
 
