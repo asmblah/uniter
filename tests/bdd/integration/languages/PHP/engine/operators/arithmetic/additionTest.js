@@ -436,95 +436,104 @@ EOS
                             expectedResult: 0.1,
                             expectedResultType: 'float'
                         }],
-                        'null': [/*{
+                        'null': [{
                             left: '0.0',
                             right: 'null',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0,
+                            expectedResultType: 'float'
                         }, {
                             left: '1.0',
                             right: 'null',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 1,
+                            expectedResultType: 'float'
                         }, {
                             left: '0.1',
                             right: 'null',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0.1,
+                            expectedResultType: 'float'
                         }, {
                             left: '-0.0',
                             right: 'null',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }*/],
-                        'object': [/*{
+                            expectedResult: 0,
+                            expectedResultType: 'float'
+                        }],
+                        'object': [{
                             left: '0.0',
                             right: 'new stdClass',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 1,
+                            expectedResultType: 'float',
+                            expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Notice: Object of class stdClass could not be converted to int
+
+EOS
+*/) {})
                         }, {
                             left: '0.1',
                             right: 'new stdClass',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 1.1,
+                            expectedResultType: 'float',
+                            expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Notice: Object of class stdClass could not be converted to int
+
+EOS
+*/) {})
                         }, {
                             left: '1.0',
                             right: 'new stdClass',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }, {
-                            left: '1.1',
-                            right: 'new stdClass',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
-                        }*/],
-                        'string': [/*{
+                            expectedResult: 2,
+                            expectedResultType: 'float',
+                            expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Notice: Object of class stdClass could not be converted to int
+
+EOS
+*/) {})
+                        }],
+                        'string': [{
                             left: '0.0',
                             right: '""',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0,
+                            expectedResultType: 'float'
                         }, {
                             left: '0.0',
                             right: '"0.1"',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0.1,
+                            expectedResultType: 'float'
                         }, {
                             left: '1.2',
                             right: '"1.2"',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 2.4,
+                            expectedResultType: 'float'
                         }, {
                             left: '1.0',
                             right: '"1"',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }*/]
+                            expectedResult: 2,
+                            expectedResultType: 'float'
+                        }]
                     }
                 },
                 'integer': {
                     right: {
-                        'integer': [/*{
+                        'integer': [{
                             left: '0',
                             right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 0,
+                            expectedResultType: 'integer'
                         }, {
                             left: '1',
                             right: '1',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
+                            expectedResult: 2,
+                            expectedResultType: 'integer'
                         }, {
-                            left: '1',
-                            right: '0',
-                            expectedResult: false,
-                            expectedResultType: 'boolean'
+                            left: '7',
+                            right: '4',
+                            expectedResult: 11,
+                            expectedResultType: 'integer'
                         }, {
-                            // Negative and positive zero are equal
-                            left: '-0',
-                            right: '0',
-                            expectedResult: true,
-                            expectedResultType: 'boolean'
-                        }*/],
+                            left: '-20',
+                            right: '4',
+                            expectedResult: -16,
+                            expectedResultType: 'integer'
+                        }],
                         'null': [/*{
                             left: '0',
                             right: 'null',

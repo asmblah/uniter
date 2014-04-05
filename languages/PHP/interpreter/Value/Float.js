@@ -40,6 +40,14 @@ define([
             return value.factory.createFloat(value.value + integerValue.value);
         },
 
+        addToObject: function (objectValue) {
+            return objectValue.addToFloat(this);
+        },
+
+        addToNull: function () {
+            return this.coerceToNumber();
+        },
+
         coerceToBoolean: function () {
             var value = this;
 

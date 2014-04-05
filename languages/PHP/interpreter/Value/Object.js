@@ -56,6 +56,14 @@ define([
             return value.factory.createInteger((booleanValue.value ? 1 : 0) + 1);
         },
 
+        addToFloat: function (floatValue) {
+            var value = this;
+
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+
+            return value.factory.createFloat(floatValue.value + 1);
+        },
+
         call: function (args) {
             return this.callMethod('__invoke', args);
         },
