@@ -15,11 +15,12 @@ define([
 ) {
     'use strict';
 
-    function StaticPropertyReference(classObject, name, value) {
+    function StaticPropertyReference(classObject, name, visibility, value) {
         this.classObject = classObject;
         this.name = name;
         this.reference = null;
         this.value = value;
+        this.visibility = visibility;
     }
 
     util.extend(StaticPropertyReference.prototype, {
@@ -31,6 +32,10 @@ define([
             var property = this;
 
             return property.value ? property.value : property.reference.getValue();
+        },
+
+        getVisibility: function () {
+            return this.visibility;
         },
 
         isReference: function () {

@@ -22,6 +22,8 @@ define([
     'use strict';
 
     var IS_STATIC = 'isStatic',
+        VALUE = 'value',
+        VISIBILITY = 'visibility',
         hasOwn = {}.hasOwnProperty;
 
     function Class(valueFactory, callStack, name, constructorName, InternalClass, staticPropertiesData) {
@@ -35,8 +37,8 @@ define([
         this.staticProperties = staticProperties;
         this.valueFactory = valueFactory;
 
-        util.each(staticPropertiesData, function (value, name) {
-            staticProperties[name] = new StaticPropertyReference(classObject, name, value);
+        util.each(staticPropertiesData, function (data, name) {
+            staticProperties[name] = new StaticPropertyReference(classObject, name, data[VISIBILITY], data[VALUE]);
         });
     }
 
@@ -86,7 +88,9 @@ define([
         },
 
         getStaticPropertyByName: function (name) {
-            var classObject = this;
+            var classObject = this,
+                currentClass,
+                staticProperty;
 
             if (!hasOwn.call(classObject.staticProperties, name)) {
                 throw new PHPFatalError(PHPFatalError.UNDECLARED_STATIC_PROPERTY, {
@@ -95,7 +99,26 @@ define([
                 });
             }
 
-            return classObject.staticProperties[name];
+            staticProperty = classObject.staticProperties[name];
+
+            // Property has public visibility; may be read from anywhere
+            if (staticProperty.getVisibility() === 'public') {
+                return staticProperty;
+            }
+
+            // Property is private; may only be read from methods of this class and not derivatives
+            if (staticProperty.getVisibility() === 'private') {
+                currentClass = classObject.callStack.getCurrent().getScope().getCurrentClass();
+
+                if (!currentClass || currentClass.name !== classObject.name) {
+                    throw new PHPFatalError(PHPFatalError.CANNOT_ACCESS_PRIVATE_PROPERTY, {
+                        className: classObject.name,
+                        propertyName: name
+                    });
+                }
+            }
+
+            return staticProperty;
         },
 
         instantiate: function (args) {

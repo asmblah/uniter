@@ -19,11 +19,13 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function Scope(callStack, valueFactory, thisObject) {
+    function Scope(callStack, valueFactory, thisObject, currentClass) {
         var thisObjectVariable;
 
+        this.currentClass = currentClass;
         this.errorsSuppressed = false;
         this.callStack = callStack;
+        this.thisObject = thisObject;
         this.valueFactory = valueFactory;
         this.variables = {};
 
@@ -57,6 +59,14 @@ define([
                 valueFactory = scope.valueFactory;
 
             scope.defineVariable(name).setValue(valueFactory.coerce(object));
+        },
+
+        getCurrentClass: function () {
+            return this.currentClass;
+        },
+
+        getThisObject: function () {
+            return this.thisObject;
         },
 
         getVariable: function (name) {

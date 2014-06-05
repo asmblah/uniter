@@ -168,14 +168,14 @@ define([
                 popCall: function () {
                     callStack.pop();
                 },
-                pushCall: function (thisObject) {
+                pushCall: function (thisObject, currentClass) {
                     var call;
 
                     if (!valueFactory.isValue(thisObject)) {
                         thisObject = null;
                     }
 
-                    call = new Call(new Scope(callStack, valueFactory, thisObject));
+                    call = new Call(new Scope(callStack, valueFactory, thisObject, currentClass));
 
                     callStack.push(call);
 
@@ -221,7 +221,7 @@ define([
         // Push the 'main' global scope call onto the stack
         callStack.push(new Call(globalScope));
 
-        code = 'var namespaceScope = tools.createNamespaceScope(namespace), namespaceResult, scope = globalScope;' + code;
+        code = 'var namespaceScope = tools.createNamespaceScope(namespace), namespaceResult, scope = globalScope, currentClass = null;' + code;
 
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
@@ -320,7 +320,7 @@ define([
         body = argumentAssignments + bindingAssignments + body;
 
         // Add scope handling logic
-        body = 'var scope = tools.pushCall(this).getScope(); try { ' + body + ' } finally { tools.popCall(); }';
+        body = 'var scope = tools.pushCall(this, currentClass).getScope(); try { ' + body + ' } finally { tools.popCall(); }';
 
         // Build function expression
         body = 'function (' + args.join(', ') + ') {' + body + '}';
@@ -468,7 +468,7 @@ define([
                     if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION') {
                         propertyCodes.push('"' + data.name + '": ' + data.value);
                     } else if (member.name === 'N_STATIC_PROPERTY_DEFINITION') {
-                        staticPropertyCodes.push('"' + data.name + '": ' + data.value);
+                        staticPropertyCodes.push('"' + data.name + '": {visibility: ' + data.visibility + ', value: ' + data.value + '}');
                     } else if (member.name === 'N_METHOD_DEFINITION' || member.name === 'N_STATIC_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
                     }
@@ -878,6 +878,7 @@ define([
             'N_STATIC_PROPERTY_DEFINITION': function (node, interpret) {
                 return {
                     name: node.variable.variable,
+                    visibility: JSON.stringify(node.visibility),
                     value: node.value ? interpret(node.value) : 'tools.valueFactory.createNull()'
                 };
             },

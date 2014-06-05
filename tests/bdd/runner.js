@@ -106,6 +106,7 @@ define({
             'bdd/integration/languages/PHP/engine/operators/updateTest',
             'bdd/integration/languages/PHP/engine/syntax/errorTest',
             'bdd/integration/languages/PHP/engine/statements/class/extendsTest',
+            'bdd/integration/languages/PHP/engine/statements/class/privateStaticPropertyTest',
             'bdd/integration/languages/PHP/engine/statements/class/instanceMethodDefaultArgumentValueTest',
             'bdd/integration/languages/PHP/engine/statements/class/instanceMethodTypeHintingTest',
             'bdd/integration/languages/PHP/engine/statements/class/staticMethodDefaultArgumentValueTest',

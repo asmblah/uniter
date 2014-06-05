@@ -34,7 +34,7 @@ define([
         this.callStack = callStack;
         this.engine = engine;
         this.globalNamespace = new Namespace(callStack, valueFactory, null, '');
-        this.globalScope = new Scope(callStack, valueFactory, null);
+        this.globalScope = new Scope(callStack, valueFactory, null, null);
         this.options = options;
         this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
