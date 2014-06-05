@@ -30,7 +30,7 @@ define([
             10: 'Cannot access self:: when no class scope is active',
             11: 'Undefined constant \'${name}\'',
             12: 'Uncaught exception \'${name}\'',
-            13: 'Cannot access private property ${className}::$${propertyName}'
+            13: 'Cannot access ${visibility} property ${className}::$${propertyName}'
         };
 
     function PHPFatalError(code, variables) {
@@ -52,7 +52,7 @@ define([
         SELF_WHEN_NO_ACTIVE_CLASS: 10,
         UNDEFINED_CONSTANT: 11,
         UNCAUGHT_EXCEPTION: 12,
-        CANNOT_ACCESS_PRIVATE_PROPERTY: 13
+        CANNOT_ACCESS_PROPERTY: 13
     });
 
     return PHPFatalError;

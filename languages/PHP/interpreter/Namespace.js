@@ -96,7 +96,8 @@ define([
                 namespace.getPrefix() + name,
                 constructorName,
                 InternalClass,
-                staticProperties
+                staticProperties,
+                definition.superClass
             );
 
             methodData.classObject = classObject;
