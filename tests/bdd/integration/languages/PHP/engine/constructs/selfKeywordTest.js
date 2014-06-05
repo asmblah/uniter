@@ -61,7 +61,6 @@ EOS
                 expectedStderr: 'PHP Fatal error: Class \'self\' not found',
                 expectedStdout: ''
             },
-            // Ensure we don't allow keyword 'self' to be used with variable classes
             'reading static property from current class via keyword "self"': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
