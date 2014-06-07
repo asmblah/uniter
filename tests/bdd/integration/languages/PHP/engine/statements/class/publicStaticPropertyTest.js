@@ -19,7 +19,7 @@ define([
 ) {
     'use strict';
 
-    describe('PHP Engine class statement static property integration', function () {
+    describe('PHP Engine class statement public static property integration', function () {
         var engine;
 
         function check(scenario) {
@@ -35,7 +35,7 @@ define([
         });
 
         util.each({
-            'defining static property without initial value': {
+            'defining static property without initial value and reading from outside class': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Animal {
@@ -49,7 +49,7 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
-            'defining static property with initial value': {
+            'defining static property with initial value and reading from outside class': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class Animal {
