@@ -63,6 +63,25 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'trying to read public static property as instance property from outside class': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Animal {
+        public static $species = 'Human';
+    }
+
+    return (new Animal)->species;
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: util.heredoc(function (/*<<<EOS
+PHP Strict standards: Accessing static property Animal::$species as non static
+PHP Notice: Undefined property: Animal::$species
+
+EOS
+*/) {}),
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

@@ -13,7 +13,6 @@
 
 /*global define */
 define([
-    './interpreter/builtin/builtins',
     'js/util',
     './interpreter/Call',
     'js/Exception',
@@ -29,7 +28,6 @@ define([
     'js/Promise',
     './interpreter/Scope'
 ], function (
-    builtinTypes,
     util,
     Call,
     Exception,
@@ -47,8 +45,7 @@ define([
 ) {
     'use strict';
 
-    var EXCEPTION_CLASS = 'Exception',
-        INVOKE_MAGIC_METHOD = '__invoke',
+    var INVOKE_MAGIC_METHOD = '__invoke',
         INCLUDE_OPTION = 'include',
         binaryOperatorToMethod = {
             '+': 'add',
@@ -164,6 +161,9 @@ define([
 
                     return variable.getValue();
                 },
+                implyObject: function (variable) {
+                    return variable.getValue();
+                },
                 include: include,
                 popCall: function () {
                     callStack.pop();
@@ -189,34 +189,7 @@ define([
                 },
                 valueFactory: valueFactory
             },
-            PHPException;
-
-        (function () {
-            var internals = {
-                    callStack: callStack,
-                    globalNamespace: globalNamespace,
-                    stdout: stdout,
-                    valueFactory: valueFactory
-                };
-
-            util.each(builtinTypes.functionGroups, function (groupFactory) {
-                var groupBuiltins = groupFactory(internals);
-
-                util.each(groupBuiltins, function (fn, name) {
-                    globalNamespace.defineFunction(name, fn);
-                });
-            });
-
-            util.each(builtinTypes.classes, function (classFactory, name) {
-                var Class = classFactory(internals);
-
-                if (name === EXCEPTION_CLASS) {
-                    PHPException = Class;
-                }
-
-                globalNamespace.defineClass(name, Class);
-            });
-        }());
+            PHPException = state.getPHPExceptionClass();
 
         // Push the 'main' global scope call onto the stack
         callStack.push(new Call(globalScope));
@@ -783,16 +756,16 @@ define([
                     suffix = '';
 
                 if (context.assignment) {
-                    objectVariableCode = 'tools.implyArray(' + interpret(node.object, {getValue: false}) + ')';
+                    objectVariableCode = 'tools.implyObject(' + interpret(node.object, {getValue: false}) + ')';
                 } else {
                     suffix = '.getValue()';
                     objectVariableCode = interpret(node.object, {getValue: true});
                 }
 
                 util.each(node.properties, function (property, index) {
-                    var keyValue = interpret(property.property, {assignment: false, getValue: false, allowBareword: true});
+                    var nameValue = interpret(property.property, {assignment: false, getValue: false, allowBareword: true});
 
-                    propertyCode += '.getElementByKey(' + keyValue + ')';
+                    propertyCode += '.getInstancePropertyByName(' + nameValue + ')';
 
                     if (index < node.properties.length - 1) {
                         propertyCode += '.getValue()';

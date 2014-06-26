@@ -135,10 +135,14 @@ define([
             return staticProperty;
         },
 
+        hasStaticPropertyByName: function (name) {
+            return hasOwn.call(this.staticProperties, name);
+        },
+
         instantiate: function (args) {
             var classObject = this,
                 nativeObject = new classObject.InternalClass(),
-                objectValue = classObject.valueFactory.createObject(nativeObject, classObject.getName());
+                objectValue = classObject.valueFactory.createObject(nativeObject, classObject);
 
             if (classObject.constructorName) {
                 objectValue.callMethod(classObject.constructorName, args);

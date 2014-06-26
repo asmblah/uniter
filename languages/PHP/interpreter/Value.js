@@ -80,6 +80,10 @@ define([
             return this;
         },
 
+        getInstancePropertyByName: function () {
+            throw new Error('Unimplemented');
+        },
+
         getLength: function () {
             return this.coerceToString().getLength();
         },

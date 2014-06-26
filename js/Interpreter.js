@@ -56,7 +56,12 @@ define([
                 spec = interpreter.spec;
 
             if (!interpreter.state && spec.State) {
-                interpreter.state = new spec.State(interpreter.stderr, interpreter.engine, interpreter.options);
+                interpreter.state = new spec.State(
+                    interpreter.stdout,
+                    interpreter.stderr,
+                    interpreter.engine,
+                    interpreter.options
+                );
             }
 
             return interpreter.state;

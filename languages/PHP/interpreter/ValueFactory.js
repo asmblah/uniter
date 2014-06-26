@@ -34,6 +34,7 @@ define([
     function ValueFactory(callStack) {
         this.nextObjectID = 1;
         this.callStack = callStack;
+        this.globalNamespace = null;
     }
 
     util.extend(ValueFactory.prototype, {
@@ -78,7 +79,7 @@ define([
                 return factory.createArray(nativeValue);
             }
 
-            return factory.createObject(nativeValue, 'Object');
+            return factory.createObject(nativeValue, factory.globalNamespace.getClass('stdClass'));
         },
         createInteger: function (value) {
             var factory = this;
@@ -90,11 +91,11 @@ define([
 
             return new NullValue(factory, factory.callStack);
         },
-        createObject: function (value, className) {
+        createObject: function (value, classObject) {
             var factory = this;
 
             // Object ID tracking is incomplete: ID should be freed when all references are lost
-            return new ObjectValue(factory, factory.callStack, value, className, factory.nextObjectID++);
+            return new ObjectValue(factory, factory.callStack, value, classObject, factory.nextObjectID++);
         },
         createString: function (value) {
             var factory = this;
@@ -103,6 +104,9 @@ define([
         },
         isValue: function (object) {
             return object instanceof Value;
+        },
+        setGlobalNamespace: function (globalNamespace) {
+            this.globalNamespace = globalNamespace;
         }
     });
 

@@ -25,10 +25,10 @@ define([
 
     var hasOwn = {}.hasOwnProperty;
 
-    function ObjectValue(factory, callStack, object, className, id) {
+    function ObjectValue(factory, callStack, object, classObject, id) {
         ArrayValue.call(this, factory, callStack, object, 'object');
 
-        this.className = className;
+        this.classObject = classObject;
         this.id = id;
         this.object = object;
     }
@@ -43,7 +43,7 @@ define([
         addToArray: function () {
             var value = this;
 
-            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.classObject.getName() + ' could not be converted to int');
 
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },
@@ -51,7 +51,7 @@ define([
         addToBoolean: function (booleanValue) {
             var value = this;
 
-            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.classObject.getName() + ' could not be converted to int');
 
             return value.factory.createInteger((booleanValue.value ? 1 : 0) + 1);
         },
@@ -59,7 +59,7 @@ define([
         addToFloat: function (floatValue) {
             var value = this;
 
-            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.className + ' could not be converted to int');
+            value.callStack.raiseError(PHPError.E_NOTICE, 'Object of class ' + value.classObject.getName() + ' could not be converted to int');
 
             return value.factory.createFloat(floatValue.value + 1);
         },
@@ -88,17 +88,14 @@ define([
             }
 
             if (!defined || !util.isFunction(object[name])) {
-                throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.className, methodName: name});
+                throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.classObject.getName(), methodName: name});
             }
 
             return value.factory.coerce(object[name].apply(value, args));
         },
 
-        callStaticMethod: function (nameValue, args, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.className);
-
-            return classObject.callStaticMethod(nameValue.getNative(), args);
+        callStaticMethod: function (nameValue, args) {
+            return this.classObject.callStaticMethod(nameValue.getNative(), args);
         },
 
         clone: function () {
@@ -125,7 +122,7 @@ define([
         },
 
         getClassName: function () {
-            return this.className;
+            return this.classObject.getName();
         },
 
         getForAssignment: function () {
@@ -136,15 +133,23 @@ define([
             return this.id;
         },
 
+        getInstancePropertyByName: function (nameValue) {
+            var name = nameValue.getNative(),
+                value = this;
+
+            if (value.classObject.hasStaticPropertyByName(name)) {
+                value.callStack.raiseError(PHPError.E_STRICT, 'Accessing static property ' + value.classObject.getName() + '::$' + name + ' as non static');
+            }
+
+            return value.getElementByKey(nameValue);
+        },
+
         getNative: function () {
             return this.object;
         },
 
-        getStaticPropertyByName: function (nameValue, namespaceScope) {
-            var value = this,
-                classObject = namespaceScope.getClass(value.className);
-
-            return classObject.getStaticPropertyByName(nameValue.getNative());
+        getStaticPropertyByName: function (nameValue) {
+            return this.classObject.getStaticPropertyByName(nameValue.getNative());
         },
 
         isEqualTo: function (rightValue) {
@@ -172,7 +177,7 @@ define([
                 leftValue = this,
                 factory = leftValue.factory;
 
-            if (rightValue.value.length !== leftValue.value.length || rightValue.className !== leftValue.className) {
+            if (rightValue.value.length !== leftValue.value.length || rightValue.getClassName() !== leftValue.getClassName()) {
                 return factory.createBoolean(false);
             }
 
@@ -206,7 +211,7 @@ define([
         },
 
         referToElement: function (key) {
-            return 'property: ' + this.className + '::$' + key;
+            return 'property: ' + this.getClassName() + '::$' + key;
         }
     });
 
