@@ -24,7 +24,7 @@ define([
     }
 
     util.extend(ClassAutoloader.prototype, {
-        appendAutoloadFunction: function (autoloadFunction) {
+        appendAutoloadCallable: function (autoloadCallable) {
             var autoloader = this,
                 splStack = autoloader.splStack;
 
@@ -33,7 +33,7 @@ define([
                 autoloader.splStack = splStack;
             }
 
-            splStack.push(autoloadFunction);
+            splStack.push(autoloadCallable);
         },
 
         autoloadClass: function (name) {
@@ -43,8 +43,8 @@ define([
                 splStack = autoloader.splStack;
 
             if (splStack) {
-                util.each(splStack, function (autoloadFunction) {
-                    autoloadFunction(autoloader.valueFactory.createString(name));
+                util.each(splStack, function (autoloadCallable) {
+                    autoloadCallable.call([autoloader.valueFactory.createString(name)], globalNamespace);
                 });
             } else {
                 magicAutoloadFunction = globalNamespace.getOwnFunction(MAGIC_AUTOLOAD_FUNCTION);

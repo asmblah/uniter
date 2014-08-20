@@ -87,6 +87,27 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'string(12) "MyUndefClass"\n'
             },
+            'registered autoloader string callable should be called with the class name when an undefined class is referenced': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function myAutoloader($className) {
+        var_dump($className);
+
+        class MyUndefClass {}
+    }
+
+    spl_autoload_register('myAutoloader');
+
+    $object = new MyUndefClass;
+
+    return 27;
+EOS
+*/) {}),
+                expectedResult: 27,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: 'string(12) "MyUndefClass"\n'
+            },
             'magic __autoload() function should not be called with the class name when an undefined class is referenced after the SPL stack has been enabled': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

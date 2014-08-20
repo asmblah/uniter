@@ -23,7 +23,7 @@ define([
                 var isReference = (callableReference instanceof Variable),
                     callableValue = isReference ? callableReference.getValue() : callableReference;
 
-                classAutoloader.appendAutoloadFunction(callableValue.getNative());
+                classAutoloader.appendAutoloadCallable(callableValue);
             }
         };
     };
