@@ -138,7 +138,19 @@ define([
 
         getClass: function (name) {
             var lowerName = name.toLowerCase(),
-                namespace = this;
+                match = name.match(/^(.*?)\\([^\\]+)$/),
+                namespace = this,
+                path,
+                subNamespace;
+
+            if (match) {
+                path = match[1];
+                name = match[2];
+
+                subNamespace = namespace.getDescendant(path);
+
+                return subNamespace.getClass(name);
+            }
 
             if (!hasOwn.call(namespace.classes, lowerName)) {
                 // Try to autoload the class
@@ -198,10 +210,24 @@ define([
 
         getFunction: function (name) {
             var globalNamespace,
-                namespace = this;
+                match,
+                namespace = this,
+                path,
+                subNamespace;
 
             if (util.isFunction(name)) {
                 return name;
+            }
+
+            match = name.match(/^(.*?)\\([^\\]+)$/);
+
+            if (match) {
+                path = match[1];
+                name = match[2];
+
+                subNamespace = namespace.getDescendant(path);
+
+                return subNamespace.getFunction(name);
             }
 
             if (hasOwn.call(namespace.functions, name)) {
@@ -221,6 +247,10 @@ define([
             var namespace = this;
 
             return namespace.name === '' ? namespace : namespace.getParent().getGlobal();
+        },
+
+        getGlobalNamespace: function () {
+            return this.getGlobal();
         },
 
         getOwnFunction: function (name) {

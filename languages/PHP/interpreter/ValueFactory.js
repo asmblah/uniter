@@ -11,6 +11,7 @@
 define([
     'js/util',
     './Value/Array',
+    './Value/BarewordString',
     './Value/Boolean',
     './Value/Float',
     './Value/Integer',
@@ -21,6 +22,7 @@ define([
 ], function (
     util,
     ArrayValue,
+    BarewordStringValue,
     BooleanValue,
     FloatValue,
     IntegerValue,
@@ -49,6 +51,11 @@ define([
             var factory = this;
 
             return new ArrayValue(factory, factory.callStack, value);
+        },
+        createBarewordString: function (value) {
+            var factory = this;
+
+            return new BarewordStringValue(factory, factory.callStack, value);
         },
         createBoolean: function (value) {
             var factory = this;

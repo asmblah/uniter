@@ -32,8 +32,8 @@ define([
             return this.coerceToNumber().add(booleanValue);
         },
 
-        call: function (args, namespaceScope) {
-            return namespaceScope.getFunction(this.value).apply(null, args);
+        call: function (args, namespaceOrNamespaceScope) {
+            return namespaceOrNamespaceScope.getGlobalNamespace().getFunction(this.value).apply(null, args);
         },
 
         callStaticMethod: function (nameValue, args, namespaceScope) {

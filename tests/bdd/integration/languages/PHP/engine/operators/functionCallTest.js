@@ -106,6 +106,40 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'global-it'
             },
+            'call to function defined in current namespace via prefixed string': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace MyTest;
+    function myFunc() {
+        return 24;
+    }
+
+    $fn = 'MyTest\myFunc';
+    return $fn();
+EOS
+*/) {}),
+                expectedResult: 24,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'call to function defined in current namespace via unprefixed string should fail': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace MyTest;
+    function myFunc() {}
+
+    $fn = 'myFunc';
+    $fn();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function myFunc\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function myFunc()',
+                expectedStdout: ''
+            },
             'call to undefined function in another namespace with prefixed path': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

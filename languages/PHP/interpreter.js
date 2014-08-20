@@ -735,9 +735,6 @@ define([
 
                 return 'if (namespaceResult = (function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace))) { return namespaceResult; }';
             },
-            'N_NAMESPACED_REFERENCE': function (node, interpret) {
-                return 'tools.valueFactory.createString(' + JSON.stringify(interpret(node.path)) + ')';
-            },
             'N_NEW_EXPRESSION': function (node, interpret) {
                 var args = [];
 
@@ -857,7 +854,7 @@ define([
             },
             'N_STRING': function (node, interpret, context) {
                 if (context.allowBareword) {
-                    return 'tools.valueFactory.createString(' + JSON.stringify(node.string) + ')';
+                    return 'tools.valueFactory.createBarewordString(' + JSON.stringify(node.string) + ')';
                 }
 
                 return 'namespaceScope.getConstant(' + JSON.stringify(node.string) + ')';

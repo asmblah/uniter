@@ -85,6 +85,27 @@ object(Here\Me)#2 (0) {
 EOS
 */) {})
             },
+            'referring to class in sub-namespace from non-global namespace': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    namespace MyTop\MyMiddle;
+
+    class MyTest {}
+
+    namespace MyTop;
+
+    var_dump(new MyMiddle\MyTest);
+EOS
+*/) {}),
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function (/*<<<EOS
+object(MyTop\MyMiddle\MyTest)#1 (0) {
+}
+
+EOS
+*/) {})
+            },
             'return from non-global namespace': {
                 code: util.heredoc(function (/*<<<EOS
 <?php

@@ -55,10 +55,10 @@ define([
                 if (match) {
                     prefix = match[1];
                     path = match[2];
-                    name = match[3];
 
                     if (hasOwn.call(scope.imports, prefix)) {
                         namespace = scope.globalNamespace.getDescendant(scope.imports[prefix].substr(1) + path);
+                        name = match[3];
                     }
                 }
             }
@@ -147,6 +147,10 @@ define([
             }
 
             return namespace.getFunction(name);
+        },
+
+        getGlobalNamespace: function () {
+            return this.globalNamespace;
         },
 
         use: function (source, alias) {
