@@ -104,14 +104,14 @@ define([
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },
 
-        call: function () {
+        call: function (args, namespaceOrNamespaceScope) {
             var value = this.value;
 
             if (value.length < 2) {
                 throw new PHPFatalError(PHPFatalError.FUNCTION_NAME_MUST_BE_STRING);
             }
 
-            return value[0].getValue().callMethod(value[1].getValue().getNative());
+            return value[0].getValue().callMethod(value[1].getValue().getNative(), args, namespaceOrNamespaceScope);
         },
 
         clone: function () {

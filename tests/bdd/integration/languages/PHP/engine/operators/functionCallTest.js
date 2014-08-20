@@ -127,17 +127,38 @@ EOS
                 code: util.heredoc(function (/*<<<EOS
 <?php
     class MyClass {
-        public function printIt() {
-            print 'it';
+        public function printMsg($msg) {
+            print $msg;
 
             return 24;
         }
     }
 
     $object = new MyClass;
-    $ref = array($object, 'printIt');
+    $ref = array($object, 'printMsg');
 
-    return $ref();
+    return $ref('it');
+EOS
+*/) {}),
+                expectedResult: 24,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: 'it'
+            },
+            'call to static method via array': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class MyClass {
+        public static function printMsg($msg) {
+            print $msg;
+
+            return 24;
+        }
+    }
+
+    $ref = array('MyClass', 'printMsg');
+
+    return $ref('it');
 EOS
 */) {}),
                 expectedResult: 24,

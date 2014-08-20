@@ -36,6 +36,12 @@ define([
             return namespaceOrNamespaceScope.getGlobalNamespace().getFunction(this.value).apply(null, args);
         },
 
+        callMethod: function (name, args, namespaceScope) {
+            var value = this;
+
+            return value.callStaticMethod(value.factory.coerce(name), args, namespaceScope);
+        },
+
         callStaticMethod: function (nameValue, args, namespaceScope) {
             var value = this,
                 classObject = namespaceScope.getClass(value.value);
