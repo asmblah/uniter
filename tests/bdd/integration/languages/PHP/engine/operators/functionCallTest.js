@@ -123,6 +123,52 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'call to instance method via array': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class MyClass {
+        public function printIt() {
+            print 'it';
+
+            return 24;
+        }
+    }
+
+    $object = new MyClass;
+    $ref = array($object, 'printIt');
+
+    return $ref();
+EOS
+*/) {}),
+                expectedResult: 24,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: 'it'
+            },
+            'attempting to call instance method via array with only one element should fail': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class MyClass {
+        public function printIt() {
+            print 'it';
+
+            return 24;
+        }
+    }
+
+    $object = new MyClass;
+    $ref = array($object);
+
+    return $ref();
+EOS
+*/) {}),
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Function name must be a string$/
+                },
+                expectedStderr: 'PHP Fatal error: Function name must be a string',
+                expectedStdout: ''
+            },
             'call to function defined in current namespace via unprefixed string should fail': {
                 code: util.heredoc(function (/*<<<EOS
 <?php
