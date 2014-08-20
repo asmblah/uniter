@@ -13,6 +13,7 @@ define([
     '../util',
     'js/util',
     './CallStack',
+    './ClassAutoloader',
     './Namespace',
     './ReferenceFactory',
     './Scope',
@@ -22,6 +23,7 @@ define([
     phpUtil,
     util,
     CallStack,
+    ClassAutoloader,
     Namespace,
     ReferenceFactory,
     Scope,
@@ -34,8 +36,10 @@ define([
     function PHPState(stdout, stderr, engine, options) {
         var callStack = new CallStack(stderr),
             valueFactory = new ValueFactory(callStack),
-            globalNamespace = new Namespace(callStack, valueFactory, null, '');
+            classAutoloader = new ClassAutoloader(valueFactory),
+            globalNamespace = new Namespace(callStack, valueFactory, classAutoloader, null, '');
 
+        classAutoloader.setGlobalNamespace(globalNamespace);
         valueFactory.setGlobalNamespace(globalNamespace);
 
         this.callStack = callStack;
@@ -46,6 +50,7 @@ define([
         this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
+        this.classAutoloader = classAutoloader;
         this.stdout = stdout;
         this.valueFactory = valueFactory;
         this.PHPException = null;
@@ -103,6 +108,7 @@ define([
         var globalNamespace = state.globalNamespace,
             internals = {
                 callStack: state.callStack,
+                classAutoloader: state.classAutoloader,
                 globalNamespace: globalNamespace,
                 stdout: state.stdout,
                 valueFactory: state.valueFactory

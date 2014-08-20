@@ -22,12 +22,12 @@ define([
     'use strict';
 
     var IS_STATIC = 'isStatic',
-        MAGIC_AUTOLOAD_FUNCTION = '__autoload',
         hasOwn = {}.hasOwnProperty;
 
-    function Namespace(callStack, valueFactory, parent, name) {
+    function Namespace(callStack, valueFactory, classAutoloader, parent, name) {
         this.callStack = callStack;
         this.children = {};
+        this.classAutoloader = classAutoloader;
         this.classes = {};
         this.constants = {};
         this.functions = {};
@@ -137,17 +137,14 @@ define([
         },
 
         getClass: function (name) {
-            var globalNamespace,
-                lowerName = name.toLowerCase(),
+            var lowerName = name.toLowerCase(),
                 namespace = this;
 
             if (!hasOwn.call(namespace.classes, lowerName)) {
-                globalNamespace = namespace.getGlobal();
+                // Try to autoload the class
+                namespace.classAutoloader.autoloadClass(namespace.getPrefix() + name);
 
-                if (hasOwn.call(globalNamespace.functions, MAGIC_AUTOLOAD_FUNCTION)) {
-                    globalNamespace.functions[MAGIC_AUTOLOAD_FUNCTION](namespace.valueFactory.createString(namespace.getPrefix() + name));
-                }
-
+                // Raise an error if it is still not defined
                 if (!hasOwn.call(namespace.classes, lowerName)) {
                     throw new PHPFatalError(PHPFatalError.CLASS_NOT_FOUND, {name: namespace.getPrefix() + name});
                 }
@@ -184,7 +181,13 @@ define([
 
             util.each(name.split('\\'), function (part) {
                 if (!hasOwn.call(namespace.children, part)) {
-                    namespace.children[part] = new Namespace(namespace.callStack, namespace.valueFactory, namespace, part);
+                    namespace.children[part] = new Namespace(
+                        namespace.callStack,
+                        namespace.valueFactory,
+                        namespace.classAutoloader,
+                        namespace,
+                        part
+                    );
                 }
 
                 namespace = namespace.children[part];
@@ -218,6 +221,16 @@ define([
             var namespace = this;
 
             return namespace.name === '' ? namespace : namespace.getParent().getGlobal();
+        },
+
+        getOwnFunction: function (name) {
+            var namespace = this;
+
+            if (hasOwn.call(namespace.functions, name)) {
+                return namespace.functions[name];
+            }
+
+            return null;
         },
 
         getParent: function () {
