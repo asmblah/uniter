@@ -618,7 +618,7 @@ define([
                     conditionCode += '.coerceToBoolean().getNative()';
                 }
 
-                return 'for (' + initializerCode + ';' + conditionCode + ';' + updateCode + ') {' + bodyCode + '}';
+                return 'for (' + initializerCode + ';' + conditionCode + ';' + updateCode + ') {tools.checkTimeLimit();' + bodyCode + '}';
             },
             'N_FOREACH_STATEMENT': function (node, interpret, context) {
                 var arrayValue = interpret(node.array),

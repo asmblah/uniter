@@ -136,6 +136,56 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Maximum execution time of 1 second exceeded',
                 expectedStdout: ''
+            },
+            'when given a limit of 1 second followed by a for loop that stops exactly at the timeout': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    set_time_limit(1);
+
+    for (;;) {
+        if ($info->getMilliseconds() === 1000) {
+            return 'done';
+        }
+    }
+
+EOS
+*/) {}),
+                exposeCurrentMilliseconds: true,
+                timerCycles: [
+                    0,
+                    0,
+                    100,
+                    200,
+                    1000
+                ],
+                expectedResult: 'done',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'when given a limit of 1 second followed by an infinite for loop that reaches 1ms after the timeout': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    set_time_limit(1);
+
+    for (;;) {}
+
+EOS
+*/) {}),
+                timerCycles: [
+                    0,
+                    0,
+                    100,
+                    200,
+                    1000,
+                    1001
+                ],
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Maximum execution time of 1 second exceeded$/
+                },
+                expectedStderr: 'PHP Fatal error: Maximum execution time of 1 second exceeded',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
