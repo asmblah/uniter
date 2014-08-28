@@ -58,6 +58,25 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '0,1,'
+            },
+            '"infinite" for loop should continue iterating until broken out of': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $i = 0;
+
+    for (;;) {
+        $i++;
+
+        if ($i === 4) {
+            return $i;
+        }
+    }
+EOS
+*/) {}),
+                expectedResult: 4,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

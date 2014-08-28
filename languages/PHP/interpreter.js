@@ -526,9 +526,13 @@ define([
             },
             'N_FOR_STATEMENT': function (node, interpret) {
                 var bodyCode = interpret(node.body),
-                    conditionCode = interpret(node.condition) + '.coerceToBoolean().getNative()',
+                    conditionCode = interpret(node.condition),
                     initializerCode = interpret(node.initializer),
                     updateCode = interpret(node.update);
+
+                if (conditionCode) {
+                    conditionCode += '.coerceToBoolean().getNative()';
+                }
 
                 return 'for (' + initializerCode + ';' + conditionCode + ';' + updateCode + ') {' + bodyCode + '}';
             },
