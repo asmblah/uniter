@@ -428,8 +428,12 @@ define([
 
                 return 'if (switchMatched_' + context.switchCase.depth + ' || switchExpression_' + context.switchCase.depth + '.isEqualTo(' + interpret(node.expression) + ').getNative()) {switchMatched_' + context.switchCase.depth + ' = true; ' + body + '}';
             },
+            'N_CLASS_CONSTANT': function (node, interpret) {
+                return interpret(node.className, {getValue: true, allowBareword: true}) + '.getConstantByName(' + JSON.stringify(node.constant) + ', namespaceScope)';
+            },
             'N_CLASS_STATEMENT': function (node, interpret) {
                 var code,
+                    constantCodes = [],
                     methodCodes = [],
                     propertyCodes = [],
                     staticPropertyCodes = [],
@@ -444,10 +448,12 @@ define([
                         staticPropertyCodes.push('"' + data.name + '": {visibility: ' + data.visibility + ', value: ' + data.value + '}');
                     } else if (member.name === 'N_METHOD_DEFINITION' || member.name === 'N_STATIC_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
+                    } else if (member.name === 'N_CONSTANT_DEFINITION') {
+                        constantCodes.push('"' + data.name + '": ' + data.value);
                     }
                 });
 
-                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}}';
+                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}, constants: {' + constantCodes.join(', ') + '}}';
 
                 return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.className) + ', ' + code + ');}());';
             },
@@ -467,6 +473,12 @@ define([
             },
             'N_COMPOUND_STATEMENT': function (node, interpret, context) {
                 return processBlock(node.statements, interpret, context);
+            },
+            'N_CONSTANT_DEFINITION': function (node, interpret) {
+                return {
+                    name: node.constant,
+                    value: node.value ? interpret(node.value) : 'null'
+                };
             },
             'N_CONTINUE_STATEMENT': function (node, interpret, context) {
                 return 'break switch_' + (context.switchCase.depth - (node.levels.number - 1)) + ';';

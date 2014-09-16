@@ -31,7 +31,8 @@ define([
             11: 'Undefined constant \'${name}\'',
             12: 'Uncaught exception \'${name}\'',
             13: 'Cannot access ${visibility} property ${className}::$${propertyName}',
-            14: 'Function name must be a string'
+            14: 'Function name must be a string',
+            15: 'Undefined class constant \'${name}\''
         };
 
     function PHPFatalError(code, variables) {
@@ -54,7 +55,8 @@ define([
         UNDEFINED_CONSTANT: 11,
         UNCAUGHT_EXCEPTION: 12,
         CANNOT_ACCESS_PROPERTY: 13,
-        FUNCTION_NAME_MUST_BE_STRING: 14
+        FUNCTION_NAME_MUST_BE_STRING: 14,
+        UNDEFINED_CLASS_CONSTANT: 15
     });
 
     return PHPFatalError;

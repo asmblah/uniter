@@ -84,6 +84,13 @@ define([
             return this;
         },
 
+        getConstantByName: function (name, namespaceScope) {
+            var value = this,
+                classObject = namespaceScope.getClass(value.value);
+
+            return classObject.getConstantByName(name);
+        },
+
         getLength: function () {
             return this.value.length;
         },

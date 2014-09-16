@@ -239,7 +239,7 @@ define([
                 components: ['T_CASE', {name: 'expression', what: 'N_EXPRESSION'}, (/:/), {name: 'body', zeroOrMoreOf: 'N_STATEMENT'}]
             },
             'N_CLASS_STATEMENT': {
-                components: ['T_CLASS', {name: 'className', rule: 'T_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACE', 'T_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_STATIC_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION', 'N_STATIC_METHOD_DEFINITION']}}, (/\}/)]
+                components: ['T_CLASS', {name: 'className', rule: 'T_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACE', 'T_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INSTANCE_PROPERTY_DEFINITION', 'N_STATIC_PROPERTY_DEFINITION', 'N_METHOD_DEFINITION', 'N_STATIC_METHOD_DEFINITION', 'N_CONSTANT_DEFINITION']}}, (/\}/)]
             },
             'N_CLOSURE': {
                 components: ['T_FUNCTION', (/\(/), {name: 'args', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {oneOf: [['T_USE', (/\(/), {name: 'bindings', zeroOrMoreOf: ['N_VARIABLE', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)], {name: 'bindings', zeroOrMoreOf: {what: (/(?!)/)}}]}, {name: 'body', what: 'N_STATEMENT'}]
@@ -249,6 +249,9 @@ define([
             },
             'N_COMPOUND_STATEMENT': {
                 components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
+            },
+            'N_CONSTANT_DEFINITION': {
+                components: ['T_CONST', {name: 'constant', what: 'T_STRING'}, (/=/), {name: 'value', what: 'N_TERM'}, (/;/)]
             },
             'N_CONTINUE_STATEMENT': {
                 components: ['T_CONTINUE', {name: 'levels', oneOf: ['N_INTEGER', 'N_JUMP_ONE_LEVEL']}, (/;/)]
@@ -348,34 +351,46 @@ define([
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_2_D': {
-                captureAs: 'N_STATIC_METHOD_CALL',
+                captureAs: 'N_CLASS_CONSTANT',
                 components: {oneOf: [
                     [
                         {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_C']},
+                        'T_DOUBLE_COLON',
+                        {name: 'constant', what: ['T_STRING', (/(?!\()/)]}
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_C'}
+                ]},
+                ifNoMatch: {component: 'constant', capture: 'next'}
+            },
+            'N_EXPRESSION_LEVEL_2_E': {
+                captureAs: 'N_STATIC_METHOD_CALL',
+                components: {oneOf: [
+                    [
+                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_D']},
                         'T_DOUBLE_COLON',
                         {name: 'method', oneOf: ['N_STRING', 'N_VARIABLE', 'N_VARIABLE_EXPRESSION']},
                         (/\(/),
                         {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
                         (/\)/)
                     ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_C'}
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_D'}
                 ]},
                 ifNoMatch: {component: 'method', capture: 'next'}
             },
-            'N_EXPRESSION_LEVEL_2_E': {
+            'N_EXPRESSION_LEVEL_2_F': {
                 captureAs: 'N_STATIC_PROPERTY',
                 components: {oneOf: [
                     [
-                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_D']},
+                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_E']},
                         'T_DOUBLE_COLON',
                         {name: 'property', what: 'N_STATIC_MEMBER'}
                     ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_D'}
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_E'}
                 ]},
                 ifNoMatch: {component: 'property', capture: 'next'}
             },
             'N_EXPRESSION_LEVEL_3_A': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_E']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_F']
             },
             'N_EXPRESSION_LEVEL_3_B': {
                 oneOf: ['N_ARRAY_CAST', 'N_EXPRESSION_LEVEL_3_A']
@@ -385,13 +400,13 @@ define([
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_E'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_E'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },

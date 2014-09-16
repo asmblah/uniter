@@ -125,6 +125,10 @@ define([
             return this.classObject.getName();
         },
 
+        getConstantByName: function (name) {
+            return this.classObject.getConstantByName(name);
+        },
+
         getForAssignment: function () {
             return this;
         },

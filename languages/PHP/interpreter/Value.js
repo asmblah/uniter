@@ -66,6 +66,10 @@ define([
             return leftValue.factory.createString(leftValue.coerceToString().getNative() + rightValue.coerceToString().getNative());
         },
 
+        getConstantByName: function () {
+            throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
+        },
+
         getElementByKey: function () {
             var callStack = this.callStack;
 
