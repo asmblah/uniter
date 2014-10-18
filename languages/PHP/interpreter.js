@@ -391,9 +391,11 @@ define([
                     indexValues = [],
                     suffix = '';
 
-                util.each(node.indices, function (index) {
-                    indexValues.push(interpret(index.index, {assignment: false, getValue: true}));
-                });
+                if (node.indices !== true) {
+                    util.each(node.indices, function (index) {
+                        indexValues.push(interpret(index.index, {assignment: false, getValue: true}));
+                    });
+                }
 
                 if (context.assignment) {
                     arrayVariableCode = 'tools.implyArray(' + interpret(node.array, {getValue: false}) + ')';
@@ -402,7 +404,11 @@ define([
                     arrayVariableCode = interpret(node.array, {getValue: true});
                 }
 
-                return arrayVariableCode + '.getElementByKey(' + indexValues.join(').getValue().getElementByKey(') + ')' + suffix;
+                if (indexValues.length > 0) {
+                    return arrayVariableCode + '.getElementByKey(' + indexValues.join(').getValue().getElementByKey(') + ')' + suffix;
+                }
+
+                return arrayVariableCode + '.getElementByKey(tools.valueFactory.createInteger(' + arrayVariableCode + '.getLength()))' + suffix;
             },
             'N_ARRAY_LITERAL': function (node, interpret) {
                 var elementValues = [];

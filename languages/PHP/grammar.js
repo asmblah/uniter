@@ -336,8 +336,13 @@ define([
             // Array index and object property must have identical precedence: with LL grammar we have to repeat
             'N_EXPRESSION_LEVEL_2_A': {
                 captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_D'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_D'}, {oneOf: ['N_EMPTY_ARRAY_INDEX', {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
+            },
+            'N_EMPTY_ARRAY_INDEX': {
+                captureAs: 'N_ARRAY_INDEX',
+                components: {name: 'indices', what: [(/\[/), (/\]/)]},
+                options: {indices: true}
             },
             'N_EXPRESSION_LEVEL_2_B': {
                 captureAs: 'N_OBJECT_PROPERTY',
@@ -347,7 +352,7 @@ define([
             // Second occurrence of N_ARRAY_INDEX (see above)
             'N_EXPRESSION_LEVEL_2_C': {
                 captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}],
+                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_2_B'}, {oneOf: ['N_EMPTY_ARRAY_INDEX', {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}]}],
                 ifNoMatch: {component: 'indices', capture: 'array'}
             },
             'N_EXPRESSION_LEVEL_2_D': {

@@ -129,6 +129,60 @@ define([
                         }
                     }]
                 }
+            },
+            'pushing integer onto array variable': {
+                code: '$array[] = 6;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_ARRAY_INDEX',
+                                array: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'array'
+                                },
+                                indices: true
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '6'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'pushing integer onto array variable with comment embedded in brackets': {
+                code: '$array[/* I should be ignored */] = 5;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_ARRAY_INDEX',
+                                array: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'array'
+                                },
+                                indices: true
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '5'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

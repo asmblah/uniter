@@ -336,6 +336,20 @@ EOS
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'pushing integer onto existing array': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    $array = array(2, 5, 6);
+    $array[] = 21;
+
+    return $array[3];
+EOS
+*/) {}),
+                expectedResult: 21,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
