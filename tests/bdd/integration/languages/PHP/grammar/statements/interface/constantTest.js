@@ -48,6 +48,33 @@ EOS
                         }]
                     }]
                 }
+            },
+            'interface constant referencing another': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    interface Thing {
+        const FIRST = self::SECOND;
+    }
+EOS
+*/) {}),
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_INTERFACE_STATEMENT',
+                        interfaceName: 'Thing',
+                        members: [{
+                            name: 'N_CONSTANT_DEFINITION',
+                            constant: 'FIRST',
+                            value: {
+                                name: 'N_CLASS_CONSTANT',
+                                className: {
+                                    name: 'N_SELF'
+                                },
+                                constant: 'SECOND'
+                            }
+                        }]
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

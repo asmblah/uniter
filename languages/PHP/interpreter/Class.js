@@ -91,7 +91,7 @@ define([
             var classObject = this;
 
             if (hasOwn.call(classObject.constants, name)) {
-                return classObject.constants[name];
+                return classObject.constants[name]();
             }
 
             if (classObject.superClass) {

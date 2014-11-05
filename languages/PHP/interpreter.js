@@ -483,7 +483,7 @@ define([
             'N_CONSTANT_DEFINITION': function (node, interpret) {
                 return {
                     name: node.constant,
-                    value: node.value ? interpret(node.value) : 'null'
+                    value: 'function () { return ' + (node.value ? interpret(node.value) : 'null') + '; }'
                 };
             },
             'N_CONTINUE_STATEMENT': function (node, interpret, context) {

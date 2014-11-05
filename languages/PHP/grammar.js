@@ -251,7 +251,7 @@ define([
                 components: [(/\{/), {name: 'statements', zeroOrMoreOf: 'N_STATEMENT'}, (/\}/)]
             },
             'N_CONSTANT_DEFINITION': {
-                components: ['T_CONST', {name: 'constant', what: 'T_STRING'}, (/=/), {name: 'value', what: 'N_TERM'}, (/;/)]
+                components: ['T_CONST', {name: 'constant', what: 'T_STRING'}, (/=/), {name: 'value', oneOf: ['N_CLASS_CONSTANT', 'N_TERM']}, (/;/)]
             },
             'N_CONTINUE_STATEMENT': {
                 components: ['T_CONTINUE', {name: 'levels', oneOf: ['N_INTEGER', 'N_JUMP_ONE_LEVEL']}, (/;/)]
@@ -367,6 +367,7 @@ define([
                 ]},
                 ifNoMatch: {component: 'constant', capture: 'next'}
             },
+            'N_CLASS_CONSTANT': 'N_EXPRESSION_LEVEL_2_D',
             'N_EXPRESSION_LEVEL_2_E': {
                 captureAs: 'N_STATIC_METHOD_CALL',
                 components: {oneOf: [
