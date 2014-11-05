@@ -90,13 +90,17 @@ define([
         getConstantByName: function (name) {
             var classObject = this;
 
-            if (!hasOwn.call(classObject.constants, name)) {
-                throw new PHPFatalError(PHPFatalError.UNDEFINED_CLASS_CONSTANT, {
-                    name: name
-                });
+            if (hasOwn.call(classObject.constants, name)) {
+                return classObject.constants[name];
             }
 
-            return classObject.constants[name];
+            if (classObject.superClass) {
+                return classObject.superClass.getConstantByName(name);
+            }
+
+            throw new PHPFatalError(PHPFatalError.UNDEFINED_CLASS_CONSTANT, {
+                name: name
+            });
         },
 
         getInternalClass: function () {

@@ -64,6 +64,42 @@ EOS
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'reading class constant from a child class': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Parent {
+        const MYVAL = 4;
+    }
+
+    class Child extends Parent {}
+
+    return Child::MYVAL;
+EOS
+*/) {}),
+                expectedResult: 4,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'overriding class constant in child class': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    class Parent {
+        const MYVAL = 4;
+    }
+
+    class Child extends Parent {
+        const MYVAL = 7;
+    }
+
+    return Child::MYVAL;
+EOS
+*/) {}),
+                expectedResult: 7,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
