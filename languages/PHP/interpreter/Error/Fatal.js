@@ -33,7 +33,8 @@ define([
             13: 'Cannot access ${visibility} property ${className}::$${propertyName}',
             14: 'Function name must be a string',
             15: 'Undefined class constant \'${name}\'',
-            16: 'Interfaces may not include member variables'
+            16: 'Interfaces may not include member variables',
+            17: 'Interface function ${className}::${methodName}() cannot contain body'
         };
 
     function PHPFatalError(code, variables) {
@@ -58,7 +59,8 @@ define([
         CANNOT_ACCESS_PROPERTY: 13,
         FUNCTION_NAME_MUST_BE_STRING: 14,
         UNDEFINED_CLASS_CONSTANT: 15,
-        INTERFACE_PROPERTY_NOT_ALLOWED: 16
+        INTERFACE_PROPERTY_NOT_ALLOWED: 16,
+        INTERFACE_METHOD_BODY_NOT_ALLOWED: 17
     });
 
     return PHPFatalError;

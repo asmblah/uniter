@@ -705,6 +705,11 @@ define([
 
                     if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION' || member.name === 'N_STATIC_PROPERTY_DEFINITION') {
                         throw new PHPFatalError(PHPFatalError.INTERFACE_PROPERTY_NOT_ALLOWED);
+                    } else if (member.name === 'N_METHOD_DEFINITION' || member.name === 'N_STATIC_METHOD_DEFINITION') {
+                        throw new PHPFatalError(PHPFatalError.INTERFACE_METHOD_BODY_NOT_ALLOWED, {
+                            className: node.interfaceName,
+                            methodName: member.func || member.method
+                        });
                     } else if (member.name === 'N_INTERFACE_METHOD_DEFINITION' || member.name === 'N_STATIC_INTERFACE_METHOD_DEFINITION') {
                         methodCodes.push('"' + data.name + '": ' + data.body);
                     } else if (member.name === 'N_CONSTANT_DEFINITION') {
