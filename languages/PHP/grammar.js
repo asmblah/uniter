@@ -554,6 +554,12 @@ define([
             'N_INTEGER': {
                 components: {name: 'number', what: 'T_LNUMBER'}
             },
+            'N_INTERFACE_METHOD_DEFINITION': {
+                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), (/;/)]
+            },
+            'N_INTERFACE_STATEMENT': {
+                components: ['T_INTERFACE', {name: 'interfaceName', rule: 'T_STRING'}, {optionally: ['T_EXTENDS', {name: 'extend', oneOf: ['N_NAMESPACE', 'T_STRING']}]}, (/\{/), {name: 'members', zeroOrMoreOf: {oneOf: ['N_INTERFACE_METHOD_DEFINITION', 'N_STATIC_INTERFACE_METHOD_DEFINITION', 'N_CONSTANT_DEFINITION']}}, (/\}/)]
+            },
             'N_ISSET': {
                 components: ['T_ISSET', (/\(/), {name: 'variables', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/)]
             },
@@ -610,7 +616,7 @@ define([
                 components: {oneOf: ['N_NAMESPACE_SCOPED_STATEMENT', 'N_NAMESPACE_STATEMENT']}
             },
             'N_NAMESPACE_SCOPED_STATEMENT': {
-                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_CONTINUE_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_DO_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT', 'N_USE_STATEMENT', 'N_THROW_STATEMENT']}
+                components: {oneOf: ['N_COMPOUND_STATEMENT', 'N_RETURN_STATEMENT', 'N_INLINE_HTML_STATEMENT', 'N_EMPTY_STATEMENT', 'N_ECHO_STATEMENT', 'N_BREAK_STATEMENT', 'N_CONTINUE_STATEMENT', 'N_EXPRESSION_STATEMENT', 'N_FUNCTION_STATEMENT', 'N_IF_STATEMENT', 'N_FOREACH_STATEMENT', 'N_FOR_STATEMENT', 'N_WHILE_STATEMENT', 'N_DO_WHILE_STATEMENT', 'N_CLASS_STATEMENT', 'N_INTERFACE_STATEMENT', 'N_SWITCH_STATEMENT', 'N_LABEL_STATEMENT', 'N_GOTO_STATEMENT', 'N_USE_STATEMENT', 'N_THROW_STATEMENT']}
             },
             'N_REQUIRE_EXPRESSION': {
                 components: ['T_REQUIRE', {name: 'path', what: 'N_EXPRESSION'}]
@@ -622,6 +628,20 @@ define([
                 allowMerge: false,
                 what: /self\b(?=\s*::)/
             },
+            'N_STATIC_INTERFACE_METHOD_DEFINITION': {
+                components: [
+                    {oneOf: [
+                        [{name: 'visibility', rule: 'N_VISIBILITY'}, 'T_STATIC'],
+                        ['T_STATIC', {name: 'visibility', rule: 'N_VISIBILITY'}],
+                        'T_STATIC'
+                    ]},
+                    'T_FUNCTION',
+                    {name: 'method', what: 'T_STRING'},
+                    (/\(/),
+                    {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                    (/\)/),
+                    (/;/)
+                ]            },
             'N_STATIC_MEMBER': {
                 components: {oneOf: ['N_STATIC_VARIABLE', 'N_STATIC_VARIABLE_EXPRESSION']}
             },
