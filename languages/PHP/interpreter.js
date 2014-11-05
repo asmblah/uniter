@@ -688,6 +688,40 @@ define([
             'N_INTEGER': function (node) {
                 return 'tools.valueFactory.createInteger(' + node.number + ')';
             },
+            'N_INTERFACE_METHOD_DEFINITION': function (node, interpret) {
+                return {
+                    name: interpret(node.func),
+                    body: '{isStatic: false, abstract: true}'
+                };
+            },
+            'N_INTERFACE_STATEMENT': function (node, interpret) {
+                var code,
+                    constantCodes = [],
+                    methodCodes = [],
+                    superClass = node.extend ? 'namespaceScope.getClass(' + JSON.stringify(node.extend) + ')' : 'null';
+
+                util.each(node.members, function (member) {
+                    var data = interpret(member, {inClass: true});
+
+                    if (member.name === 'N_INSTANCE_PROPERTY_DEFINITION' || member.name === 'N_STATIC_PROPERTY_DEFINITION') {
+                        throw new PHPFatalError(PHPFatalError.INTERFACE_PROPERTY_NOT_ALLOWED);
+                    } else if (member.name === 'N_INTERFACE_METHOD_DEFINITION' || member.name === 'N_STATIC_INTERFACE_METHOD_DEFINITION') {
+                        methodCodes.push('"' + data.name + '": ' + data.body);
+                    } else if (member.name === 'N_CONSTANT_DEFINITION') {
+                        constantCodes.push('"' + data.name + '": ' + data.value);
+                    }
+                });
+
+                code = '{superClass: ' + superClass + ', staticProperties: {}, properties: {}, methods: {' + methodCodes.join(', ') + '}, constants: {' + constantCodes.join(', ') + '}}';
+
+                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.interfaceName) + ', ' + code + ');}());';
+            },
+            'N_INTERFACE_STATIC_METHOD_DEFINITION': function (node, interpret) {
+                return {
+                    name: interpret(node.func),
+                    body: '{isStatic: false, abstract: true}'
+                };
+            },
             'N_ISSET': function (node, interpret) {
                 var issets = [];
 
