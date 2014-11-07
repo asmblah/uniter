@@ -168,6 +168,7 @@ define({
             'bdd/integration/languages/PHP/grammar/operators/newTest',
             'bdd/integration/languages/PHP/grammar/statements/class/constantTest',
             'bdd/integration/languages/PHP/grammar/statements/class/extendsTest',
+            'bdd/integration/languages/PHP/grammar/statements/class/implementsTest',
             'bdd/integration/languages/PHP/grammar/statements/class/instanceMethodDefaultArgumentValueTest',
             'bdd/integration/languages/PHP/grammar/statements/class/instanceMethodTypeHintingTest',
             'bdd/integration/languages/PHP/grammar/statements/class/staticMethodDefaultArgumentValueTest',
