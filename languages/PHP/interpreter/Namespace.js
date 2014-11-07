@@ -37,7 +37,7 @@ define([
     }
 
     util.extend(Namespace.prototype, {
-        defineClass: function (name, definition) {
+        defineClass: function (name, definition, namespaceScope) {
             var classObject,
                 constants,
                 constructorName = null,
@@ -100,7 +100,9 @@ define([
                 InternalClass,
                 staticProperties,
                 constants,
-                definition.superClass
+                definition.superClass,
+                definition.interfaces,
+                namespaceScope
             );
 
             methodData.classObject = classObject;

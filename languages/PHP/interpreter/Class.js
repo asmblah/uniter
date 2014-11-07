@@ -26,15 +26,17 @@ define([
         VISIBILITY = 'visibility',
         hasOwn = {}.hasOwnProperty;
 
-    function Class(valueFactory, callStack, name, constructorName, InternalClass, staticPropertiesData, constants, superClass) {
+    function Class(valueFactory, callStack, name, constructorName, InternalClass, staticPropertiesData, constants, superClass, interfaceNames, namespaceScope) {
         var classObject = this,
             staticProperties = {};
 
         this.callStack = callStack;
         this.constants = constants;
         this.constructorName = constructorName;
+        this.interfaceNames = interfaceNames || [];
         this.InternalClass = InternalClass;
         this.name = name;
+        this.namespaceScope = namespaceScope;
         this.staticProperties = staticProperties;
         this.superClass = superClass;
         this.valueFactory = valueFactory;
@@ -88,7 +90,9 @@ define([
         },
 
         getConstantByName: function (name) {
-            var classObject = this;
+            var classObject = this,
+                i,
+                interfaceObject;
 
             if (hasOwn.call(classObject.constants, name)) {
                 return classObject.constants[name]();
@@ -96,6 +100,14 @@ define([
 
             if (classObject.superClass) {
                 return classObject.superClass.getConstantByName(name);
+            }
+
+            for (i = 0; i < classObject.interfaceNames.length; i++) {
+                interfaceObject = classObject.namespaceScope.getClass(classObject.interfaceNames[i]);
+
+                try {
+                    return interfaceObject.getConstantByName(name);
+                } catch (e) {}
             }
 
             throw new PHPFatalError(PHPFatalError.UNDEFINED_CLASS_CONSTANT, {

@@ -443,7 +443,8 @@ define([
                     methodCodes = [],
                     propertyCodes = [],
                     staticPropertyCodes = [],
-                    superClass = node.extend ? 'namespaceScope.getClass(' + JSON.stringify(node.extend) + ')' : 'null';
+                    superClass = node.extend ? 'namespaceScope.getClass(' + JSON.stringify(node.extend) + ')' : 'null',
+                    interfaces = JSON.stringify(node.implement || []);
 
                 util.each(node.members, function (member) {
                     var data = interpret(member, {inClass: true});
@@ -459,9 +460,9 @@ define([
                     }
                 });
 
-                code = '{superClass: ' + superClass + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}, constants: {' + constantCodes.join(', ') + '}}';
+                code = '{superClass: ' + superClass + ', interfaces: ' + interfaces + ', staticProperties: {' + staticPropertyCodes.join(', ') + '}, properties: {' + propertyCodes.join(', ') + '}, methods: {' + methodCodes.join(', ') + '}, constants: {' + constantCodes.join(', ') + '}}';
 
-                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.className) + ', ' + code + ');}());';
+                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.className) + ', ' + code + ', namespaceScope);}());';
             },
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
@@ -719,7 +720,7 @@ define([
 
                 code = '{superClass: ' + superClass + ', staticProperties: {}, properties: {}, methods: {' + methodCodes.join(', ') + '}, constants: {' + constantCodes.join(', ') + '}}';
 
-                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.interfaceName) + ', ' + code + ');}());';
+                return '(function () {var currentClass = namespace.defineClass(' + JSON.stringify(node.interfaceName) + ', ' + code + ', namespaceScope);}());';
             },
             'N_INTERFACE_STATIC_METHOD_DEFINITION': function (node, interpret) {
                 return {
