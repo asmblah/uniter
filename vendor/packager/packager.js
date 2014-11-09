@@ -98,8 +98,7 @@ define(function () {
 
             req([name], function (packageConfig) {
                 var baseID,
-                    //paths = util.extend({}, requirejsConfig.paths, packageConfig.paths);
-                    paths = util.extend({}, packageConfig.paths);
+                    paths = util.extend({}, requirejsConfig.paths, packageConfig.paths);
 
                 // Process relative path mappings relative to package file
                 baseID = (req.toUrl(name) || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
