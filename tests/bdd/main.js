@@ -35,7 +35,7 @@ define([
 
     define('test-environment', {});
 
-    define('Mocha', function () {
+    define('mocha', function () {
         return global.Mocha;
     });
 

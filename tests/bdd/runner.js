@@ -13,7 +13,7 @@ define([
     'require',
     'sinon',
     'sinon-chai',
-    'Mocha'
+    'mocha'
 ], function (
     chai,
     require,

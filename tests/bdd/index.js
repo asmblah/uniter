@@ -20,8 +20,7 @@
     requirejs({
         baseUrl: __dirname + '/../..',
         paths: {
-            'packager': 'vendor/packager/packager',
-            'Mocha': 'mocha'
+            'packager': 'vendor/packager/packager'
         },
         config: {
             'test-environment': {

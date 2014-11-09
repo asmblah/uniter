@@ -98,7 +98,7 @@ define(function () {
 
             req([name], function (packageConfig) {
                 var baseID,
-                    paths = util.extend({}, requirejsConfig.paths, packageConfig.paths);
+                    paths = util.extend({}, packageConfig.paths);
 
                 // Process relative path mappings relative to package file
                 baseID = (req.toUrl(name) || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
@@ -112,7 +112,7 @@ define(function () {
                     }
                 });
 
-                paths['packager'] = requirejsConfig.paths['packager'];
+                paths = util.extend({}, requirejsConfig.paths, paths);
 
                 require({
                     // Use another isolated context to set the path mappings configured in package manifest
