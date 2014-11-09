@@ -19,8 +19,10 @@
 
     requirejs({
         baseUrl: __dirname + '/../..',
-        paths: {
-            'packager': 'vendor/packager/packager'
+        map: {
+            '*': {
+                'packager': 'vendor/packager/packager'
+            }
         },
         config: {
             'test-environment': {

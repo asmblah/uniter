@@ -9,9 +9,13 @@
 
 /*global define */
 define({
+    'map': {
+        '*': {
+            'test-environment': 'tests/bdd/test-environment'
+        }
+    },
     'paths': {
-        'bdd': 'tests/bdd',
-        'test-environment': 'tests/bdd/test-environment'
+        'bdd': 'tests/bdd'
     },
     'main': 'tests/bdd/runner'
 });

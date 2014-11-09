@@ -9,8 +9,10 @@
 
 /*global define, require */
 require.config({
-    'paths': {
-        'packager': '../vendor/packager/packager'
+    'map': {
+        '*': {
+            'packager': '../vendor/packager/packager'
+        }
     }
 });
 

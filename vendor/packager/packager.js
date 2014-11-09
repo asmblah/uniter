@@ -98,25 +98,37 @@ define(function () {
 
             req([name], function (packageConfig) {
                 var baseID,
+                    mapAll = util.extend({}, packageConfig.map ? packageConfig.map['*'] : {}),
                     paths = util.extend({}, packageConfig.paths);
+
+                function resolvePaths(paths) {
+                    util.each(paths, function (path, index, paths) {
+                        if (/^\.\.?\//.test(path)) {
+                            path = baseID + path;
+
+                            // Resolve same-directory terms
+                            path = path.replace(/(?!^\/[^.])(^|\/)(\.?\/)+/g, '$1');
+
+                            paths[index] = path;
+                        }
+                    });
+                }
 
                 // Process relative path mappings relative to package file
                 baseID = (req.toUrl(name) || '').replace(/(^|\/)[^\/]*$/, '$1') || '';
 
-                // Resolve same-directory terms
-                baseID = baseID.replace(/(?!^\/[^.])(^|\/)(\.?\/)+/g, '$1');
+                resolvePaths(mapAll);
+                resolvePaths(paths);
 
-                util.each(paths, function (path, index, paths) {
-                    if (/^\.\.?\//.test(path)) {
-                        paths[index] = baseID + path;
-                    }
-                });
-
+                mapAll = util.extend({}, requirejsConfig.map ? requirejsConfig.map['*'] : {}, mapAll);
                 paths = util.extend({}, requirejsConfig.paths, paths);
 
                 require({
                     // Use another isolated context to set the path mappings configured in package manifest
                     'paths': paths,
+                    'map': {
+                        '*': mapAll
+                    },
                     'context': isolatedContextName,
 
                     'config': requirejsConfig.config

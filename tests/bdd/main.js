@@ -10,11 +10,15 @@
 /*global define, require */
 require.config({
     paths: {
-        'bdd': '.',
-        'chai': 'bower_components/chai/chai',
-        'packager': 'vendor/packager/packager',
-        'sinon': 'bower_components/sinonjs-built/pkg/sinon',
-        'sinon-chai': 'bower_components/sinon-chai/lib/sinon-chai'
+        'bdd': '.'
+    },
+    map: {
+        '*': {
+            'chai': 'bower_components/chai/chai',
+            'packager': 'vendor/packager/packager',
+            'sinon': 'bower_components/sinonjs-built/pkg/sinon',
+            'sinon-chai': 'bower_components/sinon-chai/lib/sinon-chai'
+        }
     },
     // Defeat caching
     urlArgs: '__r=' + Math.random()
