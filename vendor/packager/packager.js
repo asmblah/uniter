@@ -118,7 +118,9 @@ define(function () {
                 require({
                     // Use another isolated context to set the path mappings configured in package manifest
                     'paths': paths,
-                    'context': isolatedContextName
+                    'context': isolatedContextName,
+
+                    'config': requirejsConfig.config
                 }, [
                     packageConfig.main
                 ], function (value) {

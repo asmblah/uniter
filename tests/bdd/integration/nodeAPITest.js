@@ -7,7 +7,7 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, require */
+/*global define */
 define([
     'test-environment'
 ], function (
@@ -17,22 +17,10 @@ define([
 
     if (testEnvironment.node) {
         describe('Node API integration', function () {
-            var nodeRequire = testEnvironment.node.require,
-                uniter;
-
-            beforeEach(function (done) {
-                require([
-                    'uniter'
-                ], function (
-                    uniterSingleton
-                ) {
-                    uniter = uniterSingleton;
-                    done();
-                });
-            });
+            var nodeRequire = testEnvironment.node.require;
 
             it('should make the Uniter singleton instance available as module.exports', function () {
-                expect(nodeRequire(testEnvironment.node.rootPath)).to.equal(uniter);
+                expect(nodeRequire(testEnvironment.node.rootPath).createEngine).to.be.a('function');
             });
         });
     }
