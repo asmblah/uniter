@@ -3,7 +3,6 @@
     "version": "0.1.11",
     "main": "uniter",
     "dependencies": {
-        "package": "0.1.x",
         "requirejs": "2.1.x"
     },
     "devDependencies": {

@@ -10,7 +10,7 @@
 /*global define */
 define([
     'require',
-    '../js/util',
+    'js/util',
     'ace/src-min-noconflict/ace'
 ], function (
     require,

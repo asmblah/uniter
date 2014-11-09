@@ -20,6 +20,7 @@
     requirejs({
         baseUrl: __dirname + '/../..',
         paths: {
+            'packager': 'vendor/packager/packager',
             'Mocha': 'mocha'
         },
         config: {
@@ -32,7 +33,7 @@
         },
         nodeRequire: require
     }, [
-        'bower_components/package/package!tests/bdd/package'
+        'vendor/packager/packager!tests/bdd/package'
     ], function (
         runner
     ) {

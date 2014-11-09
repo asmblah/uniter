@@ -7,7 +7,13 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
+/*global define, require */
+require.config({
+    'paths': {
+        'packager': '../vendor/packager/packager'
+    }
+});
+
 define([
-    '../bower_components/package/package!./interactive-package'
+    'packager!./interactive-package'
 ], function () {});

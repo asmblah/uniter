@@ -23,6 +23,7 @@
     app.use('/bower_components', express.static(rootPath + '/bower_components'));
     app.use('/js', express.static(rootPath + '/js'));
     app.use('/languages', express.static(rootPath + '/languages'));
+    app.use('/vendor', express.static(rootPath + '/vendor'));
 
     app.get('/', function (request, response) {
         response.redirect('/index.html');

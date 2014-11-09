@@ -9,9 +9,9 @@
 
 /*global define */
 define([
-    'package/util'
+    'packager'
 ], function (
-    packageUtil
+    packager
 ) {
     'use strict';
 
@@ -23,7 +23,7 @@ define([
             return new F();
         },
         toString = {}.toString,
-        util = inheritFrom(packageUtil);
+        util = inheritFrom(packager.util);
 
     return util.extend(util, {
         copy: function (to, from) {

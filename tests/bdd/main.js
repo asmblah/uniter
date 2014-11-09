@@ -12,7 +12,7 @@ require.config({
     paths: {
         'bdd': '.',
         'chai': 'bower_components/chai/chai',
-        'package/util': 'bower_components/package/util',
+        'packager': 'vendor/packager/packager',
         'sinon': 'bower_components/sinonjs-built/pkg/sinon',
         'sinon-chai': 'bower_components/sinon-chai/lib/sinon-chai'
     },

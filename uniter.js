@@ -9,7 +9,7 @@
 
 /*global define */
 define([
-    'bower_components/package/package!./package'
+    'packager!./package'
 ], function (
     uniter
 ) {
