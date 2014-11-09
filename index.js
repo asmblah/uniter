@@ -18,7 +18,10 @@
     };
 
     requirejs.config({
-        baseUrl: __dirname
+        baseUrl: __dirname,
+        paths: {
+            'packager': 'vendor/packager/packager'
+        }
     });
 
     module.exports = requirejs('uniter');
