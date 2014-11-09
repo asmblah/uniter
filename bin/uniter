@@ -9,61 +9,47 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global process, require */
+/*global __dirname, process, require */
 (function () {
     'use strict';
 
-    var modular = require('modular-amd'),
+    var hasOwn = {}.hasOwnProperty,
         optionsManager = require('node-getopt').create([
             ['d', 'dump-ast', 'Dump AST of PHP code instead of executing it'],
             ['r', 'run=<code>', 'Run PHP <code> without using script tags <? ... ?>']
         ]),
-        parsedOptions = optionsManager.parseSystem();
+        parsedOptions = optionsManager.parseSystem(),
+        phpCode,
+        phpEngine,
+        phpParser,
+        uniter = require(__dirname + '/..');
 
-    // FIXME!! (In Modular)
-    modular.configure({
-        paths: {
-            'Modular': '/node_modules/modular-amd'
-        }
-    });
+    function output() {
+        process.stdout.write(phpEngine.getStdout().readAll());
+        process.stderr.write(phpEngine.getStderr().readAll());
+    }
 
-    modular.require([
-        'uniter'
-    ], function (
-        uniter
-    ) {
-        var hasOwn = {}.hasOwnProperty,
-            phpCode,
-            phpEngine,
-            phpParser;
+    if (hasOwn.call(parsedOptions.options, 'run')) {
+        phpCode = '<?php ' + parsedOptions.options.run;
 
-        function output() {
-            process.stdout.write(phpEngine.getStdout().readAll());
-            process.stderr.write(phpEngine.getStderr().readAll());
-        }
+        // Only dump the AST to stdout if requested
+        if (hasOwn.call(parsedOptions.options, 'dump-ast')) {
+            phpParser = uniter.createParser('PHP');
 
-        if (hasOwn.call(parsedOptions.options, 'run')) {
-            phpCode = '<?php ' + parsedOptions.options.run;
-
-            // Only dump the AST to stdout if requested
-            if (hasOwn.call(parsedOptions.options, 'dump-ast')) {
-                phpParser = uniter.createParser('PHP');
-
-                process.stdout.write(JSON.stringify(phpParser.parse(phpCode), null, 4) + '\n');
-            } else {
-                phpEngine = uniter.createEngine('PHP');
-
-                phpEngine.execute(phpCode).done(function () {
-                    output();
-                }).fail(function (exception) {
-                    output();
-                    process.stderr.write(exception.getMessage());
-                    process.stdout.write('\n');
-                });
-            }
+            process.stdout.write(JSON.stringify(phpParser.parse(phpCode), null, 4) + '\n');
         } else {
-            optionsManager.showHelp();
-            process.exit(1);
+            phpEngine = uniter.createEngine('PHP');
+
+            phpEngine.execute(phpCode).done(function () {
+                output();
+            }).fail(function (exception) {
+                output();
+                process.stderr.write(exception.getMessage());
+                process.stdout.write('\n');
+            });
         }
-    });
+    } else {
+        optionsManager.showHelp();
+        process.exit(1);
+    }
 }());

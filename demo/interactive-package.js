@@ -8,12 +8,11 @@
  */
 
 /*global define */
-define([
-    'packager!./package'
-], function (
-    uniter
-) {
-    'use strict';
-
-    return uniter;
+define({
+    'paths': {
+        'ace': '../vendor/ace',
+        'bower_components': '../bower_components',
+        'js': '../js'
+    },
+    'main': 'interactive-main'
 });

@@ -2,11 +2,21 @@
     "name": "uniter",
     "version": "0.1.11",
     "main": "uniter",
+    "dependencies": {
+        "requirejs": "2.1.x"
+    },
+    "devDependencies": {
+        "chai": "1.7.x",
+        "mocha": "1.12.x",
+        "sinonjs-built": "1.8.x",
+        "sinon-chai": "2.4.x"
+    },
     "ignore": [
         ".gitignore",
         ".jshintrc",
         ".travis.yml",
         "bin",
+        "bower_components",
         "demo",
         "index.html",
         "index.js",

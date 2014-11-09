@@ -8,12 +8,10 @@
  */
 
 /*global define */
-define([
-    'packager!./package'
-], function (
-    uniter
-) {
-    'use strict';
-
-    return uniter;
+define({
+    'paths': {
+        'bdd': 'tests/bdd',
+        'test-environment': 'tests/bdd/test-environment'
+    },
+    'main': 'tests/bdd/runner'
 });

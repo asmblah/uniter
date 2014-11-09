@@ -9,11 +9,11 @@
 
 /*global define */
 define([
-    'packager!./package'
+    'module'
 ], function (
-    uniter
+    module
 ) {
     'use strict';
 
-    return uniter;
+    return module.config();
 });

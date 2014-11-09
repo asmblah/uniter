@@ -9,34 +9,18 @@
 
 /*global define */
 define([
-    'module',
-    'require',
     'test-environment'
 ], function (
-    module,
-    require,
     testEnvironment
 ) {
     'use strict';
 
     if (testEnvironment.node) {
         describe('Node API integration', function () {
-            var nodeRequire = testEnvironment.node.require,
-                uniter;
-
-            // Perform scoped require from root path context so Modular maps to the same files
-            require({
-                baseUrl: testEnvironment.node.rootPath
-            }, [
-                'uniter'
-            ], function (
-                uniterSingleton
-            ) {
-                uniter = uniterSingleton;
-            });
+            var nodeRequire = testEnvironment.node.require;
 
             it('should make the Uniter singleton instance available as module.exports', function () {
-                expect(nodeRequire(testEnvironment.node.rootPath)).to.equal(uniter);
+                expect(nodeRequire(testEnvironment.node.rootPath).createEngine).to.be.a('function');
             });
         });
     }

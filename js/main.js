@@ -9,11 +9,21 @@
 
 /*global define */
 define([
-    'packager!./package'
+    'languages/PHP/grammar',
+    'languages/PHP/interpreter',
+    'js/Language',
+    'js/Uniter'
 ], function (
-    uniter
+    phpGrammarSpec,
+    phpInterpreterSpec,
+    Language,
+    Uniter
 ) {
     'use strict';
+
+    var uniter = new Uniter();
+
+    uniter.registerLanguage(new Language('PHP', phpGrammarSpec, phpInterpreterSpec));
 
     return uniter;
 });

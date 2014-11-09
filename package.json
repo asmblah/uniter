@@ -31,8 +31,8 @@
         "webtest": "node tests/bdd/webtest.js"
     },
     "dependencies": {
-        "modular-amd": "0.1.x",
-        "node-getopt": "0.2.x"
+        "node-getopt": "0.2.x",
+        "requirejs": "2.1.x"
     },
     "devDependencies": {
         "chai": "1.7.x",

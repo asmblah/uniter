@@ -8,12 +8,10 @@
  */
 
 /*global define */
-define([
-    'packager!./package'
-], function (
-    uniter
-) {
-    'use strict';
-
-    return uniter;
+define({
+    'paths': {
+        'languages': './languages',
+        'js': './js'
+    },
+    'main': 'js/main'
 });

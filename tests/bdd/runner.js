@@ -7,32 +7,15 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, require */
-define({
-    cache: false,
-    paths: {
-        'bdd': '.',
-        'js': '/../../js',
-        'languages': '/../../languages',
-
-        // FIXME!! (In Modular)
-        'Modular': require.config().paths.Modular,
-
-        'vendor': '/../../vendor'
-    }
-}, [
-    'chai/chai',
-    'modular',
+/*global define */
+define([
+    'chai',
     'require',
-    'sinon/sinon',
-    'sinon-chai/sinon-chai',
-    'Mocha',
-
-    // Init util.js
-    'js/Uniter'
+    'sinon',
+    'sinon-chai',
+    'mocha'
 ], function (
     chai,
-    modular,
     require,
     sinon,
     sinonChai,
@@ -40,7 +23,7 @@ define({
 ) {
     'use strict';
 
-    var global = modular.util.global;
+    var global = /*jshint evil: true */new Function('return this;')()/*jshint evil: false */;
 
     chai.use(sinonChai);
 
