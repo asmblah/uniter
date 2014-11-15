@@ -57,6 +57,10 @@ EOS
             e.add({
                 func: arguments.callee,
                 statementIndex: statementIndex,
+                assignments: {
+                    '1': 'temp0',
+                    '2': 'temp1'
+                },
                 temp0: temp0,
                 temp1: temp1
             });
@@ -113,6 +117,7 @@ EOS
                         e.add({
                             func: arguments.callee,
                             statementIndex: statementIndex,
+                            assignments: {},
                             num1: num1,
                             num2: num2,
                             num3: num3
@@ -136,6 +141,10 @@ EOS
             e.add({
                 func: arguments.callee,
                 statementIndex: statementIndex,
+                assignments: {
+                    '1': 'temp0',
+                    '2': 'temp1'
+                },
                 temp0: temp0,
                 temp1: temp1
             });
@@ -203,6 +212,10 @@ EOS
                         e.add({
                             func: arguments.callee,
                             statementIndex: statementIndex,
+                            assignments: {
+                                '1': 'temp0',
+                                '2': 'temp1'
+                            },
                             num1: num1,
                             num2: num2,
                             num3: num3,
@@ -228,6 +241,10 @@ EOS
             e.add({
                 func: arguments.callee,
                 statementIndex: statementIndex,
+                assignments: {
+                    '1': 'temp0',
+                    '2': 'temp1'
+                },
                 temp0: temp0,
                 temp1: temp1
             });

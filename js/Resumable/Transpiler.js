@@ -27,7 +27,9 @@ define([
 
     util.extend(Transpiler.prototype, {
         transpile: function (ast) {
-            var enter,
+            var assignmentStatements = {},
+                assignmentStatementsStack = [],
+                enter,
                 nextTempIndex = 0,
                 nextTempIndexStack = [],
                 switchCases = [],
@@ -52,9 +54,10 @@ define([
             }
 
             function handleStatements(statements) {
-                var declaration,
+                var assignmentProperties = [],
+                    declaration,
                     index,
-                    properties = [],
+                    stateProperties = [],
                     tryBlockBody = [];
 
                 if (statements.length === 0) {
@@ -71,7 +74,7 @@ define([
                 });
 
                 util.each(variables, function (name) {
-                    properties.push({
+                    stateProperties.push({
                         type: Syntax.Property,
                         kind: 'init',
                         key: {
@@ -88,7 +91,7 @@ define([
                 declaration = esprima.parse('var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;').body[0];
 
                 for (index = 0; index < nextTempIndex; index++) {
-                    properties.push({
+                    stateProperties.push({
                         type: Syntax.Property,
                         kind: 'init',
                         key: {
@@ -110,6 +113,21 @@ define([
                         init: null
                     });
                 }
+
+                util.each(assignmentStatements, function (variableName, statementIndex) {
+                    assignmentProperties.push({
+                        type: Syntax.Property,
+                        kind: 'init',
+                        key: {
+                            type: Syntax.Literal,
+                            value: statementIndex
+                        },
+                        value: {
+                            type: Syntax.Literal,
+                            value: variableName
+                        }
+                    });
+                }, {keys: true});
 
                 tryBlockBody.push({
                     type: Syntax.SwitchStatement,
@@ -196,8 +214,20 @@ define([
                                                                             type: Syntax.Identifier,
                                                                             name: 'statementIndex'
                                                                         }
+                                                                    },
+                                                                    {
+                                                                        type: Syntax.Property,
+                                                                        kind: 'init',
+                                                                        key: {
+                                                                            type: Syntax.Identifier,
+                                                                            name: 'assignments'
+                                                                        },
+                                                                        value: {
+                                                                            type: Syntax.ObjectExpression,
+                                                                            properties: assignmentProperties
+                                                                        }
                                                                     }
-                                                                ].concat(properties)
+                                                                ].concat(stateProperties)
                                                             }
                                                         ]
                                                     }
@@ -232,6 +262,8 @@ define([
                     variablesToTemps = [];
                     nextTempIndexStack.push(nextTempIndex);
                     nextTempIndex = 0;
+                    assignmentStatementsStack.push(assignmentStatements);
+                    assignmentStatements = {};
 
                     util.each(node.params, function (param) {
                         variables.push(param.name);
@@ -242,6 +274,7 @@ define([
                     variables = variablesStack.pop();
                     variablesToTemps = variablesToTempsStack.pop();
                     nextTempIndex = nextTempIndexStack.pop();
+                    assignmentStatements = assignmentStatementsStack.pop();
 
                     return {
                         type: node.type,
@@ -261,6 +294,8 @@ define([
                         } else {
                             tempName = 'temp' + nextTempIndex++;
                             variablesToTemps[node.name] = tempName;
+
+                            assignmentStatements[switchCases.length] = tempName;
 
                             addSwitchCase({
                                 type: Syntax.ExpressionStatement,
@@ -285,6 +320,8 @@ define([
 
                 if (node.type === Syntax.CallExpression) {
                     tempName = 'temp' + nextTempIndex++;
+
+                    assignmentStatements[switchCases.length] = tempName;
 
                     addSwitchCase({
                         type: Syntax.ExpressionStatement,
