@@ -35,7 +35,7 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;
+    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
     try {
         switch (statementIndex) {
         case 0:
@@ -44,13 +44,21 @@ EOS
             }
         case 1:
             ++statementIndex;
-            exports.result = doThings(2, 3);
+            temp0 = exports;
+        case 2:
+            ++statementIndex;
+            temp1 = doThings(2, 3);
+        case 3:
+            ++statementIndex;
+            temp0.result = temp1;
         }
     } catch (e) {
         if (e instanceof Resumable.PauseException) {
             e.add({
                 func: arguments.callee,
-                statementIndex: statementIndex
+                statementIndex: statementIndex,
+                temp0: temp0,
+                temp1: temp1
             });
         }
         throw e;
@@ -84,7 +92,7 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;
+    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
     try {
         switch (statementIndex) {
         case 0:
@@ -115,13 +123,21 @@ EOS
             }
         case 1:
             ++statementIndex;
-            exports.result = doThings(2, 3);
+            temp0 = exports;
+        case 2:
+            ++statementIndex;
+            temp1 = doThings(2, 3);
+        case 3:
+            ++statementIndex;
+            temp0.result = temp1;
         }
     } catch (e) {
         if (e instanceof Resumable.PauseException) {
             e.add({
                 func: arguments.callee,
-                statementIndex: statementIndex
+                statementIndex: statementIndex,
+                temp0: temp0,
+                temp1: temp1
             });
         }
         throw e;
@@ -157,7 +173,7 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;
+    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
     try {
         switch (statementIndex) {
         case 0:
@@ -199,13 +215,21 @@ EOS
             }
         case 1:
             ++statementIndex;
-            exports.result = doThings(2, 3);
+            temp0 = exports;
+        case 2:
+            ++statementIndex;
+            temp1 = doThings(2, 3);
+        case 3:
+            ++statementIndex;
+            temp0.result = temp1;
         }
     } catch (e) {
         if (e instanceof Resumable.PauseException) {
             e.add({
                 func: arguments.callee,
-                statementIndex: statementIndex
+                statementIndex: statementIndex,
+                temp0: temp0,
+                temp1: temp1
             });
         }
         throw e;

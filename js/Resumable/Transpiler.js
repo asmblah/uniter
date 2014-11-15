@@ -254,8 +254,8 @@ define([
                     };
                 }
 
-                if (node.type === Syntax.Identifier && /(Assignment|Binary|Unary)Expression$/.test(parent.type)) {
-                    if (parent.type !== Syntax.AssignmentExpression) {
+                if (node.type === Syntax.Identifier && /(Binary|Member|Unary)Expression$/.test(parent.type)) {
+                    if (parent.type !== Syntax.MemberExpression || node !== parent.property) {
                         if (variablesToTemps[node.name]) {
                             tempName = variablesToTemps[node.name];
                         } else {
@@ -281,6 +281,28 @@ define([
                             name: tempName
                         };
                     }
+                }
+
+                if (node.type === Syntax.CallExpression) {
+                    tempName = 'temp' + nextTempIndex++;
+
+                    addSwitchCase({
+                        type: Syntax.ExpressionStatement,
+                        expression: {
+                            type: Syntax.AssignmentExpression,
+                            operator: '=',
+                            left: {
+                                type: Syntax.Identifier,
+                                name: tempName
+                            },
+                            right: node
+                        }
+                    });
+
+                    return {
+                        type: Syntax.Identifier,
+                        name: tempName
+                    };
                 }
 
                 if (parent.type === Syntax.ExpressionStatement && node.type === Syntax.AssignmentExpression) {
