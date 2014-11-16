@@ -34,24 +34,30 @@ define([
     util.extend(Resumable.prototype, {
         createPause: function () {
             var pause = new PauseException(function (promise, result, states) {
-                    var state = states[0];
+                    var i,
+                        lastResult = result,
+                        state;
 
-                    if (state.assignments[state.statementIndex - 1]) {
-                        state[state.assignments[state.statementIndex - 1]] = result;
-                    }
+                    for (i = 0; i < states.length; i++) {
+                        state = states[i];
 
-                    Resumable._resumeState_ = state;
-
-                    try {
-                        state.func();
-                    } catch (e) {
-                        if (e instanceof PauseException) {
-                            e.setPromise(promise);
-
-                            return;
+                        if (state.assignments[state.statementIndex - 1]) {
+                            state[state.assignments[state.statementIndex - 1]] = lastResult;
                         }
 
-                        throw e;
+                        Resumable._resumeState_ = state;
+
+                        try {
+                            lastResult = state.func();
+                        } catch (e) {
+                            if (e instanceof PauseException) {
+                                e.setPromise(promise);
+
+                                return;
+                            }
+
+                            throw e;
+                        }
                     }
 
                     promise.resolve();

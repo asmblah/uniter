@@ -23,7 +23,7 @@ define([
 
     util.extend(PauseException.prototype, {
         add: function (state) {
-            this.states.unshift(state);
+            this.states.push(state);
         },
 
         now: function () {

@@ -86,6 +86,30 @@ EOS
                 expectedExports: {
                     result: 9
                 }
+            },
+            'when pause occurs inside function call': {
+                code: util.heredoc(function (/*<<<EOS
+function getIt() {
+    return tools.getValue() + 2;
+}
+
+exports.result = getIt() + 10;
+EOS
+*/) {}),
+                expose: {
+                    getValue: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(21);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 33
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
