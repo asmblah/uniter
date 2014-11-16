@@ -129,6 +129,8 @@ define([
                     });
                 }
 
+                stateSetup.consequent.body.push(esprima.parse('Resumable._resumeState_ = null;').body[0]);
+
                 util.each(assignmentStatements, function (variableName, statementIndex) {
                     assignmentProperties.push({
                         type: Syntax.Property,

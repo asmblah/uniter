@@ -40,6 +40,7 @@ EOS
         statementIndex = Resumable._resumeState_.statementIndex;
         temp0 = Resumable._resumeState_.temp0;
         temp1 = Resumable._resumeState_.temp1;
+        Resumable._resumeState_ = null;
     }
     try {
         switch (statementIndex) {
@@ -106,6 +107,7 @@ EOS
         statementIndex = Resumable._resumeState_.statementIndex;
         temp0 = Resumable._resumeState_.temp0;
         temp1 = Resumable._resumeState_.temp1;
+        Resumable._resumeState_ = null;
     }
     try {
         switch (statementIndex) {
@@ -115,6 +117,7 @@ EOS
                 var statementIndex = 0;
                 if (Resumable._resumeState_) {
                     statementIndex = Resumable._resumeState_.statementIndex;
+                    Resumable._resumeState_ = null;
                 }
                 try {
                     switch (statementIndex) {
@@ -200,6 +203,7 @@ EOS
         statementIndex = Resumable._resumeState_.statementIndex;
         temp0 = Resumable._resumeState_.temp0;
         temp1 = Resumable._resumeState_.temp1;
+        Resumable._resumeState_ = null;
     }
     try {
         switch (statementIndex) {
@@ -211,6 +215,7 @@ EOS
                     statementIndex = Resumable._resumeState_.statementIndex;
                     temp0 = Resumable._resumeState_.temp0;
                     temp1 = Resumable._resumeState_.temp1;
+                    Resumable._resumeState_ = null;
                 }
                 try {
                     switch (statementIndex) {
