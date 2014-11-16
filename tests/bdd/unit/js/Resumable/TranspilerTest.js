@@ -35,7 +35,12 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
+    var statementIndex = 0, temp0, temp1;
+    if (Resumable._resumeState_) {
+        statementIndex = Resumable._resumeState_.statementIndex;
+        temp0 = Resumable._resumeState_.temp0;
+        temp1 = Resumable._resumeState_.temp1;
+    }
     try {
         switch (statementIndex) {
         case 0:
@@ -96,13 +101,21 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
+    var statementIndex = 0, temp0, temp1;
+    if (Resumable._resumeState_) {
+        statementIndex = Resumable._resumeState_.statementIndex;
+        temp0 = Resumable._resumeState_.temp0;
+        temp1 = Resumable._resumeState_.temp1;
+    }
     try {
         switch (statementIndex) {
         case 0:
             ++statementIndex;
             function doThings(num1, num2) {
-                var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;
+                var statementIndex = 0;
+                if (Resumable._resumeState_) {
+                    statementIndex = Resumable._resumeState_.statementIndex;
+                }
                 try {
                     switch (statementIndex) {
                     case 0:
@@ -182,13 +195,23 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
+    var statementIndex = 0, temp0, temp1;
+    if (Resumable._resumeState_) {
+        statementIndex = Resumable._resumeState_.statementIndex;
+        temp0 = Resumable._resumeState_.temp0;
+        temp1 = Resumable._resumeState_.temp1;
+    }
     try {
         switch (statementIndex) {
         case 0:
             ++statementIndex;
             function doThings(num1, num2) {
-                var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0, temp0, temp1;
+                var statementIndex = 0, temp0, temp1;
+                if (Resumable._resumeState_) {
+                    statementIndex = Resumable._resumeState_.statementIndex;
+                    temp0 = Resumable._resumeState_.temp0;
+                    temp1 = Resumable._resumeState_.temp1;
+                }
                 try {
                     switch (statementIndex) {
                     case 0:

@@ -58,6 +58,7 @@ define([
                     declaration,
                     index,
                     stateProperties = [],
+                    stateSetup,
                     tryBlockBody = [];
 
                 if (statements.length === 0) {
@@ -88,7 +89,8 @@ define([
                     });
                 });
 
-                declaration = esprima.parse('var statementIndex = Resumable._resumeState_ ? Resumable._resumeState_.statementIndex : 0;').body[0];
+                declaration = esprima.parse('var statementIndex = 0;').body[0];
+                stateSetup = esprima.parse('if (Resumable._resumeState_) { statementIndex = Resumable._resumeState_.statementIndex; }').body[0];
 
                 for (index = 0; index < nextTempIndex; index++) {
                     stateProperties.push({
@@ -111,6 +113,19 @@ define([
                             name: 'temp' + index
                         },
                         init: null
+                    });
+
+                    stateSetup.consequent.body.push({
+                        type: Syntax.ExpressionStatement,
+                        expression: {
+                            type: Syntax.AssignmentExpression,
+                            operator: '=',
+                            left: {
+                                type: Syntax.Identifier,
+                                name: 'temp' + index,
+                            },
+                            right: esprima.parse('Resumable._resumeState_.temp' + index).body[0].expression
+                        }
                     });
                 }
 
@@ -142,6 +157,7 @@ define([
 
                 return [
                     declaration,
+                    stateSetup,
                     {
                         type: Syntax.TryStatement,
                         block: {
