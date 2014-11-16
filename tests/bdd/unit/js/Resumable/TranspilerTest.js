@@ -299,5 +299,79 @@ EOS
                 }
             })).to.equal(expectedOutputJS);
         });
+
+        it('should correctly transpile an if (...) {...} statement', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+if (tools.sayYes) {
+    exports.result = 'yes';
+}
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                temp0 = tools;
+            case 1:
+                ++statementIndex;
+                temp1 = temp0.sayYes;
+            case 2:
+                ++statementIndex;
+                if (temp1) {
+                    switch (statementIndex) {
+                    case 3:
+                        ++statementIndex;
+                        temp2 = exports;
+                    case 4:
+                        ++statementIndex;
+                        temp2.result = 'yes';
+                    }
+                }
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '3': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
     });
 });

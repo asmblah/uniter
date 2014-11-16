@@ -32,21 +32,24 @@ define([
                 enter,
                 functionDeclarations = [],
                 functionDeclarationsStack = [],
+                nextStatementIndex = 0,
+                nextStatementIndexStack = [],
                 nextTempIndex = 0,
                 nextTempIndexStack = [],
                 switchCases = [],
                 stack = [],
+                statementIndex = null,
                 variables = [],
                 variablesStack = [],
                 variablesToTemps = [],
                 variablesToTempsStack = [];
 
-            function addSwitchCase(statement) {
+            function addSwitchCase(statement, index) {
                 switchCases.push({
                     type: Syntax.SwitchCase,
                     test: {
                         type: Syntax.Literal,
-                        value: switchCases.length
+                        value: index
                     },
                     consequent: [
                         esprima.parse('++statementIndex').body[0],
@@ -80,7 +83,12 @@ define([
                         });
 
                     if (node !== null) {
-                        addSwitchCase(node);
+                        if (statementIndex !== null) {
+                            addSwitchCase(node, statementIndex);
+                            statementIndex = null;
+                        } else {
+                            addSwitchCase(node, nextStatementIndex++);
+                        }
                     }
                 });
 
@@ -303,7 +311,9 @@ define([
 
             enter = function enter(node, parent) {
                 var body,
+                    expression,
                     expressions,
+                    statements,
                     tempName;
 
                 if (node.type === Syntax.FunctionDeclaration || node.type === Syntax.FunctionExpression) {
@@ -313,6 +323,8 @@ define([
                     variables = [];
                     variablesToTempsStack.push(variablesToTemps);
                     variablesToTemps = [];
+                    nextStatementIndexStack.push(nextStatementIndex);
+                    nextStatementIndex = 0;
                     nextTempIndexStack.push(nextTempIndex);
                     nextTempIndex = 0;
                     assignmentStatementsStack.push(assignmentStatements);
@@ -328,6 +340,7 @@ define([
 
                     variables = variablesStack.pop();
                     variablesToTemps = variablesToTempsStack.pop();
+                    nextStatementIndex = nextStatementIndexStack.pop();
                     nextTempIndex = nextTempIndexStack.pop();
                     assignmentStatements = assignmentStatementsStack.pop();
                     functionDeclarations = functionDeclarationsStack.pop();
@@ -359,7 +372,7 @@ define([
                             tempName = 'temp' + nextTempIndex++;
                             variablesToTemps[node.name] = tempName;
 
-                            assignmentStatements[switchCases.length] = tempName;
+                            assignmentStatements[nextStatementIndex] = tempName;
 
                             addSwitchCase({
                                 type: Syntax.ExpressionStatement,
@@ -372,7 +385,7 @@ define([
                                     },
                                     right: node
                                 }
-                            });
+                            }, nextStatementIndex++);
                         }
 
                         return {
@@ -385,7 +398,7 @@ define([
                 if (node.type === Syntax.CallExpression) {
                     tempName = 'temp' + nextTempIndex++;
 
-                    assignmentStatements[switchCases.length] = tempName;
+                    assignmentStatements[nextStatementIndex] = tempName;
 
                     addSwitchCase({
                         type: Syntax.ExpressionStatement,
@@ -398,7 +411,7 @@ define([
                             },
                             right: node
                         }
-                    });
+                    }, nextStatementIndex++);
 
                     return {
                         type: Syntax.Identifier,
@@ -444,6 +457,79 @@ define([
                             type: Syntax.SequenceExpression,
                             expressions: expressions
                         }
+                    };
+                }
+
+                if (node.type === Syntax.IfStatement) {
+                    this.skip();
+
+                    expression = estraverse.replace(node.test, {
+                        'enter': enter
+                    });
+
+                    tempName = 'temp' + nextTempIndex++;
+
+                    assignmentStatements[nextStatementIndex] = tempName;
+
+                    addSwitchCase({
+                        type: Syntax.ExpressionStatement,
+                        expression: {
+                            type: Syntax.AssignmentExpression,
+                            operator: '=',
+                            left: {
+                                type: Syntax.Identifier,
+                                name: tempName
+                            },
+                            right: expression
+                        }
+                    }, nextStatementIndex++);
+
+                    statementIndex = nextStatementIndex++;
+
+                    return {
+                        type: Syntax.IfStatement,
+                        test: {
+                            type: Syntax.Identifier,
+                            name: tempName
+                        },
+                        consequent: estraverse.replace(node.consequent, {
+                            'enter': enter
+                        })
+                    };
+                }
+
+                if (node.type === Syntax.BlockStatement) {
+                    this.skip();
+
+                    stack.push(switchCases);
+                    switchCases = [];
+
+                    util.each(node.body, function (statement) {
+                        var node = estraverse.replace(statement, {
+                                'enter': enter
+                            });
+
+                        if (node !== null) {
+                            addSwitchCase(node, nextStatementIndex++);
+                        }
+                    });
+
+                    statements = [
+                        {
+                            type: Syntax.SwitchStatement,
+                            discriminant: {
+                                type: Syntax.Identifier,
+                                name: 'statementIndex'
+                            },
+                            cases: switchCases
+                        }
+                    ];
+
+                    switchCases = stack.pop();
+
+                    return {
+                        type: Syntax.BlockStatement,
+                        body: statements
                     };
                 }
             };
