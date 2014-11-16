@@ -46,10 +46,12 @@ define([
                         state.func();
                     } catch (e) {
                         if (e instanceof PauseException) {
-                            throw e;
+                            e.setPromise(promise);
+
+                            return;
                         }
 
-                        return;
+                        throw e;
                     }
 
                     promise.resolve();

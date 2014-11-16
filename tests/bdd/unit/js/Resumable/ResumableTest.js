@@ -57,6 +57,35 @@ EOS
                 expectedExports: {
                     result: 22
                 }
+            },
+            'when two pauses are used with a single expression': {
+                code: util.heredoc(function (/*<<<EOS
+exports.result = tools.getFirst() + 4 + tools.getSecond();
+EOS
+*/) {}),
+                expose: {
+                    getFirst: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(2);
+                        });
+
+                        pause.now();
+                    },
+                    getSecond: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(3);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 9
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
