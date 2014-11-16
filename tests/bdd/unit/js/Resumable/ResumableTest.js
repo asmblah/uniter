@@ -110,6 +110,69 @@ EOS
                 expectedExports: {
                     result: 33
                 }
+            },
+            'when pause occurs inside function defined via declaration with closure-bound variables': {
+                code: util.heredoc(function (/*<<<EOS
+function getIt() {
+    var myResult;
+
+    function doGet() {
+        myResult = tools.getValue() + 2;
+    }
+
+    doGet();
+
+    return myResult;
+}
+
+exports.result = getIt() + 10;
+EOS
+*/) {}),
+                expose: {
+                    getValue: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(21);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 33
+                }
+            },
+            'when pause occurs inside function defined via expression with closure-bound variables': {
+                code: util.heredoc(function (/*<<<EOS
+function getIt() {
+    var myResult,
+        doGet = function () {
+            myResult = tools.getValue() + 2;
+        };
+
+    doGet();
+
+    return myResult;
+}
+
+exports.result = getIt() + 10;
+EOS
+*/) {}),
+                expose: {
+                    getValue: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(21);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 33
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

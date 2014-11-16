@@ -30,6 +30,8 @@ define([
             var assignmentStatements = {},
                 assignmentStatementsStack = [],
                 enter,
+                functionDeclarations = [],
+                functionDeclarationsStack = [],
                 nextTempIndex = 0,
                 nextTempIndexStack = [],
                 switchCases = [],
@@ -57,6 +59,7 @@ define([
                 var assignmentProperties = [],
                     declaration,
                     index,
+                    parameters,
                     stateProperties = [],
                     stateSetup,
                     tryBlockBody = [];
@@ -65,16 +68,37 @@ define([
                     return [];
                 }
 
+                parameters = variables;
+                variables = [];
+
                 stack.push(switchCases);
                 switchCases = [];
 
                 util.each(statements, function (statement) {
-                    addSwitchCase(estraverse.replace(statement, {
-                        'enter': enter
-                    }));
+                    var node = estraverse.replace(statement, {
+                            'enter': enter
+                        });
+
+                    if (node !== null) {
+                        addSwitchCase(node);
+                    }
                 });
 
+                declaration = esprima.parse('var statementIndex = 0;').body[0];
+                stateSetup = esprima.parse('if (Resumable._resumeState_) { statementIndex = Resumable._resumeState_.statementIndex; }').body[0];
+
                 util.each(variables, function (name) {
+                    declaration.declarations.push({
+                        type: Syntax.VariableDeclarator,
+                        id: {
+                            type: Syntax.Identifier,
+                            name: name
+                        },
+                        init: null
+                    });
+                });
+
+                util.each(parameters.concat(variables), function (name) {
                     stateProperties.push({
                         type: Syntax.Property,
                         kind: 'init',
@@ -88,9 +112,6 @@ define([
                         }
                     });
                 });
-
-                declaration = esprima.parse('var statementIndex = 0;').body[0];
-                stateSetup = esprima.parse('if (Resumable._resumeState_) { statementIndex = Resumable._resumeState_.statementIndex; }').body[0];
 
                 for (index = 0; index < nextTempIndex; index++) {
                     stateProperties.push({
@@ -158,117 +179,131 @@ define([
                 switchCases = stack.pop();
 
                 return [
-                    declaration,
-                    stateSetup,
+                    declaration
+                ].concat(functionDeclarations).concat([
                     {
-                        type: Syntax.TryStatement,
-                        block: {
-                            type: Syntax.BlockStatement,
-                            body: tryBlockBody
-                        },
-                        handler: {
-                            type: Syntax.CatchClause,
-                            param: {
-                                type: Syntax.Identifier,
-                                name: 'e'
-                            },
-                            body: {
-                                type: Syntax.BlockStatement,
-                                body: [
-                                    {
-                                        type: Syntax.IfStatement,
-                                        test: esprima.parse('e instanceof Resumable.PauseException').body[0].expression,
-                                        consequent: {
-                                            type: Syntax.BlockStatement,
-                                            body: [
-                                                {
-                                                    type: Syntax.ExpressionStatement,
-                                                    expression: {
-                                                        type: Syntax.CallExpression,
-                                                        callee: {
-                                                            type: Syntax.MemberExpression,
-                                                            object: {
-                                                                type: Syntax.Identifier,
-                                                                name: 'e'
-                                                            },
-                                                            property: {
-                                                                type: Syntax.Identifier,
-                                                                name: 'add'
-                                                            },
-                                                            computed: false
-                                                        },
-                                                        arguments: [
-                                                            {
-                                                                type: Syntax.ObjectExpression,
-                                                                properties: [
+                        type: Syntax.ReturnStatement,
+                        argument: {
+                            type: Syntax.CallExpression,
+                            arguments: [],
+                            callee: {
+                                type: Syntax.FunctionExpression,
+                                id: {
+                                    type: Syntax.Identifier,
+                                    name: 'resumableScope'
+                                },
+                                params: [],
+                                body: {
+                                    type: Syntax.BlockStatement,
+                                    body: [
+                                        stateSetup,
+                                        {
+                                            type: Syntax.TryStatement,
+                                            block: {
+                                                type: Syntax.BlockStatement,
+                                                body: tryBlockBody
+                                            },
+                                            handler: {
+                                                type: Syntax.CatchClause,
+                                                param: {
+                                                    type: Syntax.Identifier,
+                                                    name: 'e'
+                                                },
+                                                body: {
+                                                    type: Syntax.BlockStatement,
+                                                    body: [
+                                                        {
+                                                            type: Syntax.IfStatement,
+                                                            test: esprima.parse('e instanceof Resumable.PauseException').body[0].expression,
+                                                            consequent: {
+                                                                type: Syntax.BlockStatement,
+                                                                body: [
                                                                     {
-                                                                        type: Syntax.Property,
-                                                                        kind: 'init',
-                                                                        key: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'func'
-                                                                        },
-                                                                        value: {
-                                                                            type: Syntax.MemberExpression,
-                                                                            object: {
-                                                                                type: Syntax.Identifier,
-                                                                                name: 'arguments'
+                                                                        type: Syntax.ExpressionStatement,
+                                                                        expression: {
+                                                                            type: Syntax.CallExpression,
+                                                                            callee: {
+                                                                                type: Syntax.MemberExpression,
+                                                                                object: {
+                                                                                    type: Syntax.Identifier,
+                                                                                    name: 'e'
+                                                                                },
+                                                                                property: {
+                                                                                    type: Syntax.Identifier,
+                                                                                    name: 'add'
+                                                                                },
+                                                                                computed: false
                                                                             },
-                                                                            property: {
-                                                                                type: Syntax.Identifier,
-                                                                                name: 'callee'
-                                                                            },
-                                                                            computed: false
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        type: Syntax.Property,
-                                                                        kind: 'init',
-                                                                        key: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'statementIndex'
-                                                                        },
-                                                                        value: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'statementIndex'
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        type: Syntax.Property,
-                                                                        kind: 'init',
-                                                                        key: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'assignments'
-                                                                        },
-                                                                        value: {
-                                                                            type: Syntax.ObjectExpression,
-                                                                            properties: assignmentProperties
+                                                                            arguments: [
+                                                                                {
+                                                                                    type: Syntax.ObjectExpression,
+                                                                                    properties: [
+                                                                                        {
+                                                                                            type: Syntax.Property,
+                                                                                            kind: 'init',
+                                                                                            key: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'func'
+                                                                                            },
+                                                                                            value: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'resumableScope'
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            type: Syntax.Property,
+                                                                                            kind: 'init',
+                                                                                            key: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'statementIndex'
+                                                                                            },
+                                                                                            value: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'statementIndex'
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            type: Syntax.Property,
+                                                                                            kind: 'init',
+                                                                                            key: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'assignments'
+                                                                                            },
+                                                                                            value: {
+                                                                                                type: Syntax.ObjectExpression,
+                                                                                                properties: assignmentProperties
+                                                                                            }
+                                                                                        }
+                                                                                    ].concat(stateProperties)
+                                                                                }
+                                                                            ]
                                                                         }
                                                                     }
-                                                                ].concat(stateProperties)
+                                                                ]
                                                             }
-                                                        ]
-                                                    }
+                                                        },
+                                                        {
+                                                            type: Syntax.ThrowStatement,
+                                                            argument: {
+                                                                type: Syntax.Identifier,
+                                                                name: 'e'
+                                                            }
+                                                        }
+                                                    ]
                                                 }
-                                            ]
+                                            }
                                         }
-                                    },
-                                    {
-                                        type: Syntax.ThrowStatement,
-                                        argument: {
-                                            type: Syntax.Identifier,
-                                            name: 'e'
-                                        }
-                                    }
-                                ]
+                                    ]
+                                }
                             }
                         }
                     }
-                ];
+                ]);
             }
 
             enter = function enter(node, parent) {
                 var body,
+                    expressions,
                     tempName;
 
                 if (node.type === Syntax.FunctionDeclaration || node.type === Syntax.FunctionExpression) {
@@ -282,6 +317,8 @@ define([
                     nextTempIndex = 0;
                     assignmentStatementsStack.push(assignmentStatements);
                     assignmentStatements = {};
+                    functionDeclarationsStack.push(functionDeclarations);
+                    functionDeclarations = [];
 
                     util.each(node.params, function (param) {
                         variables.push(param.name);
@@ -293,8 +330,9 @@ define([
                     variablesToTemps = variablesToTempsStack.pop();
                     nextTempIndex = nextTempIndexStack.pop();
                     assignmentStatements = assignmentStatementsStack.pop();
+                    functionDeclarations = functionDeclarationsStack.pop();
 
-                    return {
+                    node = {
                         type: node.type,
                         id: node.id,
                         params: node.params,
@@ -303,6 +341,14 @@ define([
                             body: body
                         }
                     };
+
+                    if (node.type === Syntax.FunctionDeclaration) {
+                        functionDeclarations.push(node);
+                        this.remove();
+                        return;
+                    }
+
+                    return node;
                 }
 
                 if (node.type === Syntax.Identifier && /(Binary|Member|Unary)Expression$/.test(parent.type)) {
@@ -376,10 +422,29 @@ define([
                     }
                 }
 
-                if (node.type === Syntax.VariableDeclarator) {
-                    variables.push(node.id.name);
+                if (node.type === Syntax.VariableDeclaration) {
+                    expressions = [];
 
-                    return;
+                    util.each(node.declarations, function (declaration) {
+                        variables.push(declaration.id.name);
+
+                        if (declaration.init !== null) {
+                            expressions.push({
+                                type: Syntax.AssignmentExpression,
+                                operator: '=',
+                                left: declaration.id,
+                                right: declaration.init
+                            });
+                        }
+                    });
+
+                    return {
+                        type: Syntax.ExpressionStatement,
+                        expression: {
+                            type: Syntax.SequenceExpression,
+                            expressions: expressions
+                        }
+                    };
                 }
             };
 

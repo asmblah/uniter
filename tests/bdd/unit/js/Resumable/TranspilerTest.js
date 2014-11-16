@@ -36,43 +36,43 @@ EOS
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
-    if (Resumable._resumeState_) {
-        statementIndex = Resumable._resumeState_.statementIndex;
-        temp0 = Resumable._resumeState_.temp0;
-        temp1 = Resumable._resumeState_.temp1;
-        Resumable._resumeState_ = null;
+    function doThings(num1, num2) {
     }
-    try {
-        switch (statementIndex) {
-        case 0:
-            ++statementIndex;
-            function doThings(num1, num2) {
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                temp0 = exports;
+            case 1:
+                ++statementIndex;
+                temp1 = doThings(2, 3);
+            case 2:
+                ++statementIndex;
+                temp0.result = temp1;
             }
-        case 1:
-            ++statementIndex;
-            temp0 = exports;
-        case 2:
-            ++statementIndex;
-            temp1 = doThings(2, 3);
-        case 3:
-            ++statementIndex;
-            temp0.result = temp1;
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1'
+                    },
+                    temp0: temp0,
+                    temp1: temp1
+                });
+            }
+            throw e;
         }
-    } catch (e) {
-        if (e instanceof Resumable.PauseException) {
-            e.add({
-                func: arguments.callee,
-                statementIndex: statementIndex,
-                assignments: {
-                    '1': 'temp0',
-                    '2': 'temp1'
-                },
-                temp0: temp0,
-                temp1: temp1
-            });
-        }
-        throw e;
-    }
+    }();
 });
 EOS
 */) {}),
@@ -103,70 +103,72 @@ EOS
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
-    if (Resumable._resumeState_) {
-        statementIndex = Resumable._resumeState_.statementIndex;
-        temp0 = Resumable._resumeState_.temp0;
-        temp1 = Resumable._resumeState_.temp1;
-        Resumable._resumeState_ = null;
-    }
-    try {
-        switch (statementIndex) {
-        case 0:
-            ++statementIndex;
-            function doThings(num1, num2) {
-                var statementIndex = 0;
-                if (Resumable._resumeState_) {
-                    statementIndex = Resumable._resumeState_.statementIndex;
-                    Resumable._resumeState_ = null;
-                }
-                try {
-                    switch (statementIndex) {
-                    case 0:
-                        ++statementIndex;
-                        var num3 = 2 + 4;
-                    case 1:
-                        ++statementIndex;
-                        return num3;
-                    }
-                } catch (e) {
-                    if (e instanceof Resumable.PauseException) {
-                        e.add({
-                            func: arguments.callee,
-                            statementIndex: statementIndex,
-                            assignments: {},
-                            num1: num1,
-                            num2: num2,
-                            num3: num3
-                        });
-                    }
-                    throw e;
-                }
+    function doThings(num1, num2) {
+        var statementIndex = 0, num3;
+        return function resumableScope() {
+            if (Resumable._resumeState_) {
+                statementIndex = Resumable._resumeState_.statementIndex;
+                Resumable._resumeState_ = null;
             }
-        case 1:
-            ++statementIndex;
-            temp0 = exports;
-        case 2:
-            ++statementIndex;
-            temp1 = doThings(2, 3);
-        case 3:
-            ++statementIndex;
-            temp0.result = temp1;
-        }
-    } catch (e) {
-        if (e instanceof Resumable.PauseException) {
-            e.add({
-                func: arguments.callee,
-                statementIndex: statementIndex,
-                assignments: {
-                    '1': 'temp0',
-                    '2': 'temp1'
-                },
-                temp0: temp0,
-                temp1: temp1
-            });
-        }
-        throw e;
+            try {
+                switch (statementIndex) {
+                case 0:
+                    ++statementIndex;
+                    num3 = 2 + 4;
+                case 1:
+                    ++statementIndex;
+                    return num3;
+                }
+            } catch (e) {
+                if (e instanceof Resumable.PauseException) {
+                    e.add({
+                        func: resumableScope,
+                        statementIndex: statementIndex,
+                        assignments: {},
+                        num1: num1,
+                        num2: num2,
+                        num3: num3
+                    });
+                }
+                throw e;
+            }
+        }();
     }
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                temp0 = exports;
+            case 1:
+                ++statementIndex;
+                temp1 = doThings(2, 3);
+            case 2:
+                ++statementIndex;
+                temp0.result = temp1;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1'
+                    },
+                    temp0: temp0,
+                    temp1: temp1
+                });
+            }
+            throw e;
+        }
+    }();
 });
 EOS
 */) {}),
@@ -199,86 +201,88 @@ EOS
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
-    if (Resumable._resumeState_) {
-        statementIndex = Resumable._resumeState_.statementIndex;
-        temp0 = Resumable._resumeState_.temp0;
-        temp1 = Resumable._resumeState_.temp1;
-        Resumable._resumeState_ = null;
-    }
-    try {
-        switch (statementIndex) {
-        case 0:
-            ++statementIndex;
-            function doThings(num1, num2) {
-                var statementIndex = 0, temp0, temp1;
-                if (Resumable._resumeState_) {
-                    statementIndex = Resumable._resumeState_.statementIndex;
-                    temp0 = Resumable._resumeState_.temp0;
-                    temp1 = Resumable._resumeState_.temp1;
-                    Resumable._resumeState_ = null;
-                }
-                try {
-                    switch (statementIndex) {
-                    case 0:
-                        ++statementIndex;
-                        var num3 = 0;
-                    case 1:
-                        ++statementIndex;
-                        temp0 = num3;
-                    case 2:
-                        ++statementIndex;
-                        temp1 = num1;
-                    case 3:
-                        ++statementIndex;
-                        num3 = temp0 + (temp1 + 1);
-                    case 4:
-                        ++statementIndex;
-                        return num3;
-                    }
-                } catch (e) {
-                    if (e instanceof Resumable.PauseException) {
-                        e.add({
-                            func: arguments.callee,
-                            statementIndex: statementIndex,
-                            assignments: {
-                                '1': 'temp0',
-                                '2': 'temp1'
-                            },
-                            num1: num1,
-                            num2: num2,
-                            num3: num3,
-                            temp0: temp0,
-                            temp1: temp1
-                        });
-                    }
-                    throw e;
-                }
+    function doThings(num1, num2) {
+        var statementIndex = 0, num3, temp0, temp1;
+        return function resumableScope() {
+            if (Resumable._resumeState_) {
+                statementIndex = Resumable._resumeState_.statementIndex;
+                temp0 = Resumable._resumeState_.temp0;
+                temp1 = Resumable._resumeState_.temp1;
+                Resumable._resumeState_ = null;
             }
-        case 1:
-            ++statementIndex;
-            temp0 = exports;
-        case 2:
-            ++statementIndex;
-            temp1 = doThings(2, 3);
-        case 3:
-            ++statementIndex;
-            temp0.result = temp1;
-        }
-    } catch (e) {
-        if (e instanceof Resumable.PauseException) {
-            e.add({
-                func: arguments.callee,
-                statementIndex: statementIndex,
-                assignments: {
-                    '1': 'temp0',
-                    '2': 'temp1'
-                },
-                temp0: temp0,
-                temp1: temp1
-            });
-        }
-        throw e;
+            try {
+                switch (statementIndex) {
+                case 0:
+                    ++statementIndex;
+                    num3 = 0;
+                case 1:
+                    ++statementIndex;
+                    temp0 = num3;
+                case 2:
+                    ++statementIndex;
+                    temp1 = num1;
+                case 3:
+                    ++statementIndex;
+                    num3 = temp0 + (temp1 + 1);
+                case 4:
+                    ++statementIndex;
+                    return num3;
+                }
+            } catch (e) {
+                if (e instanceof Resumable.PauseException) {
+                    e.add({
+                        func: resumableScope,
+                        statementIndex: statementIndex,
+                        assignments: {
+                            '1': 'temp0',
+                            '2': 'temp1'
+                        },
+                        num1: num1,
+                        num2: num2,
+                        num3: num3,
+                        temp0: temp0,
+                        temp1: temp1
+                    });
+                }
+                throw e;
+            }
+        }();
     }
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                temp0 = exports;
+            case 1:
+                ++statementIndex;
+                temp1 = doThings(2, 3);
+            case 2:
+                ++statementIndex;
+                temp0.result = temp1;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1'
+                    },
+                    temp0: temp0,
+                    temp1: temp1
+                });
+            }
+            throw e;
+        }
+    }();
 });
 EOS
 */) {}),
