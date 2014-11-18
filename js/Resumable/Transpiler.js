@@ -11,546 +11,93 @@
 define([
     'vendor/esparse/esprima',
     'vendor/esparse/estraverse',
-    'js/util'
+    'js/util',
+    './ExpressionTranspiler/AssignmentExpressionTranspiler',
+    './ExpressionTranspiler/BinaryExpressionTranspiler',
+    './StatementTranspiler/BlockStatementTranspiler',
+    './ExpressionTranspiler/CallExpressionTranspiler',
+    './StatementTranspiler/ExpressionStatementTranspiler',
+    './ExpressionTranspiler/ExpressionTranspiler',
+    './StatementTranspiler/FunctionDeclarationTranspiler',
+    './ExpressionTranspiler/FunctionExpressionTranspiler',
+    './FunctionTranspiler',
+    './StatementTranspiler/IfStatementTranspiler',
+    './ExpressionTranspiler/MemberExpressionTranspiler',
+    './StatementTranspiler/ProgramTranspiler',
+    './StatementTranspiler/ReturnStatementTranspiler',
+    './StatementTranspiler/StatementTranspiler',
+    './StatementTranspiler/VariableDeclarationTranspiler',
+    'vendor/esparse/escodegen'
 ], function (
     esprima,
     estraverse,
-    util
+    util,
+    AssignmentExpressionTranspiler,
+    BinaryExpressionTranspiler,
+    BlockStatementTranspiler,
+    CallExpressionTranspiler,
+    ExpressionStatementTranspiler,
+    ExpressionTranspiler,
+    FunctionDeclarationTranspiler,
+    FunctionExpressionTranspiler,
+    FunctionTranspiler,
+    IfStatementTranspiler,
+    MemberExpressionTranspiler,
+    ProgramTranspiler,
+    ReturnStatementTranspiler,
+    StatementTranspiler,
+    VariableDeclarationTranspiler
 ) {
     'use strict';
 
-    var Syntax = estraverse.Syntax;
-
     function Transpiler() {
+        var expressionTranspiler = new ExpressionTranspiler(),
+            statementTranspiler = new StatementTranspiler(),
+            functionTranspiler = new FunctionTranspiler(statementTranspiler);
 
+        util.each([
+            BlockStatementTranspiler,
+            ExpressionStatementTranspiler,
+            IfStatementTranspiler,
+            ProgramTranspiler,
+            ReturnStatementTranspiler,
+            VariableDeclarationTranspiler
+        ], function (Class) {
+            statementTranspiler.addTranspiler(new Class(statementTranspiler, expressionTranspiler));
+        });
+
+        statementTranspiler.addTranspiler(
+            new FunctionDeclarationTranspiler(
+                statementTranspiler,
+                expressionTranspiler,
+                functionTranspiler
+            )
+        );
+
+        util.each([
+            AssignmentExpressionTranspiler,
+            BinaryExpressionTranspiler,
+            CallExpressionTranspiler,
+            MemberExpressionTranspiler
+        ], function (Class) {
+            expressionTranspiler.addTranspiler(new Class(statementTranspiler, expressionTranspiler));
+        });
+
+        expressionTranspiler.addTranspiler(
+            new FunctionExpressionTranspiler(
+                statementTranspiler,
+                expressionTranspiler,
+                functionTranspiler
+            )
+        );
+
+        this.expressionTranspiler = expressionTranspiler;
+        this.statementTranspiler = statementTranspiler;
     }
 
     util.extend(Transpiler.prototype, {
         transpile: function (ast) {
-            var assignmentStatements = {},
-                assignmentStatementsStack = [],
-                enter,
-                functionDeclarations = [],
-                functionDeclarationsStack = [],
-                nextStatementIndex = 0,
-                nextStatementIndexStack = [],
-                nextTempIndex = 0,
-                nextTempIndexStack = [],
-                switchCases = [],
-                stack = [],
-                statementIndex = null,
-                variables = [],
-                variablesStack = [],
-                variablesToTemps = [],
-                variablesToTempsStack = [];
-
-            function addSwitchCase(statement, index) {
-                switchCases.push({
-                    type: Syntax.SwitchCase,
-                    test: {
-                        type: Syntax.Literal,
-                        value: index
-                    },
-                    consequent: [
-                        esprima.parse('++statementIndex').body[0],
-                        statement
-                    ]
-                });
-            }
-
-            function handleStatements(statements) {
-                var assignmentProperties = [],
-                    declaration,
-                    index,
-                    parameters,
-                    stateProperties = [],
-                    stateSetup,
-                    tryBlockBody = [];
-
-                if (statements.length === 0) {
-                    return [];
-                }
-
-                parameters = variables;
-                variables = [];
-
-                stack.push(switchCases);
-                switchCases = [];
-
-                util.each(statements, function (statement) {
-                    var node = estraverse.replace(statement, {
-                            'enter': enter
-                        });
-
-                    if (node !== null) {
-                        if (statementIndex !== null) {
-                            addSwitchCase(node, statementIndex);
-                            statementIndex = null;
-                        } else {
-                            addSwitchCase(node, nextStatementIndex++);
-                        }
-                    }
-                });
-
-                declaration = esprima.parse('var statementIndex = 0;').body[0];
-                stateSetup = esprima.parse('if (Resumable._resumeState_) { statementIndex = Resumable._resumeState_.statementIndex; }').body[0];
-
-                util.each(variables, function (name) {
-                    declaration.declarations.push({
-                        type: Syntax.VariableDeclarator,
-                        id: {
-                            type: Syntax.Identifier,
-                            name: name
-                        },
-                        init: null
-                    });
-                });
-
-                util.each(parameters.concat(variables), function (name) {
-                    stateProperties.push({
-                        type: Syntax.Property,
-                        kind: 'init',
-                        key: {
-                            type: Syntax.Identifier,
-                            name: name
-                        },
-                        value: {
-                            type: Syntax.Identifier,
-                            name: name
-                        }
-                    });
-                });
-
-                for (index = 0; index < nextTempIndex; index++) {
-                    stateProperties.push({
-                        type: Syntax.Property,
-                        kind: 'init',
-                        key: {
-                            type: Syntax.Identifier,
-                            name: 'temp' + index
-                        },
-                        value: {
-                            type: Syntax.Identifier,
-                            name: 'temp' + index
-                        }
-                    });
-
-                    declaration.declarations.push({
-                        type: Syntax.VariableDeclarator,
-                        id: {
-                            type: Syntax.Identifier,
-                            name: 'temp' + index
-                        },
-                        init: null
-                    });
-
-                    stateSetup.consequent.body.push({
-                        type: Syntax.ExpressionStatement,
-                        expression: {
-                            type: Syntax.AssignmentExpression,
-                            operator: '=',
-                            left: {
-                                type: Syntax.Identifier,
-                                name: 'temp' + index,
-                            },
-                            right: esprima.parse('Resumable._resumeState_.temp' + index).body[0].expression
-                        }
-                    });
-                }
-
-                stateSetup.consequent.body.push(esprima.parse('Resumable._resumeState_ = null;').body[0]);
-
-                util.each(assignmentStatements, function (variableName, statementIndex) {
-                    assignmentProperties.push({
-                        type: Syntax.Property,
-                        kind: 'init',
-                        key: {
-                            type: Syntax.Literal,
-                            value: statementIndex
-                        },
-                        value: {
-                            type: Syntax.Literal,
-                            value: variableName
-                        }
-                    });
-                }, {keys: true});
-
-                tryBlockBody.push({
-                    type: Syntax.SwitchStatement,
-                    discriminant: {
-                        type: Syntax.Identifier,
-                        name: 'statementIndex'
-                    },
-                    cases: switchCases
-                });
-
-                switchCases = stack.pop();
-
-                return [
-                    declaration
-                ].concat(functionDeclarations).concat([
-                    {
-                        type: Syntax.ReturnStatement,
-                        argument: {
-                            type: Syntax.CallExpression,
-                            arguments: [],
-                            callee: {
-                                type: Syntax.FunctionExpression,
-                                id: {
-                                    type: Syntax.Identifier,
-                                    name: 'resumableScope'
-                                },
-                                params: [],
-                                body: {
-                                    type: Syntax.BlockStatement,
-                                    body: [
-                                        stateSetup,
-                                        {
-                                            type: Syntax.TryStatement,
-                                            block: {
-                                                type: Syntax.BlockStatement,
-                                                body: tryBlockBody
-                                            },
-                                            handler: {
-                                                type: Syntax.CatchClause,
-                                                param: {
-                                                    type: Syntax.Identifier,
-                                                    name: 'e'
-                                                },
-                                                body: {
-                                                    type: Syntax.BlockStatement,
-                                                    body: [
-                                                        {
-                                                            type: Syntax.IfStatement,
-                                                            test: esprima.parse('e instanceof Resumable.PauseException').body[0].expression,
-                                                            consequent: {
-                                                                type: Syntax.BlockStatement,
-                                                                body: [
-                                                                    {
-                                                                        type: Syntax.ExpressionStatement,
-                                                                        expression: {
-                                                                            type: Syntax.CallExpression,
-                                                                            callee: {
-                                                                                type: Syntax.MemberExpression,
-                                                                                object: {
-                                                                                    type: Syntax.Identifier,
-                                                                                    name: 'e'
-                                                                                },
-                                                                                property: {
-                                                                                    type: Syntax.Identifier,
-                                                                                    name: 'add'
-                                                                                },
-                                                                                computed: false
-                                                                            },
-                                                                            arguments: [
-                                                                                {
-                                                                                    type: Syntax.ObjectExpression,
-                                                                                    properties: [
-                                                                                        {
-                                                                                            type: Syntax.Property,
-                                                                                            kind: 'init',
-                                                                                            key: {
-                                                                                                type: Syntax.Identifier,
-                                                                                                name: 'func'
-                                                                                            },
-                                                                                            value: {
-                                                                                                type: Syntax.Identifier,
-                                                                                                name: 'resumableScope'
-                                                                                            }
-                                                                                        },
-                                                                                        {
-                                                                                            type: Syntax.Property,
-                                                                                            kind: 'init',
-                                                                                            key: {
-                                                                                                type: Syntax.Identifier,
-                                                                                                name: 'statementIndex'
-                                                                                            },
-                                                                                            value: {
-                                                                                                type: Syntax.Identifier,
-                                                                                                name: 'statementIndex'
-                                                                                            }
-                                                                                        },
-                                                                                        {
-                                                                                            type: Syntax.Property,
-                                                                                            kind: 'init',
-                                                                                            key: {
-                                                                                                type: Syntax.Identifier,
-                                                                                                name: 'assignments'
-                                                                                            },
-                                                                                            value: {
-                                                                                                type: Syntax.ObjectExpression,
-                                                                                                properties: assignmentProperties
-                                                                                            }
-                                                                                        }
-                                                                                    ].concat(stateProperties)
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        {
-                                                            type: Syntax.ThrowStatement,
-                                                            argument: {
-                                                                type: Syntax.Identifier,
-                                                                name: 'e'
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                ]);
-            }
-
-            enter = function enter(node, parent) {
-                var body,
-                    expression,
-                    expressions,
-                    statements,
-                    tempName;
-
-                if (node.type === Syntax.FunctionDeclaration || node.type === Syntax.FunctionExpression) {
-                    this.skip();
-
-                    variablesStack.push(variables);
-                    variables = [];
-                    variablesToTempsStack.push(variablesToTemps);
-                    variablesToTemps = [];
-                    nextStatementIndexStack.push(nextStatementIndex);
-                    nextStatementIndex = 0;
-                    nextTempIndexStack.push(nextTempIndex);
-                    nextTempIndex = 0;
-                    assignmentStatementsStack.push(assignmentStatements);
-                    assignmentStatements = {};
-                    functionDeclarationsStack.push(functionDeclarations);
-                    functionDeclarations = [];
-
-                    util.each(node.params, function (param) {
-                        variables.push(param.name);
-                    });
-
-                    body = handleStatements(node.body.body);
-
-                    variables = variablesStack.pop();
-                    variablesToTemps = variablesToTempsStack.pop();
-                    nextStatementIndex = nextStatementIndexStack.pop();
-                    nextTempIndex = nextTempIndexStack.pop();
-                    assignmentStatements = assignmentStatementsStack.pop();
-                    functionDeclarations = functionDeclarationsStack.pop();
-
-                    node = {
-                        type: node.type,
-                        id: node.id,
-                        params: node.params,
-                        body: {
-                            type: Syntax.BlockStatement,
-                            body: body
-                        }
-                    };
-
-                    if (node.type === Syntax.FunctionDeclaration) {
-                        functionDeclarations.push(node);
-                        this.remove();
-                        return;
-                    }
-
-                    return node;
-                }
-
-                if (node.type === Syntax.Identifier && /(Binary|Member|Unary)Expression$/.test(parent.type)) {
-                    if (parent.type !== Syntax.MemberExpression || node !== parent.property) {
-                        if (variablesToTemps[node.name]) {
-                            tempName = variablesToTemps[node.name];
-                        } else {
-                            tempName = 'temp' + nextTempIndex++;
-                            variablesToTemps[node.name] = tempName;
-
-                            assignmentStatements[nextStatementIndex] = tempName;
-
-                            addSwitchCase({
-                                type: Syntax.ExpressionStatement,
-                                expression: {
-                                    type: Syntax.AssignmentExpression,
-                                    operator: '=',
-                                    left: {
-                                        type: Syntax.Identifier,
-                                        name: tempName
-                                    },
-                                    right: node
-                                }
-                            }, nextStatementIndex++);
-                        }
-
-                        return {
-                            type: Syntax.Identifier,
-                            name: tempName
-                        };
-                    }
-                }
-
-                if (node.type === Syntax.CallExpression) {
-                    tempName = 'temp' + nextTempIndex++;
-
-                    assignmentStatements[nextStatementIndex] = tempName;
-
-                    addSwitchCase({
-                        type: Syntax.ExpressionStatement,
-                        expression: {
-                            type: Syntax.AssignmentExpression,
-                            operator: '=',
-                            left: {
-                                type: Syntax.Identifier,
-                                name: tempName
-                            },
-                            right: node
-                        }
-                    }, nextStatementIndex++);
-
-                    return {
-                        type: Syntax.Identifier,
-                        name: tempName
-                    };
-                }
-
-                if (parent.type === Syntax.ExpressionStatement && node.type === Syntax.AssignmentExpression) {
-                    if (node.operator !== '=') {
-                        return {
-                            type: Syntax.AssignmentExpression,
-                            operator: '=',
-                            left: node.left,
-                            right: {
-                                type: Syntax.BinaryExpression,
-                                operator: node.operator.charAt(0),
-                                left: node.left,
-                                right: node.right
-                            }
-                        };
-                    }
-                }
-
-                if (node.type === Syntax.VariableDeclaration) {
-                    expressions = [];
-
-                    util.each(node.declarations, function (declaration) {
-                        variables.push(declaration.id.name);
-
-                        if (declaration.init !== null) {
-                            expressions.push({
-                                type: Syntax.AssignmentExpression,
-                                operator: '=',
-                                left: declaration.id,
-                                right: declaration.init
-                            });
-                        }
-                    });
-
-                    return {
-                        type: Syntax.ExpressionStatement,
-                        expression: {
-                            type: Syntax.SequenceExpression,
-                            expressions: expressions
-                        }
-                    };
-                }
-
-                if (node.type === Syntax.IfStatement) {
-                    this.skip();
-
-                    expression = estraverse.replace(node.test, {
-                        'enter': enter
-                    });
-
-                    tempName = 'temp' + nextTempIndex++;
-
-                    assignmentStatements[nextStatementIndex] = tempName;
-
-                    addSwitchCase({
-                        type: Syntax.ExpressionStatement,
-                        expression: {
-                            type: Syntax.AssignmentExpression,
-                            operator: '=',
-                            left: {
-                                type: Syntax.Identifier,
-                                name: tempName
-                            },
-                            right: expression
-                        }
-                    }, nextStatementIndex++);
-
-                    statementIndex = nextStatementIndex++;
-
-                    return {
-                        type: Syntax.IfStatement,
-                        test: {
-                            type: Syntax.Identifier,
-                            name: tempName
-                        },
-                        consequent: estraverse.replace(node.consequent, {
-                            'enter': enter
-                        })
-                    };
-                }
-
-                if (node.type === Syntax.BlockStatement) {
-                    this.skip();
-
-                    stack.push(switchCases);
-                    switchCases = [];
-
-                    util.each(node.body, function (statement) {
-                        var node = estraverse.replace(statement, {
-                                'enter': enter
-                            });
-
-                        if (node !== null) {
-                            addSwitchCase(node, nextStatementIndex++);
-                        }
-                    });
-
-                    statements = [
-                        {
-                            type: Syntax.SwitchStatement,
-                            discriminant: {
-                                type: Syntax.Identifier,
-                                name: 'statementIndex'
-                            },
-                            cases: switchCases
-                        }
-                    ];
-
-                    switchCases = stack.pop();
-
-                    return {
-                        type: Syntax.BlockStatement,
-                        body: statements
-                    };
-                }
-            };
-
-            return {
-                type: Syntax.Program,
-                body: [
-                    {
-                        type: Syntax.ExpressionStatement,
-                        expression: {
-                            type: Syntax.FunctionExpression,
-                            id: null,
-                            params: [],
-                            body: {
-                                type: Syntax.BlockStatement,
-                                body: handleStatements(ast.body)
-                            }
-                        }
-                    }
-                ]
-            };
+            return this.statementTranspiler.transpile(ast);
         }
     });
 

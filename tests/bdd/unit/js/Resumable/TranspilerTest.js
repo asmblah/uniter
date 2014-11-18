@@ -300,6 +300,72 @@ EOS
             })).to.equal(expectedOutputJS);
         });
 
+        it('should correctly transpile an assignment of method call result to property', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+exports.result = tools.getOne();
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                temp0 = exports;
+            case 1:
+                ++statementIndex;
+                temp1 = tools;
+            case 2:
+                ++statementIndex;
+                temp2 = temp1.getOne();
+            case 3:
+                ++statementIndex;
+                temp0.result = temp2;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '2': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
         it('should correctly transpile an if (...) {...} statement', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
 if (tools.sayYes) {
@@ -348,6 +414,88 @@ EOS
                         '0': 'temp0',
                         '1': 'temp1',
                         '3': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
+        it('should correctly transpile an if (...) {...} statement inside a block', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+{
+    if (tools.sayYes) {
+        exports.result = 'yes';
+    }
+}
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                {
+                    switch (statementIndex) {
+                    case 1:
+                        ++statementIndex;
+                        temp0 = tools;
+                    case 2:
+                        ++statementIndex;
+                        temp1 = temp0.sayYes;
+                    case 3:
+                        ++statementIndex;
+                        if (temp1) {
+                            switch (statementIndex) {
+                            case 4:
+                                ++statementIndex;
+                                temp2 = exports;
+                            case 5:
+                                ++statementIndex;
+                                temp2.result = 'yes';
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '1': 'temp0',
+                        '2': 'temp1',
+                        '4': 'temp2'
                     },
                     temp0: temp0,
                     temp1: temp1,
