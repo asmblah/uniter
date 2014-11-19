@@ -48,6 +48,10 @@ define([
             this.variables.push(name);
         },
 
+        getCurrentStatementIndex: function () {
+            return this.nextStatementIndex;
+        },
+
         getNextStatementIndex: function () {
             return this.nextStatementIndex++;
         },

@@ -62,7 +62,11 @@ define([
 
             util.each(this.switchCases, function (switchCase) {
                 if (switchCase) {
-                    switchCases.push(switchCase);
+                    if (util.isArray(switchCase)) {
+                        [].push.apply(switchCases, switchCase);
+                    } else {
+                        switchCases.push(switchCase);
+                    }
                 }
             });
 
@@ -82,7 +86,37 @@ define([
 
             return {
                 assign: function (statementNode) {
-                    context.switchCases[index] = createSwitchCase(statementNode, index);
+                    var currentIndex = context.functionContext.getCurrentStatementIndex(),
+                        i,
+                        switchCases = [];
+
+                    if (index === currentIndex - 1) {
+                        switchCases.push(createSwitchCase(statementNode, index));
+                    } else {
+                        switchCases.push({
+                            type: Syntax.SwitchCase,
+                            test: {
+                                type: Syntax.Literal,
+                                value: index
+                            },
+                            consequent: [
+                                esprima.parse('++statementIndex').body[0]
+                            ]
+                        });
+
+                        for (i = index + 1; i < currentIndex; i++) {
+                            switchCases.push({
+                                type: Syntax.SwitchCase,
+                                test: {
+                                    type: Syntax.Literal,
+                                    value: i
+                                },
+                                consequent: i < currentIndex - 1 ? [] : [statementNode]
+                            });
+                        }
+                    }
+
+                    context.switchCases[index] = switchCases;
                 },
 
                 getIndex: function () {

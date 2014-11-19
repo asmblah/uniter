@@ -173,6 +173,38 @@ EOS
                 expectedExports: {
                     result: 33
                 }
+            },
+            'when pause occurs inside if (...) {...} statement with condition that becomes falsy before resume': {
+                code: util.heredoc(function (/*<<<EOS
+var allow = true;
+
+function getIt() {
+    if (allow) {
+        allow = false;
+
+        var result = tools.getValue();
+
+        return result + 2;
+    }
+}
+
+exports.result = getIt();
+EOS
+*/) {}),
+                expose: {
+                    getValue: function () {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(20);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 22
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
