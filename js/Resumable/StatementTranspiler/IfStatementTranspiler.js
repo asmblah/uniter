@@ -33,10 +33,10 @@ define([
             return Syntax.IfStatement;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var ownBlockContext = new BlockContext(functionContext),
                 transpiler = this,
-                expression = transpiler.expressionTranspiler.transpile(node[TEST], functionContext, blockContext),
+                expression = transpiler.expressionTranspiler.transpile(node[TEST], node, functionContext, blockContext),
                 statement,
                 tempName = functionContext.getTempName();
 
@@ -44,7 +44,7 @@ define([
 
             statement = blockContext.prepareStatement();
 
-            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], functionContext, ownBlockContext);
+            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], node, functionContext, ownBlockContext);
 
             statement.assign({
                 'type': Syntax.IfStatement,

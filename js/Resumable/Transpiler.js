@@ -97,7 +97,7 @@ define([
 
     util.extend(Transpiler.prototype, {
         transpile: function (ast) {
-            return this.statementTranspiler.transpile(ast);
+            return this.statementTranspiler.transpile(ast, null);
         }
     });
 

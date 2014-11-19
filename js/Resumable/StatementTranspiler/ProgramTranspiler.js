@@ -38,7 +38,7 @@ define([
                 functionContext = new FunctionContext(),
                 blockContext = new BlockContext(functionContext);
 
-            transpiler.statementTranspiler.transpileArray(node[BODY], functionContext, blockContext);
+            transpiler.statementTranspiler.transpileArray(node[BODY], node, functionContext, blockContext);
 
             return {
                 'type': Syntax.Program,

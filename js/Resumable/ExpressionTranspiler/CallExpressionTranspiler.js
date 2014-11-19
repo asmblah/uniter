@@ -18,6 +18,7 @@ define([
 
     var ARGUMENTS = 'arguments',
         CALLEE = 'callee',
+        TYPE = 'type',
         Syntax = estraverse.Syntax;
 
     function CallExpressionTranspiler(statementTranspiler, expressionTranspiler) {
@@ -30,12 +31,16 @@ define([
             return Syntax.CallExpression;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var callee,
                 transpiler = this,
                 tempName;
 
-            callee = transpiler.expressionTranspiler.transpile(node[CALLEE], functionContext, blockContext);
+            if (parent[TYPE] === Syntax.ExpressionStatement) {
+                return node;
+            }
+
+            callee = transpiler.expressionTranspiler.transpile(node[CALLEE], node, functionContext, blockContext);
 
             tempName = functionContext.getTempName();
 

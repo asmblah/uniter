@@ -33,7 +33,7 @@ define([
             return Syntax.BinaryExpression;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var left,
                 right,
                 transpiler = this;
@@ -44,7 +44,7 @@ define([
                     'name': functionContext.getTempNameForVariable(node[LEFT][NAME], blockContext)
                 };
             } else {
-                left = transpiler.expressionTranspiler.transpile(node[LEFT], functionContext, blockContext);
+                left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext);
             }
 
             if (node[RIGHT][TYPE] === Syntax.Identifier) {
@@ -53,7 +53,7 @@ define([
                     'name': functionContext.getTempNameForVariable(node[RIGHT][NAME], blockContext)
                 };
             } else {
-                right = transpiler.expressionTranspiler.transpile(node[RIGHT], functionContext, blockContext);
+                right = transpiler.expressionTranspiler.transpile(node[RIGHT], node, functionContext, blockContext);
             }
 
             return {

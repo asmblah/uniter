@@ -46,7 +46,7 @@ define([
             });
 
             if (node[BODY][BODY].length > 0) {
-                transpiler.statementTranspiler.transpileArray(node[BODY][BODY], ownFunctionContext, ownBlockContext);
+                transpiler.statementTranspiler.transpileArray(node[BODY][BODY], node, ownFunctionContext, ownBlockContext);
                 statements = ownFunctionContext.getStatements(ownBlockContext.getSwitchStatement());
             }
 

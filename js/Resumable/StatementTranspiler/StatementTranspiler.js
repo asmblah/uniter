@@ -30,21 +30,21 @@ define([
             this.transpilers[transpiler.getNodeType()] = transpiler;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var transpiler = this;
 
             if (!hasOwn.call(transpiler.transpilers, node[TYPE])) {
                 throw new Error('Unsupported type "' + node[TYPE] + '"');
             }
 
-            return transpiler.transpilers[node[TYPE]].transpile(node, functionContext, blockContext);
+            return transpiler.transpilers[node[TYPE]].transpile(node, parent, functionContext, blockContext);
         },
 
-        transpileArray: function (array, functionContext, blockContext) {
+        transpileArray: function (array, parent, functionContext, blockContext) {
             var transpiler = this;
 
             util.each(array, function (statementNode) {
-                transpiler.transpile(statementNode, functionContext, blockContext);
+                transpiler.transpile(statementNode, parent, functionContext, blockContext);
             });
         }
     });

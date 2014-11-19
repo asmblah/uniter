@@ -90,6 +90,53 @@ EOS
             })).to.equal(expectedOutputJS);
         });
 
+        it('should correctly transpile a function call', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+doSomething();
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+                doSomething();
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {}
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
         it('should correctly transpile a simple function with one calculation', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
 function doThings(num1, num2) {

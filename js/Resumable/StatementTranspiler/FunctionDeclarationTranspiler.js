@@ -29,8 +29,8 @@ define([
             return Syntax.FunctionDeclaration;
         },
 
-        transpile: function (node, functionContext, blockContext) {
-            var newNode = this.functionTranspiler.transpile(node, functionContext, blockContext);
+        transpile: function (node, parent, functionContext, blockContext) {
+            var newNode = this.functionTranspiler.transpile(node, parent, functionContext, blockContext);
 
             functionContext.addFunctionDeclaration(newNode);
         }

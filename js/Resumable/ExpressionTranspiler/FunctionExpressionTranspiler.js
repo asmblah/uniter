@@ -29,8 +29,8 @@ define([
             return Syntax.FunctionExpression;
         },
 
-        transpile: function (node, functionContext, blockContext) {
-            return this.functionTranspiler.transpile(node, functionContext, blockContext);
+        transpile: function (node, parent, functionContext, blockContext) {
+            return this.functionTranspiler.transpile(node, parent, functionContext, blockContext);
         }
     });
 

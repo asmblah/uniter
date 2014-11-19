@@ -31,7 +31,7 @@ define([
             return Syntax.MemberExpression;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var tempName;
 
             tempName = functionContext.getTempNameForVariable(node[OBJECT][NAME], blockContext);

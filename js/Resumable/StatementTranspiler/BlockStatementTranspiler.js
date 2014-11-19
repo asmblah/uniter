@@ -31,12 +31,12 @@ define([
             return Syntax.BlockStatement;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var transpiler = this,
                 ownBlockContext = new BlockContext(functionContext),
                 statement = blockContext.prepareStatement();
 
-            transpiler.statementTranspiler.transpileArray(node[BODY], functionContext, ownBlockContext);
+            transpiler.statementTranspiler.transpileArray(node[BODY], node, functionContext, ownBlockContext);
 
             statement.assign({
                 'type': Syntax.BlockStatement,

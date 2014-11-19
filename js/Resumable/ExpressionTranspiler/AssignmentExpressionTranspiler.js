@@ -31,12 +31,12 @@ define([
             return Syntax.AssignmentExpression;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var left,
                 right,
                 transpiler = this;
 
-            left = transpiler.expressionTranspiler.transpile(node[LEFT], functionContext, blockContext, {
+            left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext, {
                 assignment: true
             });
 
@@ -51,7 +51,7 @@ define([
                 };
             }
 
-            right = transpiler.expressionTranspiler.transpile(right, functionContext, blockContext);
+            right = transpiler.expressionTranspiler.transpile(right, node, functionContext, blockContext);
 
             return {
                 'type': Syntax.AssignmentExpression,

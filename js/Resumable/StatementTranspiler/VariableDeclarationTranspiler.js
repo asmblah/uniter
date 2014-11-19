@@ -32,7 +32,7 @@ define([
             return Syntax.VariableDeclaration;
         },
 
-        transpile: function (node, functionContext, blockContext) {
+        transpile: function (node, parent, functionContext, blockContext) {
             var expressions = [],
                 transpiler = this;
 
@@ -46,6 +46,7 @@ define([
                         'left': declaration[ID],
                         'right': transpiler.expressionTranspiler.transpile(
                             declaration[INIT],
+                            node,
                             functionContext,
                             blockContext
                         )
