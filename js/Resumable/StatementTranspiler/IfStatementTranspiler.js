@@ -49,8 +49,24 @@ define([
             statement.assign({
                 'type': Syntax.IfStatement,
                 'test': {
-                    'type': Syntax.Identifier,
-                    'name': tempName
+                    'type': Syntax.LogicalExpression,
+                    'operator': '||',
+                    'left': {
+                        'type': Syntax.BinaryExpression,
+                        'operator': '>',
+                        'left': {
+                            'type': Syntax.Identifier,
+                            'name': 'statementIndex'
+                        },
+                        'right': {
+                            'type': Syntax.Literal,
+                            'value': statement.getIndex() + 1
+                        }
+                    },
+                    'right': {
+                        'type': Syntax.Identifier,
+                        'name': tempName
+                    }
                 },
                 'consequent': {
                     'type': Syntax.BlockStatement,

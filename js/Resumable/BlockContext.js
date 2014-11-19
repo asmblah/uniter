@@ -83,6 +83,10 @@ define([
             return {
                 assign: function (statementNode) {
                     context.switchCases[index] = createSwitchCase(statementNode, index);
+                },
+
+                getIndex: function () {
+                    return index;
                 }
             };
         }

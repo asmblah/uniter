@@ -441,7 +441,7 @@ EOS
                 temp1 = temp0.sayYes;
             case 2:
                 ++statementIndex;
-                if (temp1) {
+                if (statementIndex > 3 || temp1) {
                     switch (statementIndex) {
                     case 3:
                         ++statementIndex;
@@ -521,7 +521,7 @@ EOS
                         temp1 = temp0.sayYes;
                     case 3:
                         ++statementIndex;
-                        if (temp1) {
+                        if (statementIndex > 4 || temp1) {
                             switch (statementIndex) {
                             case 4:
                                 ++statementIndex;
