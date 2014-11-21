@@ -205,6 +205,29 @@ EOS
                 expectedExports: {
                     result: 22
                 }
+            },
+            'multiple variable declarators in one declaration, with inits that yield': {
+                code: util.heredoc(function (/*<<<EOS
+var first = tools.addOneTo(4),
+    second = tools.addOneTo(5);
+
+exports.result = first + ',' + second;
+EOS
+*/) {}),
+                expose: {
+                    addOneTo: function (to) {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(to + 1);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: '5,6'
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
