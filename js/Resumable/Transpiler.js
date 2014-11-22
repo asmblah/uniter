@@ -27,6 +27,7 @@ define([
     './StatementTranspiler/ReturnStatementTranspiler',
     './StatementTranspiler/StatementTranspiler',
     './StatementTranspiler/VariableDeclarationTranspiler',
+    './StatementTranspiler/WhileStatementTranspiler',
     'vendor/esparse/escodegen'
 ], function (
     esprima,
@@ -46,7 +47,8 @@ define([
     ProgramTranspiler,
     ReturnStatementTranspiler,
     StatementTranspiler,
-    VariableDeclarationTranspiler
+    VariableDeclarationTranspiler,
+    WhileStatementTranspiler
 ) {
     'use strict';
 
@@ -61,7 +63,8 @@ define([
             IfStatementTranspiler,
             ProgramTranspiler,
             ReturnStatementTranspiler,
-            VariableDeclarationTranspiler
+            VariableDeclarationTranspiler,
+            WhileStatementTranspiler
         ], function (Class) {
             statementTranspiler.addTranspiler(new Class(statementTranspiler, expressionTranspiler));
         });

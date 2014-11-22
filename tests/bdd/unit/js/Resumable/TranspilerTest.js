@@ -576,5 +576,89 @@ EOS
                 }
             })).to.equal(expectedOutputJS);
         });
+
+        it('should correctly transpile a while (...) {...} statement', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+while (a > 4) {
+    exports.result = doSomething();
+}
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                ++statementIndex;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                for (;;) {
+                    switch (statementIndex) {
+                    case 1:
+                        ++statementIndex;
+                        temp0 = a;
+                    case 2:
+                        ++statementIndex;
+                        if (!(temp0 > 4)) {
+                            break;
+                        }
+                    case 3:
+                        ++statementIndex;
+                        temp1 = exports;
+                    case 4:
+                        ++statementIndex;
+                        temp2 = doSomething();
+                    case 5:
+                        ++statementIndex;
+                        temp1.result = temp2;
+                    }
+                }
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex,
+                    assignments: {
+                        '1': 'temp0',
+                        '3': 'temp1',
+                        '4': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
     });
 });
