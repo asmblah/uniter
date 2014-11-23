@@ -90,31 +90,20 @@ define([
                         i,
                         switchCases = [];
 
-                    if (index === currentIndex - 1) {
-                        switchCases.push(createSwitchCase(statementNode, index));
-                    } else {
+                    for (i = index; i < currentIndex - 1; i++) {
                         switchCases.push({
                             type: Syntax.SwitchCase,
                             test: {
                                 type: Syntax.Literal,
-                                value: index
+                                value: i
                             },
-                            consequent: [
-                                esprima.parse('++statementIndex').body[0]
-                            ]
+                            consequent: i === index ? [
+                                esprima.parse('statementIndex = ' + (index + 1) + ';').body[0]
+                            ] : []
                         });
-
-                        for (i = index + 1; i < currentIndex; i++) {
-                            switchCases.push({
-                                type: Syntax.SwitchCase,
-                                test: {
-                                    type: Syntax.Literal,
-                                    value: i
-                                },
-                                consequent: i < currentIndex - 1 ? [] : [statementNode]
-                            });
-                        }
                     }
+
+                    switchCases.push(createSwitchCase(statementNode, currentIndex - 1));
 
                     context.switchCases[index] = switchCases;
                 },
@@ -134,8 +123,8 @@ define([
                 value: index
             },
             consequent: [
-                esprima.parse('++statementIndex').body[0],
-                statementNode
+                statementNode,
+                esprima.parse('statementIndex = ' + (index + 1) + ';').body[0]
             ]
         };
     }

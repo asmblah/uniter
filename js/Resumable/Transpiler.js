@@ -15,6 +15,7 @@ define([
     './ExpressionTranspiler/AssignmentExpressionTranspiler',
     './ExpressionTranspiler/BinaryExpressionTranspiler',
     './StatementTranspiler/BlockStatementTranspiler',
+    './StatementTranspiler/BreakStatementTranspiler',
     './ExpressionTranspiler/CallExpressionTranspiler',
     './StatementTranspiler/ExpressionStatementTranspiler',
     './ExpressionTranspiler/ExpressionTranspiler',
@@ -36,6 +37,7 @@ define([
     AssignmentExpressionTranspiler,
     BinaryExpressionTranspiler,
     BlockStatementTranspiler,
+    BreakStatementTranspiler,
     CallExpressionTranspiler,
     ExpressionStatementTranspiler,
     ExpressionTranspiler,
@@ -59,6 +61,7 @@ define([
 
         util.each([
             BlockStatementTranspiler,
+            BreakStatementTranspiler,
             ExpressionStatementTranspiler,
             IfStatementTranspiler,
             ProgramTranspiler,

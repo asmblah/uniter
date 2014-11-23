@@ -8,10 +8,12 @@
 
 /*global define */
 define([
+    'vendor/esparse/esprima',
     'vendor/esparse/estraverse',
     'js/util',
     '../BlockContext'
 ], function (
+    esprima,
     estraverse,
     util,
     BlockContext
@@ -33,7 +35,8 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var ownBlockContext = new BlockContext(functionContext),
+            var forNode,
+                ownBlockContext = new BlockContext(functionContext),
                 transpiler = this,
                 expression,
                 statement;
@@ -55,7 +58,10 @@ define([
                     'body': [
                         {
                             'type': Syntax.BreakStatement,
-                            'label': null
+                            'label': {
+                                'type': Syntax.Identifier,
+                                'name': functionContext.getLabel()
+                            }
                         }
                     ]
                 }
@@ -63,7 +69,7 @@ define([
 
             transpiler.statementTranspiler.transpileArray(node[BODY][BODY], node, functionContext, ownBlockContext);
 
-            statement.assign({
+            forNode = {
                 'type': Syntax.ForStatement,
                 'init': null,
                 'test': null,
@@ -71,10 +77,22 @@ define([
                 'body': {
                     'type': Syntax.BlockStatement,
                     'body': [
-                        ownBlockContext.getSwitchStatement()
+                        ownBlockContext.getSwitchStatement(),
+                        esprima.parse('statementIndex = ' + (statement.getIndex() + 1) + ';').body[0]
                     ]
                 }
-            });
+            };
+
+            statement.assign(functionContext.isLabelUsed() ? {
+                'type': Syntax.LabeledStatement,
+                'label': {
+                    'type': Syntax.Identifier,
+                    'name': functionContext.getLabel()
+                },
+                'body': forNode
+            } : forNode);
+
+            functionContext.endLabelableContext();
         }
     });
 

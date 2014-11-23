@@ -24,6 +24,8 @@ define([
     function FunctionContext() {
         this.assignmentVariables = {};
         this.functionDeclarations = [];
+        this.labelIndex = null;
+        this.nextLabelIndex = 0;
         this.nextStatementIndex = 0;
         this.nextTempIndex = 0;
         this.parameters = [];
@@ -48,8 +50,22 @@ define([
             this.variables.push(name);
         },
 
+        endLabelableContext: function () {
+            this.labelIndex = null;
+        },
+
         getCurrentStatementIndex: function () {
             return this.nextStatementIndex;
+        },
+
+        getLabel: function () {
+            var context = this;
+
+            if (context.labelIndex === null) {
+                context.labelIndex = this.nextLabelIndex++;
+            }
+
+            return 'label' + context.labelIndex;
         },
 
         getNextStatementIndex: function () {
@@ -226,8 +242,16 @@ define([
                                                                                         name: 'statementIndex'
                                                                                     },
                                                                                     value: {
-                                                                                        type: Syntax.Identifier,
-                                                                                        name: 'statementIndex'
+                                                                                        type: Syntax.BinaryExpression,
+                                                                                        operator: '+',
+                                                                                        left: {
+                                                                                            type: Syntax.Identifier,
+                                                                                            name: 'statementIndex'
+                                                                                        },
+                                                                                        right: {
+                                                                                            type: Syntax.Literal,
+                                                                                            value: 1
+                                                                                        }
                                                                                     }
                                                                                 },
                                                                                 {
@@ -291,6 +315,10 @@ define([
             });
 
             return tempName;
+        },
+
+        isLabelUsed: function () {
+            return this.labelIndex !== null;
         }
     });
 
