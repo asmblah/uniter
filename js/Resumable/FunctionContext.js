@@ -30,7 +30,6 @@ define([
         this.nextTempIndex = 0;
         this.parameters = [];
         this.variables = [];
-        this.variablesToTemps = {};
     }
 
     util.extend(FunctionContext.prototype, {
@@ -302,12 +301,7 @@ define([
             var context = this,
                 tempName;
 
-            if (context.variablesToTemps[variableName]) {
-                return context.variablesToTemps[variableName];
-            }
-
             tempName = context.getTempName();
-            context.variablesToTemps[variableName] = tempName;
 
             blockContext.addAssignment(tempName).assign({
                 'type': Syntax.Identifier,

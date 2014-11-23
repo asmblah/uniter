@@ -228,6 +228,39 @@ EOS
                 expectedExports: {
                     result: '5,6'
                 }
+            },
+            'while loop with condition that becomes falsy before resume': {
+                code: util.heredoc(function (/*<<<EOS
+var go = true,
+    result = 0;
+
+while (go) {
+    go = false;
+    result += tools.addOneTo(1);
+    go = true;
+
+    if (result === 6) {
+        break;
+    }
+}
+
+exports.result = result;
+EOS
+*/) {}),
+                expose: {
+                    addOneTo: function (to) {
+                        var pause = resumable.createPause();
+
+                        setTimeout(function () {
+                            pause.resume(to + 1);
+                        });
+
+                        pause.now();
+                    }
+                },
+                expectedExports: {
+                    result: 6
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
