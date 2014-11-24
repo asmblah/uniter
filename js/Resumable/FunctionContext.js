@@ -19,6 +19,8 @@ define([
     'use strict';
 
     var DECLARATIONS = 'declarations',
+        ID = 'id',
+        NAME = 'name',
         Syntax = estraverse.Syntax;
 
     function FunctionContext() {
@@ -309,6 +311,19 @@ define([
             });
 
             return tempName;
+        },
+
+        hasVariableDefined: function (name) {
+            var isDefined = false;
+
+            util.each(this.functionDeclarations, function (functionDeclaration) {
+                if (functionDeclaration[ID] && functionDeclaration[ID][NAME] === name) {
+                    isDefined = true;
+                    return false;
+                }
+            });
+
+            return isDefined;
         },
 
         isLabelUsed: function () {

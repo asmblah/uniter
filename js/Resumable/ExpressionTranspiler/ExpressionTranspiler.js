@@ -36,6 +36,17 @@ define([
             }
 
             return transpiler.transpilers[node[TYPE]].transpile(node, parent, functionContext, blockContext);
+        },
+
+        transpileArray: function (array, parent, functionContext, blockContext) {
+            var result = [],
+                transpiler = this;
+
+            util.each(array, function (expressionNode) {
+                result.push(transpiler.transpile(expressionNode, parent, functionContext, blockContext));
+            });
+
+            return result;
         }
     });
 
