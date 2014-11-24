@@ -16,8 +16,7 @@ define([
 ) {
     'use strict';
 
-    var NAME = 'name',
-        OBJECT = 'object',
+    var OBJECT = 'object',
         PROPERTY = 'property',
         Syntax = estraverse.Syntax;
 
@@ -32,9 +31,10 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var tempName;
+            var object = this.expressionTranspiler.transpile(node[OBJECT], node, functionContext, blockContext),
+                tempName = functionContext.getTempName();
 
-            tempName = functionContext.getTempNameForVariable(node[OBJECT][NAME], blockContext);
+            blockContext.addAssignment(tempName).assign(object);
 
             return {
                 'type': Syntax.MemberExpression,
