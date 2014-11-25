@@ -18,6 +18,7 @@ define([
 
     var ARGUMENTS = 'arguments',
         CALLEE = 'callee',
+        OBJECT = 'object',
         TYPE = 'type',
         Syntax = estraverse.Syntax;
 
@@ -49,10 +50,14 @@ define([
 
             if (node[CALLEE][TYPE] === Syntax.MemberExpression) {
                 // Change callee to a '... .call(...)' to preserve thisObj
-                args = [{
-                    'type': Syntax.Identifier,
-                    'name': assignments[assignments.length - 2]
-                }].concat(args);
+                args = [
+                    assignments.length > 1 ?
+                        {
+                            'type': Syntax.Identifier,
+                            'name': assignments[assignments.length - 2]
+                        } :
+                        node[CALLEE][OBJECT]
+                ].concat(args);
 
                 callee = {
                     'type': Syntax.MemberExpression,

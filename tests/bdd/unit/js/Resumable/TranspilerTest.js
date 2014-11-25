@@ -1120,5 +1120,71 @@ EOS
                 }
             })).to.equal(expectedOutputJS);
         });
+
+        it('should correctly transpile a call to method of local variable', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+var obj = {};
+
+result = obj.method();
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, obj, temp0, temp1;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                obj = {};
+                statementIndex = 1;
+            case 1:
+                temp0 = obj.method;
+                statementIndex = 2;
+            case 2:
+                temp1 = temp0.call(obj);
+                statementIndex = 3;
+            case 3:
+                result = temp1;
+                statementIndex = 4;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {
+                        '1': 'temp0',
+                        '2': 'temp1'
+                    },
+                    obj: obj,
+                    temp0: temp0,
+                    temp1: temp1
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
     });
 });
