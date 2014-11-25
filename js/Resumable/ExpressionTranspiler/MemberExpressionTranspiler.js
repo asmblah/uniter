@@ -18,6 +18,7 @@ define([
 
     var OBJECT = 'object',
         PROPERTY = 'property',
+        TYPE = 'type',
         Syntax = estraverse.Syntax;
 
     function MemberExpressionTranspiler(statementTranspiler, expressionTranspiler) {
@@ -31,18 +32,27 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var object = this.expressionTranspiler.transpile(node[OBJECT], node, functionContext, blockContext),
-                tempName = functionContext.getTempName();
+            var memberExpression,
+                object = this.expressionTranspiler.transpile(node[OBJECT], node, functionContext, blockContext),
+                propertyTempName;
 
-            blockContext.addAssignment(tempName).assign(object);
+            memberExpression = {
+                'type': Syntax.MemberExpression,
+                'object': object,
+                'property': node[PROPERTY]
+            };
+
+            if (parent[TYPE] === Syntax.AssignmentExpression) {
+                return memberExpression;
+            }
+
+            propertyTempName = functionContext.getTempName();
+
+            blockContext.addAssignment(propertyTempName).assign(memberExpression);
 
             return {
-                'type': Syntax.MemberExpression,
-                'object': {
-                    'type': Syntax.Identifier,
-                    'name': tempName
-                },
-                'property': node[PROPERTY]
+                'type': Syntax.Identifier,
+                'name': propertyTempName
             };
         }
     });

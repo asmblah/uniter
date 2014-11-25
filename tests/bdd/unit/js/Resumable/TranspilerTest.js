@@ -254,12 +254,11 @@ EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
     function doThings(num1, num2) {
-        var statementIndex = 0, num3, temp0, temp1;
+        var statementIndex = 0, num3, temp0;
         return function resumableScope() {
             if (Resumable._resumeState_) {
                 statementIndex = Resumable._resumeState_.statementIndex;
                 temp0 = Resumable._resumeState_.temp0;
-                temp1 = Resumable._resumeState_.temp1;
                 Resumable._resumeState_ = null;
             }
             try {
@@ -268,32 +267,25 @@ EOS
                     num3 = 0;
                     statementIndex = 1;
                 case 1:
-                    temp0 = num3;
+                    temp0 = num1;
                     statementIndex = 2;
                 case 2:
-                    temp1 = num1;
+                    num3 = num3 + (temp0 + 1);
                     statementIndex = 3;
                 case 3:
-                    num3 = temp0 + (temp1 + 1);
-                    statementIndex = 4;
-                case 4:
                     return num3;
-                    statementIndex = 5;
+                    statementIndex = 4;
                 }
             } catch (e) {
                 if (e instanceof Resumable.PauseException) {
                     e.add({
                         func: resumableScope,
                         statementIndex: statementIndex + 1,
-                        assignments: {
-                            '1': 'temp0',
-                            '2': 'temp1'
-                        },
+                        assignments: { '1': 'temp0' },
                         num1: num1,
                         num2: num2,
                         num3: num3,
-                        temp0: temp0,
-                        temp1: temp1
+                        temp0: temp0
                     });
                 }
                 throw e;
@@ -950,6 +942,163 @@ EOS
                     temp2: temp2,
                     temp3: temp3,
                     temp4: temp4
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
+        it('should correctly transpile a logical expression', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+exports.result = first.second || third.fourth;
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            temp3 = Resumable._resumeState_.temp3;
+            temp4 = Resumable._resumeState_.temp4;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                temp0 = exports;
+                statementIndex = 1;
+            case 1:
+                temp1 = first;
+                statementIndex = 2;
+            case 2:
+                temp2 = temp1.second;
+                statementIndex = 3;
+            case 3:
+                statementIndex = 4;
+            case 4:
+            case 5:
+                if (statementIndex > 4 || !temp2) {
+                    switch (statementIndex) {
+                    case 4:
+                        temp3 = third;
+                        statementIndex = 5;
+                    case 5:
+                        temp4 = temp3.fourth;
+                        statementIndex = 6;
+                    }
+                }
+                statementIndex = 6;
+            case 6:
+                temp0.result = temp2 || temp4;
+                statementIndex = 7;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '2': 'temp2',
+                        '4': 'temp3',
+                        '5': 'temp4'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2,
+                    temp3: temp3,
+                    temp4: temp4
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
+        it('should correctly transpile a read->write->read', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+a = a + b;
+c = a;
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                temp0 = a;
+                statementIndex = 1;
+            case 1:
+                temp1 = b;
+                statementIndex = 2;
+            case 2:
+                a = temp0 + temp1;
+                statementIndex = 3;
+            case 3:
+                temp2 = a;
+                statementIndex = 4;
+            case 4:
+                c = temp2;
+                statementIndex = 5;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '3': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
                 });
             }
             throw e;

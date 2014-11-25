@@ -17,10 +17,8 @@ define([
     'use strict';
 
     var LEFT = 'left',
-        NAME = 'name',
         OPERATOR = 'operator',
         RIGHT = 'right',
-        TYPE = 'type',
         Syntax = estraverse.Syntax;
 
     function BinaryExpressionTranspiler(statementTranspiler, expressionTranspiler) {
@@ -38,23 +36,8 @@ define([
                 right,
                 transpiler = this;
 
-            if (node[LEFT][TYPE] === Syntax.Identifier) {
-                left = {
-                    'type': Syntax.Identifier,
-                    'name': functionContext.getTempNameForVariable(node[LEFT][NAME], blockContext)
-                };
-            } else {
-                left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext);
-            }
-
-            if (node[RIGHT][TYPE] === Syntax.Identifier) {
-                right = {
-                    'type': Syntax.Identifier,
-                    'name': functionContext.getTempNameForVariable(node[RIGHT][NAME], blockContext)
-                };
-            } else {
-                right = transpiler.expressionTranspiler.transpile(node[RIGHT], node, functionContext, blockContext);
-            }
+            left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext);
+            right = transpiler.expressionTranspiler.transpile(node[RIGHT], node, functionContext, blockContext);
 
             return {
                 'type': Syntax.BinaryExpression,

@@ -18,30 +18,36 @@ define([
 ) {
     'use strict';
 
-    var BODY = 'body',
-        CONSEQUENT = 'consequent',
-        TEST = 'test',
+    var LEFT = 'left',
+        NAME = 'name',
+        OPERATOR = 'operator',
+        RIGHT = 'right',
         Syntax = estraverse.Syntax;
 
-    function IfStatementTranspiler(statementTranspiler, expressionTranspiler) {
+    function LogicalExpressionTranspiler(statementTranspiler, expressionTranspiler) {
         this.expressionTranspiler = expressionTranspiler;
         this.statementTranspiler = statementTranspiler;
     }
 
-    util.extend(IfStatementTranspiler.prototype, {
+    util.extend(LogicalExpressionTranspiler.prototype, {
         getNodeType: function () {
-            return Syntax.IfStatement;
+            return Syntax.LogicalExpression;
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var ownBlockContext = new BlockContext(functionContext),
-                transpiler = this,
-                expression = transpiler.expressionTranspiler.transpile(node[TEST], node, functionContext, blockContext),
-                statement;
+            var left,
+                right,
+                rightSideBlockContext,
+                statement,
+                transpiler = this;
+
+            left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext);
 
             statement = blockContext.prepareStatement();
 
-            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], node, functionContext, ownBlockContext);
+            rightSideBlockContext = new BlockContext(functionContext);
+
+            right = transpiler.expressionTranspiler.transpile(node[RIGHT], node, functionContext, rightSideBlockContext);
 
             statement.assign({
                 'type': Syntax.IfStatement,
@@ -60,17 +66,32 @@ define([
                             'value': statement.getIndex() + 1
                         }
                     },
-                    'right': expression
+                    'right': {
+                        'type': Syntax.UnaryExpression,
+                        'operator': '!',
+                        'prefix': true,
+                        'argument': {
+                            'type': Syntax.Identifier,
+                            'name': left[NAME]
+                        }
+                    }
                 },
                 'consequent': {
                     'type': Syntax.BlockStatement,
                     'body': [
-                        ownBlockContext.getSwitchStatement()
+                        rightSideBlockContext.getSwitchStatement()
                     ]
                 }
             });
+
+            return {
+                'type': Syntax.LogicalExpression,
+                'operator': node[OPERATOR],
+                'left': left,
+                'right': right
+            };
         }
     });
 
-    return IfStatementTranspiler;
+    return LogicalExpressionTranspiler;
 });

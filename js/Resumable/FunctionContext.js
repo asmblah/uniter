@@ -27,6 +27,7 @@ define([
         this.assignmentVariables = {};
         this.functionDeclarations = [];
         this.labelIndex = null;
+        this.lastAssignments = [];
         this.nextLabelIndex = 0;
         this.nextStatementIndex = 0;
         this.nextTempIndex = 0;
@@ -36,7 +37,10 @@ define([
 
     util.extend(FunctionContext.prototype, {
         addAssignment: function (index, variableName) {
-            this.assignmentVariables[index] = variableName;
+            var context = this;
+
+            context.assignmentVariables[index] = variableName;
+            context.lastAssignments.push(variableName);
         },
 
         addFunctionDeclaration: function (declaration) {
@@ -49,6 +53,10 @@ define([
 
         addVariable: function (name) {
             this.variables.push(name);
+        },
+
+        clearLastAssignments: function () {
+            this.lastAssignments = [];
         },
 
         endLabelableContext: function () {
@@ -67,6 +75,10 @@ define([
             }
 
             return 'label' + context.labelIndex;
+        },
+
+        getLastAssignments: function () {
+            return this.lastAssignments;
         },
 
         getNextStatementIndex: function () {
@@ -320,6 +332,12 @@ define([
                 if (functionDeclaration[ID] && functionDeclaration[ID][NAME] === name) {
                     isDefined = true;
                     return false;
+                }
+            });
+
+            util.each(this.variables, function (variable) {
+                if (variable === name) {
+                    isDefined = true;
                 }
             });
 

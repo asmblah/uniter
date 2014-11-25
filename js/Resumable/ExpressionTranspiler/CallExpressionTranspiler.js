@@ -18,8 +18,6 @@ define([
 
     var ARGUMENTS = 'arguments',
         CALLEE = 'callee',
-        NAME = 'name',
-        OBJECT = 'object',
         TYPE = 'type',
         Syntax = estraverse.Syntax;
 
@@ -35,46 +33,37 @@ define([
 
         transpile: function (node, parent, functionContext, blockContext) {
             var args = node[ARGUMENTS],
+                assignments,
                 callee,
                 callNode,
                 transpiler = this,
-                tempNameForAssignment,
-                tempNameForCallee;
+                tempNameForAssignment;
 
-            if (node[CALLEE][TYPE] === Syntax.Identifier && functionContext.hasVariableDefined(node[CALLEE][NAME])) {
-                callee = node[CALLEE];
-            } else {
-                callee = transpiler.expressionTranspiler.transpile(node[CALLEE], node, functionContext, blockContext);
-                tempNameForCallee = functionContext.getTempName();
-                blockContext.addAssignment(tempNameForCallee).assign(
-                    callee
-                );
+            functionContext.clearLastAssignments();
 
-                if (node[CALLEE][TYPE] === Syntax.MemberExpression) {
-                    // Change callee to a '... .call(...)' to preserve thisObj
-                    args = [callee[OBJECT]].concat(args);
+            callee = transpiler.expressionTranspiler.transpile(node[CALLEE], node, functionContext, blockContext);
 
-                    callee = {
-                        'type': Syntax.MemberExpression,
-                        'object': {
-                            'type': Syntax.Identifier,
-                            'name': tempNameForCallee
-                        },
-                        'property': {
-                            'type': Syntax.Identifier,
-                            'name': 'call',
-                        },
-                        'computed': false
-                    };
-                } else {
-                    callee = {
-                        'type': Syntax.Identifier,
-                        'name': tempNameForCallee
-                    };
-                }
-            }
+            assignments = functionContext.getLastAssignments();
 
             args = transpiler.expressionTranspiler.transpileArray(args, node, functionContext, blockContext);
+
+            if (node[CALLEE][TYPE] === Syntax.MemberExpression) {
+                // Change callee to a '... .call(...)' to preserve thisObj
+                args = [{
+                    'type': Syntax.Identifier,
+                    'name': assignments[assignments.length - 2]
+                }].concat(args);
+
+                callee = {
+                    'type': Syntax.MemberExpression,
+                    'object': callee,
+                    'property': {
+                        'type': Syntax.Identifier,
+                        'name': 'call',
+                    },
+                    'computed': false
+                };
+            }
 
             callNode = {
                 'type': Syntax.CallExpression,
