@@ -1,0 +1,189 @@
+/*
+ * Uniter - JavaScript PHP interpreter
+ * Copyright 2013 Dan Phillimore (asmblah)
+ * http://asmblah.github.com/uniter/
+ *
+ * Released under the MIT license
+ * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
+ */
+
+/*global define */
+define([
+    './pcrelib16.lib',
+    'js/util'
+], function (
+    pcrelib,
+    util
+) {
+    'use strict';
+
+    var PCRE_CASELESS = 1,
+        PCRE_MULTILINE = 2,
+        PCRE_DOTALL = 4,
+        PCRE_EXTENDED = 8,
+        PCRE_ANCHORED = 16,
+        PCRE_DOLLAR_ENDONLY = 32,
+        PCRE_EXTRA = 64,
+        PCRE_NOTBOL = 128,
+        PCRE_NOTEOL = 256,
+        PCRE_UNGREEDY = 512,
+        PCRE_NOTEMPTY = 1024,
+        PCRE_UTF8 = 2048,
+        PCRE_UTF16 = 2048,
+        PCRE_UTF32 = 2048,
+        PCRE_NO_AUTO_CAPTURE = 4096,
+        PCRE_NO_UTF8_CHECK = 8192,
+        PCRE_NO_UTF16_CHECK = 8192,
+        PCRE_NO_UTF32_CHECK = 8192,
+        PCRE_AUTO_CALLOUT = 16384,
+        PCRE_PARTIAL_SOFT = 32768,
+        PCRE_PARTIAL = 32768,
+        PCRE_NEVER_UTF = 65536,
+        PCRE_DFA_SHORTEST = 65536,
+        PCRE_DFA_RESTART = 131072,
+        PCRE_FIRSTLINE = 262144,
+        PCRE_DUPNAMES = 524288,
+        PCRE_NEWLINE_CR = 1048576,
+        PCRE_NEWLINE_LF = 2097152,
+        PCRE_NEWLINE_CRLF = 3145728,
+        PCRE_NEWLINE_ANY = 4194304,
+        PCRE_NEWLINE_ANYCRLF = 5242880,
+        PCRE_BSR_ANYCRLF = 8388608,
+        PCRE_BSR_UNICODE = 16777216,
+        PCRE_JAVASCRIPT_COMPAT = 33554432,
+        PCRE_NO_START_OPTIMIZE = 67108864,
+        PCRE_NO_START_OPTIMISE = 67108864,
+        PCRE_PARTIAL_HARD = 134217728,
+        PCRE_NOTEMPTY_ATSTART = 268435456,
+        PCRE_UCP = 536870912,
+
+        PCRE_INFO_CAPTURECOUNT = 2;
+
+    function PCRE() {
+
+    }
+
+    util.extend(PCRE.prototype, {
+        exec: function (pattern, subject, flags) {
+            /*jshint bitwise: false */
+            var end,
+                error = pcrelib.malloc(4),
+                errorOffset = pcrelib.malloc(4),
+                execResult,
+                i,
+                internalOptions,
+                matches,
+                offset,
+                resultOffsetsPointer,
+                results = [],
+                ovectorPointer,
+                patternByteArray = pcrelib.malloc((pattern.length * 2 + 1) * 2),
+                regexID,
+                start,
+                subjectByteArray = pcrelib.malloc((subject.length * 2 + 1) * 2),
+                subPatternElementsCount,
+                subPatternElementsPointer;
+
+            function free() {
+                pcrelib.free(error);
+                pcrelib.free(errorOffset);
+                pcrelib.free(patternByteArray);
+            }
+
+            pcrelib.stringToUTF16(pattern, patternByteArray);
+
+            regexID = pcrelib.pcre_compile(regexID, this.flagsArrayToInt(flags), error, errorOffset, null);
+
+            if (!regexID) {
+                free();
+
+                throw new Error(
+                    pcrelib.Pointer_stringify(pcrelib.HEAP32[error >> 2]) +
+                    ' - offset: ' +
+                    pcrelib.HEAP32[errorOffset >> 2]
+                );
+            }
+
+            pcrelib.stringToUTF16(subject, subjectByteArray);
+
+            subPatternElementsPointer = pcrelib.malloc(4);
+            pcrelib.pcre_fullinfo(regexID, null, PCRE_INFO_CAPTURECOUNT, subPatternElementsPointer);
+            subPatternElementsCount = (pcrelib.HEAP32[subPatternElementsPointer >> 2] + 1) * 3;
+            pcrelib.free(subPatternElementsPointer);
+
+            resultOffsetsPointer = pcrelib.malloc(4 * subPatternElementsCount);
+            ovectorPointer = resultOffsetsPointer >> 2;
+            offset = 0;
+            internalOptions = 0;
+
+            execResult = pcrelib.pcre_exec(
+                regexID,
+                0,
+                subjectByteArray,
+                subject.length,
+                offset,
+                internalOptions,
+                resultOffsetsPointer,
+                subPatternElementsCount
+            );
+
+            if (execResult >= 0) {
+                if (execResult === 0) {
+                    execResult = subPatternElementsCount / 3;
+                }
+
+                matches = [];
+
+                for (i = 0; i < execResult * 2; i += 2) {
+                    start = pcrelib.HEAP32[resultOffsetsPointer + i];
+                    end = pcrelib.HEAP32[resultOffsetsPointer + (i + 1)];
+
+                    matches.push({
+                        start: start,
+                        end: end,
+                        content: subject.substring(start, end)
+                    });
+                }
+
+                results.push(matches);
+            }
+
+            free();
+
+            return results;
+        },
+
+        flagsArrayToInt: function (array) {
+            /*jshint bitwise: false */
+            var bitsMap = {
+                    'g': 0,
+                    'i': PCRE_CASELESS,
+                    'm': PCRE_MULTILINE,
+                    's': PCRE_DOTALL,
+                    'x': PCRE_EXTENDED,
+                    'A': PCRE_ANCHORED,
+                    'C': PCRE_AUTO_CALLOUT,
+                    'D': PCRE_DOLLAR_ENDONLY,
+                    'E': PCRE_DOLLAR_ENDONLY,
+                    'J': PCRE_DUPNAMES,
+                    'N': PCRE_NO_AUTO_CAPTURE,
+                    'S': 0,
+                    'U': PCRE_UNGREEDY,
+                    'X': PCRE_EXTRA,
+                    'Y': PCRE_NO_START_OPTIMISE,
+                    'u': PCRE_UTF16 | PCRE_UCP
+                },
+                number = 0;
+
+            util.each(array, function (flag) {
+                if (bitsMap[flag]) {
+                    number |= bitsMap[flag];
+                }
+            });
+
+            return number;
+        }
+    });
+
+    return new PCRE();
+});
