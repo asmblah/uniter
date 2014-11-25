@@ -94,6 +94,10 @@ define([
                 }
             });
 
+            //console.log(transpiledCode);
+
+            //debugger;
+
             /*jshint evil:true */
             func = new Function(names, 'return ' + transpiledCode);
 

@@ -13,6 +13,7 @@
 
 /*global define */
 define([
+    'vendor/esparse/esprima',
     'js/util',
     './interpreter/Call',
     'js/Exception',
@@ -26,8 +27,12 @@ define([
     './interpreter/Error/Fatal',
     './interpreter/State',
     'js/Promise',
-    './interpreter/Scope'
+    'js/Resumable/Resumable',
+    'js/Resumable/Transpiler',
+    './interpreter/Scope',
+    'vendor/esparse/escodegen'
 ], function (
+    esprima,
     util,
     Call,
     Exception,
@@ -41,6 +46,8 @@ define([
     PHPFatalError,
     PHPState,
     Promise,
+    Resumable,
+    ResumableTranspiler,
     Scope
 ) {
     'use strict';
@@ -119,14 +126,16 @@ define([
         }
 
         var engine = state.getEngine(),
+            exports = {},
             globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
             promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
-            result,
+            //result,
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
+            resumable = new Resumable(new ResumableTranspiler()),
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
@@ -199,8 +208,64 @@ define([
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
-        try {
-            /*jshint evil:true */
+        code = 'exports.result = (function () {' + code + '}());';
+        console.log(escodegen.generate(esprima.parse(code), {
+            format: {
+                indent: {
+                    style: '    ',
+                    base: 0
+                }
+            }
+        }));
+
+        resumable.execute(code, {
+            expose: {
+                exports: exports,
+                stdin: stdin,
+                stdout: stdout,
+                stderr: stderr,
+                tools: tools,
+                callStack: callStack,
+                globalScope: globalScope,
+                namespace: globalNamespace
+            }
+        }).done(function () {
+            promise.resolve(exports.result.getNative(), exports.result.getType());
+        }).fail(function (exception) {
+            if (exception instanceof ObjectValue) {
+                // Uncaught PHP Exceptions become E_FATAL errors
+                (function (value) {
+                    var exception = value.getNative();
+
+                    if (!exception instanceof PHPException) {
+                        throw new Exception('Weird value class thrown: ' + value.getClassName());
+                    }
+
+                    exception = new PHPFatalError(PHPFatalError.UNCAUGHT_EXCEPTION, {name: value.getClassName()});
+
+                    if (context.mainProgram) {
+                        stderr.write(exception.message);
+                    }
+
+                    promise.reject(exception);
+                }(exception));
+
+                return promise;
+            }
+
+            if (exception instanceof PHPError) {
+                if (context.mainProgram) {
+                    stderr.write(exception.message);
+                }
+
+                return promise.reject(exception);
+            }
+
+            throw exception;
+        });
+
+        /*try {
+            / *jshint evil:true * /
             result = new Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
                 stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
             );
@@ -237,7 +302,9 @@ define([
             throw exception;
         }
 
-        return promise.resolve(result.getNative(), result.getType());
+        return promise.resolve(result.getNative(), result.getType());*/
+
+        return promise;
     }
 
     function hoistDeclarations(statements) {
@@ -282,7 +349,7 @@ define([
                 }
             } else {
                 variable = argNode.variable;
-                valueCode += variable;
+                valueCode += variable + '.getValue()';
             }
 
             argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
@@ -384,7 +451,7 @@ define([
         State: PHPState,
         nodes: {
             'N_ARRAY_CAST': function (node, interpret) {
-                return interpret(node.value) + '.coerceToArray()';
+                return interpret(node.value, {getValue: true}) + '.coerceToArray()';
             },
             'N_ARRAY_INDEX': function (node, interpret, context) {
                 var arrayVariableCode,
@@ -615,7 +682,7 @@ define([
                 var args = [];
 
                 util.each(node.args, function (arg) {
-                    args.push(interpret(arg));
+                    args.push(interpret(arg, {getValue: false}));
                 });
 
                 return '(' + interpret(node.func, {getValue: true, allowBareword: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
@@ -780,7 +847,7 @@ define([
                     code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.getNative(), [' + args.join(', ') + '])';
                 });
 
-                return interpret(node.object) + code;
+                return interpret(node.object, {getValue: true}) + code;
             },
             'N_METHOD_DEFINITION': function (node, interpret) {
                 return {

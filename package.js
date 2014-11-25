@@ -13,5 +13,10 @@ define({
         'languages': './languages',
         'js': './js'
     },
+    'map': {
+        '*': {
+            'pcrelib': './vendor/pcrelib/pcrelib16.js'
+        }
+    },
     'main': 'js/main'
 });

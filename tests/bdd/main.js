@@ -16,6 +16,7 @@ require.config({
         '*': {
             'chai': 'bower_components/chai/chai',
             'packager': 'vendor/packager/packager',
+            'pcrelib': 'vendor/pcrelib/pcrelib16',
             'sinon': 'bower_components/sinonjs-built/pkg/sinon',
             'sinon-chai': 'bower_components/sinon-chai/lib/sinon-chai'
         }

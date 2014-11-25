@@ -21,7 +21,8 @@
         baseUrl: __dirname + '/../..',
         map: {
             '*': {
-                'packager': 'vendor/packager/packager'
+                'packager': 'vendor/packager/packager',
+                'pcrelib': 'vendor/pcrelib/pcrelib16'
             }
         },
         config: {

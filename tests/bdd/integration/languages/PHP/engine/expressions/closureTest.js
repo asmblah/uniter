@@ -130,6 +130,22 @@ EOS
                 expectedResult: 7,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            // Check that when passed by reference, original variable in parent scope is modified
+            'self-executed closure that modifies the parameter var (by reference)': {
+                code: util.heredoc(function (/*<<<EOS
+<?php
+    function (&$arg) {
+        $arg = 7;
+    }($result);
+
+    return $result;
+
+EOS
+*/) {}),
+                expectedResult: 7,
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

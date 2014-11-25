@@ -261,6 +261,9 @@ EOS
                 expectedExports: {
                     result: 6
                 }
+            },
+            'logical OR (||) operator with short-circuit evaluation': {
+
             }
         }, function (scenario, description) {
             describe(description, function () {

@@ -52,6 +52,7 @@ define([
             'bdd/integration/languages/PHP/engine/builtin/functions/array/currentTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/array/nextTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/constant/defineTest',
+            'bdd/integration/languages/PHP/engine/builtin/functions/preg/preg_matchTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/spl/spl_autoload_registerTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/string/strlenTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',

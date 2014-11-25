@@ -11,6 +11,7 @@
 define([
     './functions/array',
     './functions/constant',
+    './functions/preg',
     './functions/spl',
     './classes/stdClass',
     './functions/string',
@@ -19,6 +20,7 @@ define([
 ], function (
     arrayFunctions,
     constantFunctions,
+    pregFunctions,
     splFunctions,
     stdClass,
     stringFunctions,
@@ -35,6 +37,7 @@ define([
         functionGroups: [
             arrayFunctions,
             constantFunctions,
+            pregFunctions,
             splFunctions,
             stringFunctions,
             variableHandlingFunctions
