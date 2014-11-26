@@ -12,6 +12,7 @@ define([
     'vendor/esparse/esprima',
     'vendor/esparse/estraverse',
     'js/util',
+    './ExpressionTranspiler/ArrayExpressionTranspiler',
     './ExpressionTranspiler/AssignmentExpressionTranspiler',
     './ExpressionTranspiler/BinaryExpressionTranspiler',
     './StatementTranspiler/BlockStatementTranspiler',
@@ -36,6 +37,7 @@ define([
     esprima,
     estraverse,
     util,
+    ArrayExpressionTranspiler,
     AssignmentExpressionTranspiler,
     BinaryExpressionTranspiler,
     BlockStatementTranspiler,
@@ -85,6 +87,7 @@ define([
         );
 
         util.each([
+            ArrayExpressionTranspiler,
             AssignmentExpressionTranspiler,
             BinaryExpressionTranspiler,
             CallExpressionTranspiler,
