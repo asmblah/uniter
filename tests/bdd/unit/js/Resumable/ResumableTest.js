@@ -22,10 +22,12 @@ define([
     'use strict';
 
     describe('Resumable', function () {
-        var resumable;
+        var resumable,
+            state;
 
         beforeEach(function () {
             resumable = new Resumable(new Transpiler());
+            state = {};
         });
 
         util.each({
@@ -261,23 +263,135 @@ EOS
                 expectedExports: {
                     result: 6
                 }
+            },
+            'logical OR (||) operator with short-circuit evaluation, where left operand evaluates to truthy': {
+                code: util.heredoc(function (/*<<<EOS
+var result = tools.truthy() || otherTools.falsy();
+
+exports.result = result;
+EOS
+*/) {}),
+                expose: function (state) {
+                    var falsy = sinon.stub().returns(false),
+                        truthy = sinon.stub().returns(true),
+                        getOtherTools = sinon.stub(),
+                        expose = {
+                            tools: {
+                                truthy: truthy
+                            }
+                        };
+
+                    getOtherTools.returns({
+                        falsy: falsy
+                    });
+
+                    Object.defineProperty(expose, 'otherTools', {
+                        get: getOtherTools
+                    });
+
+                    state.getOtherTools = getOtherTools;
+                    state.falsy = falsy;
+                    state.truthy = truthy;
+
+                    return expose;
+                },
+                expectedExports: {
+                    result: true
+                },
+                expect: function () {
+                    it('should only call the .truthy() method, not the .falsy() method', function () {
+                        expect(state.truthy).to.have.been.calledOnce;
+                        expect(state.falsy).not.to.have.been.called;
+                    });
+
+                    it('should not attempt to read the object variable for the right operand', function () {
+                        expect(state.getOtherTools).not.to.have.been.called;
+                    });
+                }
+            },
+            'logical OR (||) operator with short-circuit evaluation, where left operand evaluates to falsy but right operand truthy': {
+                code: util.heredoc(function (/*<<<EOS
+var result = tools.falsy() || tools.truthy();
+
+exports.result = result;
+EOS
+*/) {}),
+                expose: function (state) {
+                    var falsy = sinon.stub().returns(false),
+                        truthy = sinon.stub().returns(true);
+
+                    state.falsy = falsy;
+                    state.truthy = truthy;
+
+                    return {
+                        tools: {
+                            falsy: falsy,
+                            truthy: truthy
+                        }
+                    };
+                },
+                expectedExports: {
+                    result: true
+                },
+                expect: function () {
+                    it('should call both the .falsy() and .truthy() methods', function () {
+                        expect(state.falsy).to.have.been.calledOnce;
+                        expect(state.truthy).to.have.been.calledOnce;
+                    });
+                }
+            },
+            'logical OR (||) operator with short-circuit evaluation, where left and right operands both evaluate to falsy': {
+                code: util.heredoc(function (/*<<<EOS
+var result = tools.falsy() || tools.alsoFalsy();
+
+exports.result = result;
+EOS
+*/) {}),
+                expose: function (state) {
+                    var falsy = sinon.stub().returns(false),
+                        alsoFalsy = sinon.stub().returns(false);
+
+                    state.falsy = falsy;
+                    state.alsoFalsy = alsoFalsy;
+
+                    return {
+                        tools: {
+                            falsy: falsy,
+                            alsoFalsy: alsoFalsy
+                        }
+                    };
+                },
+                expectedExports: {
+                    result: false
+                },
+                expect: function () {
+                    it('should call both the .falsy() and .alsoFalsy() methods', function () {
+                        expect(state.falsy).to.have.been.calledOnce;
+                        expect(state.alsoFalsy).to.have.been.calledOnce;
+                    });
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
-                var exports,
-                    options;
+                var exports;
 
                 beforeEach(function (done) {
-                    exports = {};
+                    var expose;
 
-                    options = {
-                        expose: {
-                            exports: exports,
-                            tools: scenario.expose
-                        }
+                    exports = {};
+                    expose = {
+                        exports: exports
                     };
 
-                    resumable.execute(scenario.code, options).done(function () {
+                    if (util.isFunction(scenario.expose)) {
+                        util.extend(expose, scenario.expose(state));
+                    } else {
+                        util.extend(expose, {
+                            tools: scenario.expose
+                        });
+                    }
+
+                    resumable.execute(scenario.code, {expose: expose}).done(function () {
                         done();
                     }).fail(function (e) {
                         done(e);
@@ -287,6 +401,10 @@ EOS
                 it('should resolve the promise with the correct result', function () {
                     expect(exports).to.deep.equal(scenario.expectedExports);
                 });
+
+                if (scenario.expect) {
+                    scenario.expect();
+                }
             });
         });
     });
