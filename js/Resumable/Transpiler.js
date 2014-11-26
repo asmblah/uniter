@@ -30,6 +30,7 @@ define([
     './StatementTranspiler/ProgramTranspiler',
     './StatementTranspiler/ReturnStatementTranspiler',
     './StatementTranspiler/StatementTranspiler',
+    './StatementTranspiler/TryStatementTranspiler',
     './StatementTranspiler/VariableDeclarationTranspiler',
     './StatementTranspiler/WhileStatementTranspiler',
     'vendor/esparse/escodegen'
@@ -55,6 +56,7 @@ define([
     ProgramTranspiler,
     ReturnStatementTranspiler,
     StatementTranspiler,
+    TryStatementTranspiler,
     VariableDeclarationTranspiler,
     WhileStatementTranspiler
 ) {
@@ -72,6 +74,7 @@ define([
             IfStatementTranspiler,
             ProgramTranspiler,
             ReturnStatementTranspiler,
+            TryStatementTranspiler,
             VariableDeclarationTranspiler,
             WhileStatementTranspiler
         ], function (Class) {

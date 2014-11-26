@@ -742,6 +742,83 @@ EOS
             })).to.equal(expectedOutputJS);
         });
 
+        it('should correctly transpile a try {...} catch (...) {...} statement', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+a = 1;
+try {
+    b = 2;
+} catch (e) {
+    c = 3;
+}
+d = 4;
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                a = 1;
+                statementIndex = 1;
+            case 1:
+                statementIndex = 2;
+            case 2:
+            case 3:
+                try {
+                    switch (statementIndex) {
+                    case 2:
+                        b = 2;
+                        statementIndex = 3;
+                    }
+                } catch (e) {
+                    if (e instanceof Resumable.PauseException) {
+                        throw e;
+                    }
+                    switch (statementIndex) {
+                    case 3:
+                        c = 3;
+                        statementIndex = 4;
+                    }
+                }
+                statementIndex = 4;
+            case 4:
+                d = 4;
+                statementIndex = 5;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {}
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
         it('should correctly transpile multiple reads of the same variable', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
 exports.result = myVar + myVar;
