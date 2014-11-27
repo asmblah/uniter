@@ -82,15 +82,19 @@ define([
 
         prepareStatement: function () {
             var context = this,
+                endIndex = null,
                 index = context.functionContext.getNextStatementIndex();
 
             return {
-                assign: function (statementNode) {
-                    var currentIndex = context.functionContext.getCurrentStatementIndex(),
-                        i,
+                assign: function (statementNode, nextIndex) {
+                    var i,
                         switchCases = [];
 
-                    for (i = index; i < currentIndex - 1; i++) {
+                    if (!endIndex) {
+                        endIndex = context.functionContext.getCurrentStatementIndex();
+                    }
+
+                    for (i = index; i < endIndex - 1; i++) {
                         switchCases.push({
                             type: Syntax.SwitchCase,
                             test: {
@@ -103,9 +107,17 @@ define([
                         });
                     }
 
-                    switchCases.push(createSwitchCase(statementNode, currentIndex - 1));
+                    switchCases.push(createSwitchCase(statementNode, endIndex - 1, nextIndex));
 
                     context.switchCases[index] = switchCases;
+                },
+
+                captureEndIndex: function () {
+                    endIndex = context.functionContext.getCurrentStatementIndex();
+                },
+
+                getEndIndex: function () {
+                    return endIndex;
                 },
 
                 getIndex: function () {
@@ -115,7 +127,11 @@ define([
         }
     });
 
-    function createSwitchCase(statementNode, index) {
+    function createSwitchCase(statementNode, index, nextIndex) {
+        if (!nextIndex) {
+            nextIndex = index + 1;
+        }
+
         return {
             type: Syntax.SwitchCase,
             test: {
@@ -124,7 +140,7 @@ define([
             },
             consequent: [
                 statementNode,
-                esprima.parse('statementIndex = ' + (index + 1) + ';').body[0]
+                esprima.parse('statementIndex = ' + nextIndex + ';').body[0]
             ]
         };
     }

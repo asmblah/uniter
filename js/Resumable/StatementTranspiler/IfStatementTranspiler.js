@@ -18,7 +18,8 @@ define([
 ) {
     'use strict';
 
-    var BODY = 'body',
+    var ALTERNATE = 'alternate',
+        BODY = 'body',
         CONSEQUENT = 'consequent',
         TEST = 'test',
         Syntax = estraverse.Syntax;
@@ -34,16 +35,18 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var ownBlockContext = new BlockContext(functionContext),
+            var alternateBlockContext,
+                alternateStatement,
+                consequentBlockContext = new BlockContext(functionContext),
+                consequentStatement,
                 transpiler = this,
-                expression = transpiler.expressionTranspiler.transpile(node[TEST], node, functionContext, blockContext),
-                statement;
+                expression = transpiler.expressionTranspiler.transpile(node[TEST], node, functionContext, blockContext);
 
-            statement = blockContext.prepareStatement();
+            consequentStatement = blockContext.prepareStatement();
 
-            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], node, functionContext, ownBlockContext);
+            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], node, functionContext, consequentBlockContext);
 
-            statement.assign({
+            consequentStatement.assign({
                 'type': Syntax.IfStatement,
                 'test': {
                     'type': Syntax.LogicalExpression,
@@ -57,7 +60,7 @@ define([
                         },
                         'right': {
                             'type': Syntax.Literal,
-                            'value': statement.getIndex() + 1
+                            'value': consequentStatement.getIndex() + 1
                         }
                     },
                     'right': expression
@@ -65,10 +68,50 @@ define([
                 'consequent': {
                     'type': Syntax.BlockStatement,
                     'body': [
-                        ownBlockContext.getSwitchStatement()
+                        consequentBlockContext.getSwitchStatement()
                     ]
                 }
             });
+
+            if (node[ALTERNATE]) {
+                alternateBlockContext = new BlockContext(functionContext);
+
+                alternateStatement = blockContext.prepareStatement();
+
+                transpiler.statementTranspiler.transpileArray(node[ALTERNATE][BODY], node, functionContext, alternateBlockContext);
+
+                alternateStatement.assign({
+                    'type': Syntax.IfStatement,
+                    'test': {
+                        'type': Syntax.LogicalExpression,
+                        'operator': '||',
+                        'left': {
+                            'type': Syntax.BinaryExpression,
+                            'operator': '>',
+                            'left': {
+                                'type': Syntax.Identifier,
+                                'name': 'statementIndex'
+                            },
+                            'right': {
+                                'type': Syntax.Literal,
+                                'value': alternateStatement.getIndex() + 1
+                            }
+                        },
+                        'right': {
+                            'type': Syntax.UnaryExpression,
+                            'operator': '!',
+                            'prefix': true,
+                            'argument': expression
+                        }
+                    },
+                    'consequent': {
+                        'type': Syntax.BlockStatement,
+                        'body': [
+                            alternateBlockContext.getSwitchStatement()
+                        ]
+                    }
+                });
+            }
         }
     });
 
