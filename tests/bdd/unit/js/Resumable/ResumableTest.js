@@ -9,27 +9,15 @@
 
 /*global define, describe, expect, it, setTimeout */
 define([
-    'vendor/esparse/esprima',
-    'js/util',
-    'js/Resumable/Resumable',
-    'js/Resumable/Transpiler'
+    './Resumable/tools',
+    'js/util'
 ], function (
-    esprima,
-    util,
-    Resumable,
-    Transpiler
+    tools,
+    util
 ) {
     'use strict';
 
     describe('Resumable', function () {
-        var resumable,
-            state;
-
-        beforeEach(function () {
-            resumable = new Resumable(new Transpiler());
-            state = {};
-        });
-
         util.each({
             'when no pauses are used': {
                 code: util.heredoc(function (/*<<<EOS
@@ -45,16 +33,20 @@ EOS
 exports.result = tools.getResult();
 EOS
 */) {}),
-                expose: {
-                    getResult: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getResult: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(22);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(22);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 22
@@ -65,25 +57,29 @@ EOS
 exports.result = tools.getFirst() + 4 + tools.getSecond();
 EOS
 */) {}),
-                expose: {
-                    getFirst: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getFirst: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(2);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(2);
+                                });
 
-                        pause.now();
-                    },
-                    getSecond: function () {
-                        var pause = resumable.createPause();
+                                pause.now();
+                            },
+                            getSecond: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(3);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(3);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 9
@@ -98,16 +94,20 @@ function getIt() {
 exports.result = getIt() + 10;
 EOS
 */) {}),
-                expose: {
-                    getValue: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getValue: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(21);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(21);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 33
@@ -130,16 +130,20 @@ function getIt() {
 exports.result = getIt() + 10;
 EOS
 */) {}),
-                expose: {
-                    getValue: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getValue: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(21);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(21);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 33
@@ -161,16 +165,20 @@ function getIt() {
 exports.result = getIt() + 10;
 EOS
 */) {}),
-                expose: {
-                    getValue: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getValue: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(21);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(21);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 33
@@ -193,16 +201,20 @@ function getIt() {
 exports.result = getIt();
 EOS
 */) {}),
-                expose: {
-                    getValue: function () {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getValue: function () {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(20);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(20);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 22
@@ -216,16 +228,20 @@ var first = tools.addOneTo(4),
 exports.result = first + ',' + second;
 EOS
 */) {}),
-                expose: {
-                    addOneTo: function (to) {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            addOneTo: function (to) {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(to + 1);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(to + 1);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: '5,6'
@@ -249,16 +265,20 @@ while (go) {
 exports.result = result;
 EOS
 */) {}),
-                expose: {
-                    addOneTo: function (to) {
-                        var pause = resumable.createPause();
+                expose: function (state) {
+                    return {
+                        tools: {
+                            addOneTo: function (to) {
+                                var pause = state.resumable.createPause();
 
-                        setTimeout(function () {
-                            pause.resume(to + 1);
-                        });
+                                setTimeout(function () {
+                                    pause.resume(to + 1);
+                                });
 
-                        pause.now();
-                    }
+                                pause.now();
+                            }
+                        }
+                    };
                 },
                 expectedExports: {
                     result: 6
@@ -300,12 +320,12 @@ EOS
                 },
                 expect: function () {
                     it('should only call the .truthy() method, not the .falsy() method', function () {
-                        expect(state.truthy).to.have.been.calledOnce;
-                        expect(state.falsy).not.to.have.been.called;
+                        expect(this.truthy).to.have.been.calledOnce;
+                        expect(this.falsy).not.to.have.been.called;
                     });
 
                     it('should not attempt to read the object variable for the right operand', function () {
-                        expect(state.getOtherTools).not.to.have.been.called;
+                        expect(this.getOtherTools).not.to.have.been.called;
                     });
                 }
             },
@@ -335,8 +355,8 @@ EOS
                 },
                 expect: function () {
                     it('should call both the .falsy() and .truthy() methods', function () {
-                        expect(state.falsy).to.have.been.calledOnce;
-                        expect(state.truthy).to.have.been.calledOnce;
+                        expect(this.falsy).to.have.been.calledOnce;
+                        expect(this.truthy).to.have.been.calledOnce;
                     });
                 }
             },
@@ -366,46 +386,11 @@ EOS
                 },
                 expect: function () {
                     it('should call both the .falsy() and .alsoFalsy() methods', function () {
-                        expect(state.falsy).to.have.been.calledOnce;
-                        expect(state.alsoFalsy).to.have.been.calledOnce;
+                        expect(this.falsy).to.have.been.calledOnce;
+                        expect(this.alsoFalsy).to.have.been.calledOnce;
                     });
                 }
             }
-        }, function (scenario, description) {
-            describe(description, function () {
-                var exports;
-
-                beforeEach(function (done) {
-                    var expose;
-
-                    exports = {};
-                    expose = {
-                        exports: exports
-                    };
-
-                    if (util.isFunction(scenario.expose)) {
-                        util.extend(expose, scenario.expose(state));
-                    } else {
-                        util.extend(expose, {
-                            tools: scenario.expose
-                        });
-                    }
-
-                    resumable.execute(scenario.code, {expose: expose}).done(function () {
-                        done();
-                    }).fail(function (e) {
-                        done(e);
-                    });
-                });
-
-                it('should resolve the promise with the correct result', function () {
-                    expect(exports).to.deep.equal(scenario.expectedExports);
-                });
-
-                if (scenario.expect) {
-                    scenario.expect();
-                }
-            });
-        });
+        }, tools.check);
     });
 });
