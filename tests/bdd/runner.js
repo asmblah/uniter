@@ -189,6 +189,7 @@ define([
             'bdd/integration/languages/PHP/interpreter/statements/ifTest',
             'bdd/integration/languages/PHP/interpreter/smallTest',
             'bdd/integration/nodeAPITest',
+            'bdd/unit/js/Resumable/Resumable/ifStatementWithoutPauseTest',
             'bdd/unit/js/Resumable/ResumableTest',
             'bdd/unit/js/Resumable/TranspilerTest',
             'bdd/unit/js/InterpreterTest',
