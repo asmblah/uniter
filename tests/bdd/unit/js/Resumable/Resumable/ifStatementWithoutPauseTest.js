@@ -112,6 +112,50 @@ EOS
                         expect(this.getInTruthy).not.to.have.been.called;
                     });
                 }
+            },
+            'when condition is falsy and no compound statement is used': {
+                code: util.heredoc(function (/*<<<EOS
+with (scope) {
+    if (1 === 2)
+        exports.result = inTruthy;
+    else
+        exports.result = inFalsy;
+}
+EOS
+*/) {}),
+                expose: function (state) {
+                    var getInFalsy = sinon.stub().returns('no'),
+                        getInTruthy = sinon.stub().returns('yes'),
+                        scope = {};
+
+                    state.getInFalsy = getInFalsy;
+                    state.getInTruthy = getInTruthy;
+
+                    Object.defineProperties(scope, {
+                        inFalsy: {
+                            get: getInFalsy
+                        },
+                        inTruthy: {
+                            get: getInTruthy
+                        }
+                    });
+
+                    return {
+                        scope: scope
+                    };
+                },
+                expectedExports: {
+                    result: 'no'
+                },
+                expect: function () {
+                    it('should read the inFalsy variable once', function () {
+                        expect(this.getInFalsy).to.have.been.calledOnce;
+                    });
+
+                    it('should not read the inTruthy variable at all', function () {
+                        expect(this.getInTruthy).not.to.have.been.called;
+                    });
+                }
             }
         }, tools.check);
     });

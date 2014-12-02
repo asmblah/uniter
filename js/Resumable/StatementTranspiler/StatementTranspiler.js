@@ -9,19 +9,22 @@
 /*global define */
 define([
     'vendor/esparse/estraverse',
-    'js/util'
+    'js/util',
+    '../BlockContext'
 ], function (
     estraverse,
-    util
+    util,
+    BlockContext
 ) {
     'use strict';
 
-    var TYPE = 'type',
-        hasOwn = {}.hasOwnProperty;
+    var BODY = 'body',
+        TYPE = 'type',
+        hasOwn = {}.hasOwnProperty,
+        Syntax = estraverse.Syntax;
 
-    function StatementTranspiler(statementTranspiler, expressionTranspiler) {
+    function StatementTranspiler(expressionTranspiler) {
         this.expressionTranspiler = expressionTranspiler;
-        this.statementTranspiler = statementTranspiler;
         this.transpilers = {};
     }
 
@@ -38,6 +41,24 @@ define([
             }
 
             return transpiler.transpilers[node[TYPE]].transpile(node, parent, functionContext, blockContext);
+        },
+
+        transpileBlock: function (node, parent, functionContext) {
+            var transpiler = this,
+                ownBlockContext = new BlockContext(functionContext);
+
+            if (node[TYPE] === Syntax.BlockStatement) {
+                transpiler.transpileArray(node[BODY], parent, functionContext, ownBlockContext);
+            } else {
+                transpiler.transpile(node, parent, functionContext, ownBlockContext);
+            }
+
+            return {
+                'type': Syntax.BlockStatement,
+                'body': [
+                    ownBlockContext.getSwitchStatement()
+                ]
+            };
         },
 
         transpileArray: function (array, parent, functionContext, blockContext) {

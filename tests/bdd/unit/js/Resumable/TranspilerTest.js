@@ -680,6 +680,102 @@ EOS
             })).to.equal(expectedOutputJS);
         });
 
+        it('should correctly transpile an if (...) {...} statement with else clause where no compound statements are used', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+if (tools.sayYes)
+    exports.result = 'yes';
+else
+    exports.result = 'no';
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2, temp3;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            temp3 = Resumable._resumeState_.temp3;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                temp0 = tools;
+                statementIndex = 1;
+            case 1:
+                temp1 = temp0.sayYes;
+                statementIndex = 2;
+            case 2:
+                statementIndex = 3;
+            case 3:
+            case 4:
+                if (statementIndex > 3 || temp1) {
+                    switch (statementIndex) {
+                    case 3:
+                        temp2 = exports;
+                        statementIndex = 4;
+                    case 4:
+                        temp2.result = 'yes';
+                        statementIndex = 5;
+                    }
+                }
+                statementIndex = 5;
+            case 5:
+                statementIndex = 6;
+            case 6:
+            case 7:
+                if (statementIndex > 6 || !temp1) {
+                    switch (statementIndex) {
+                    case 6:
+                        temp3 = exports;
+                        statementIndex = 7;
+                    case 7:
+                        temp3.result = 'no';
+                        statementIndex = 8;
+                    }
+                }
+                statementIndex = 8;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '3': 'temp2',
+                        '6': 'temp3'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2,
+                    temp3: temp3
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
+
         it('should correctly transpile a while (...) {...} statement', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
 while (a > 4) {

@@ -9,17 +9,14 @@
 /*global define */
 define([
     'vendor/esparse/estraverse',
-    'js/util',
-    '../BlockContext'
+    'js/util'
 ], function (
     estraverse,
-    util,
-    BlockContext
+    util
 ) {
     'use strict';
 
     var ALTERNATE = 'alternate',
-        BODY = 'body',
         CONSEQUENT = 'consequent',
         TEST = 'test',
         Syntax = estraverse.Syntax;
@@ -35,16 +32,12 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var alternateBlockContext,
-                alternateStatement,
-                consequentBlockContext = new BlockContext(functionContext),
+            var alternateStatement,
                 consequentStatement,
                 transpiler = this,
                 expression = transpiler.expressionTranspiler.transpile(node[TEST], node, functionContext, blockContext);
 
             consequentStatement = blockContext.prepareStatement();
-
-            transpiler.statementTranspiler.transpileArray(node[CONSEQUENT][BODY], node, functionContext, consequentBlockContext);
 
             consequentStatement.assign({
                 'type': Syntax.IfStatement,
@@ -65,20 +58,11 @@ define([
                     },
                     'right': expression
                 },
-                'consequent': {
-                    'type': Syntax.BlockStatement,
-                    'body': [
-                        consequentBlockContext.getSwitchStatement()
-                    ]
-                }
+                'consequent': transpiler.statementTranspiler.transpileBlock(node[CONSEQUENT], node, functionContext)
             });
 
             if (node[ALTERNATE]) {
-                alternateBlockContext = new BlockContext(functionContext);
-
                 alternateStatement = blockContext.prepareStatement();
-
-                transpiler.statementTranspiler.transpileArray(node[ALTERNATE][BODY], node, functionContext, alternateBlockContext);
 
                 alternateStatement.assign({
                     'type': Syntax.IfStatement,
@@ -104,12 +88,7 @@ define([
                             'argument': expression
                         }
                     },
-                    'consequent': {
-                        'type': Syntax.BlockStatement,
-                        'body': [
-                            alternateBlockContext.getSwitchStatement()
-                        ]
-                    }
+                    'consequent': transpiler.statementTranspiler.transpileBlock(node[ALTERNATE], node, functionContext)
                 });
             }
         }
