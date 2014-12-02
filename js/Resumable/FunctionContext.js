@@ -78,7 +78,12 @@ define([
         },
 
         getLastAssignments: function () {
-            return this.lastAssignments;
+            var context = this,
+                lastAssignments = context.lastAssignments;
+
+            context.lastAssignments = [];
+
+            return lastAssignments;
         },
 
         getNextStatementIndex: function () {
