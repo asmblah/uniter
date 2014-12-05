@@ -27,7 +27,9 @@ define([
     './StatementTranspiler/IfStatementTranspiler',
     './ExpressionTranspiler/LogicalExpressionTranspiler',
     './ExpressionTranspiler/MemberExpressionTranspiler',
+    './ExpressionTranspiler/ObjectExpressionTranspiler',
     './StatementTranspiler/ProgramTranspiler',
+    './ExpressionTranspiler/PropertyTranspiler',
     './StatementTranspiler/ReturnStatementTranspiler',
     './StatementTranspiler/StatementTranspiler',
     './StatementTranspiler/TryStatementTranspiler',
@@ -54,7 +56,9 @@ define([
     IfStatementTranspiler,
     LogicalExpressionTranspiler,
     MemberExpressionTranspiler,
+    ObjectExpressionTranspiler,
     ProgramTranspiler,
+    PropertyTranspiler,
     ReturnStatementTranspiler,
     StatementTranspiler,
     TryStatementTranspiler,
@@ -99,7 +103,9 @@ define([
             CallExpressionTranspiler,
             IdentifierTranspiler,
             LogicalExpressionTranspiler,
-            MemberExpressionTranspiler
+            MemberExpressionTranspiler,
+            ObjectExpressionTranspiler,
+            PropertyTranspiler
         ], function (Class) {
             expressionTranspiler.addTranspiler(new Class(statementTranspiler, expressionTranspiler));
         });

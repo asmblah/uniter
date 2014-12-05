@@ -1603,5 +1603,74 @@ EOS
                 }
             })).to.equal(expectedOutputJS);
         });
+
+        it('should correctly transpile each property specified in an object literal', function () {
+            var inputJS = util.heredoc(function (/*<<<EOS
+exports.result = {val1: a + 1, val2: b + 2};
+EOS
+*/) {}),
+                expectedOutputJS = util.heredoc(function (/*<<<EOS
+(function () {
+    var statementIndex = 0, temp0, temp1, temp2;
+    return function resumableScope() {
+        if (Resumable._resumeState_) {
+            statementIndex = Resumable._resumeState_.statementIndex;
+            temp0 = Resumable._resumeState_.temp0;
+            temp1 = Resumable._resumeState_.temp1;
+            temp2 = Resumable._resumeState_.temp2;
+            Resumable._resumeState_ = null;
+        }
+        try {
+            switch (statementIndex) {
+            case 0:
+                temp0 = exports;
+                statementIndex = 1;
+            case 1:
+                temp1 = a;
+                statementIndex = 2;
+            case 2:
+                temp2 = b;
+                statementIndex = 3;
+            case 3:
+                temp0.result = {
+                    val1: temp1 + 1,
+                    val2: temp2 + 2
+                };
+                statementIndex = 4;
+            }
+        } catch (e) {
+            if (e instanceof Resumable.PauseException) {
+                e.add({
+                    func: resumableScope,
+                    statementIndex: statementIndex + 1,
+                    assignments: {
+                        '0': 'temp0',
+                        '1': 'temp1',
+                        '2': 'temp2'
+                    },
+                    temp0: temp0,
+                    temp1: temp1,
+                    temp2: temp2
+                });
+            }
+            throw e;
+        }
+    }();
+});
+EOS
+*/) {}),
+                ast = esprima.parse(inputJS);
+
+            ast = transpiler.transpile(ast);
+
+            expect(escodegen.generate(ast, {
+                format: {
+                    indent: {
+                        style: '    ',
+                        base: 0
+                    }
+                }
+            })).to.equal(expectedOutputJS);
+        });
     });
 });
