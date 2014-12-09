@@ -33,32 +33,30 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var expressions = [],
-                transpiler = this;
+            var transpiler = this;
 
             util.each(node[DECLARATIONS], function (declaration) {
+                var expression;
+
                 functionContext.addVariable(declaration[ID][NAME]);
 
                 if (declaration[INIT] !== null) {
-                    expressions.push({
-                        'type': Syntax.AssignmentExpression,
-                        'operator': '=',
-                        'left': declaration[ID],
-                        'right': transpiler.expressionTranspiler.transpile(
-                            declaration[INIT],
-                            node,
-                            functionContext,
-                            blockContext
-                        )
-                    });
-                }
-            });
+                    expression = transpiler.expressionTranspiler.transpile(
+                        declaration[INIT],
+                        node,
+                        functionContext,
+                        blockContext
+                    );
 
-            blockContext.prepareStatement().assign({
-                'type': Syntax.ExpressionStatement,
-                'expression': {
-                    'type': Syntax.SequenceExpression,
-                    'expressions': expressions
+                    blockContext.prepareStatement().assign({
+                        'type': Syntax.ExpressionStatement,
+                        'expression': {
+                            'type': Syntax.AssignmentExpression,
+                            'operator': '=',
+                            'left': declaration[ID],
+                            'right': expression
+                        }
+                    });
                 }
             });
         }
