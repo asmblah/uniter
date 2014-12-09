@@ -185,125 +185,136 @@ define([
                 type: Syntax.ReturnStatement,
                 argument: {
                     type: Syntax.CallExpression,
-                    arguments: [],
+                    arguments: [
+                        {
+                            type: Syntax.ThisExpression
+                        }
+                    ],
                     callee: {
-                        type: Syntax.FunctionExpression,
-                        id: {
-                            type: Syntax.Identifier,
-                            name: 'resumableScope'
-                        },
-                        params: [],
-                        body: {
-                            type: Syntax.BlockStatement,
-                            body: [
-                                stateSetup,
-                                {
-                                    type: Syntax.TryStatement,
-                                    block: {
-                                        type: Syntax.BlockStatement,
-                                        body: [
-                                            switchStatement
-                                        ]
-                                    },
-                                    handler: {
-                                        type: Syntax.CatchClause,
-                                        param: {
-                                            type: Syntax.Identifier,
-                                            name: 'e'
-                                        },
-                                        body: {
+                        type: Syntax.MemberExpression,
+                        object: {
+                            type: Syntax.FunctionExpression,
+                            id: {
+                                type: Syntax.Identifier,
+                                name: 'resumableScope'
+                            },
+                            params: [],
+                            body: {
+                                type: Syntax.BlockStatement,
+                                body: [
+                                    stateSetup,
+                                    {
+                                        type: Syntax.TryStatement,
+                                        block: {
                                             type: Syntax.BlockStatement,
                                             body: [
-                                                {
-                                                    type: Syntax.IfStatement,
-                                                    test: esprima.parse('e instanceof Resumable.PauseException').body[0].expression,
-                                                    consequent: {
-                                                        type: Syntax.BlockStatement,
-                                                        body: [
-                                                            {
-                                                                type: Syntax.ExpressionStatement,
-                                                                expression: {
-                                                                    type: Syntax.CallExpression,
-                                                                    callee: {
-                                                                        type: Syntax.MemberExpression,
-                                                                        object: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'e'
+                                                switchStatement
+                                            ]
+                                        },
+                                        handler: {
+                                            type: Syntax.CatchClause,
+                                            param: {
+                                                type: Syntax.Identifier,
+                                                name: 'e'
+                                            },
+                                            body: {
+                                                type: Syntax.BlockStatement,
+                                                body: [
+                                                    {
+                                                        type: Syntax.IfStatement,
+                                                        test: esprima.parse('e instanceof Resumable.PauseException').body[0].expression,
+                                                        consequent: {
+                                                            type: Syntax.BlockStatement,
+                                                            body: [
+                                                                {
+                                                                    type: Syntax.ExpressionStatement,
+                                                                    expression: {
+                                                                        type: Syntax.CallExpression,
+                                                                        callee: {
+                                                                            type: Syntax.MemberExpression,
+                                                                            object: {
+                                                                                type: Syntax.Identifier,
+                                                                                name: 'e'
+                                                                            },
+                                                                            property: {
+                                                                                type: Syntax.Identifier,
+                                                                                name: 'add'
+                                                                            },
+                                                                            computed: false
                                                                         },
-                                                                        property: {
-                                                                            type: Syntax.Identifier,
-                                                                            name: 'add'
-                                                                        },
-                                                                        computed: false
-                                                                    },
-                                                                    arguments: [
-                                                                        {
-                                                                            type: Syntax.ObjectExpression,
-                                                                            properties: [
-                                                                                {
-                                                                                    type: Syntax.Property,
-                                                                                    kind: 'init',
-                                                                                    key: {
-                                                                                        type: Syntax.Identifier,
-                                                                                        name: 'func'
+                                                                        arguments: [
+                                                                            {
+                                                                                type: Syntax.ObjectExpression,
+                                                                                properties: [
+                                                                                    {
+                                                                                        type: Syntax.Property,
+                                                                                        kind: 'init',
+                                                                                        key: {
+                                                                                            type: Syntax.Identifier,
+                                                                                            name: 'func'
+                                                                                        },
+                                                                                        value: {
+                                                                                            type: Syntax.Identifier,
+                                                                                            name: 'resumableScope'
+                                                                                        }
                                                                                     },
-                                                                                    value: {
-                                                                                        type: Syntax.Identifier,
-                                                                                        name: 'resumableScope'
-                                                                                    }
-                                                                                },
-                                                                                {
-                                                                                    type: Syntax.Property,
-                                                                                    kind: 'init',
-                                                                                    key: {
-                                                                                        type: Syntax.Identifier,
-                                                                                        name: 'statementIndex'
-                                                                                    },
-                                                                                    value: {
-                                                                                        type: Syntax.BinaryExpression,
-                                                                                        operator: '+',
-                                                                                        left: {
+                                                                                    {
+                                                                                        type: Syntax.Property,
+                                                                                        kind: 'init',
+                                                                                        key: {
                                                                                             type: Syntax.Identifier,
                                                                                             name: 'statementIndex'
                                                                                         },
-                                                                                        right: {
-                                                                                            type: Syntax.Literal,
-                                                                                            value: 1
+                                                                                        value: {
+                                                                                            type: Syntax.BinaryExpression,
+                                                                                            operator: '+',
+                                                                                            left: {
+                                                                                                type: Syntax.Identifier,
+                                                                                                name: 'statementIndex'
+                                                                                            },
+                                                                                            right: {
+                                                                                                type: Syntax.Literal,
+                                                                                                value: 1
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        type: Syntax.Property,
+                                                                                        kind: 'init',
+                                                                                        key: {
+                                                                                            type: Syntax.Identifier,
+                                                                                            name: 'assignments'
+                                                                                        },
+                                                                                        value: {
+                                                                                            type: Syntax.ObjectExpression,
+                                                                                            properties: assignmentProperties
                                                                                         }
                                                                                     }
-                                                                                },
-                                                                                {
-                                                                                    type: Syntax.Property,
-                                                                                    kind: 'init',
-                                                                                    key: {
-                                                                                        type: Syntax.Identifier,
-                                                                                        name: 'assignments'
-                                                                                    },
-                                                                                    value: {
-                                                                                        type: Syntax.ObjectExpression,
-                                                                                        properties: assignmentProperties
-                                                                                    }
-                                                                                }
-                                                                            ].concat(stateProperties)
-                                                                        }
-                                                                    ]
+                                                                                ].concat(stateProperties)
+                                                                            }
+                                                                        ]
+                                                                    }
                                                                 }
-                                                            }
-                                                        ]
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        type: Syntax.ThrowStatement,
+                                                        argument: {
+                                                            type: Syntax.Identifier,
+                                                            name: 'e'
+                                                        }
                                                     }
-                                                },
-                                                {
-                                                    type: Syntax.ThrowStatement,
-                                                    argument: {
-                                                        type: Syntax.Identifier,
-                                                        name: 'e'
-                                                    }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
-                                }
-                            ]
+                                ]
+                            }
+                        },
+                        property: {
+                            type: Syntax.Identifier,
+                            name: 'call'
                         }
                     }
                 }

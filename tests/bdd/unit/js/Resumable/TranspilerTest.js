@@ -72,7 +72,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -124,7 +124,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -184,7 +184,7 @@ EOS
                 }
                 throw e;
             }
-        }();
+        }.call(this);
     }
     return function resumableScope() {
         if (Resumable._resumeState_) {
@@ -220,7 +220,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -290,7 +290,7 @@ EOS
                 }
                 throw e;
             }
-        }();
+        }.call(this);
     }
     return function resumableScope() {
         if (Resumable._resumeState_) {
@@ -326,7 +326,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -398,7 +398,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -476,7 +476,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -553,7 +553,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -650,7 +650,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -740,7 +740,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -836,7 +836,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -930,7 +930,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -995,7 +995,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1072,7 +1072,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1138,7 +1138,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1216,7 +1216,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1294,7 +1294,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1381,7 +1381,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1451,7 +1451,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1517,7 +1517,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1586,7 +1586,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
@@ -1655,7 +1655,7 @@ EOS
             }
             throw e;
         }
-    }();
+    }.call(this);
 });
 EOS
 */) {}),
