@@ -390,6 +390,37 @@ EOS
                         expect(this.alsoFalsy).to.have.been.calledOnce;
                     });
                 }
+            },
+            'throwing error synchronously, no pause': {
+                code: util.heredoc(function (/*<<<EOS
+throw new Error('Good, I have worked sync');
+EOS
+*/) {}),
+                expectedError: new Error('Good, I have worked sync')
+            },
+            'throwing error after async pause': {
+                code: util.heredoc(function (/*<<<EOS
+tools.getNumber();
+
+throw new Error('Good, I have worked async');
+EOS
+*/) {}),
+                expose: function (state) {
+                    return {
+                        tools: {
+                            getNumber: function () {
+                                var pause = state.resumable.createPause();
+
+                                setTimeout(function () {
+                                    pause.resume(21);
+                                });
+
+                                pause.now();
+                            }
+                        }
+                    };
+                },
+                expectedError: new Error('Good, I have worked async')
             }
         }, tools.check);
     });

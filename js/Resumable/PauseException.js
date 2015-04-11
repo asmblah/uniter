@@ -33,7 +33,18 @@ define([
         resume: function (result) {
             var exception = this;
 
-            exception.resumer(exception.promise, result, exception.states);
+            try {
+                exception.resumer(exception.promise, result, exception.states);
+            } catch (e) {
+                // Just re-throw if another PauseException gets raised,
+                // we're just looking for normal errors
+                if (e instanceof PauseException) {
+                    throw e;
+                }
+
+                // Reject the promise for the run with the error thrown
+                exception.promise.reject(e);
+            }
         },
 
         setPromise: function (promise) {

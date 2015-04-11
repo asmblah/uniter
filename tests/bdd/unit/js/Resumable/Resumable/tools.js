@@ -27,6 +27,7 @@ define([
                 beforeEach(function (done) {
                     var expose;
 
+                    this.resolved = false;
                     this.resumable = new Resumable(new Transpiler());
 
                     exports = {};
@@ -43,15 +44,24 @@ define([
                     }
 
                     this.resumable.execute(scenario.code, {expose: expose}).done(function () {
+                        this.resolved = true;
                         done();
-                    }).fail(function (e) {
-                        done(e);
-                    });
+                    }.bind(this)).fail(function (e) {
+                        this.resolved = false;
+                        this.error = e;
+                        done();
+                    }.bind(this));
                 });
 
-                it('should resolve the promise with the correct result', function () {
-                    expect(exports).to.deep.equal(scenario.expectedExports);
-                });
+                if (scenario.expectedExports) {
+                    it('should resolve the promise with the correct result', function () {
+                        expect(exports).to.deep.equal(scenario.expectedExports);
+                    });
+                } else {
+                    it('should reject the promise with the correct error', function () {
+                        expect(this.error.toString()).to.equal(scenario.expectedError.toString());
+                    });
+                }
 
                 if (scenario.expect) {
                     scenario.expect();
