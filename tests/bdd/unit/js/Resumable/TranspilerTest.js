@@ -1319,7 +1319,7 @@ EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
+    var statementIndex = 0, temp0, temp1, temp2, temp3, temp4, temp5;
     return function resumableScope() {
         if (Resumable._resumeState_) {
             statementIndex = Resumable._resumeState_.statementIndex;
@@ -1328,6 +1328,7 @@ EOS
             temp2 = Resumable._resumeState_.temp2;
             temp3 = Resumable._resumeState_.temp3;
             temp4 = Resumable._resumeState_.temp4;
+            temp5 = Resumable._resumeState_.temp5;
             Resumable._resumeState_ = null;
         }
         try {
@@ -1357,8 +1358,11 @@ EOS
                 }
                 statementIndex = 6;
             case 6:
-                temp0.result = temp2 || temp4;
+                temp5 = temp2 || temp4;
                 statementIndex = 7;
+            case 7:
+                temp0.result = temp5;
+                statementIndex = 8;
             }
         } catch (e) {
             if (e instanceof Resumable.PauseException) {
@@ -1370,13 +1374,15 @@ EOS
                         '1': 'temp1',
                         '2': 'temp2',
                         '4': 'temp3',
-                        '5': 'temp4'
+                        '5': 'temp4',
+                        '6': 'temp5'
                     },
                     temp0: temp0,
                     temp1: temp1,
                     temp2: temp2,
                     temp3: temp3,
-                    temp4: temp4
+                    temp4: temp4,
+                    temp5: temp5
                 });
             }
             throw e;

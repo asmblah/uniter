@@ -38,6 +38,7 @@ define([
                 right,
                 rightSideBlockContext,
                 statement,
+                tempName,
                 transpiler = this;
 
             left = transpiler.expressionTranspiler.transpile(node[LEFT], node, functionContext, blockContext);
@@ -80,11 +81,18 @@ define([
                 }
             });
 
-            return {
+            tempName = functionContext.getTempName();
+
+            blockContext.addAssignment(tempName).assign({
                 'type': Syntax.LogicalExpression,
                 'operator': node[OPERATOR],
                 'left': left,
                 'right': right
+            });
+
+            return {
+                'type': Syntax.Identifier,
+                'name': tempName
             };
         }
     });
