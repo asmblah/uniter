@@ -19,7 +19,6 @@ define([
     'use strict';
 
     var LEFT = 'left',
-        NAME = 'name',
         OPERATOR = 'operator',
         RIGHT = 'right',
         Syntax = estraverse.Syntax;
@@ -70,10 +69,7 @@ define([
                         'type': Syntax.UnaryExpression,
                         'operator': '!',
                         'prefix': true,
-                        'argument': {
-                            'type': Syntax.Identifier,
-                            'name': left[NAME]
-                        }
+                        'argument': left
                     }
                 },
                 'consequent': {
