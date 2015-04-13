@@ -191,6 +191,7 @@ define([
             'bdd/integration/nodeAPITest',
             'bdd/unit/js/Resumable/Resumable/ifStatementWithoutPauseTest',
             'bdd/unit/js/Resumable/Resumable/ifStatementWithPauseTest',
+            'bdd/unit/js/Resumable/Transpiler/doWhileStatementTest',
             'bdd/unit/js/Resumable/Transpiler/labeledStatementTest',
             'bdd/unit/js/Resumable/Transpiler/throwStatementTest',
             'bdd/unit/js/Resumable/ResumableTest',
