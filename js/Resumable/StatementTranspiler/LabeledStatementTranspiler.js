@@ -16,33 +16,31 @@ define([
 ) {
     'use strict';
 
-    var LABEL = 'label',
+    var BODY = 'body',
+        LABEL = 'label',
         Syntax = estraverse.Syntax;
 
-    function BreakStatementTranspiler(statementTranspiler, expressionTranspiler) {
+    function LabeledStatementTranspiler(statementTranspiler, expressionTranspiler) {
         this.expressionTranspiler = expressionTranspiler;
         this.statementTranspiler = statementTranspiler;
     }
 
-    util.extend(BreakStatementTranspiler.prototype, {
+    util.extend(LabeledStatementTranspiler.prototype, {
         getNodeType: function () {
-            return Syntax.BreakStatement;
+            return Syntax.LabeledStatement;
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var label = node[LABEL] ?
-                node[LABEL] :
-                {
-                    'type': Syntax.Identifier,
-                    'name': functionContext.getLabel()
-                };
+            var transpiler = this,
+                statement = blockContext.prepareStatement();
 
-            blockContext.prepareStatement().assign({
-                'type': Syntax.BreakStatement,
-                'label': label
+            statement.assign({
+                'type': Syntax.LabeledStatement,
+                'label': node[LABEL],
+                'body': transpiler.statementTranspiler.transpileBlock(node[BODY], node, functionContext)
             });
         }
     });
 
-    return BreakStatementTranspiler;
+    return LabeledStatementTranspiler;
 });
