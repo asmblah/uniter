@@ -197,6 +197,7 @@ define([
             'bdd/unit/js/Resumable/Transpiler/doWhileStatementTest',
             'bdd/unit/js/Resumable/Transpiler/labeledStatementTest',
             'bdd/unit/js/Resumable/Transpiler/logicalExpressionTest',
+            'bdd/unit/js/Resumable/Transpiler/sequenceExpressionTest',
             'bdd/unit/js/Resumable/Transpiler/throwStatementTest',
             'bdd/unit/js/Resumable/ResumableTest',
             'bdd/unit/js/Resumable/TranspilerTest',
