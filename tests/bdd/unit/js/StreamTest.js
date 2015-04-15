@@ -86,5 +86,19 @@ define([
                 });
             });
         });
+
+        describe('write()', function () {
+            util.each(['some new data', 'other new data'], function (data) {
+                it('should emit a "data" event with the newly written data when "' + data + '"', function () {
+                    var onData = sinon.spy();
+                    stream.on('data', onData);
+
+                    stream.write(data);
+
+                    expect(onData).to.have.been.calledOnce;
+                    expect(onData).to.have.been.calledWith(data);
+                });
+            });
+        });
     });
 });
