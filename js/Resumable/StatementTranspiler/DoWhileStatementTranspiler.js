@@ -41,6 +41,8 @@ define([
                 expression,
                 statement;
 
+            functionContext.pushLabelableContext();
+
             statement = blockContext.prepareStatement();
 
             transpiler.statementTranspiler.transpileArray(node[BODY][BODY], node, functionContext, ownBlockContext);
@@ -92,7 +94,7 @@ define([
                 'body': forNode
             } : forNode);
 
-            functionContext.endLabelableContext();
+            functionContext.popLabelableContext();
         }
     });
 

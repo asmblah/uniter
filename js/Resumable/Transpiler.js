@@ -21,6 +21,7 @@ define([
     './StatementTranspiler/DoWhileStatementTranspiler',
     './StatementTranspiler/ExpressionStatementTranspiler',
     './ExpressionTranspiler/ExpressionTranspiler',
+    './StatementTranspiler/ForStatementTranspiler',
     './StatementTranspiler/FunctionDeclarationTranspiler',
     './ExpressionTranspiler/FunctionExpressionTranspiler',
     './FunctionTranspiler',
@@ -33,9 +34,11 @@ define([
     './StatementTranspiler/ProgramTranspiler',
     './ExpressionTranspiler/PropertyTranspiler',
     './StatementTranspiler/ReturnStatementTranspiler',
+    './ExpressionTranspiler/SequenceExpressionTranspiler',
     './StatementTranspiler/StatementTranspiler',
     './StatementTranspiler/ThrowStatementTranspiler',
     './StatementTranspiler/TryStatementTranspiler',
+    './ExpressionTranspiler/UpdateExpressionTranspiler',
     './StatementTranspiler/VariableDeclarationTranspiler',
     './StatementTranspiler/WhileStatementTranspiler',
     './StatementTranspiler/WithStatementTranspiler',
@@ -53,6 +56,7 @@ define([
     DoWhileStatementTranspiler,
     ExpressionStatementTranspiler,
     ExpressionTranspiler,
+    ForStatementTranspiler,
     FunctionDeclarationTranspiler,
     FunctionExpressionTranspiler,
     FunctionTranspiler,
@@ -65,9 +69,11 @@ define([
     ProgramTranspiler,
     PropertyTranspiler,
     ReturnStatementTranspiler,
+    SequenceExpressionTranspiler,
     StatementTranspiler,
     ThrowStatementTranspiler,
     TryStatementTranspiler,
+    UpdateExpressionTranspiler,
     VariableDeclarationTranspiler,
     WhileStatementTranspiler,
     WithStatementTranspiler
@@ -84,6 +90,7 @@ define([
             BreakStatementTranspiler,
             DoWhileStatementTranspiler,
             ExpressionStatementTranspiler,
+            ForStatementTranspiler,
             IfStatementTranspiler,
             LabeledStatementTranspiler,
             ProgramTranspiler,
@@ -114,7 +121,9 @@ define([
             LogicalExpressionTranspiler,
             MemberExpressionTranspiler,
             ObjectExpressionTranspiler,
-            PropertyTranspiler
+            PropertyTranspiler,
+            SequenceExpressionTranspiler,
+            UpdateExpressionTranspiler
         ], function (Class) {
             expressionTranspiler.addTranspiler(new Class(statementTranspiler, expressionTranspiler));
         });

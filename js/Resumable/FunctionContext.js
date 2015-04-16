@@ -26,9 +26,11 @@ define([
     function FunctionContext() {
         this.assignmentVariables = {};
         this.functionDeclarations = [];
-        this.labelIndex = null;
+        this.labelIndex = -1;
+        this.labelUsed = false;
+        this.labelUseds = [];
         this.lastAssignments = [];
-        this.nextLabelIndex = 0;
+        this.lastTempNames = {};
         this.nextStatementIndex = 0;
         this.nextTempIndex = 0;
         this.parameters = [];
@@ -59,10 +61,6 @@ define([
             this.lastAssignments = [];
         },
 
-        endLabelableContext: function () {
-            this.labelIndex = null;
-        },
-
         getCurrentStatementIndex: function () {
             return this.nextStatementIndex;
         },
@@ -70,9 +68,7 @@ define([
         getLabel: function () {
             var context = this;
 
-            if (context.labelIndex === null) {
-                context.labelIndex = this.nextLabelIndex++;
-            }
+            context.labelUsed = true;
 
             return 'label' + context.labelIndex;
         },
@@ -333,12 +329,22 @@ define([
 
             tempName = context.getTempName();
 
+            context.lastTempNames[variableName] = tempName;
+
             blockContext.addAssignment(tempName).assign({
                 'type': Syntax.Identifier,
                 'name': variableName
             });
 
             return tempName;
+        },
+
+        getLastTempName: function () {
+            return 'temp' + (this.nextTempIndex - 1);
+        },
+
+        getLastTempNameForVariable: function (variableName) {
+            return this.lastTempNames[variableName];
         },
 
         hasVariableDefined: function (name) {
@@ -361,7 +367,24 @@ define([
         },
 
         isLabelUsed: function () {
-            return this.labelIndex !== null;
+            var context = this;
+
+            return context.labelUsed;
+        },
+
+        popLabelableContext: function () {
+            var context = this;
+
+            context.labelUsed = context.labelUseds.pop();
+            context.labelIndex--;
+        },
+
+        pushLabelableContext: function () {
+            var context = this;
+
+            context.labelUseds.push(context.labelUsed);
+            context.labelUsed = false;
+            context.labelIndex++;
         }
     });
 
