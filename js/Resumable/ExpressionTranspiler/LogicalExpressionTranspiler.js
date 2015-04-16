@@ -34,7 +34,8 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var left,
+            var condition,
+                left,
                 right,
                 rightSideBlockContext,
                 statement,
@@ -48,6 +49,21 @@ define([
             rightSideBlockContext = new BlockContext(functionContext);
 
             right = transpiler.expressionTranspiler.transpile(node[RIGHT], node, functionContext, rightSideBlockContext);
+
+            /**
+             * Support short-circuit evaluation of the operands -
+             * when '&&' and left operand is truthy, evaluate right,
+             * when '||' and left operand is truthy, do not,
+             * and vice versa.
+             */
+            condition = node[OPERATOR] === '||' ?
+                {
+                    'type': Syntax.UnaryExpression,
+                    'operator': '!',
+                    'prefix': true,
+                    'argument': left
+                } :
+                left;
 
             statement.assign({
                 'type': Syntax.IfStatement,
@@ -66,12 +82,7 @@ define([
                             'value': statement.getIndex() + 1
                         }
                     },
-                    'right': {
-                        'type': Syntax.UnaryExpression,
-                        'operator': '!',
-                        'prefix': true,
-                        'argument': left
-                    }
+                    'right': condition
                 },
                 'consequent': {
                     'type': Syntax.BlockStatement,
