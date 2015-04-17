@@ -18,6 +18,7 @@ define([
     './StatementTranspiler/BlockStatementTranspiler',
     './StatementTranspiler/BreakStatementTranspiler',
     './ExpressionTranspiler/CallExpressionTranspiler',
+    './StatementTranspiler/ContinueStatementTranspiler',
     './StatementTranspiler/DoWhileStatementTranspiler',
     './StatementTranspiler/ExpressionStatementTranspiler',
     './ExpressionTranspiler/ExpressionTranspiler',
@@ -53,6 +54,7 @@ define([
     BlockStatementTranspiler,
     BreakStatementTranspiler,
     CallExpressionTranspiler,
+    ContinueStatementTranspiler,
     DoWhileStatementTranspiler,
     ExpressionStatementTranspiler,
     ExpressionTranspiler,
@@ -88,6 +90,7 @@ define([
         util.each([
             BlockStatementTranspiler,
             BreakStatementTranspiler,
+            ContinueStatementTranspiler,
             DoWhileStatementTranspiler,
             ExpressionStatementTranspiler,
             ForStatementTranspiler,
