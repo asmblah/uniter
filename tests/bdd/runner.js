@@ -194,6 +194,7 @@ define([
             'bdd/unit/js/Resumable/Resumable/ifStatementWithoutPauseTest',
             'bdd/unit/js/Resumable/Resumable/ifStatementWithPauseTest',
             'bdd/unit/js/Resumable/Resumable/returnStatementTest',
+            'bdd/unit/js/Resumable/Transpiler/blockStatementTest',
             'bdd/unit/js/Resumable/Transpiler/doWhileStatementTest',
             'bdd/unit/js/Resumable/Transpiler/forStatementTest',
             'bdd/unit/js/Resumable/Transpiler/labeledStatementTest',

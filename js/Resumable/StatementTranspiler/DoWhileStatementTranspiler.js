@@ -79,8 +79,8 @@ define([
                 'body': {
                     'type': Syntax.BlockStatement,
                     'body': [
-                        ownBlockContext.getSwitchStatement(),
-                        esprima.parse('statementIndex = ' + (statement.getIndex() + 1) + ';').body[0]
+                        esprima.parse('statementIndex = ' + (statement.getIndex() + 1) + ';').body[0],
+                        ownBlockContext.getSwitchStatement()
                     ]
                 }
             };

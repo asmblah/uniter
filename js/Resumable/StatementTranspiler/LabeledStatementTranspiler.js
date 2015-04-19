@@ -31,14 +31,18 @@ define([
         },
 
         transpile: function (node, parent, functionContext, blockContext) {
-            var transpiler = this,
-                statement = blockContext.prepareStatement();
+            var label = node[LABEL],
+                transpiler = this;
 
-            statement.assign({
-                'type': Syntax.LabeledStatement,
-                'label': node[LABEL],
-                'body': transpiler.statementTranspiler.transpileBlock(node[BODY], node, functionContext)
+            blockContext.transformNextStatement(function (node) {
+                return {
+                    'type': Syntax.LabeledStatement,
+                    'label': label,
+                    'body': node
+                };
             });
+
+            transpiler.statementTranspiler.transpile(node[BODY], node, functionContext, blockContext);
         }
     });
 

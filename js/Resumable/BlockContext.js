@@ -23,6 +23,7 @@ define([
     function BlockContext(functionContext) {
         this.functionContext = functionContext;
         this.switchCases = [];
+        this.transformNext = null;
     }
 
     util.extend(BlockContext.prototype, {
@@ -90,6 +91,11 @@ define([
                     var i,
                         switchCases = [];
 
+                    if (context.transformNext) {
+                        statementNode = context.transformNext(statementNode);
+                        context.transformNext = null;
+                    }
+
                     if (!endIndex) {
                         endIndex = context.functionContext.getCurrentStatementIndex();
                     }
@@ -124,6 +130,10 @@ define([
                     return index;
                 }
             };
+        },
+
+        transformNextStatement: function (transformer) {
+            this.transformNext = transformer;
         }
     });
 

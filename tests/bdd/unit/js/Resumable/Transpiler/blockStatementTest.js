@@ -20,80 +20,61 @@ define([
 ) {
     'use strict';
 
-    describe('Resumable Transpiler do...while statement', function () {
+    describe('Resumable Transpiler block statement', function () {
         var transpiler;
 
         beforeEach(function () {
             transpiler = new Transpiler();
         });
 
-        it('should correctly transpile a break out of do...while statement', function () {
+        it('should correctly transpile a block statement containing break', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
-print(1);
-do {
+my_block: {
+    print(1);
+    break my_block;
     print(2);
-    break;
-} while (a < 4);
-print(3);
+}
 EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = 0, temp0, temp1, temp2, temp3;
+    var statementIndex = 0, temp0, temp1;
     return function resumableScope() {
         if (Resumable._resumeState_) {
             statementIndex = Resumable._resumeState_.statementIndex;
             temp0 = Resumable._resumeState_.temp0;
             temp1 = Resumable._resumeState_.temp1;
-            temp2 = Resumable._resumeState_.temp2;
-            temp3 = Resumable._resumeState_.temp3;
             Resumable._resumeState_ = null;
         }
         try {
             switch (statementIndex) {
             case 0:
-                temp0 = print;
                 statementIndex = 1;
             case 1:
-                temp0(1);
-                statementIndex = 2;
             case 2:
-                statementIndex = 3;
             case 3:
             case 4:
             case 5:
-            case 6:
-            case 7:
-                label0:
-                    for (;;) {
+                my_block: {
+                    switch (statementIndex) {
+                    case 1:
+                        temp0 = print;
+                        statementIndex = 2;
+                    case 2:
+                        temp0(1);
                         statementIndex = 3;
-                        switch (statementIndex) {
-                        case 3:
-                            temp1 = print;
-                            statementIndex = 4;
-                        case 4:
-                            temp1(2);
-                            statementIndex = 5;
-                        case 5:
-                            break label0;
-                            statementIndex = 6;
-                        case 6:
-                            temp2 = a;
-                            statementIndex = 7;
-                        case 7:
-                            if (!(temp2 < 4)) {
-                                break label0;
-                            }
-                            statementIndex = 8;
-                        }
+                    case 3:
+                        break my_block;
+                        statementIndex = 4;
+                    case 4:
+                        temp1 = print;
+                        statementIndex = 5;
+                    case 5:
+                        temp1(2);
+                        statementIndex = 6;
                     }
-                statementIndex = 8;
-            case 8:
-                temp3 = print;
-                statementIndex = 9;
-            case 9:
-                temp3(3);
-                statementIndex = 10;
+                }
+                statementIndex = 6;
             }
         } catch (e) {
             if (e instanceof Resumable.PauseException) {
@@ -101,15 +82,11 @@ EOS
                     func: resumableScope,
                     statementIndex: statementIndex + 1,
                     assignments: {
-                        '0': 'temp0',
-                        '3': 'temp1',
-                        '6': 'temp2',
-                        '8': 'temp3'
+                        '1': 'temp0',
+                        '4': 'temp1'
                     },
                     temp0: temp0,
-                    temp1: temp1,
-                    temp2: temp2,
-                    temp3: temp3
+                    temp1: temp1
                 });
             }
             throw e;
@@ -132,19 +109,24 @@ EOS
             })).to.equal(expectedOutputJS);
         });
 
-        it('should correctly transpile a do...while with labeled continue', function () {
+        it('should correctly transpile a nested block statement containing break', function () {
             var inputJS = util.heredoc(function (/*<<<EOS
-print(1);
-my_block: do {
-    print(2);
-    continue my_block;
-} while (a < 4);
-print(3);
+my_block: {
+    print(1);
+    another_block: {
+        print(2);
+        break my_block;
+        print(3);
+        break another_block;
+        print(4);
+    }
+    print(5);
+}
 EOS
 */) {}),
                 expectedOutputJS = util.heredoc(function (/*<<<EOS
 (function () {
-    var statementIndex = 0, temp0, temp1, temp2, temp3;
+    var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
     return function resumableScope() {
         if (Resumable._resumeState_) {
             statementIndex = Resumable._resumeState_.statementIndex;
@@ -152,54 +134,82 @@ EOS
             temp1 = Resumable._resumeState_.temp1;
             temp2 = Resumable._resumeState_.temp2;
             temp3 = Resumable._resumeState_.temp3;
+            temp4 = Resumable._resumeState_.temp4;
             Resumable._resumeState_ = null;
         }
         try {
             switch (statementIndex) {
             case 0:
-                temp0 = print;
                 statementIndex = 1;
             case 1:
-                temp0(1);
-                statementIndex = 2;
             case 2:
-                statementIndex = 3;
             case 3:
             case 4:
             case 5:
             case 6:
             case 7:
-                my_block:
-                    label0:
-                        for (;;) {
-                            statementIndex = 3;
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                my_block: {
+                    switch (statementIndex) {
+                    case 1:
+                        temp0 = print;
+                        statementIndex = 2;
+                    case 2:
+                        temp0(1);
+                        statementIndex = 3;
+                    case 3:
+                        statementIndex = 4;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                        another_block: {
                             switch (statementIndex) {
-                            case 3:
-                                temp1 = print;
-                                statementIndex = 4;
                             case 4:
-                                temp1(2);
+                                temp1 = print;
                                 statementIndex = 5;
                             case 5:
-                                continue my_block;
+                                temp1(2);
                                 statementIndex = 6;
                             case 6:
-                                temp2 = a;
+                                break my_block;
                                 statementIndex = 7;
                             case 7:
-                                if (!(temp2 < 4)) {
-                                    break label0;
-                                }
+                                temp2 = print;
                                 statementIndex = 8;
+                            case 8:
+                                temp2(3);
+                                statementIndex = 9;
+                            case 9:
+                                break another_block;
+                                statementIndex = 10;
+                            case 10:
+                                temp3 = print;
+                                statementIndex = 11;
+                            case 11:
+                                temp3(4);
+                                statementIndex = 12;
                             }
                         }
-                statementIndex = 8;
-            case 8:
-                temp3 = print;
-                statementIndex = 9;
-            case 9:
-                temp3(3);
-                statementIndex = 10;
+                        statementIndex = 12;
+                    case 12:
+                        temp4 = print;
+                        statementIndex = 13;
+                    case 13:
+                        temp4(5);
+                        statementIndex = 14;
+                    }
+                }
+                statementIndex = 14;
             }
         } catch (e) {
             if (e instanceof Resumable.PauseException) {
@@ -207,15 +217,17 @@ EOS
                     func: resumableScope,
                     statementIndex: statementIndex + 1,
                     assignments: {
-                        '0': 'temp0',
-                        '3': 'temp1',
-                        '6': 'temp2',
-                        '8': 'temp3'
+                        '1': 'temp0',
+                        '4': 'temp1',
+                        '7': 'temp2',
+                        '10': 'temp3',
+                        '12': 'temp4'
                     },
                     temp0: temp0,
                     temp1: temp1,
                     temp2: temp2,
-                    temp3: temp3
+                    temp3: temp3,
+                    temp4: temp4
                 });
             }
             throw e;
