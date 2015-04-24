@@ -393,7 +393,7 @@ define([
         State: PHPState,
         nodes: {
             'N_ARRAY_CAST': function (node, interpret) {
-                return interpret(node.value) + '.coerceToArray()';
+                return interpret(node.value, {getValue: true}) + '.coerceToArray()';
             },
             'N_ARRAY_INDEX': function (node, interpret, context) {
                 var arrayVariableCode,
@@ -624,7 +624,7 @@ define([
                 var args = [];
 
                 util.each(node.args, function (arg) {
-                    args.push(interpret(arg));
+                    args.push(interpret(arg, {getValue: false}));
                 });
 
                 return '(' + interpret(node.func, {getValue: true, allowBareword: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
@@ -789,7 +789,7 @@ define([
                     code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.getNative(), [' + args.join(', ') + '])';
                 });
 
-                return interpret(node.object) + code;
+                return interpret(node.object, {getValue: true}) + code;
             },
             'N_METHOD_DEFINITION': function (node, interpret) {
                 return {
