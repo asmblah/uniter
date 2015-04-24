@@ -283,9 +283,18 @@ define([
             } else {
                 variable = argNode.variable;
                 valueCode += variable;
+
+                if (!argNode.reference) {
+                    valueCode += '.getValue()';
+                }
             }
 
-            argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
+            if (argNode.reference) {
+                argumentAssignments += 'scope.getVariable("' + variable + '").setReference(' + valueCode + '.getReference());';
+            } else {
+                argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
+            }
+
             args[index] = '$' + variable;
         });
 
