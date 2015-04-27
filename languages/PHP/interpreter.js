@@ -119,14 +119,15 @@ define([
         }
 
         var engine = state.getEngine(),
+            exports = {},
             globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
             promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
-            result,
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
+            resumable = state.getResumable(),
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
@@ -199,12 +200,22 @@ define([
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
-        try {
-            /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
-                stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
-            );
-        } catch (exception) {
+        code = 'exports.result = (function () {' + code + '}());';
+
+        resumable.execute(code, {
+            expose: {
+                exports: exports,
+                stdin: stdin,
+                stdout: stdout,
+                stderr: stderr,
+                tools: tools,
+                callStack: callStack,
+                globalScope: globalScope,
+                namespace: globalNamespace
+            }
+        }).done(function () {
+            promise.resolve(exports.result.getNative(), exports.result.getType());
+        }).fail(function (exception) {
             if (exception instanceof ObjectValue) {
                 // Uncaught PHP Exceptions become E_FATAL errors
                 (function (value) {
@@ -235,9 +246,9 @@ define([
             }
 
             throw exception;
-        }
+        });
 
-        return promise.resolve(result.getNative(), result.getType());
+        return promise;
     }
 
     function hoistDeclarations(statements) {

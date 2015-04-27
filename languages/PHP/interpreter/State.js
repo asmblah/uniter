@@ -16,6 +16,8 @@ define([
     './ClassAutoloader',
     './Namespace',
     './ReferenceFactory',
+    'js/Resumable/Resumable',
+    'js/Resumable/Transpiler',
     './Scope',
     './ValueFactory'
 ], function (
@@ -26,6 +28,8 @@ define([
     ClassAutoloader,
     Namespace,
     ReferenceFactory,
+    Resumable,
+    ResumableTranspiler,
     Scope,
     ValueFactory
 ) {
@@ -51,6 +55,7 @@ define([
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
         this.classAutoloader = classAutoloader;
+        this.resumable = new Resumable(new ResumableTranspiler());
         this.stdout = stdout;
         this.valueFactory = valueFactory;
         this.PHPException = null;
@@ -91,6 +96,10 @@ define([
             return this.referenceFactory;
         },
 
+        getResumable: function () {
+            return this.resumable;
+        },
+
         getValueFactory: function () {
             return this.valueFactory;
         },
@@ -110,6 +119,7 @@ define([
                 callStack: state.callStack,
                 classAutoloader: state.classAutoloader,
                 globalNamespace: globalNamespace,
+                resumable: state.resumable,
                 stdout: state.stdout,
                 valueFactory: state.valueFactory
             };

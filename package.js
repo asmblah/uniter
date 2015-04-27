@@ -11,7 +11,8 @@
 define({
     'paths': {
         'languages': './languages',
-        'js': './js'
+        'js': './js',
+        'vendor': './vendor'
     },
     'main': 'js/main'
 });
