@@ -37,12 +37,6 @@ require([
 
     var phpEngine = uniter.createEngine('PHP');
 
-    function output() {
-        clear();
-        print(phpEngine.getStdout().readAll());
-        print(phpEngine.getStderr().readAll());
-    }
-
     phpEngine.expose({
         getCC: function () {
             return 'en';
@@ -50,11 +44,16 @@ require([
         salutation: 'Hello'
     }, 'info');
 
-    phpEngine.execute(phpCode).done(function () {
-        output();
-    }).fail(function (exception) {
-        output();
+    phpEngine.getStdout().on('data', function (data) {
+        print(data);
     });
+
+    phpEngine.getStderr().on('data', function (data) {
+        print(data);
+    });
+
+    clear();
+    phpEngine.execute(phpCode);
 });
 
 EOS
