@@ -36,31 +36,31 @@ define([
 
         util.each({
             'capturing current file from initial program code': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php echo __FILE__;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '(program)'
             },
             'capturing current file in required module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     require_once 'get_file.php';
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 options: {
                     include: function (path, promise) {
-                        promise.resolve(util.heredoc(function (/*<<<EOS
+                        promise.resolve(util.heredoc(function () {/*<<<EOS
 <?php
 
     echo __FILE__;
 
 EOS
-*/) {}));
+*/;})); // jshint ignore:line
                     }
                 },
                 expectedResult: null,
@@ -69,23 +69,23 @@ EOS
             },
             // Ensure the state is not shared between main program and required module
             'capturing current file in main program before and after required module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     echo __FILE__;
     require_once 'get_file.php';
     echo __FILE__;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 options: {
                     include: function (path, promise) {
-                        promise.resolve(util.heredoc(function (/*<<<EOS
+                        promise.resolve(util.heredoc(function () {/*<<<EOS
 <?php
 
     echo __FILE__;
 
 EOS
-*/) {}));
+*/;})); // jshint ignore:line
                     }
                 },
                 expectedResult: null,

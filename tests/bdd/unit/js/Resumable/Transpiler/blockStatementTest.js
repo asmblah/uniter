@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, describe, escodegen, expect, it */
+/*global define, describe, expect, it */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
-    'js/Resumable/Transpiler',
-    'vendor/esparse/escodegen'
+    'js/Resumable/Transpiler'
 ], function (
+    escodegen,
     esprima,
     util,
     Transpiler
@@ -28,15 +29,15 @@ define([
         });
 
         it('should correctly transpile a block statement containing break', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 my_block: {
     print(1);
     break my_block;
     print(2);
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
     return function resumableScope() {
@@ -94,7 +95,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -110,7 +111,7 @@ EOS
         });
 
         it('should correctly transpile a nested block statement containing break', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 my_block: {
     print(1);
     another_block: {
@@ -123,8 +124,8 @@ my_block: {
     print(5);
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
     return function resumableScope() {
@@ -235,7 +236,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);

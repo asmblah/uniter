@@ -36,65 +36,65 @@ define([
 
         util.each({
             'defining case-sensitive constant in global namespace then referencing with correct case from global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('NAME', 'Dan');
 
     return NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining case-sensitive constant in global namespace but referencing with incorrect case from global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('NAME', 'Dan');
 
     return NaME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'NaME',
                 expectedResultType: 'string',
                 expectedStderr: 'PHP Notice: Use of undefined constant NaME - assumed \'NaME\'\n',
                 expectedStdout: ''
             },
             'defining case-insensitive constant in global namespace then referencing with correct case from global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('NAME', 'Dan', true);
 
     return NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining case-insensitive constant in global namespace but referencing with incorrect case from global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('NAME', 'Dan', true);
 
     return NaME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining case-sensitive lowercase constant in global namespace but referencing with incorrect case from global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('name', 'Dan');
 
     return NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'NAME',
                 expectedResultType: 'string',
                 expectedStderr: 'PHP Notice: Use of undefined constant NAME - assumed \'NAME\'\n',

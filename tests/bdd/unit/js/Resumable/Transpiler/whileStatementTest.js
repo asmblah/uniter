@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, describe, escodegen, expect, it */
+/*global define, describe, expect, it */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
-    'js/Resumable/Transpiler',
-    'vendor/esparse/escodegen'
+    'js/Resumable/Transpiler'
 ], function (
+    escodegen,
     esprima,
     util,
     Transpiler
@@ -28,7 +29,7 @@ define([
         });
 
         it('should correctly transpile a nested while loop with break statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 print(1);
 while (a < 4) {
     print(2);
@@ -41,8 +42,8 @@ while (a < 4) {
 }
 print(5);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4, temp5, temp6;
     return function resumableScope() {
@@ -176,7 +177,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -192,7 +193,7 @@ EOS
         });
 
         it('should correctly transpile a nested while loop with continue statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 print(1);
 while (a < 4) {
     print(2);
@@ -205,8 +206,8 @@ while (a < 4) {
 }
 print(5);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4, temp5, temp6;
     return function resumableScope() {
@@ -340,7 +341,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);

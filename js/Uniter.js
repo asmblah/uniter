@@ -11,7 +11,7 @@
 define([
     'js/util',
     'js/Engine',
-    'js/Exception',
+    'js/Exception/Exception',
     'js/Language'
 ], function (
     util,

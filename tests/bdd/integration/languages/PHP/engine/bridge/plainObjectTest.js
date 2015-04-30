@@ -37,11 +37,11 @@ define([
         describe('exposing as global PHP variables', function () {
             util.each({
                 'plain object with one scalar string property': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $me->name;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'me': {
                             name: 'Dan'
@@ -53,11 +53,11 @@ EOS
                     expectedStdout: ''
                 },
                 'plain object with one scalar integer property': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $me->age;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'me': {
                             age: 23
@@ -69,11 +69,11 @@ EOS
                     expectedStdout: ''
                 },
                 'plain object with one array property': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $order->payments[0];
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'order': {
                             'payments': [10, 20]

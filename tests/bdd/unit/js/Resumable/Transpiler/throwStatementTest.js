@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, describe, escodegen, expect, it */
+/*global define, describe, expect, it */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
-    'js/Resumable/Transpiler',
-    'vendor/esparse/escodegen'
+    'js/Resumable/Transpiler'
 ], function (
+    escodegen,
     esprima,
     util,
     Transpiler
@@ -28,11 +29,11 @@ define([
         });
 
         it('should correctly transpile a throw statement with scalar arg', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 throw 21;
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0;
     return function resumableScope() {
@@ -59,7 +60,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);

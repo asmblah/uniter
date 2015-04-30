@@ -20,14 +20,14 @@ define([
     describe('Resumable return statement', function () {
         util.each({
             'return of IIFE return value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 exports.result = (function () {
     return (function () {
         return tools.giveMe(21);
     }());
 }());
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {

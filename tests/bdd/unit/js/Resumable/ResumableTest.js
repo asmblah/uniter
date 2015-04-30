@@ -20,19 +20,19 @@ define([
     describe('Resumable', function () {
         util.each({
             'when no pauses are used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 exports.result = 21;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedExports: {
                     result: 21
                 }
             },
             'when one pause is used with a single expression': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 exports.result = tools.getResult();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -53,10 +53,10 @@ EOS
                 }
             },
             'when two pauses are used with a single expression': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 exports.result = tools.getFirst() + 4 + tools.getSecond();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -86,14 +86,14 @@ EOS
                 }
             },
             'when pause occurs inside function call': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 function getIt() {
     return tools.getValue() + 2;
 }
 
 exports.result = getIt() + 10;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -114,7 +114,7 @@ EOS
                 }
             },
             'when pause occurs inside function defined via declaration with closure-bound variables': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 function getIt() {
     var myResult;
 
@@ -129,7 +129,7 @@ function getIt() {
 
 exports.result = getIt() + 10;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -150,7 +150,7 @@ EOS
                 }
             },
             'when pause occurs inside function defined via expression with closure-bound variables': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 function getIt() {
     var myResult,
         doGet = function () {
@@ -164,7 +164,7 @@ function getIt() {
 
 exports.result = getIt() + 10;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -185,7 +185,7 @@ EOS
                 }
             },
             'when pause occurs inside if (...) {...} statement with condition that becomes falsy before resume': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var allow = true;
 
 function getIt() {
@@ -200,7 +200,7 @@ function getIt() {
 
 exports.result = getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -221,13 +221,13 @@ EOS
                 }
             },
             'multiple variable declarators in one declaration, with inits that yield': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var first = tools.addOneTo(4),
     second = tools.addOneTo(5);
 
 exports.result = first + ',' + second;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -248,7 +248,7 @@ EOS
                 }
             },
             'while loop with condition that becomes falsy before resume': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var go = true,
     result = 0;
 
@@ -264,7 +264,7 @@ while (go) {
 
 exports.result = result;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {
@@ -285,12 +285,12 @@ EOS
                 }
             },
             'logical OR (||) operator with short-circuit evaluation, where left operand evaluates to truthy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var result = tools.truthy() || otherTools.falsy();
 
 exports.result = result;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var falsy = sinon.stub().returns(false),
                         truthy = sinon.stub().returns(true),
@@ -330,12 +330,12 @@ EOS
                 }
             },
             'logical OR (||) operator with short-circuit evaluation, where left operand evaluates to falsy but right operand truthy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var result = tools.falsy() || tools.truthy();
 
 exports.result = result;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var falsy = sinon.stub().returns(false),
                         truthy = sinon.stub().returns(true);
@@ -361,12 +361,12 @@ EOS
                 }
             },
             'logical OR (||) operator with short-circuit evaluation, where left and right operands both evaluate to falsy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 var result = tools.falsy() || tools.alsoFalsy();
 
 exports.result = result;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var falsy = sinon.stub().returns(false),
                         alsoFalsy = sinon.stub().returns(false);
@@ -392,19 +392,19 @@ EOS
                 }
             },
             'throwing error synchronously, no pause': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 throw new Error('Good, I have worked sync');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedError: new Error('Good, I have worked sync')
             },
             'throwing error after async pause': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 tools.getNumber();
 
 throw new Error('Good, I have worked async');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {

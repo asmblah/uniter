@@ -7,14 +7,15 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, escodegen */
+/*global define */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
     './PauseException',
-    'js/Promise',
-    'vendor/esparse/escodegen'
+    'js/Promise'
 ], function (
+    escodegen,
     esprima,
     util,
     PauseException,

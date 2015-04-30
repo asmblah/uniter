@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, describe, escodegen, expect, it */
+/*global define, describe, expect, it */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
-    'js/Resumable/Transpiler',
-    'vendor/esparse/escodegen'
+    'js/Resumable/Transpiler'
 ], function (
+    escodegen,
     esprima,
     util,
     Transpiler
@@ -28,12 +29,12 @@ define([
         });
 
         it('should correctly transpile an empty function', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 function doThings(num1, num2) {}
 exports.result = doThings(2, 3);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
     function doThings(num1, num2) {
@@ -75,7 +76,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -91,11 +92,11 @@ EOS
         });
 
         it('should correctly transpile a function call', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 doSomething();
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0;
     return function resumableScope() {
@@ -127,7 +128,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -143,7 +144,7 @@ EOS
         });
 
         it('should correctly transpile a simple function with one calculation', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 function doThings(num1, num2) {
     var num3 = 2 + 4;
 
@@ -151,8 +152,8 @@ function doThings(num1, num2) {
 }
 exports.result = doThings(2, 3);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
     function doThings(num1, num2) {
@@ -223,7 +224,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -239,7 +240,7 @@ EOS
         });
 
         it('should correctly transpile a simple function with no control structures', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 function doThings(num1, num2) {
     var num3 = 0;
 
@@ -249,8 +250,8 @@ function doThings(num1, num2) {
 }
 exports.result = doThings(2, 3);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1;
     function doThings(num1, num2) {
@@ -329,7 +330,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -345,11 +346,11 @@ EOS
         });
 
         it('should correctly transpile an assignment of method call result to property', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = tools.getOne();
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -401,7 +402,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -417,11 +418,11 @@ EOS
         });
 
         it('should correctly transpile an assignment of method call result to property when call has variable argument', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = tools.getOne(myVar);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
     return function resumableScope() {
@@ -479,7 +480,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -495,13 +496,13 @@ EOS
         });
 
         it('should correctly transpile an if (...) {...} statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 if (tools.sayYes) {
     exports.result = 'yes';
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -556,7 +557,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -572,15 +573,15 @@ EOS
         });
 
         it('should correctly transpile an if (...) {...} statement with else clause', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 if (tools.sayYes) {
     exports.result = 'yes';
 } else {
     exports.result = 'no';
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -653,7 +654,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -669,15 +670,15 @@ EOS
         });
 
         it('should correctly transpile an if (...) {...} statement inside a block', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 {
     if (tools.sayYes) {
         exports.result = 'yes';
     }
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -743,7 +744,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -759,14 +760,14 @@ EOS
         });
 
         it('should correctly transpile an if (...) {...} statement with else clause where no compound statements are used', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 if (tools.sayYes)
     exports.result = 'yes';
 else
     exports.result = 'no';
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -839,7 +840,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -855,13 +856,13 @@ EOS
         });
 
         it('should correctly transpile a while (...) {...} statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 while (a > 4) {
     exports.result = doSomething();
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -933,7 +934,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -949,13 +950,13 @@ EOS
         });
 
         it('should correctly transpile an unlabelled "break;" statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 while (true) {
     break;
 }
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0;
     return function resumableScope() {
@@ -998,7 +999,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1014,7 +1015,7 @@ EOS
         });
 
         it('should correctly transpile a try {...} catch (...) {...} statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 a = 1;
 try {
     b = 2;
@@ -1023,8 +1024,8 @@ try {
 }
 d = 4;
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0;
     return function resumableScope() {
@@ -1075,7 +1076,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1091,11 +1092,11 @@ EOS
         });
 
         it('should correctly transpile multiple reads of the same variable', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = myVar + myVar;
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -1141,7 +1142,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1157,11 +1158,11 @@ EOS
         });
 
         it('should correctly transpile each argument passed in a function call', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = sum(a + 1, b + 2);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
     return function resumableScope() {
@@ -1219,7 +1220,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1235,11 +1236,11 @@ EOS
         });
 
         it('should correctly transpile a call to a method of a property', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = first.second.third();
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4;
     return function resumableScope() {
@@ -1297,7 +1298,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1313,11 +1314,11 @@ EOS
         });
 
         it('should correctly transpile a logical expression', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = first.second || third.fourth;
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3, temp4, temp5;
     return function resumableScope() {
@@ -1390,7 +1391,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1406,12 +1407,12 @@ EOS
         });
 
         it('should correctly transpile a read->write->read', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 a = a + b;
 c = a;
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -1460,7 +1461,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1476,13 +1477,13 @@ EOS
         });
 
         it('should correctly transpile a call to method of local variable', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 var obj = {};
 
 result = obj.method();
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, obj, temp0, temp1;
     return function resumableScope() {
@@ -1526,7 +1527,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1542,11 +1543,11 @@ EOS
         });
 
         it('should correctly transpile each element specified in an array literal', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = [a + 1, b + 2];
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -1595,7 +1596,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1611,11 +1612,11 @@ EOS
         });
 
         it('should correctly transpile each property specified in an object literal', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 exports.result = {val1: a + 1, val2: b + 2};
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2;
     return function resumableScope() {
@@ -1664,7 +1665,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -1680,12 +1681,12 @@ EOS
         });
 
         it('should correctly transpile a variable declarator that refers to a previous one of same declaration', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 var myFirstVar = 1,
     mySecondVar = addOneTo(myFirstVar);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, myFirstVar, mySecondVar, temp0, temp1;
     return function resumableScope() {
@@ -1730,7 +1731,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);

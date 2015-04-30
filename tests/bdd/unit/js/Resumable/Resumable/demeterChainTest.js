@@ -20,7 +20,7 @@ define([
     describe('Resumable demeter chain', function () {
         util.each({
             'calling method on return value then method on that return value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 exports.result = (function () {
     return {
         first: function () {
@@ -35,7 +35,7 @@ exports.result = (function () {
     .first()
     .second();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     return {
                         tools: {

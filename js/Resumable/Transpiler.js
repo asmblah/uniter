@@ -9,8 +9,8 @@
 
 /*global define */
 define([
-    'vendor/esparse/esprima',
-    'vendor/esparse/estraverse',
+    'esprima',
+    'estraverse',
     'js/util',
     './ExpressionTranspiler/ArrayExpressionTranspiler',
     './ExpressionTranspiler/AssignmentExpressionTranspiler',
@@ -43,7 +43,7 @@ define([
     './StatementTranspiler/VariableDeclarationTranspiler',
     './StatementTranspiler/WhileStatementTranspiler',
     './StatementTranspiler/WithStatementTranspiler',
-    'vendor/esparse/escodegen'
+    'escodegen'
 ], function (
     esprima,
     estraverse,

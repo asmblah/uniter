@@ -294,7 +294,7 @@ define([
 
         util.each({
             'array access of object property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $object = new stdClass;
 
@@ -302,14 +302,14 @@ define([
 
     return $object->prop[0];
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 4,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'array access of function call result': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function getArray() {
         return array('a', 'b');
@@ -317,35 +317,35 @@ EOS
 
     return getArray()[1];
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'b',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'array access with key in variable': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $array = array(2, 5, 6);
     $key = 1;
 
     return $array[$key];
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 5,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'pushing integer onto existing array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $array = array(2, 5, 6);
     $array[] = 21;
 
     return $array[3];
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 21,
                 expectedResultType: 'integer',
                 expectedStderr: '',

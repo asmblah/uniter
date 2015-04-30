@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, describe, escodegen, expect, it */
+/*global define, describe, expect, it */
 define([
-    'vendor/esparse/esprima',
+    'escodegen',
+    'esprima',
     'js/util',
-    'js/Resumable/Transpiler',
-    'vendor/esparse/escodegen'
+    'js/Resumable/Transpiler'
 ], function (
+    escodegen,
     esprima,
     util,
     Transpiler
@@ -28,7 +29,7 @@ define([
         });
 
         it('should correctly transpile a break out of do...while statement', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 print(1);
 do {
     print(2);
@@ -36,8 +37,8 @@ do {
 } while (a < 4);
 print(3);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -117,7 +118,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);
@@ -133,7 +134,7 @@ EOS
         });
 
         it('should correctly transpile a do...while with labeled continue', function () {
-            var inputJS = util.heredoc(function (/*<<<EOS
+            var inputJS = util.heredoc(function () {/*<<<EOS
 print(1);
 my_block: do {
     print(2);
@@ -141,8 +142,8 @@ my_block: do {
 } while (a < 4);
 print(3);
 EOS
-*/) {}),
-                expectedOutputJS = util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                expectedOutputJS = util.heredoc(function () {/*<<<EOS
 (function () {
     var statementIndex = 0, temp0, temp1, temp2, temp3;
     return function resumableScope() {
@@ -223,7 +224,7 @@ EOS
     }.call(this);
 });
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 ast = esprima.parse(inputJS);
 
             ast = transpiler.transpile(ast);

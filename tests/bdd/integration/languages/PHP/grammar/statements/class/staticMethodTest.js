@@ -26,7 +26,7 @@ define([
 
         util.each({
             'simple empty static method definition with no args or statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function doNothing() {
@@ -34,7 +34,7 @@ define([
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -54,7 +54,7 @@ EOS
                 }
             },
             'simple empty static method definition with one arg but no statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function doNothing($a) {
@@ -62,7 +62,7 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -85,13 +85,13 @@ EOS
                 }
             },
             'static method definition with one arg and one body statement not wrapped in braces': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function printIt($string) echo $string;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -117,7 +117,7 @@ EOS
                 }
             },
             'static method definition with two args and two statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function add($number1, $number2) {
@@ -126,7 +126,7 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

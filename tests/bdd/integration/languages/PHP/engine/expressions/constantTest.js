@@ -38,13 +38,13 @@ define([
 
         util.each({
             'assigning undefined constant called "MY_CONST" to variable in global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = MY_CONST;
 
     return $value;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'MY_CONST',
                 expectedResultType: 'string',
@@ -52,13 +52,13 @@ EOS
                 expectedStdout: ''
             },
             'assigning undefined constant called "YOUR_CONST" to variable in global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = YOUR_CONST;
 
     return $value;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'YOUR_CONST',
                 expectedResultType: 'string',
@@ -66,7 +66,7 @@ EOS
                 expectedStdout: ''
             },
             'assigning undefined constant called "MY_CONST" to variable in a namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Us;
 
@@ -74,7 +74,7 @@ EOS
 
     return $value;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'MY_CONST',
                 expectedResultType: 'string',
@@ -82,18 +82,18 @@ EOS
                 expectedStdout: ''
             },
             'undefined constant as default argument value when not called': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function test($value = UNDEF_CONST) {}
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 // No notice should be raised
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'undefined constant as default argument value when called and used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function test($value = UNDEF_CONST) {
         return $value;
@@ -101,7 +101,7 @@ EOS
 
     return test();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'UNDEF_CONST',
                 expectedResultType: 'string',
@@ -110,7 +110,7 @@ EOS
             },
             // Ensure we use .hasOwnProperty(...) checks internally
             'undefined constant called "constructor" as default argument value when called and used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function test($value = constructor) {
         return $value;
@@ -118,7 +118,7 @@ EOS
 
     return test();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Undefined constant should be interpreted as bareword string literal
                 expectedResult: 'constructor',
                 expectedResultType: 'string',
@@ -126,7 +126,7 @@ EOS
                 expectedStdout: ''
             },
             'undefined constant as default argument value when called but not used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function test($value = UNDEF_CONST) {
         return $value;
@@ -134,7 +134,7 @@ EOS
 
     return test('world');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'world',
                 expectedResultType: 'string',
                 // No notice should be raised
@@ -142,7 +142,7 @@ EOS
                 expectedStdout: ''
             },
             'defined constant as default argument value should be read and not raise warning when called and used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     define('MY_PLANET', 'Earth');
 
@@ -152,7 +152,7 @@ EOS
 
     return getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 // No notice should be raised
@@ -160,7 +160,7 @@ EOS
                 expectedStdout: ''
             },
             'defined constant in namespace read from another namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Test;
 
@@ -170,7 +170,7 @@ EOS
 
     return \Test\NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 // No notice should be raised
@@ -178,7 +178,7 @@ EOS
                 expectedStdout: ''
             },
             'defined constant in namespace read from another namespace via import': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Test;
 
@@ -188,7 +188,7 @@ EOS
 
     return Me\NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 // No notice should be raised
@@ -196,11 +196,11 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read undefined constant from global namespace with prefix': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     return \NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 // Note that when using namespaces, use of undefined constant is a fatal error not just a notice
                 expectedException: {
                     instanceOf: PHPFatalError,
@@ -210,13 +210,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read undefined constant from another namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Fun;
 
     return My\Stuff\NAME;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Undefined constant 'Fun\\My\\Stuff\\NAME'$/

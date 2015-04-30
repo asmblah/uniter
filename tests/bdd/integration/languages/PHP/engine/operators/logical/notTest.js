@@ -36,164 +36,164 @@ define([
 
         util.each({
             'logical Not of empty array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!array());
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of populated array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!array('a' => 7));
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of boolean true': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!true);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of boolean false': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!false);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of float 0.0': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!0.0);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of float 2.2': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!2.2);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of integer 0': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!0);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of integer 6': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!6);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of null': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!null);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of empty stdClass instance': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!new stdClass);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of stdClass instance with one property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = new stdClass;
     $value->prop = 6;
 
     var_dump(!$value);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'logical Not of class instance with one public default property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public $name = "Dan";
@@ -201,42 +201,42 @@ EOS
 
     var_dump(!new Test);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'cast of empty string to array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!'');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(true)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'cast of non-empty string to array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(!'Halcyon');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 bool(false)
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             }
         }, function (scenario, description) {
             describe(description, function () {

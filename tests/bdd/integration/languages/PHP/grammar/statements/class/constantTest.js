@@ -26,13 +26,13 @@ define([
 
         util.each({
             'class constant with default string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Planet {
         const SHAPE = 'sphere';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

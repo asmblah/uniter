@@ -38,7 +38,7 @@ define([
 
         util.each({
             'calling static method from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -48,14 +48,14 @@ define([
 
     return Animal::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'calling dynamically referenced static method from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -67,20 +67,20 @@ EOS
 
     return Animal::$methodName();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to call static method from array value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = array(1, 2);
 
     return $value::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -89,13 +89,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to call static method from boolean value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = true;
 
     return $value::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -104,13 +104,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to call static method from float value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = 4.1;
 
     return $value::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -119,13 +119,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to call static method from integer value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = 7;
 
     return $value::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -134,13 +134,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to call static method from null value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = null;
 
     return $value::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -149,7 +149,7 @@ EOS
                 expectedStdout: ''
             },
             'calling static method from class referenced via an instance': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -161,14 +161,14 @@ EOS
 
     return $animal::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'calling static method from class referenced via a string containing class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -180,20 +180,20 @@ EOS
 
     return $myClassName::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to call static method from string containing non-existent class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $myClassName = 'Person';
 
     return $myClassName::getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'Person' not found$/
@@ -202,13 +202,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to call undefined static method from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
     return Earth::getLegLength();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined method Earth::getLegLength\(\)$/
@@ -218,13 +218,13 @@ EOS
             },
             // Ensure we use .hasOwnProperty(...) checks internally
             'attempting to call undefined static method called "constructor" from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
     return Earth::constructor();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
@@ -233,7 +233,7 @@ EOS
                 expectedStdout: ''
             },
             'calling instance method as static method from class referenced via an instance': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public function getPlanet() {
@@ -243,7 +243,7 @@ EOS
 
     return Animal::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: 'PHP Strict standards: Non-static method Animal::getPlanet() should not be called statically\n',

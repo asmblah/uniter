@@ -1,2 +1,5 @@
 /bower_components/
+/dist/*
+!/dist/uniter.js
+!/dist/demo
 /node_modules/

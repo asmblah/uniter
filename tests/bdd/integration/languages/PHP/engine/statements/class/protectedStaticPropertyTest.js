@@ -38,7 +38,7 @@ define([
 
         util.each({
             'reading protected static property from instance method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -50,14 +50,14 @@ define([
 
     return (new Animal())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading protected static property from static method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -69,14 +69,14 @@ EOS
 
     return Animal::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading protected static property from instance method of derived class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -90,14 +90,14 @@ EOS
 
     return (new Chicken())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'trying to read protected static property from outside class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -105,7 +105,7 @@ EOS
 
     return (new Animal())::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/
@@ -114,7 +114,7 @@ EOS
                 expectedStdout: ''
             },
             'trying to read protected static property from instance method of another, unrelated class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -128,7 +128,7 @@ EOS
 
     return (new Wall())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/

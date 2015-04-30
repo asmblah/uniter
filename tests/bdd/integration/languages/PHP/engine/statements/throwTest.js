@@ -38,11 +38,11 @@ define([
 
         util.each({
             'throwing newly created instance of Exception (unprefixed class path)': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     throw new Exception;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Uncaught exception 'Exception'$/
@@ -51,11 +51,11 @@ EOS
                 expectedStdout: ''
             },
             'throwing newly created instance of Exception (prefixed class path)': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     throw new \Exception;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Uncaught exception 'Exception'$/
@@ -64,13 +64,13 @@ EOS
                 expectedStdout: ''
             },
             'throwing newly created instance of Exception child class (unprefixed class path)': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class MyException extends Exception {}
 
     throw new MyException;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Uncaught exception 'MyException'$/
@@ -79,13 +79,13 @@ EOS
                 expectedStdout: ''
             },
             'throwing instance of Exception stored in variable': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $exception = new Exception;
 
     throw $exception;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Uncaught exception 'Exception'$/

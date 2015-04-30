@@ -26,13 +26,13 @@ define([
 
         util.each({
             'method definition with one "array" type hinted arg': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public static function doNothing(array $items);
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -55,13 +55,13 @@ EOS
                 }
             },
             'method definition with one unnamespaced class or interface type hinted arg': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public static function doNothing(ItemList $items);
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -84,13 +84,13 @@ EOS
                 }
             },
             'method definition with one namespaced class or interface type hinted arg': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public static function doNothing(\Creator\Framework\Request $items);
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

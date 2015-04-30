@@ -36,7 +36,7 @@ define([
 
         util.each({
             'defining static property without initial value and reading from outside class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet;
@@ -44,13 +44,13 @@ define([
 
     return Animal::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining static property with initial value and reading from outside class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -58,14 +58,14 @@ EOS
 
     return Animal::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'trying to read public static property as instance property from outside class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $species = 'Human';
@@ -73,14 +73,14 @@ EOS
 
     return (new Animal)->species;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
-                expectedStderr: util.heredoc(function (/*<<<EOS
+                expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Strict standards: Accessing static property Animal::$species as non static
 PHP Notice: Undefined property: Animal::$species
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStdout: ''
             }
         }, function (scenario, description) {

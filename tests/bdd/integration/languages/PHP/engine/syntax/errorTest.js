@@ -38,11 +38,11 @@ define([
 
         util.each({
             'function call missing end semicolon': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     open()
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 2$/
@@ -51,11 +51,11 @@ EOS
                 expectedStdout: ''
             },
             'function call missing end semicolon in required module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     require_once 'syntax_error.php';
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 options: {
                     'include': function (path, promise) {
                         promise.resolve('<?php open()');

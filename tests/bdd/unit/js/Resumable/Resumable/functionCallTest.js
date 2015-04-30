@@ -20,27 +20,27 @@ define([
     describe('Resumable function call', function () {
         util.each({
             'with "or" expression inside argument when left is falsy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 function returnIt(value) {
     return value;
 }
 
 exports.result = returnIt(0 || 4);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedExports: {
                     result: 4
                 }
             },
             'with "or" expression inside argument when left is truthy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 function returnIt(value) {
     return value;
 }
 
 exports.result = returnIt(3 || 4);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedExports: {
                     result: 3
                 }

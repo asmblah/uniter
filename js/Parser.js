@@ -11,7 +11,7 @@
 define([
     'js/util',
     'js/Component',
-    'js/Exception',
+    'js/Exception/Exception',
     'js/Exception/Parse',
     'js/Rule'
 ], function (

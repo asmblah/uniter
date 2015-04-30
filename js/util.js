@@ -8,11 +8,7 @@
  */
 
 /*global define */
-define([
-    'packager'
-], function (
-    packager
-) {
+define(function () {
     'use strict';
 
     var global = /*jshint evil: true */new Function('return this;')()/*jshint evil: false */,
@@ -23,9 +19,10 @@ define([
             return new F();
         },
         toString = {}.toString,
-        util = inheritFrom(packager.util);
+        undef,
+        util;
 
-    return util.extend(util, {
+    util = {
         copy: function (to, from) {
             var key;
 
@@ -34,6 +31,53 @@ define([
                     to[key] = from[key];
                 }
             }
+        },
+
+        each: function (obj, callback, options) {
+            var key,
+                length;
+
+            if (!obj || typeof obj !== 'object') {
+                return;
+            }
+
+            options = options || {};
+
+            if (('length' in obj) && !options.keys) {
+                for (key = 0, length = obj.length; key < length; key += 1) { // Keep JSLint happy with '+= 1'
+                    if (callback.call(obj[key], obj[key], key, obj) === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (key in obj) {
+                    if (hasOwn.call(obj, key)) {
+                        if (callback.call(obj[key], obj[key], key, obj) === false) {
+                            break;
+                        }
+                    }
+                }
+            }
+        },
+
+        extend: function (target, source1, source2) {
+            util.each([source1, source2], function (obj) {
+                util.each(obj, function (val, key) {
+                    target[key] = val;
+                }, { keys: true });
+            });
+
+            return target;
+        },
+
+        extendConfig: function (target, sources) {
+            util.each(sources, function (obj) {
+                util.each(obj, function (val, key) {
+                    target[key] = (key === 'paths') ? util.extend({}, target[key], val) : val;
+                }, { keys: true });
+            });
+
+            return target;
         },
 
         from: function (from) {
@@ -46,6 +90,12 @@ define([
                     }
                 }
             };
+        },
+
+        getType: function (obj) {
+            /*jshint eqnull: true */
+
+            return obj != null && {}.toString.call(obj).match(/\[object ([\s\S]*)\]/)[1];
         },
 
         global: global,
@@ -106,6 +156,10 @@ define([
             return typeof value === 'string' || toString.call(value) === '[object String]';
         },
 
+        isUndefined: function (obj) {
+            return obj === undef;
+        },
+
         regexEscape: function (text) {
             // See http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
             return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -136,5 +190,7 @@ define([
 
             return string;
         }
-    });
+    };
+
+    return util;
 });

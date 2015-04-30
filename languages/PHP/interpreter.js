@@ -15,7 +15,7 @@
 define([
     'js/util',
     './interpreter/Call',
-    'js/Exception',
+    'js/Exception/Exception',
     './interpreter/KeyValuePair',
     './interpreter/LabelRepository',
     './interpreter/List',

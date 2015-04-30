@@ -38,7 +38,7 @@ define([
 
         util.each({
             'defining interface constant with string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const CATEGORY = 'Misc';
@@ -46,14 +46,14 @@ define([
 
     return Stuff::CATEGORY;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Misc',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining interface constant with integer value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const RANDOM = 3546;
@@ -61,14 +61,14 @@ EOS
 
     return Stuff::RANDOM;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 3546,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining interface constant referencing another using "self::"': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const FIRST = 5;
@@ -77,14 +77,14 @@ EOS
 
     return Stuff::SECOND;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 5,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading interface constant from a child interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Parent {
         const MYVAL = 4;
@@ -94,20 +94,20 @@ EOS
 
     return Child::MYVAL;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 4,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to define an instance variable for an interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private $yours = false;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Interfaces may not include member variables$/
@@ -116,13 +116,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to define a static variable for an interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private static $yours = false;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Interfaces may not include member variables$/

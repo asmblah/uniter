@@ -38,7 +38,7 @@ define([
 
         util.each({
             'reading private static property from instance method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         private static $planet = 'Earth';
@@ -50,14 +50,14 @@ define([
 
     return (new Animal())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading private static property from static method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         private static $planet = 'Earth';
@@ -69,14 +69,14 @@ EOS
 
     return Animal::getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'trying to read private static property from outside class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         private static $planet = 'Earth';
@@ -84,7 +84,7 @@ EOS
 
     return (new Animal())::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/
@@ -93,7 +93,7 @@ EOS
                 expectedStdout: ''
             },
             'trying to read private static property from instance method of another, unrelated class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         private static $planet = 'Earth';
@@ -107,7 +107,7 @@ EOS
 
     return (new Wall())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/
@@ -116,7 +116,7 @@ EOS
                 expectedStdout: ''
             },
             'trying to read private static property from instance method of derived class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         private static $planet = 'Earth';
@@ -130,7 +130,7 @@ EOS
 
     return (new Chicken())->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/

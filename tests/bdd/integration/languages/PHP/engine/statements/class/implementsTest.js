@@ -36,7 +36,7 @@ define([
 
         util.each({
             'creating instance of class that implements empty interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface DoesNothing {}
 
@@ -50,14 +50,14 @@ define([
 
     return $object->getOK();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'ok',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading constant from interface implemented by class, where interface occurs after class in module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth implements Planet {}
 
@@ -67,14 +67,14 @@ EOS
 
     return Earth::SHAPE;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'sphere',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading constant from second interface implemented by class, where interface occurs after class in module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth implements Habitable, Planet {}
 
@@ -86,7 +86,7 @@ EOS
 
     return Earth::SHAPE;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'sphere',
                 expectedResultType: 'string',
                 expectedStderr: '',

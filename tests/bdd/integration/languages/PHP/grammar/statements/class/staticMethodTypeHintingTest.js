@@ -26,13 +26,13 @@ define([
 
         util.each({
             'empty method definition with one "array" type hinted arg but no statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function doNothing(array $items) {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -59,13 +59,13 @@ EOS
                 }
             },
             'empty method definition with one unnamespaced class type hinted arg but no statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function doNothing(ItemList $items) {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -92,13 +92,13 @@ EOS
                 }
             },
             'empty method definition with one namespaced class type hinted arg but no statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Thing {
         public static function doNothing(\Creator\Framework\Request $items) {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

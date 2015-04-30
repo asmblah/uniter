@@ -38,7 +38,7 @@ define([
 
         util.each({
             'reading defined class constant from statically specified class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const CATEGORY = 'Misc';
@@ -46,14 +46,14 @@ define([
 
     return Stuff::CATEGORY;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Misc',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading defined class constant from instance variable': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const TEST = 'cmp';
@@ -63,20 +63,20 @@ EOS
 
     return $object::TEST;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'cmp',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to read undefined class constant from statically specified class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Stuff {}
 
     return Stuff::THINGS;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Undefined class constant 'THINGS'$/

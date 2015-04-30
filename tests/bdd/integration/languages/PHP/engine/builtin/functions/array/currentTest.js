@@ -76,7 +76,7 @@ define([
         describe('inside foreach (...) {...}', function () {
             util.each({
                 'foreach should reset internal pointer but not advance during': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     $array = array(1, 2, 3);
     $result = '';
@@ -90,7 +90,7 @@ define([
 
     return $result;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expectedResult: '1,1,1,',
                     expectedStderr: '',
                     expectedStdout: ''

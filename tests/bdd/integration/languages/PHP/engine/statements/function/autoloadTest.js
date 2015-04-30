@@ -38,11 +38,11 @@ define([
 
         util.each({
             'should throw a fatal error if magic __autoload function in global namespace does not take any arguments': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload() {}
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: __autoload\(\) must take exactly 1 argument$/
@@ -51,11 +51,11 @@ EOS
                 expectedStdout: ''
             },
             'should throw a fatal error if magic __autoload function with non-lower case in global namespace does not take any arguments': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoLOAd() {}
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: __autoload\(\) must take exactly 1 argument$/
@@ -64,31 +64,31 @@ EOS
                 expectedStdout: ''
             },
             'should not throw a fatal error if magic __autoload function in a namespace does not take any arguments': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyNamespace;
     function __autoload() {}
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 // Note that no error is raised, as the function is not magic if not in the global namespace
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'should not be called when no class or interface is used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         echo 'autoloading';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'should not be called when class used in global namespace is already defined': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         echo 'autoloading';
@@ -98,13 +98,13 @@ EOS
 
     $object = new Test;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'should be called when undefined class is used, erroring if class is still not defined by autoloader': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         echo 'autoloading ' . $class;
@@ -112,7 +112,7 @@ EOS
 
     $object = new TeSt;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'TeSt' not found$/
@@ -122,7 +122,7 @@ EOS
                 expectedStdout: 'autoloading TeSt'
             },
             'should be called when undefined class is used in a namespace, erroring if class is still not defined by autoloader': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         echo 'autoloading ' . $class;
@@ -132,7 +132,7 @@ EOS
 
     $object = new TeSt;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'My\\Library\\TeSt' not found$/
@@ -142,7 +142,7 @@ EOS
                 expectedStdout: 'autoloading My\\Library\\TeSt'
             },
             'should be called when undefined class is used, not erroring if class is then defined with same case by autoloader': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         class Test {}
@@ -152,13 +152,13 @@ EOS
 
     $object = new Test;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'autoloaded Test'
             },
             'should be called when undefined class is used, not erroring if class is then defined with different case by autoloader': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($class) {
         class MyTESTClass {}
@@ -168,7 +168,7 @@ EOS
 
     $object = new Mytestclass;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'autoloaded Mytestclass'

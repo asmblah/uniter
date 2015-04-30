@@ -36,31 +36,31 @@ define([
 
         util.each({
             'for loop that does not even iterate once': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     for ($i = 4; $i < 4; $i++) {
         echo $i;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'for loop that iterates twice': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     for ($i = 0; $i < 2; $i++) {
         echo $i . ',';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '0,1,'
             },
             '"infinite" for loop should continue iterating until broken out of': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $i = 0;
 
@@ -72,7 +72,7 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 4,
                 expectedResultType: 'integer',
                 expectedStderr: '',

@@ -26,13 +26,13 @@ define([
 
         util.each({
             'interface constant with default string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Planet {
         const SHAPE = 'sphere';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -50,13 +50,13 @@ EOS
                 }
             },
             'interface constant referencing another': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         const FIRST = self::SECOND;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

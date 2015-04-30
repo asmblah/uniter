@@ -8,8 +8,8 @@
 
 /*global define */
 define([
-    'vendor/esparse/esprima',
-    'vendor/esparse/estraverse',
+    'esprima',
+    'estraverse',
     'js/util',
     './BlockContext',
     './FunctionContext'

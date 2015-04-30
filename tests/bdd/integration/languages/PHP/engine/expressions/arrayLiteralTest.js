@@ -39,44 +39,44 @@ define([
                 code: '<?php var_dump(array());',
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 array(0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'array with one auto-indexed element': {
                 code: '<?php var_dump(array(2));',
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   int(2)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'array with one explicitly-indexed element': {
                 code: '<?php var_dump(array(7 => 4));',
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 array(1) {
   [7]=>
   int(4)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'array with one explicitly-indexed element used as base for next implicitly-indexed element': {
                 code: '<?php var_dump(array(7 => "a", "b"));',
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 array(2) {
   [7]=>
   string(1) "a"
@@ -85,7 +85,7 @@ array(2) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             }
         }, function (scenario, description) {
             describe(description, function () {

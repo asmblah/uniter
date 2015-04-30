@@ -36,7 +36,7 @@ define([
 
         util.each({
             'while loop with bool(false) condition - should never execute body statements': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     while (false) {
         echo 1;
@@ -45,13 +45,13 @@ define([
 
     echo 'Done.';
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'Done.'
             },
             'while loop with counter to only execute 2 times': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $a = 0;
 
@@ -59,13 +59,13 @@ EOS
         echo $a++ . ',';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '0,1,'
             },
             'while loop with non-boolean falsy value - countdown from 2 to 0': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $a = 2;
 
@@ -73,7 +73,7 @@ EOS
         echo $a-- . ',';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '2,1,'

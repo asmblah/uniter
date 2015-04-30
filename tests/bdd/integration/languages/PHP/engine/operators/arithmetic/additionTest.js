@@ -38,38 +38,38 @@ define([
                         'array': [{
                             left: 'array()',
                             right: 'array()',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1)',
                             right: 'array(1)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   int(1)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1 => 2)',
                             right: 'array(1 => 2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [1]=>
   int(2)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1 => 2, 2 => 3)',
                             right: 'array(2 => 3, 1 => 2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [1]=>
   int(2)
@@ -78,8 +78,8 @@ array(2) {
 }
 
 EOS
-*/) {}),
-                            expectedInverseDump: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                            expectedInverseDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [2]=>
   int(3)
@@ -88,49 +88,49 @@ array(2) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1)',
                             right: 'array(2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   int(1)
 }
 
 EOS
-*/) {}),
-                            expectedInverseDump: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                            expectedInverseDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   int(2)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1 => 1)',
                             right: 'array(1 => 2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [1]=>
   int(1)
 }
 
 EOS
-*/) {}),
-                            expectedInverseDump: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                            expectedInverseDump: util.heredoc(function () {/*<<<EOS
 array(1) {
   [1]=>
   int(2)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1 => 2)',
                             right: 'array(2 => 2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [1]=>
   int(2)
@@ -139,8 +139,8 @@ array(2) {
 }
 
 EOS
-*/) {}),
-                            expectedInverseDump: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                            expectedInverseDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [2]=>
   int(2)
@@ -149,11 +149,11 @@ array(2) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(1 => 2, 3 => 4)',
                             right: 'array(1 => 2)',
-                            expectedDump: util.heredoc(function (/*<<<EOS
+                            expectedDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [1]=>
   int(2)
@@ -162,8 +162,8 @@ array(2) {
 }
 
 EOS
-*/) {}),
-                            expectedInverseDump: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                            expectedInverseDump: util.heredoc(function () {/*<<<EOS
 array(2) {
   [1]=>
   int(2)
@@ -172,7 +172,7 @@ array(2) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }],
                         'boolean': [{
                             left: 'array()',
@@ -225,11 +225,11 @@ EOS
                                 instanceOf: PHPFatalError,
                                 match: /^PHP Fatal error: Unsupported operand types$/
                             },
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 PHP Fatal error: Unsupported operand types
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'array(2)',
                             right: '(function () { class Planet {} return new Planet; }())',
@@ -238,11 +238,11 @@ EOS
                                 match: /^PHP Fatal error: Unsupported operand types$/
                             },
                             // Ensure correct class name is used in notice text
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class Planet could not be converted to int
 PHP Fatal error: Unsupported operand types
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }],
                         'string': [{
                             left: 'array()',
@@ -336,21 +336,21 @@ EOS
                             right: 'new stdClass',
                             expectedResult: 2,
                             expectedResultType: 'integer',
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: 'false',
                             right: 'new stdClass',
                             expectedResult: 1,
                             expectedResultType: 'integer',
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }],
                         'string': [{
                             left: 'true',
@@ -462,31 +462,31 @@ EOS
                             right: 'new stdClass',
                             expectedResult: 1,
                             expectedResultType: 'float',
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: '0.1',
                             right: 'new stdClass',
                             expectedResult: 1.1,
                             expectedResultType: 'float',
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }, {
                             left: '1.0',
                             right: 'new stdClass',
                             expectedResult: 2,
                             expectedResultType: 'float',
-                            expectedStderr: util.heredoc(function (/*<<<EOS
+                            expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Object of class stdClass could not be converted to int
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
                         }],
                         'string': [{
                             left: '0.0',

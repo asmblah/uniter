@@ -8,7 +8,7 @@
 
 /*global define */
 define([
-    'vendor/esparse/estraverse',
+    'estraverse',
     'js/util',
     '../BlockContext'
 ], function (

@@ -26,13 +26,13 @@ define([
 
         util.each({
             'method definition with argument with no type hint but a default value of null': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public static function doNothing($items = null);
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -57,13 +57,13 @@ EOS
                 }
             },
             'method definition with "array" type hinted argument with a default value of 7': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public static function doNothing(array $items = 7);
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

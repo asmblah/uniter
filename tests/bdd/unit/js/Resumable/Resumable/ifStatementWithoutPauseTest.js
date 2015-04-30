@@ -20,7 +20,7 @@ define([
     describe('Resumable if (...) {...} statement without pause', function () {
         util.each({
             'when condition is truthy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 with (scope) {
     if (1 === 1) {
         inTruthy;
@@ -31,7 +31,7 @@ with (scope) {
     }
 }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var getInFalsy = sinon.stub().returns(1),
                         getInTruthy = sinon.stub().returns(2),
@@ -67,7 +67,7 @@ EOS
                 }
             },
             'when condition is falsy': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 with (scope) {
     if (1 === 2) {
         inTruthy;
@@ -78,7 +78,7 @@ with (scope) {
     }
 }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var getInFalsy = sinon.stub().returns(1),
                         getInTruthy = sinon.stub().returns(2),
@@ -114,7 +114,7 @@ EOS
                 }
             },
             'when condition is falsy and no compound statement is used': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 with (scope) {
     if (1 === 2)
         exports.result = inTruthy;
@@ -122,7 +122,7 @@ with (scope) {
         exports.result = inFalsy;
 }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expose: function (state) {
                     var getInFalsy = sinon.stub().returns('no'),
                         getInTruthy = sinon.stub().returns('yes'),

@@ -36,7 +36,7 @@ define([
 
         util.each({
             'passing array to method argument type hinted as array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function sum(array $numbers) {
         $total = 0;
@@ -50,7 +50,7 @@ define([
 
     return sum(array(3, 5, 1));
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 9,
                 expectedResultType: 'integer',
                 expectedStderr: '',

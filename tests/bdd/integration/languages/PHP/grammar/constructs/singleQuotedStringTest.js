@@ -26,11 +26,11 @@ define([
 
         util.each({
             'string with plain text and partial variable interpolation surrounded by whitespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     return 'this ${ should not be interpolated';
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -43,11 +43,11 @@ EOS
                 }
             },
             'string with plain text and full variable interpolation surrounded by whitespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     return 'this ${var} should not be interpolated';
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

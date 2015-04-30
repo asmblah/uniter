@@ -36,7 +36,7 @@ define([
 
         util.each({
             'referring to class in same sub-namespace but using var_dump(...) from global namespace (with fallback; no prefix)': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace SubWhere;
 
@@ -46,18 +46,18 @@ define([
 
     var_dump($me);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(SubWhere\Me)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'multiple namespace statements, referring to classes from within each namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace There;
 
@@ -73,20 +73,20 @@ EOS
     $me = new Me;
     var_dump($me);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(There\You)#1 (0) {
 }
 object(Here\Me)#2 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'referring to class in sub-namespace from non-global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyTop\MyMiddle;
 
@@ -96,24 +96,24 @@ EOS
 
     var_dump(new MyMiddle\MyTest);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(MyTop\MyMiddle\MyTest)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'return from non-global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace There;
 
     return 7;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 7,
                 expectedResultType: 'integer',
                 expectedStderr: '',
