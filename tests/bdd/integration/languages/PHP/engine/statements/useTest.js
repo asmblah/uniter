@@ -11,11 +11,13 @@
 define([
     '../tools',
     '../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -191,6 +193,21 @@ object(Uniter\Tool\Drill)#1 (0) {
 A tool
 EOS
 */;}) // jshint ignore:line
+            },
+            'multiple identical use statements': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+    use Uniter\Tool\Stuff;
+    use Uniter\Tool\Stuff;
+
+EOS
+*/;}), // jshint ignore:line
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use$/
+                },
+                expectedStderr: 'PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

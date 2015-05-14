@@ -9,9 +9,11 @@
 
 /*global define */
 define([
-    'js/util'
+    'js/util',
+    './Error/Fatal'
 ], function (
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -154,15 +156,28 @@ define([
         },
 
         use: function (source, alias) {
+            var scope = this,
+                normalizedSource = source;
+
             if (!alias) {
                 alias = source.replace(/^.*?([^\\]+)$/, '$1');
             }
 
-            if (source.charAt(0) !== '\\') {
-                source = '\\' + source;
+            if (normalizedSource.charAt(0) !== '\\') {
+                normalizedSource = '\\' + normalizedSource;
             }
 
-            this.imports[alias] = source;
+            if (scope.imports[alias]) {
+                throw new PHPFatalError(
+                    PHPFatalError.NAME_ALREADY_IN_USE,
+                    {
+                        alias: alias,
+                        source: source
+                    }
+                );
+            }
+
+            scope.imports[alias] = normalizedSource;
         }
     });
 
