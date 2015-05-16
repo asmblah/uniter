@@ -38,7 +38,7 @@ define([
 
         util.each({
             'when given a limit of 1 second followed by a while loop that stops exactly at the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
@@ -49,7 +49,7 @@ define([
     }
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 exposeCurrentMilliseconds: true,
                 timerCycles: [
                     0,
@@ -64,14 +64,14 @@ EOS
                 expectedStdout: ''
             },
             'when given a limit of 1 second followed by an infinite while loop that reaches 1ms after the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
     while (true) {}
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 timerCycles: [
                     0,
                     0,
@@ -88,7 +88,7 @@ EOS
                 expectedStdout: ''
             },
             'when given a limit of 1 second followed by a do...while loop that stops exactly at the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
@@ -99,7 +99,7 @@ EOS
     } while (true);
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 exposeCurrentMilliseconds: true,
                 timerCycles: [
                     0,
@@ -114,14 +114,14 @@ EOS
                 expectedStdout: ''
             },
             'when given a limit of 1 second followed by an infinite do...while loop that reaches 1ms after the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
     do {} while (true);
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 timerCycles: [
                     0,
                     0,
@@ -138,7 +138,7 @@ EOS
                 expectedStdout: ''
             },
             'when given a limit of 1 second followed by a for loop that stops exactly at the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
@@ -149,7 +149,7 @@ EOS
     }
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 exposeCurrentMilliseconds: true,
                 timerCycles: [
                     0,
@@ -164,14 +164,14 @@ EOS
                 expectedStdout: ''
             },
             'when given a limit of 1 second followed by an infinite for loop that reaches 1ms after the timeout': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     set_time_limit(1);
 
     for (;;) {}
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 timerCycles: [
                     0,
                     0,

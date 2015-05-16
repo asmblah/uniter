@@ -108,7 +108,7 @@ define(function () {
             return getCount(text.substr(0, offset), '\n');
         },
 
-        getMilliseconds: util.global.performance ? function () {
+        getMilliseconds: global.performance ? function () {
             /*global performance */
             return performance.now();
         } : (Date.now || function () {
