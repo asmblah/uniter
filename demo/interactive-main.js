@@ -37,12 +37,9 @@ phpEngine.getStdout().on('data', function (data) {
     print(data);
 });
 
-phpEngine.getStderr().on('data', function (data) {
-    print(data);
+phpEngine.execute(phpCode).fail(function (error) {
+    print(error.toString());
 });
-
-clear();
-phpEngine.execute(phpCode);
 
 EOS
 */
@@ -64,6 +61,7 @@ $lang = ($info->getCC() === 'en') ? new English : null;
 echo $info->salutation .
     ' from ' .
     $lang->exclaim($project);
+
 EOS
 */
         }),
@@ -86,6 +84,8 @@ EOS
         function printText(text) {
             resultBody.appendChild(global.document.createTextNode(text));
         }
+
+        clear();
 
         try {
             /*jshint evil: true */
