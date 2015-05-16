@@ -113,7 +113,7 @@ function allElementsAreStrings(array) {
     }
 module.exports = Component;}());
 
-},{"./util":52}],2:[function(require,module,exports){
+},{"./util":51}],2:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -184,7 +184,7 @@ util.extend(Engine.prototype, {
     });
 module.exports = Engine;}());
 
-},{"./Exception/Exception":4,"./Promise":9,"./util":52}],3:[function(require,module,exports){
+},{"./Exception/Exception":4,"./Promise":9,"./util":51}],3:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -288,7 +288,7 @@ util.extend(EventEmitter.prototype, {
     });
 module.exports = EventEmitter;}());
 
-},{"./util":52}],4:[function(require,module,exports){
+},{"./util":51}],4:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -314,7 +314,7 @@ util.extend(Exception.prototype, {
     });
 module.exports = Exception;}());
 
-},{"./../util":52}],5:[function(require,module,exports){
+},{"./../util":51}],5:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -366,7 +366,7 @@ util.extend(ParseException.prototype, {
     });
 module.exports = ParseException;}());
 
-},{"./../util":52,"./Exception":4}],6:[function(require,module,exports){
+},{"./../util":51,"./Exception":4}],6:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -470,7 +470,7 @@ util.extend(Interpreter.prototype, {
     });
 module.exports = Interpreter;}());
 
-},{"./Exception/Exception":4,"./util":52}],7:[function(require,module,exports){
+},{"./Exception/Exception":4,"./util":51}],7:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -517,7 +517,7 @@ util.extend(Language.prototype, {
     });
 module.exports = Language;}());
 
-},{"./Engine":2,"./Interpreter":6,"./Parser":8,"./Stream":49,"./util":52}],8:[function(require,module,exports){
+},{"./Engine":2,"./Interpreter":6,"./Parser":8,"./Stream":48,"./util":51}],8:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -952,7 +952,7 @@ util.extend(Parser.prototype, {
     });
 module.exports = Parser;}());
 
-},{"./Component":1,"./Exception/Exception":4,"./Exception/Parse":5,"./Rule":47,"./util":52}],9:[function(require,module,exports){
+},{"./Component":1,"./Exception/Exception":4,"./Exception/Parse":5,"./Rule":46,"./util":51}],9:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -996,7 +996,7 @@ util.extend(Promise.prototype, {
     });
 module.exports = Promise;}());
 
-},{"./SimplePromise":48,"./util":52}],10:[function(require,module,exports){
+},{"./SimplePromise":47,"./util":51}],10:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1143,7 +1143,7 @@ function createSwitchCase(statementNode, index, nextIndex) {
     }
 module.exports = BlockContext;}());
 
-},{"./../util":52,"esprima":119,"estraverse":120}],11:[function(require,module,exports){
+},{"./../util":51,"esprima":117,"estraverse":118}],11:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1177,7 +1177,7 @@ util.extend(ArrayExpressionTranspiler.prototype, {
     });
 module.exports = ArrayExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],12:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],12:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1234,7 +1234,7 @@ util.extend(AssignmentExpressionTranspiler.prototype, {
     });
 module.exports = AssignmentExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],13:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],13:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1277,7 +1277,7 @@ util.extend(BinaryExpressionTranspiler.prototype, {
     });
 module.exports = BinaryExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],14:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],14:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1362,7 +1362,7 @@ util.extend(CallExpressionTranspiler.prototype, {
     });
 module.exports = CallExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],15:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],15:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1407,7 +1407,7 @@ util.extend(ExpressionTranspiler.prototype, {
     });
 module.exports = ExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],16:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],16:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1436,7 +1436,7 @@ util.extend(FunctionExpressionTranspiler.prototype, {
     });
 module.exports = FunctionExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],17:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],17:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1478,7 +1478,7 @@ util.extend(IdentifierTranspiler.prototype, {
     });
 module.exports = IdentifierTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],18:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],18:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1579,7 +1579,7 @@ util.extend(LogicalExpressionTranspiler.prototype, {
     });
 module.exports = LogicalExpressionTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"estraverse":120}],19:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"estraverse":118}],19:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1631,7 +1631,7 @@ util.extend(MemberExpressionTranspiler.prototype, {
     });
 module.exports = MemberExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],20:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],20:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1670,7 +1670,7 @@ util.extend(ObjectExpressionTranspiler.prototype, {
     });
 module.exports = ObjectExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],21:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],21:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1713,7 +1713,7 @@ util.extend(PropertyTranspiler.prototype, {
     });
 module.exports = PropertyTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],22:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],22:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1759,7 +1759,7 @@ util.extend(SequenceExpressionTranspiler.prototype, {
     });
 module.exports = SequenceExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],23:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],23:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -1866,7 +1866,7 @@ util.extend(UpdateExpressionTranspiler.prototype, {
     });
 module.exports = UpdateExpressionTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],24:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],24:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2247,7 +2247,7 @@ util.extend(FunctionContext.prototype, {
     });
 module.exports = FunctionContext;}());
 
-},{"./../util":52,"esprima":119,"estraverse":120}],25:[function(require,module,exports){
+},{"./../util":51,"esprima":117,"estraverse":118}],25:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2300,7 +2300,7 @@ util.extend(FunctionTranspiler.prototype, {
     });
 module.exports = FunctionTranspiler;}());
 
-},{"./../util":52,"./BlockContext":10,"./FunctionContext":24,"esprima":119,"estraverse":120}],26:[function(require,module,exports){
+},{"./../util":51,"./BlockContext":10,"./FunctionContext":24,"esprima":117,"estraverse":118}],26:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -2350,7 +2350,7 @@ util.extend(PauseException.prototype, {
     });
 module.exports = PauseException;}());
 
-},{"./../util":52}],27:[function(require,module,exports){
+},{"./../util":51}],27:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -2360,9 +2360,9 @@ module.exports = PauseException;}());
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define, escodegen */
+/*global define */
 (function () {'use strict';
-var esprima = require('esprima'), util = require('./../util'), PauseException = require('./PauseException'), Promise = require('./../Promise'), escodegen = require('escodegen');
+var escodegen = require('escodegen'), esprima = require('esprima'), util = require('./../util'), PauseException = require('./PauseException'), Promise = require('./../Promise');
 function Resumable(transpiler) {
         this.transpiler = transpiler;
     }
@@ -2455,7 +2455,7 @@ util.extend(Resumable.prototype, {
     });
 module.exports = Resumable;}());
 
-},{"./../Promise":9,"./../util":52,"./PauseException":26,"escodegen":101,"esprima":119}],28:[function(require,module,exports){
+},{"./../Promise":9,"./../util":51,"./PauseException":26,"escodegen":99,"esprima":117}],28:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2495,7 +2495,7 @@ util.extend(BlockStatementTranspiler.prototype, {
     });
 module.exports = BlockStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"estraverse":120}],29:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"estraverse":118}],29:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2534,7 +2534,7 @@ util.extend(BreakStatementTranspiler.prototype, {
     });
 module.exports = BreakStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],30:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],30:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2573,37 +2573,7 @@ util.extend(ContinueStatementTranspiler.prototype, {
     });
 module.exports = ContinueStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],31:[function(require,module,exports){
-/*
- * Uniter - JavaScript PHP interpreter
- * http://asmblah.github.com/uniter/
- *
- * Released under the MIT license
- * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
- */
-
-/*global define */
-(function () {'use strict';
-var estraverse = require('estraverse'), util = require('./../../util');
-var Syntax = estraverse.Syntax;
-function DebuggerStatementTranspiler(statementTranspiler, expressionTranspiler) {
-        this.expressionTranspiler = expressionTranspiler;
-        this.statementTranspiler = statementTranspiler;
-    }
-util.extend(DebuggerStatementTranspiler.prototype, {
-        getNodeType: function () {
-            return Syntax.DebuggerStatement;
-        },
-
-        transpile: function (node, parent, functionContext, blockContext) {
-            blockContext.prepareStatement().assign({
-                'type': Syntax.DebuggerStatement
-            });
-        }
-    });
-module.exports = DebuggerStatementTranspiler;}());
-
-},{"./../../util":52,"estraverse":120}],32:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],31:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2692,7 +2662,7 @@ util.extend(DoWhileStatementTranspiler.prototype, {
     });
 module.exports = DoWhileStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"esprima":119,"estraverse":120}],33:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"esprima":117,"estraverse":118}],32:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2726,7 +2696,7 @@ util.extend(ExpressionStatementTranspiler.prototype, {
     });
 module.exports = ExpressionStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],34:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],33:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2857,7 +2827,7 @@ util.extend(ForStatementTranspiler.prototype, {
     });
 module.exports = ForStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"esprima":119,"estraverse":120}],35:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"esprima":117,"estraverse":118}],34:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2888,7 +2858,7 @@ util.extend(FunctionDeclarationTranspiler.prototype, {
     });
 module.exports = FunctionDeclarationTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],36:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],35:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -2977,7 +2947,7 @@ util.extend(IfStatementTranspiler.prototype, {
     });
 module.exports = IfStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],37:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],36:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3018,7 +2988,7 @@ util.extend(LabeledStatementTranspiler.prototype, {
     });
 module.exports = LabeledStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],38:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],37:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3069,7 +3039,7 @@ util.extend(ProgramTranspiler.prototype, {
     });
 module.exports = ProgramTranspiler;}());
 
-},{"../BlockContext":10,"../FunctionContext":24,"./../../util":52,"estraverse":120}],39:[function(require,module,exports){
+},{"../BlockContext":10,"../FunctionContext":24,"./../../util":51,"estraverse":118}],38:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3103,7 +3073,7 @@ util.extend(ReturnStatementTranspiler.prototype, {
     });
 module.exports = ReturnStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],40:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],39:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3166,7 +3136,7 @@ util.extend(StatementTranspiler.prototype, {
     });
 module.exports = StatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"estraverse":120}],41:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"estraverse":118}],40:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3200,7 +3170,7 @@ util.extend(ThrowStatementTranspiler.prototype, {
     });
 module.exports = ThrowStatementTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],42:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],41:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3294,7 +3264,7 @@ util.extend(TryStatementTranspiler.prototype, {
     });
 module.exports = TryStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"esprima":119,"estraverse":120}],43:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"esprima":117,"estraverse":118}],42:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3351,7 +3321,7 @@ util.extend(VariableDeclarationTranspiler.prototype, {
     });
 module.exports = VariableDeclarationTranspiler;}());
 
-},{"./../../util":52,"estraverse":120}],44:[function(require,module,exports){
+},{"./../../util":51,"estraverse":118}],43:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3440,7 +3410,7 @@ util.extend(WhileStatementTranspiler.prototype, {
     });
 module.exports = WhileStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"esprima":119,"estraverse":120}],45:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"esprima":117,"estraverse":118}],44:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * http://asmblah.github.com/uniter/
@@ -3486,7 +3456,7 @@ util.extend(WithStatementTranspiler.prototype, {
     });
 module.exports = WithStatementTranspiler;}());
 
-},{"../BlockContext":10,"./../../util":52,"estraverse":120}],46:[function(require,module,exports){
+},{"../BlockContext":10,"./../../util":51,"estraverse":118}],45:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3498,7 +3468,7 @@ module.exports = WithStatementTranspiler;}());
 
 /*global define */
 (function () {'use strict';
-var esprima = require('esprima'), estraverse = require('estraverse'), util = require('./../util'), ArrayExpressionTranspiler = require('./ExpressionTranspiler/ArrayExpressionTranspiler'), AssignmentExpressionTranspiler = require('./ExpressionTranspiler/AssignmentExpressionTranspiler'), BinaryExpressionTranspiler = require('./ExpressionTranspiler/BinaryExpressionTranspiler'), BlockStatementTranspiler = require('./StatementTranspiler/BlockStatementTranspiler'), BreakStatementTranspiler = require('./StatementTranspiler/BreakStatementTranspiler'), CallExpressionTranspiler = require('./ExpressionTranspiler/CallExpressionTranspiler'), ContinueStatementTranspiler = require('./StatementTranspiler/ContinueStatementTranspiler'), DebuggerStatementTranspiler = require('./StatementTranspiler/DebuggerStatementTranspiler'), DoWhileStatementTranspiler = require('./StatementTranspiler/DoWhileStatementTranspiler'), ExpressionStatementTranspiler = require('./StatementTranspiler/ExpressionStatementTranspiler'), ExpressionTranspiler = require('./ExpressionTranspiler/ExpressionTranspiler'), ForStatementTranspiler = require('./StatementTranspiler/ForStatementTranspiler'), FunctionDeclarationTranspiler = require('./StatementTranspiler/FunctionDeclarationTranspiler'), FunctionExpressionTranspiler = require('./ExpressionTranspiler/FunctionExpressionTranspiler'), FunctionTranspiler = require('./FunctionTranspiler'), IdentifierTranspiler = require('./ExpressionTranspiler/IdentifierTranspiler'), IfStatementTranspiler = require('./StatementTranspiler/IfStatementTranspiler'), LabeledStatementTranspiler = require('./StatementTranspiler/LabeledStatementTranspiler'), LogicalExpressionTranspiler = require('./ExpressionTranspiler/LogicalExpressionTranspiler'), MemberExpressionTranspiler = require('./ExpressionTranspiler/MemberExpressionTranspiler'), ObjectExpressionTranspiler = require('./ExpressionTranspiler/ObjectExpressionTranspiler'), ProgramTranspiler = require('./StatementTranspiler/ProgramTranspiler'), PropertyTranspiler = require('./ExpressionTranspiler/PropertyTranspiler'), ReturnStatementTranspiler = require('./StatementTranspiler/ReturnStatementTranspiler'), SequenceExpressionTranspiler = require('./ExpressionTranspiler/SequenceExpressionTranspiler'), StatementTranspiler = require('./StatementTranspiler/StatementTranspiler'), ThrowStatementTranspiler = require('./StatementTranspiler/ThrowStatementTranspiler'), TryStatementTranspiler = require('./StatementTranspiler/TryStatementTranspiler'), UpdateExpressionTranspiler = require('./ExpressionTranspiler/UpdateExpressionTranspiler'), VariableDeclarationTranspiler = require('./StatementTranspiler/VariableDeclarationTranspiler'), WhileStatementTranspiler = require('./StatementTranspiler/WhileStatementTranspiler'), WithStatementTranspiler = require('./StatementTranspiler/WithStatementTranspiler');
+var esprima = require('esprima'), estraverse = require('estraverse'), util = require('./../util'), ArrayExpressionTranspiler = require('./ExpressionTranspiler/ArrayExpressionTranspiler'), AssignmentExpressionTranspiler = require('./ExpressionTranspiler/AssignmentExpressionTranspiler'), BinaryExpressionTranspiler = require('./ExpressionTranspiler/BinaryExpressionTranspiler'), BlockStatementTranspiler = require('./StatementTranspiler/BlockStatementTranspiler'), BreakStatementTranspiler = require('./StatementTranspiler/BreakStatementTranspiler'), CallExpressionTranspiler = require('./ExpressionTranspiler/CallExpressionTranspiler'), ContinueStatementTranspiler = require('./StatementTranspiler/ContinueStatementTranspiler'), DoWhileStatementTranspiler = require('./StatementTranspiler/DoWhileStatementTranspiler'), ExpressionStatementTranspiler = require('./StatementTranspiler/ExpressionStatementTranspiler'), ExpressionTranspiler = require('./ExpressionTranspiler/ExpressionTranspiler'), ForStatementTranspiler = require('./StatementTranspiler/ForStatementTranspiler'), FunctionDeclarationTranspiler = require('./StatementTranspiler/FunctionDeclarationTranspiler'), FunctionExpressionTranspiler = require('./ExpressionTranspiler/FunctionExpressionTranspiler'), FunctionTranspiler = require('./FunctionTranspiler'), IdentifierTranspiler = require('./ExpressionTranspiler/IdentifierTranspiler'), IfStatementTranspiler = require('./StatementTranspiler/IfStatementTranspiler'), LabeledStatementTranspiler = require('./StatementTranspiler/LabeledStatementTranspiler'), LogicalExpressionTranspiler = require('./ExpressionTranspiler/LogicalExpressionTranspiler'), MemberExpressionTranspiler = require('./ExpressionTranspiler/MemberExpressionTranspiler'), ObjectExpressionTranspiler = require('./ExpressionTranspiler/ObjectExpressionTranspiler'), ProgramTranspiler = require('./StatementTranspiler/ProgramTranspiler'), PropertyTranspiler = require('./ExpressionTranspiler/PropertyTranspiler'), ReturnStatementTranspiler = require('./StatementTranspiler/ReturnStatementTranspiler'), SequenceExpressionTranspiler = require('./ExpressionTranspiler/SequenceExpressionTranspiler'), StatementTranspiler = require('./StatementTranspiler/StatementTranspiler'), ThrowStatementTranspiler = require('./StatementTranspiler/ThrowStatementTranspiler'), TryStatementTranspiler = require('./StatementTranspiler/TryStatementTranspiler'), UpdateExpressionTranspiler = require('./ExpressionTranspiler/UpdateExpressionTranspiler'), VariableDeclarationTranspiler = require('./StatementTranspiler/VariableDeclarationTranspiler'), WhileStatementTranspiler = require('./StatementTranspiler/WhileStatementTranspiler'), WithStatementTranspiler = require('./StatementTranspiler/WithStatementTranspiler');
 require('escodegen');
 function Transpiler() {
         var expressionTranspiler = new ExpressionTranspiler(),
@@ -3509,7 +3479,6 @@ function Transpiler() {
             BlockStatementTranspiler,
             BreakStatementTranspiler,
             ContinueStatementTranspiler,
-            DebuggerStatementTranspiler,
             DoWhileStatementTranspiler,
             ExpressionStatementTranspiler,
             ForStatementTranspiler,
@@ -3568,7 +3537,7 @@ util.extend(Transpiler.prototype, {
     });
 module.exports = Transpiler;}());
 
-},{"./../util":52,"./ExpressionTranspiler/ArrayExpressionTranspiler":11,"./ExpressionTranspiler/AssignmentExpressionTranspiler":12,"./ExpressionTranspiler/BinaryExpressionTranspiler":13,"./ExpressionTranspiler/CallExpressionTranspiler":14,"./ExpressionTranspiler/ExpressionTranspiler":15,"./ExpressionTranspiler/FunctionExpressionTranspiler":16,"./ExpressionTranspiler/IdentifierTranspiler":17,"./ExpressionTranspiler/LogicalExpressionTranspiler":18,"./ExpressionTranspiler/MemberExpressionTranspiler":19,"./ExpressionTranspiler/ObjectExpressionTranspiler":20,"./ExpressionTranspiler/PropertyTranspiler":21,"./ExpressionTranspiler/SequenceExpressionTranspiler":22,"./ExpressionTranspiler/UpdateExpressionTranspiler":23,"./FunctionTranspiler":25,"./StatementTranspiler/BlockStatementTranspiler":28,"./StatementTranspiler/BreakStatementTranspiler":29,"./StatementTranspiler/ContinueStatementTranspiler":30,"./StatementTranspiler/DebuggerStatementTranspiler":31,"./StatementTranspiler/DoWhileStatementTranspiler":32,"./StatementTranspiler/ExpressionStatementTranspiler":33,"./StatementTranspiler/ForStatementTranspiler":34,"./StatementTranspiler/FunctionDeclarationTranspiler":35,"./StatementTranspiler/IfStatementTranspiler":36,"./StatementTranspiler/LabeledStatementTranspiler":37,"./StatementTranspiler/ProgramTranspiler":38,"./StatementTranspiler/ReturnStatementTranspiler":39,"./StatementTranspiler/StatementTranspiler":40,"./StatementTranspiler/ThrowStatementTranspiler":41,"./StatementTranspiler/TryStatementTranspiler":42,"./StatementTranspiler/VariableDeclarationTranspiler":43,"./StatementTranspiler/WhileStatementTranspiler":44,"./StatementTranspiler/WithStatementTranspiler":45,"escodegen":101,"esprima":119,"estraverse":120}],47:[function(require,module,exports){
+},{"./../util":51,"./ExpressionTranspiler/ArrayExpressionTranspiler":11,"./ExpressionTranspiler/AssignmentExpressionTranspiler":12,"./ExpressionTranspiler/BinaryExpressionTranspiler":13,"./ExpressionTranspiler/CallExpressionTranspiler":14,"./ExpressionTranspiler/ExpressionTranspiler":15,"./ExpressionTranspiler/FunctionExpressionTranspiler":16,"./ExpressionTranspiler/IdentifierTranspiler":17,"./ExpressionTranspiler/LogicalExpressionTranspiler":18,"./ExpressionTranspiler/MemberExpressionTranspiler":19,"./ExpressionTranspiler/ObjectExpressionTranspiler":20,"./ExpressionTranspiler/PropertyTranspiler":21,"./ExpressionTranspiler/SequenceExpressionTranspiler":22,"./ExpressionTranspiler/UpdateExpressionTranspiler":23,"./FunctionTranspiler":25,"./StatementTranspiler/BlockStatementTranspiler":28,"./StatementTranspiler/BreakStatementTranspiler":29,"./StatementTranspiler/ContinueStatementTranspiler":30,"./StatementTranspiler/DoWhileStatementTranspiler":31,"./StatementTranspiler/ExpressionStatementTranspiler":32,"./StatementTranspiler/ForStatementTranspiler":33,"./StatementTranspiler/FunctionDeclarationTranspiler":34,"./StatementTranspiler/IfStatementTranspiler":35,"./StatementTranspiler/LabeledStatementTranspiler":36,"./StatementTranspiler/ProgramTranspiler":37,"./StatementTranspiler/ReturnStatementTranspiler":38,"./StatementTranspiler/StatementTranspiler":39,"./StatementTranspiler/ThrowStatementTranspiler":40,"./StatementTranspiler/TryStatementTranspiler":41,"./StatementTranspiler/VariableDeclarationTranspiler":42,"./StatementTranspiler/WhileStatementTranspiler":43,"./StatementTranspiler/WithStatementTranspiler":44,"escodegen":99,"esprima":117,"estraverse":118}],46:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3627,7 +3596,7 @@ util.extend(Rule.prototype, {
     });
 module.exports = Rule;}());
 
-},{"./util":52}],48:[function(require,module,exports){
+},{"./util":51}],47:[function(require,module,exports){
 /*
  * Modular - JavaScript AMD Framework
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3708,7 +3677,7 @@ util.extend(Promise.prototype, {
     });
 module.exports = Promise;}());
 
-},{"./util":52}],49:[function(require,module,exports){
+},{"./util":51}],48:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3758,7 +3727,7 @@ util.extend(Stream.prototype, {
     });
 module.exports = Stream;}());
 
-},{"./EventEmitter":3,"./util":52}],50:[function(require,module,exports){
+},{"./EventEmitter":3,"./util":51}],49:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3842,7 +3811,7 @@ util.extend(Uniter.prototype, {
     });
 module.exports = Uniter;}());
 
-},{"./Engine":2,"./Exception/Exception":4,"./Language":7,"./util":52}],51:[function(require,module,exports){
+},{"./Engine":2,"./Exception/Exception":4,"./Language":7,"./util":51}],50:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -3859,7 +3828,7 @@ var uniter = new Uniter();
 uniter.registerLanguage(new Language('PHP', phpGrammarSpec, phpInterpreterSpec));
 module.exports = uniter;}());
 
-},{"./../languages/PHP/grammar":53,"./../languages/PHP/interpreter":56,"./Language":7,"./Uniter":50}],52:[function(require,module,exports){
+},{"./../languages/PHP/grammar":52,"./../languages/PHP/interpreter":55,"./Language":7,"./Uniter":49}],51:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -4052,7 +4021,7 @@ util = {
     };
 module.exports = util;}());
 
-},{}],53:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -4794,7 +4763,7 @@ module.exports = {
         start: 'N_PROGRAM'
     };}());
 
-},{"./grammar/ErrorHandler":54,"./grammar/State":55}],54:[function(require,module,exports){
+},{"./grammar/ErrorHandler":53,"./grammar/State":54}],53:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -4839,7 +4808,7 @@ util.extend(ErrorHandler.prototype, {
     });
 module.exports = ErrorHandler;}());
 
-},{"./../../../js/util":52,"./../interpreter/Error/Parse":64}],55:[function(require,module,exports){
+},{"./../../../js/util":51,"./../interpreter/Error/Parse":63}],54:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -4870,7 +4839,7 @@ util.extend(State.prototype, {
     });
 module.exports = State;}());
 
-},{"../util":98,"./../../../js/util":52}],56:[function(require,module,exports){
+},{"../util":96,"./../../../js/util":51}],55:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -4926,14 +4895,23 @@ function evaluateModule(state, code, context, stdin, stdout, stderr) {
         function include(path) {
             var done = false,
                 promise = new Promise(),
+                pause = null,
                 result;
+
+            function completeWith(moduleResult) {
+                if (pause) {
+                    pause.resume(moduleResult);
+                } else {
+                    result = moduleResult;
+                }
+            }
 
             promise.done(function (contents) {
                 done = true;
 
                 engine.execute(contents, path).done(function (resultNative) {
                     // TODO: This is inefficient, we should just have access to the Value object
-                    result = valueFactory.coerce(resultNative);
+                    completeWith(valueFactory.coerce(resultNative));
                 }).fail(function (exception) {
                     throw exception;
                 });
@@ -4943,7 +4921,7 @@ function evaluateModule(state, code, context, stdin, stdout, stderr) {
                 callStack.raiseError(PHPError.E_WARNING, 'include(' + path + '): failed to open stream: No such file or directory');
                 callStack.raiseError(PHPError.E_WARNING, 'include(): Failed opening \'' + path + '\' for inclusion');
 
-                result = valueFactory.createNull();
+                completeWith(valueFactory.createNull());
             });
 
             if (!options[INCLUDE_OPTION]) {
@@ -4952,11 +4930,12 @@ function evaluateModule(state, code, context, stdin, stdout, stderr) {
 
             options[INCLUDE_OPTION](path, promise);
 
-            if (!done) {
-                throw new Exception('include() :: Must be called synchronously for now.');
+            if (done) {
+                return result;
             }
 
-            return result;
+            pause = resumable.createPause();
+            pause.now();
         }
 
         var engine = state.getEngine(),
@@ -5865,7 +5844,7 @@ module.exports = {
         }
     };}());
 
-},{"./../../js/Exception/Exception":4,"./../../js/Promise":9,"./../../js/util":52,"./interpreter/Call":57,"./interpreter/Environment":61,"./interpreter/Error":62,"./interpreter/Error/Fatal":63,"./interpreter/KeyValuePair":65,"./interpreter/LabelRepository":66,"./interpreter/List":67,"./interpreter/NamespaceScope":69,"./interpreter/Scope":75,"./interpreter/State":76,"./interpreter/Value/Object":84}],57:[function(require,module,exports){
+},{"./../../js/Exception/Exception":4,"./../../js/Promise":9,"./../../js/util":51,"./interpreter/Call":56,"./interpreter/Environment":60,"./interpreter/Error":61,"./interpreter/Error/Fatal":62,"./interpreter/KeyValuePair":64,"./interpreter/LabelRepository":65,"./interpreter/List":66,"./interpreter/NamespaceScope":68,"./interpreter/Scope":74,"./interpreter/State":75,"./interpreter/Value/Object":83}],56:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -5888,7 +5867,7 @@ util.extend(Call.prototype, {
     });
 module.exports = Call;}());
 
-},{"./../../../js/util":52}],58:[function(require,module,exports){
+},{"./../../../js/util":51}],57:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -5942,7 +5921,7 @@ util.extend(CallStack.prototype, {
     });
 module.exports = CallStack;}());
 
-},{"./../../../js/util":52,"./Error":62}],59:[function(require,module,exports){
+},{"./../../../js/util":51,"./Error":61}],58:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6114,7 +6093,7 @@ util.extend(Class.prototype, {
     });
 module.exports = Class;}());
 
-},{"./../../../js/util":52,"./Error":62,"./Error/Fatal":63,"./Reference/StaticProperty":72}],60:[function(require,module,exports){
+},{"./../../../js/util":51,"./Error":61,"./Error/Fatal":62,"./Reference/StaticProperty":71}],59:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6171,7 +6150,7 @@ util.extend(ClassAutoloader.prototype, {
     });
 module.exports = ClassAutoloader;}());
 
-},{"./../../../js/util":52}],61:[function(require,module,exports){
+},{"./../../../js/util":51}],60:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6194,7 +6173,7 @@ util.extend(PHPEnvironment.prototype, {
     });
 module.exports = PHPEnvironment;}());
 
-},{"./../../../js/util":52}],62:[function(require,module,exports){
+},{"./../../../js/util":51}],61:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6221,7 +6200,7 @@ util.extend(PHPError, {
     });
 module.exports = PHPError;}());
 
-},{"./../../../js/Exception/Exception":4,"./../../../js/util":52}],63:[function(require,module,exports){
+},{"./../../../js/Exception/Exception":4,"./../../../js/util":51}],62:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6251,7 +6230,8 @@ var MESSAGE_PREFIXES = {
             14: 'Function name must be a string',
             15: 'Undefined class constant \'${name}\'',
             16: 'Interfaces may not include member variables',
-            17: 'Interface function ${className}::${methodName}() cannot contain body'
+            17: 'Interface function ${className}::${methodName}() cannot contain body',
+            18: 'Cannot use ${source} as ${alias} because the name is already in use'
         };
 function PHPFatalError(code, variables) {
         PHPError.call(this, PHPError.E_FATAL, util.stringTemplate(MESSAGE_PREFIXES[code], variables));
@@ -6274,11 +6254,12 @@ util.extend(PHPFatalError, {
         FUNCTION_NAME_MUST_BE_STRING: 14,
         UNDEFINED_CLASS_CONSTANT: 15,
         INTERFACE_PROPERTY_NOT_ALLOWED: 16,
-        INTERFACE_METHOD_BODY_NOT_ALLOWED: 17
+        INTERFACE_METHOD_BODY_NOT_ALLOWED: 17,
+        NAME_ALREADY_IN_USE: 18
     });
 module.exports = PHPFatalError;}());
 
-},{"../Error":62,"./../../../../js/util":52}],64:[function(require,module,exports){
+},{"../Error":61,"./../../../../js/util":51}],63:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6303,7 +6284,7 @@ util.extend(PHPParseError, {
     });
 module.exports = PHPParseError;}());
 
-},{"../Error":62,"./../../../../js/util":52}],65:[function(require,module,exports){
+},{"../Error":61,"./../../../../js/util":51}],64:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6330,7 +6311,7 @@ util.extend(KeyValuePair.prototype, {
     });
 module.exports = KeyValuePair;}());
 
-},{"./../../../js/util":52}],66:[function(require,module,exports){
+},{"./../../../js/util":51}],65:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6389,7 +6370,7 @@ util.extend(LabelRepository.prototype, {
     });
 module.exports = LabelRepository;}());
 
-},{"./../../../js/EventEmitter":3,"./../../../js/util":52}],67:[function(require,module,exports){
+},{"./../../../js/EventEmitter":3,"./../../../js/util":51}],66:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6422,7 +6403,7 @@ util.extend(List.prototype, {
     });
 module.exports = List;}());
 
-},{"./../../../js/util":52}],68:[function(require,module,exports){
+},{"./../../../js/util":51}],67:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6696,7 +6677,7 @@ util.extend(Namespace.prototype, {
     });
 module.exports = Namespace;}());
 
-},{"./../../../js/util":52,"./Class":59,"./Error":62,"./Error/Fatal":63}],69:[function(require,module,exports){
+},{"./../../../js/util":51,"./Class":58,"./Error":61,"./Error/Fatal":62}],68:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6708,7 +6689,7 @@ module.exports = Namespace;}());
 
 /*global define */
 (function () {'use strict';
-var util = require('./../../../js/util');
+var util = require('./../../../js/util'), PHPFatalError = require('./Error/Fatal');
 var hasOwn = {}.hasOwnProperty;
 function NamespaceScope(globalNamespace, namespace) {
         this.globalNamespace = globalNamespace;
@@ -6846,20 +6827,33 @@ util.extend(NamespaceScope.prototype, {
         },
 
         use: function (source, alias) {
+            var scope = this,
+                normalizedSource = source;
+
             if (!alias) {
                 alias = source.replace(/^.*?([^\\]+)$/, '$1');
             }
 
-            if (source.charAt(0) !== '\\') {
-                source = '\\' + source;
+            if (normalizedSource.charAt(0) !== '\\') {
+                normalizedSource = '\\' + normalizedSource;
             }
 
-            this.imports[alias] = source;
+            if (scope.imports[alias]) {
+                throw new PHPFatalError(
+                    PHPFatalError.NAME_ALREADY_IN_USE,
+                    {
+                        alias: alias,
+                        source: source
+                    }
+                );
+            }
+
+            scope.imports[alias] = normalizedSource;
         }
     });
 module.exports = NamespaceScope;}());
 
-},{"./../../../js/util":52}],70:[function(require,module,exports){
+},{"./../../../js/util":51,"./Error/Fatal":62}],69:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6937,7 +6931,7 @@ util.extend(ElementReference.prototype, {
     });
 module.exports = ElementReference;}());
 
-},{"../Error":62,"./../../../../js/util":52}],71:[function(require,module,exports){
+},{"../Error":61,"./../../../../js/util":51}],70:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -6971,7 +6965,7 @@ util.extend(NullReference.prototype, {
     });
 module.exports = NullReference;}());
 
-},{"./../../../../js/util":52}],72:[function(require,module,exports){
+},{"./../../../../js/util":51}],71:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7029,7 +7023,7 @@ util.extend(StaticPropertyReference.prototype, {
     });
 module.exports = StaticPropertyReference;}());
 
-},{"./../../../../js/util":52}],73:[function(require,module,exports){
+},{"./../../../../js/util":51}],72:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7056,7 +7050,7 @@ util.extend(VariableReference.prototype, {
     });
 module.exports = VariableReference;}());
 
-},{"./../../../../js/util":52}],74:[function(require,module,exports){
+},{"./../../../../js/util":51}],73:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7079,7 +7073,7 @@ util.extend(ReferenceFactory.prototype, {
     });
 module.exports = ReferenceFactory;}());
 
-},{"./../../../js/util":52,"./Reference/Null":71}],75:[function(require,module,exports){
+},{"./../../../js/util":51,"./Reference/Null":70}],74:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7167,7 +7161,7 @@ util.extend(Scope.prototype, {
     });
 module.exports = Scope;}());
 
-},{"./../../../js/util":52,"./Variable":87}],76:[function(require,module,exports){
+},{"./../../../js/util":51,"./Variable":86}],75:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7286,7 +7280,7 @@ function setUpState(state) {
     }
 module.exports = PHPState;}());
 
-},{"../util":98,"./../../../js/Resumable/Resumable":27,"./../../../js/Resumable/Transpiler":46,"./../../../js/util":52,"./CallStack":58,"./ClassAutoloader":60,"./Namespace":68,"./ReferenceFactory":74,"./Scope":75,"./ValueFactory":86,"./builtin/builtins":88}],77:[function(require,module,exports){
+},{"../util":96,"./../../../js/Resumable/Resumable":27,"./../../../js/Resumable/Transpiler":45,"./../../../js/util":51,"./CallStack":57,"./ClassAutoloader":59,"./Namespace":67,"./ReferenceFactory":73,"./Scope":74,"./ValueFactory":85,"./builtin/builtins":87}],76:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7455,7 +7449,7 @@ util.extend(Value.prototype, {
     });
 module.exports = Value;}());
 
-},{"./../../../js/util":52,"./Error":62,"./Error/Fatal":63,"./Reference/Null":71}],78:[function(require,module,exports){
+},{"./../../../js/util":51,"./Error":61,"./Error/Fatal":62,"./Reference/Null":70}],77:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7783,7 +7777,7 @@ util.extend(ArrayValue.prototype, {
     });
 module.exports = ArrayValue;}());
 
-},{"../Error":62,"../Error/Fatal":63,"../KeyValuePair":65,"../Reference/Element":70,"../Reference/Null":71,"../Value":77,"./../../../../js/util":52}],79:[function(require,module,exports){
+},{"../Error":61,"../Error/Fatal":62,"../KeyValuePair":64,"../Reference/Element":69,"../Reference/Null":70,"../Value":76,"./../../../../js/util":51}],78:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7807,7 +7801,7 @@ util.extend(BarewordStringValue.prototype, {
     });
 module.exports = BarewordStringValue;}());
 
-},{"./../../../../js/util":52,"./String":85}],80:[function(require,module,exports){
+},{"./../../../../js/util":51,"./String":84}],79:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -7907,7 +7901,7 @@ util.extend(BooleanValue.prototype, {
     });
 module.exports = BooleanValue;}());
 
-},{"../Error/Fatal":63,"../Value":77,"./../../../../js/util":52}],81:[function(require,module,exports){
+},{"../Error/Fatal":62,"../Value":76,"./../../../../js/util":51}],80:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8044,7 +8038,7 @@ util.extend(FloatValue.prototype, {
     });
 module.exports = FloatValue;}());
 
-},{"../Value":77,"./../../../../js/util":52}],82:[function(require,module,exports){
+},{"../Value":76,"./../../../../js/util":51}],81:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8220,7 +8214,7 @@ util.extend(IntegerValue.prototype, {
     });
 module.exports = IntegerValue;}());
 
-},{"../Value":77,"./../../../../js/util":52}],83:[function(require,module,exports){
+},{"../Value":76,"./../../../../js/util":51}],82:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8289,7 +8283,7 @@ util.extend(NullValue.prototype, {
     });
 module.exports = NullValue;}());
 
-},{"../Value":77,"./../../../../js/util":52}],84:[function(require,module,exports){
+},{"../Value":76,"./../../../../js/util":51}],83:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8496,7 +8490,7 @@ util.extend(ObjectValue.prototype, {
     });
 module.exports = ObjectValue;}());
 
-},{"../Error":62,"../Error/Fatal":63,"../KeyValuePair":65,"./../../../../js/util":52,"./Array":78}],85:[function(require,module,exports){
+},{"../Error":61,"../Error/Fatal":62,"../KeyValuePair":64,"./../../../../js/util":51,"./Array":77}],84:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8618,7 +8612,7 @@ util.extend(StringValue.prototype, {
     });
 module.exports = StringValue;}());
 
-},{"../Value":77,"./../../../../js/util":52}],86:[function(require,module,exports){
+},{"../Value":76,"./../../../../js/util":51}],85:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8715,7 +8709,7 @@ util.extend(ValueFactory.prototype, {
     });
 module.exports = ValueFactory;}());
 
-},{"./../../../js/util":52,"./Value":77,"./Value/Array":78,"./Value/BarewordString":79,"./Value/Boolean":80,"./Value/Float":81,"./Value/Integer":82,"./Value/Null":83,"./Value/Object":84,"./Value/String":85}],87:[function(require,module,exports){
+},{"./../../../js/util":51,"./Value":76,"./Value/Array":77,"./Value/BarewordString":78,"./Value/Boolean":79,"./Value/Float":80,"./Value/Integer":81,"./Value/Null":82,"./Value/Object":83,"./Value/String":84}],86:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8855,7 +8849,7 @@ util.extend(Variable.prototype, {
     });
 module.exports = Variable;}());
 
-},{"./../../../js/util":52,"./Error":62,"./Reference/Variable":73}],88:[function(require,module,exports){
+},{"./../../../js/util":51,"./Error":61,"./Reference/Variable":72}],87:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8867,7 +8861,7 @@ module.exports = Variable;}());
 
 /*global define */
 (function () {'use strict';
-var arrayFunctions = require('./functions/array'), constantFunctions = require('./functions/constant'), pregFunctions = require('./functions/preg'), splFunctions = require('./functions/spl'), stdClass = require('./classes/stdClass'), stringFunctions = require('./functions/string'), timeFunctions = require('./functions/time'), variableHandlingFunctions = require('./functions/variableHandling'), Exception = require('./classes/Exception');
+var arrayFunctions = require('./functions/array'), constantFunctions = require('./functions/constant'), splFunctions = require('./functions/spl'), stdClass = require('./classes/stdClass'), stringFunctions = require('./functions/string'), timeFunctions = require('./functions/time'), variableHandlingFunctions = require('./functions/variableHandling'), Exception = require('./classes/Exception');
 module.exports = {
         classes: {
             'stdClass': stdClass,
@@ -8876,7 +8870,6 @@ module.exports = {
         functionGroups: [
             arrayFunctions,
             constantFunctions,
-            pregFunctions,
             splFunctions,
             stringFunctions,
             timeFunctions,
@@ -8884,7 +8877,7 @@ module.exports = {
         ]
     };}());
 
-},{"./classes/Exception":89,"./classes/stdClass":90,"./functions/array":91,"./functions/constant":92,"./functions/preg":93,"./functions/spl":94,"./functions/string":95,"./functions/time":96,"./functions/variableHandling":97}],89:[function(require,module,exports){
+},{"./classes/Exception":88,"./classes/stdClass":89,"./functions/array":90,"./functions/constant":91,"./functions/spl":92,"./functions/string":93,"./functions/time":94,"./functions/variableHandling":95}],88:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8911,7 +8904,7 @@ module.exports = function () {
         return Exception;
     };}());
 
-},{"./../../../../../js/util":52,"./../../Error":62}],90:[function(require,module,exports){
+},{"./../../../../../js/util":51,"./../../Error":61}],89:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8931,7 +8924,7 @@ module.exports = function () {
         return stdClass;
     };}());
 
-},{}],91:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8979,7 +8972,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{"./../../Error":62,"./../../Variable":87}],92:[function(require,module,exports){
+},{"./../../Error":61,"./../../Variable":86}],91:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9022,67 +9015,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{}],93:[function(require,module,exports){
-/*
- * Uniter - JavaScript PHP interpreter
- * Copyright 2013 Dan Phillimore (asmblah)
- * http://asmblah.github.com/uniter/
- *
- * Released under the MIT license
- * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
- */
-
-/*global define */
-(function () {'use strict';
-var util = require('./../../../../../js/util'), KeyValuePair = require('./../../KeyValuePair'), PHPError = require('./../../Error'), Variable = require('./../../Variable');
-module.exports = function (internals) {
-        var valueFactory = internals.valueFactory;
-
-        return {
-            'preg_match': function (patternReference, subjectReference, matchesReference) {
-                var parts,
-                    patternValue = (patternReference instanceof Variable) ?
-                        patternReference.getValue() :
-                        patternReference,
-                    pcreResult,
-                    result = [],
-                    subjectValue = (subjectReference instanceof Variable) ?
-                        subjectReference.getValue() :
-                        subjectReference;
-
-                parts = patternValue.getNative().match(/^(.)([\s\S]*)\1([\s\S]*)$/);
-
-                if (parts) {
-                    pcrelib.preg_compile(parts[2], parts[3].split());
-                    pcreResult = pcrelib.preg_match(subjectValue.getNative());
-
-                    if (pcreResult.result.length > 0) {
-                        util.each(pcreResult.result[0], function (match) {
-                            if (match.name) {
-                                result.push(new KeyValuePair(valueFactory.createString(match.name), valueFactory.createString(match.content)));
-                            }
-
-                            result.push(match.content);
-                        });
-
-                        if (matchesReference) {
-                            matchesReference.setValue(valueFactory.createArray(result));
-                        }
-
-                        return valueFactory.createInteger(1);
-                    }
-
-                    if (matchesReference) {
-                        matchesReference.setValue(valueFactory.createArray());
-                    }
-
-                    return valueFactory.createInteger(0);
-                }
-            }
-        };
-    };}());
-
-},{"./../../../../../js/util":52,"./../../Error":62,"./../../KeyValuePair":65,"./../../Variable":87}],94:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9108,7 +9041,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{"./../../Variable":87}],95:[function(require,module,exports){
+},{"./../../Variable":86}],93:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9140,7 +9073,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{"./../../Error":62,"./../../Variable":87}],96:[function(require,module,exports){
+},{"./../../Error":61,"./../../Variable":86}],94:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9179,7 +9112,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{"./../../Error":62,"./../../Variable":87}],97:[function(require,module,exports){
+},{"./../../Error":61,"./../../Variable":86}],95:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9279,7 +9212,7 @@ module.exports = function (internals) {
         };
     };}());
 
-},{"./../../../../../js/util":52,"./../../Error":62,"./../../Variable":87}],98:[function(require,module,exports){
+},{"./../../../../../js/util":51,"./../../Error":61,"./../../Variable":86}],96:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9297,7 +9230,7 @@ module.exports = {
         }
     };}());
 
-},{}],99:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -9525,7 +9458,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":100}],100:[function(require,module,exports){
+},{"_process":98}],98:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -9585,7 +9518,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],101:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 (function (global){
 /*
   Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
@@ -12147,7 +12080,7 @@ process.umask = function() { return 0; };
 /* vim: set sw=4 ts=4 et tw=80 : */
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./package.json":118,"estraverse":102,"esutils":106,"source-map":107}],102:[function(require,module,exports){
+},{"./package.json":116,"estraverse":100,"esutils":104,"source-map":105}],100:[function(require,module,exports){
 /*
   Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
@@ -12994,7 +12927,7 @@ process.umask = function() { return 0; };
 }));
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{}],103:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /*
   Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
 
@@ -13140,7 +13073,7 @@ process.umask = function() { return 0; };
 }());
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{}],104:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 /*
   Copyright (C) 2013-2014 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
@@ -13243,7 +13176,7 @@ process.umask = function() { return 0; };
 }());
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{}],105:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 /*
   Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
 
@@ -13382,7 +13315,7 @@ process.umask = function() { return 0; };
 }());
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{"./code":104}],106:[function(require,module,exports){
+},{"./code":102}],104:[function(require,module,exports){
 /*
   Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
 
@@ -13417,7 +13350,7 @@ process.umask = function() { return 0; };
 }());
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{"./ast":103,"./code":104,"./keyword":105}],107:[function(require,module,exports){
+},{"./ast":101,"./code":102,"./keyword":103}],105:[function(require,module,exports){
 /*
  * Copyright 2009-2011 Mozilla Foundation and contributors
  * Licensed under the New BSD license. See LICENSE.txt or:
@@ -13427,7 +13360,7 @@ exports.SourceMapGenerator = require('./source-map/source-map-generator').Source
 exports.SourceMapConsumer = require('./source-map/source-map-consumer').SourceMapConsumer;
 exports.SourceNode = require('./source-map/source-node').SourceNode;
 
-},{"./source-map/source-map-consumer":113,"./source-map/source-map-generator":114,"./source-map/source-node":115}],108:[function(require,module,exports){
+},{"./source-map/source-map-consumer":111,"./source-map/source-map-generator":112,"./source-map/source-node":113}],106:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13526,7 +13459,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./util":116,"amdefine":117}],109:[function(require,module,exports){
+},{"./util":114,"amdefine":115}],107:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13670,7 +13603,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./base64":110,"amdefine":117}],110:[function(require,module,exports){
+},{"./base64":108,"amdefine":115}],108:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13714,7 +13647,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":117}],111:[function(require,module,exports){
+},{"amdefine":115}],109:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13796,7 +13729,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":117}],112:[function(require,module,exports){
+},{"amdefine":115}],110:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2014 Mozilla Foundation and contributors
@@ -13884,7 +13817,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./util":116,"amdefine":117}],113:[function(require,module,exports){
+},{"./util":114,"amdefine":115}],111:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -14461,7 +14394,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./array-set":108,"./base64-vlq":109,"./binary-search":111,"./util":116,"amdefine":117}],114:[function(require,module,exports){
+},{"./array-set":106,"./base64-vlq":107,"./binary-search":109,"./util":114,"amdefine":115}],112:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -14863,7 +14796,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./array-set":108,"./base64-vlq":109,"./mapping-list":112,"./util":116,"amdefine":117}],115:[function(require,module,exports){
+},{"./array-set":106,"./base64-vlq":107,"./mapping-list":110,"./util":114,"amdefine":115}],113:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -15279,7 +15212,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./source-map-generator":114,"./util":116,"amdefine":117}],116:[function(require,module,exports){
+},{"./source-map-generator":112,"./util":114,"amdefine":115}],114:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -15600,7 +15533,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":117}],117:[function(require,module,exports){
+},{"amdefine":115}],115:[function(require,module,exports){
 (function (process,__filename){
 /** vim: et:ts=4:sw=4:sts=4
  * @license amdefine 0.1.0 Copyright (c) 2011, The Dojo Foundation All Rights Reserved.
@@ -15903,7 +15836,7 @@ function amdefine(module, requireFn) {
 module.exports = amdefine;
 
 }).call(this,require('_process'),"/node_modules/escodegen/node_modules/source-map/node_modules/amdefine/amdefine.js")
-},{"_process":100,"path":99}],118:[function(require,module,exports){
+},{"_process":98,"path":97}],116:[function(require,module,exports){
 module.exports={
   "name": "escodegen",
   "description": "ECMAScript code generator",
@@ -15992,7 +15925,7 @@ module.exports={
   "readme": "ERROR: No README data found!"
 }
 
-},{}],119:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 /*
   Copyright (C) 2013 Ariya Hidayat <ariya.hidayat@gmail.com>
   Copyright (C) 2013 Thaddee Tyl <thaddee.tyl@gmail.com>
@@ -21315,7 +21248,7 @@ module.exports={
 }));
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{}],120:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 /*
   Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
@@ -22158,7 +22091,7 @@ module.exports={
 }(exports));
 /* vim: set sw=4 ts=4 et tw=80 : */
 
-},{"./package.json":121}],121:[function(require,module,exports){
+},{"./package.json":119}],119:[function(require,module,exports){
 module.exports={
   "name": "estraverse",
   "description": "ECMAScript JS AST traversal functions",
@@ -22227,5 +22160,5 @@ module.exports={
   "readme": "ERROR: No README data found!"
 }
 
-},{}]},{},[51])(51)
+},{}]},{},[50])(50)
 });
