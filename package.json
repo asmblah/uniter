@@ -37,8 +37,7 @@
     "escodegen": "^1.6.1",
     "esprima": "^2.2.0",
     "estraverse": "^4.0.0",
-    "node-getopt": "0.2.x",
-    "requirejs": "2.1.x"
+    "node-getopt": "0.2.x"
   },
   "devDependencies": {
     "aliasify": "^1.7.2",

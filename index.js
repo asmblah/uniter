@@ -7,24 +7,7 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global __dirname, module, require */
-(function () {
-    'use strict';
+/*global module, require */
+'use strict';
 
-    var requirejs = require('requirejs');
-
-    requirejs.nextTick = function (fn) {
-        fn();
-    };
-
-    requirejs.config({
-        baseUrl: __dirname,
-        map: {
-            '*': {
-                'packager': 'vendor/packager/packager'
-            }
-        }
-    });
-
-    module.exports = requirejs('uniter');
-}());
+module.exports = require('./dist/uniter');
