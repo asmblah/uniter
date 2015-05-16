@@ -36,7 +36,7 @@ define([
             16: 'Interfaces may not include member variables',
             17: 'Interface function ${className}::${methodName}() cannot contain body',
             18: 'Cannot use ${source} as ${alias} because the name is already in use',
-            19: 'Call to a member function ${name}() on a non-object'
+            19: 'Call to a member function ${name}() on a non-object',
             20: 'Maximum execution time of ${seconds} second${suffix} exceeded'
         };
 

@@ -220,6 +220,13 @@ util = {
             return getCount(text.substr(0, offset), '\n');
         },
 
+        getMilliseconds: global.performance ? function () {
+            /*global performance */
+            return performance.now();
+        } : (Date.now || function () {
+            return +new Date();
+        }),
+
         heredoc: function (fn, variables) {
             var match = function () {}.toString.call(fn).match(/\/\*<<<(\w+)[\r\n](?:([\s\S]*)[\r\n])?\1\s*\*\//),
                 string;
