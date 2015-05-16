@@ -36,7 +36,7 @@ define([
 
         util.each({
             'registered autoloader function should not be called when no classes are referenced': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -44,14 +44,14 @@ define([
 
     return 27;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 27,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'registered autoloader function should not be called when a previously defined class is referenced': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -62,14 +62,14 @@ EOS
 
     return 27;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 27,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'registered autoloader function should be called with the class name when an undefined class is referenced': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -81,14 +81,14 @@ EOS
 
     return 27;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 27,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: 'string(12) "MyUndefClass"\n'
             },
             'registered autoloader string callable should be called with the class name when an undefined class is referenced': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function myAutoloader($className) {
         var_dump($className);
@@ -102,14 +102,14 @@ EOS
 
     return 27;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 27,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: 'string(12) "MyUndefClass"\n'
             },
             'magic __autoload() function should not be called with the class name when an undefined class is referenced after the SPL stack has been enabled': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function __autoload($className) {
         print 'Wrong';
@@ -123,7 +123,7 @@ EOS
 
     return 31;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 31,
                 expectedResultType: 'integer',
                 expectedStderr: '',

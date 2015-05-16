@@ -57,7 +57,7 @@ define([
             },
             // Test for pre-hoisting
             'calling a function before its definition outside of any blocks eg. conditionals': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     return add1(7);
 
@@ -65,13 +65,13 @@ define([
         return $number + 1;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 8,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'calling a function before its definition where definition is inside of a conditional': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     return add1(7);
 
@@ -81,7 +81,7 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function add1\(\)$/
@@ -90,7 +90,7 @@ EOS
                 expectedStdout: ''
             },
             'calling a function before its definition where definition is inside of a function': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function declareFunc() {
         secondFunc();
@@ -100,7 +100,7 @@ EOS
 
     declareFunc();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function secondFunc\(\)$/
@@ -109,7 +109,7 @@ EOS
                 expectedStdout: ''
             },
             'calling a function before its definition where definition is inside of a while loop': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $a = 1;
 
@@ -119,7 +119,7 @@ EOS
         function doSomething () {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
@@ -128,7 +128,7 @@ EOS
                 expectedStdout: ''
             },
             'calling a function before its definition where definition is inside of a foreach loop': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $items = array(1);
 
@@ -138,7 +138,7 @@ EOS
         function doSomething () {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
@@ -147,7 +147,7 @@ EOS
                 expectedStdout: ''
             },
             'using the name "tools" for a function argument': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function getResult($tools) {
         return $tools->result;
@@ -158,13 +158,13 @@ EOS
 
     return getResult($tools);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 7,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'function declarations inside conditionals should not be hoisted within the block': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     if (true) {
         doSomething();
@@ -172,7 +172,7 @@ EOS
         function doSomething() {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
                 expectedStdout: ''
             }

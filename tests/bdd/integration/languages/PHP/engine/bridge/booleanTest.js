@@ -37,11 +37,11 @@ define([
         describe('exposing as global PHP variables', function () {
             util.each({
                 'true': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $theBoolean;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'theBoolean': true
                     },
@@ -51,11 +51,11 @@ EOS
                     expectedStdout: ''
                 },
                 'false': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $theBoolean;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'theBoolean': false
                     },

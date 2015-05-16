@@ -9,15 +9,21 @@
 
 /*global define */
 define([
-    'js/util'
+    'js/util',
+    'js/EventEmitter'
 ], function (
-    util
+    util,
+    EventEmitter
 ) {
     'use strict';
 
     function Stream() {
+        EventEmitter.call(this);
+
         this.data = '';
     }
+
+    util.inherit(Stream).from(EventEmitter);
 
     util.extend(Stream.prototype, {
         read: function (length) {
@@ -42,7 +48,10 @@ define([
         },
 
         write: function (data) {
-            this.data += data;
+            var stream = this;
+
+            stream.data += data;
+            stream.emit('data', data);
         }
     });
 

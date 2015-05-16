@@ -120,30 +120,30 @@ define([
                 'assignment of integer value to variable after variable has been read: definitions should not be hoisted': {
                     code: '<?php var_dump($value); $value = 7;',
                     expectedResult: null,
-                    expectedStderr: util.heredoc(function (/*<<<EOS
+                    expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Undefined variable: value
 
 EOS
-*/) {}),
-                    expectedStdout: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                    expectedStdout: util.heredoc(function () {/*<<<EOS
 NULL
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 },
                 'assignment of integer value to variable before variable has been read, but in code block that is never run': {
                     code: '<?php if (0) { $value = 1; } var_dump($value);',
                     expectedResult: null,
-                    expectedStderr: util.heredoc(function (/*<<<EOS
+                    expectedStderr: util.heredoc(function () {/*<<<EOS
 PHP Notice: Undefined variable: value
 
 EOS
-*/) {}),
-                    expectedStdout: util.heredoc(function (/*<<<EOS
+*/;}), // jshint ignore:line
+                    expectedStdout: util.heredoc(function () {/*<<<EOS
 NULL
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 },
                 'assignment of result of assignment to variable': {
                     code: '<?php $value = $result = 7; return $value + $result;',

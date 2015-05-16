@@ -27,27 +27,7 @@ define([
         });
 
         describe('execute()', function () {
-            util.each([
-                {
-                    code: ''
-                }, {
-                    code: '<a></b>'
-                }, {
-                    code: '<?php'
-                }, {
-                    code: '<?php return 0;'
-                }, {
-                    code: '<?php return 7;'
-                }, {
-                    code: '<?php return "world";'
-                }
-            ], function (scenario) {
-                describe('when the code is "' + scenario.code + '"', function () {
-                    it('should return a Promise', function () {
-                        expect(engine.execute(scenario.code)).to.be.an.instanceOf(Promise);
-                    });
-                });
-            });
+
         });
     });
 });

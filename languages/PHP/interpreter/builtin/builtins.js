@@ -14,6 +14,7 @@ define([
     './functions/spl',
     './classes/stdClass',
     './functions/string',
+    './functions/time',
     './functions/variableHandling',
     './classes/Exception'
 ], function (
@@ -22,6 +23,7 @@ define([
     splFunctions,
     stdClass,
     stringFunctions,
+    timeFunctions,
     variableHandlingFunctions,
     Exception
 ) {
@@ -37,6 +39,7 @@ define([
             constantFunctions,
             splFunctions,
             stringFunctions,
+            timeFunctions,
             variableHandlingFunctions
         ]
     };

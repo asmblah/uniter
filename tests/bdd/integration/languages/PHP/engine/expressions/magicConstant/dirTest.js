@@ -36,31 +36,31 @@ define([
 
         util.each({
             'capturing current file\'s directory from initial program code': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php echo __DIR__;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '(program)'
             },
             'capturing current file\'s directory in required module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     require_once 'vendor/producer/get_dir.php';
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 options: {
                     include: function (path, promise) {
-                        promise.resolve(util.heredoc(function (/*<<<EOS
+                        promise.resolve(util.heredoc(function () {/*<<<EOS
 <?php
 
     echo __DIR__;
 
 EOS
-*/) {}));
+*/;})); // jshint ignore:line
                     }
                 },
                 expectedResult: null,

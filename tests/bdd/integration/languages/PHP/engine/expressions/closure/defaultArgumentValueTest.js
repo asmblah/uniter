@@ -36,7 +36,7 @@ define([
 
         util.each({
             'self-executed closure with default argument value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $result = 4;
 
@@ -47,7 +47,7 @@ define([
     return $result;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 10,
                 expectedStderr: '',
                 expectedStdout: ''

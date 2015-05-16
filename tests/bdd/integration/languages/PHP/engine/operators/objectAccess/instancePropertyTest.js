@@ -36,7 +36,7 @@ define([
 
         util.each({
             'setting previously undefined property of object of stdClass': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $object = new stdClass;
 
@@ -44,32 +44,32 @@ define([
 
     var_dump($object);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(stdClass)#1 (1) {
   ["aProperty"]=>
   int(21)
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'reading undefined property of object of stdClass': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $object = new stdClass;
 
     var_dump($object->anUndefinedProperty);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: 'PHP Notice: Undefined property: stdClass::$anUndefinedProperty\n',
                 expectedStdout: 'NULL\n'
             },
             'setting dynamically referenced property of object with expression for key': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $object = new stdClass;
     $propPrefix = 'my';
@@ -78,17 +78,17 @@ EOS
 
     var_dump($object);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(stdClass)#1 (1) {
   ["myName"]=>
   string(4) "Fred"
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             }
         }, function (scenario, description) {
             describe(description, function () {

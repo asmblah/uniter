@@ -38,7 +38,7 @@ define([
 
         util.each({
             'call to statically referenced instance method returning value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function getIt() {
@@ -50,13 +50,13 @@ define([
 
     return $object->getIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 7,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'call to statically referenced instance method with argument and returning value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function addOne($number) {
@@ -68,13 +68,13 @@ EOS
 
     return $object->addOne(3);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 4,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'call to dynamically referenced instance method returning value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function getIt() {
@@ -87,13 +87,13 @@ EOS
 
     return $object->$methodName();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 6,
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'call to undefined method of object when class is in global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -101,7 +101,7 @@ EOS
 
     var_dump($object->iDontExist());
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
@@ -110,7 +110,7 @@ EOS
                 expectedStdout: ''
             },
             'call to undefined method of object when class is in a namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyStuff;
 
@@ -120,7 +120,7 @@ EOS
 
     var_dump($object->iDontExist());
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist\(\)$/
@@ -130,7 +130,7 @@ EOS
             },
             // Ensure we use .hasOwnProperty(...) checks internally
             'call to undefined instance method called "constructor"': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
@@ -138,7 +138,7 @@ EOS
 
     return $planet->constructor();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
@@ -147,7 +147,7 @@ EOS
                 expectedStdout: ''
             },
             'calling static method as instance method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -159,7 +159,7 @@ EOS
 
     return $animal->getPlanet();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 // Note that no notices are generated at all

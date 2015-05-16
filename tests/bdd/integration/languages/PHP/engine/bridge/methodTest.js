@@ -37,11 +37,11 @@ define([
         describe('exposing as global PHP variables', function () {
             util.each({
                 'plain object from JavaScript with instance method': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $tools->getValue();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'tools': {
                             getValue: function () {
@@ -55,11 +55,11 @@ EOS
                     expectedStdout: ''
                 },
                 'plain object from JavaScript with prototype method': {
-                    code: util.heredoc(function (/*<<<EOS
+                    code: util.heredoc(function () {/*<<<EOS
 <?php
     return $tools->getValue();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expose: {
                         'tools': Object.create({
                             getValue: function () {

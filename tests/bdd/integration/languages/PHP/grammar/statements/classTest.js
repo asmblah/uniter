@@ -37,13 +37,13 @@ define([
                 }
             },
             'class with one public instance property with no value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OnePub {
         public $aPublicProp;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -61,13 +61,13 @@ EOS
                 }
             },
             'class with one public instance property with string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OnePub {
         public $aPublicProp = 'yep';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -89,7 +89,7 @@ EOS
                 }
             },
             'class with one public instance method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneMethod {
         public function printIt($what) {
@@ -97,7 +97,7 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -126,13 +126,13 @@ EOS
                 }
             },
             'class with one public instance method with one body statement not wrapped in braces': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneMethod {
         public function printIt($what) echo $what;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

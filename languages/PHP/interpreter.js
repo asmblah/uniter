@@ -15,7 +15,7 @@
 define([
     'js/util',
     './interpreter/Call',
-    'js/Exception',
+    'js/Exception/Exception',
     './interpreter/KeyValuePair',
     './interpreter/LabelRepository',
     './interpreter/List',
@@ -85,14 +85,23 @@ define([
         function include(path) {
             var done = false,
                 promise = new Promise(),
+                pause = null,
                 result;
+
+            function completeWith(moduleResult) {
+                if (pause) {
+                    pause.resume(moduleResult);
+                } else {
+                    result = moduleResult;
+                }
+            }
 
             promise.done(function (contents) {
                 done = true;
 
                 engine.execute(contents, path).done(function (resultNative) {
                     // TODO: This is inefficient, we should just have access to the Value object
-                    result = valueFactory.coerce(resultNative);
+                    completeWith(valueFactory.coerce(resultNative));
                 }).fail(function (exception) {
                     throw exception;
                 });
@@ -102,7 +111,7 @@ define([
                 callStack.raiseError(PHPError.E_WARNING, 'include(' + path + '): failed to open stream: No such file or directory');
                 callStack.raiseError(PHPError.E_WARNING, 'include(): Failed opening \'' + path + '\' for inclusion');
 
-                result = valueFactory.createNull();
+                completeWith(valueFactory.createNull());
             });
 
             if (!options[INCLUDE_OPTION]) {
@@ -111,22 +120,24 @@ define([
 
             options[INCLUDE_OPTION](path, promise);
 
-            if (!done) {
-                throw new Exception('include() :: Must be called synchronously for now.');
+            if (done) {
+                return result;
             }
 
-            return result;
+            pause = resumable.createPause();
+            pause.now();
         }
 
         var engine = state.getEngine(),
+            exports = {},
             globalNamespace = state.getGlobalNamespace(),
             valueFactory = state.getValueFactory(),
             promise = new Promise(),
             referenceFactory = state.getReferenceFactory(),
-            result,
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
+            resumable = state.getResumable(),
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
@@ -199,12 +210,22 @@ define([
         // Program returns null rather than undefined if nothing is returned
         code += 'return tools.valueFactory.createNull();';
 
-        try {
-            /*jshint evil:true */
-            result = new Function('stdin, stdout, stderr, tools, callStack, globalScope, namespace', code)(
-                stdin, stdout, stderr, tools, callStack, globalScope, globalNamespace
-            );
-        } catch (exception) {
+        code = 'exports.result = (function () {' + code + '}());';
+
+        resumable.execute(code, {
+            expose: {
+                exports: exports,
+                stdin: stdin,
+                stdout: stdout,
+                stderr: stderr,
+                tools: tools,
+                callStack: callStack,
+                globalScope: globalScope,
+                namespace: globalNamespace
+            }
+        }).done(function () {
+            promise.resolve(exports.result.getNative(), exports.result.getType());
+        }).fail(function (exception) {
             if (exception instanceof ObjectValue) {
                 // Uncaught PHP Exceptions become E_FATAL errors
                 (function (value) {
@@ -235,9 +256,9 @@ define([
             }
 
             throw exception;
-        }
+        });
 
-        return promise.resolve(result.getNative(), result.getType());
+        return promise;
     }
 
     function hoistDeclarations(statements) {
@@ -283,9 +304,18 @@ define([
             } else {
                 variable = argNode.variable;
                 valueCode += variable;
+
+                if (!argNode.reference) {
+                    valueCode += '.getValue()';
+                }
             }
 
-            argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
+            if (argNode.reference) {
+                argumentAssignments += 'scope.getVariable("' + variable + '").setReference(' + valueCode + '.getReference());';
+            } else {
+                argumentAssignments += 'scope.getVariable("' + variable + '").setValue(' + valueCode + ');';
+            }
+
             args[index] = '$' + variable;
         });
 
@@ -384,7 +414,7 @@ define([
         State: PHPState,
         nodes: {
             'N_ARRAY_CAST': function (node, interpret) {
-                return interpret(node.value) + '.coerceToArray()';
+                return interpret(node.value, {getValue: true}) + '.coerceToArray()';
             },
             'N_ARRAY_INDEX': function (node, interpret, context) {
                 var arrayVariableCode,
@@ -615,7 +645,7 @@ define([
                 var args = [];
 
                 util.each(node.args, function (arg) {
-                    args.push(interpret(arg));
+                    args.push(interpret(arg, {getValue: false}));
                 });
 
                 return '(' + interpret(node.func, {getValue: true, allowBareword: true}) + '.call([' + args.join(', ') + '], namespaceScope) || tools.valueFactory.createNull())';
@@ -780,7 +810,7 @@ define([
                     code += '.callMethod(' + interpret(call.func, {allowBareword: true}) + '.getNative(), [' + args.join(', ') + '])';
                 });
 
-                return interpret(node.object) + code;
+                return interpret(node.object, {getValue: true}) + code;
             },
             'N_METHOD_DEFINITION': function (node, interpret) {
                 return {

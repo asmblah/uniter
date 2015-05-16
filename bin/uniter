@@ -19,7 +19,7 @@
             ['r', 'run=<code>', 'Run PHP <code> without using script tags <? ... ?>']
         ]),
         parsedOptions = optionsManager.parseSystem(),
-        phpCode,
+        phpCode = null,
         phpEngine,
         phpParser,
         uniter = require(__dirname + '/..');
@@ -31,25 +31,29 @@
 
     if (hasOwn.call(parsedOptions.options, 'run')) {
         phpCode = '<?php ' + parsedOptions.options.run;
+    } else if (parsedOptions.argv.length > 0) {
+        phpCode = require('fs').readFileSync(parsedOptions.argv[0]).toString();
+    }
 
-        // Only dump the AST to stdout if requested
-        if (hasOwn.call(parsedOptions.options, 'dump-ast')) {
-            phpParser = uniter.createParser('PHP');
-
-            process.stdout.write(JSON.stringify(phpParser.parse(phpCode), null, 4) + '\n');
-        } else {
-            phpEngine = uniter.createEngine('PHP');
-
-            phpEngine.execute(phpCode).done(function () {
-                output();
-            }).fail(function (exception) {
-                output();
-                process.stderr.write(exception.getMessage());
-                process.stdout.write('\n');
-            });
-        }
-    } else {
+    if (phpCode === null) {
         optionsManager.showHelp();
         process.exit(1);
+    }
+
+    // Only dump the AST to stdout if requested
+    if (hasOwn.call(parsedOptions.options, 'dump-ast')) {
+        phpParser = uniter.createParser('PHP');
+
+        process.stdout.write(JSON.stringify(phpParser.parse(phpCode), null, 4) + '\n');
+    } else {
+        phpEngine = uniter.createEngine('PHP');
+
+        phpEngine.execute(phpCode).done(function () {
+            output();
+        }).fail(function (exception) {
+            output();
+            process.stderr.write(exception.getMessage());
+            process.stdout.write('\n');
+        });
     }
 }());

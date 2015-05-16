@@ -9,21 +9,13 @@
 
 /*global define, describe, expect, it */
 define([
-    'packager',
-    'require',
     'js/util'
 ], function (
-    packager,
-    require,
     util
 ) {
     'use strict';
 
     describe('Util', function () {
-        it('should inherit from packager.util', function () {
-            expect(Object.getPrototypeOf(util)).to.equal(packager.util);
-        });
-
         describe('getLineNumber()', function () {
             util.each({
                 'the empty string': {
@@ -56,25 +48,25 @@ define([
         describe('heredoc()', function () {
             util.each([
                 {
-                    heredoc: util.heredoc(function (/*<<<EOS
+                    heredoc: util.heredoc(function () {/*<<<EOS
 Line 1
 Line 2
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                     expectedString: 'Line 1\nLine 2'
                 },
                 {
-                    heredoc: util.heredoc(function (/*<<<EOS
+                    heredoc: util.heredoc(function () {/*<<<EOS
 ${person} walked up the stairs in ${person}'s flat.
 EOS
-*/) {}, {person: 'Fred'}),
+*/;}, {person: 'Fred'}), // jshint ignore:line
                     expectedString: 'Fred walked up the stairs in Fred\'s flat.'
                 },
                 {
-                    heredoc: util.heredoc(function (/*<<<EOS
+                    heredoc: util.heredoc(function () {/*<<<EOS
 The ladder is ${length}cm long.
 EOS
-*/) {}, {length: 12}),
+*/;}, {length: 12}), // jshint ignore:line
                     expectedString: 'The ladder is 12cm long.'
                 }
             ], function (scenario, index) {

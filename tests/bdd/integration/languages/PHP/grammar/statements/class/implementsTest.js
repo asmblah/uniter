@@ -26,13 +26,13 @@ define([
 
         util.each({
             'class implementing a single interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Planet implements Rotatable {
         const SHAPE = 'sphere';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -51,13 +51,13 @@ EOS
                 }
             },
             'class implementing two interfaces': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Planet implements Rotatable, Orbitable {
         const SHAPE = 'sphere';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

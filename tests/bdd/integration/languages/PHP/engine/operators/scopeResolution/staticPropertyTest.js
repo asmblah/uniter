@@ -38,7 +38,7 @@ define([
 
         util.each({
             'reading static property\'s initial value from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -46,14 +46,14 @@ define([
 
     return Animal::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading dynamically referenced static property\'s initial value from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -63,20 +63,20 @@ EOS
 
     return Animal::$$propertyName;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to read static property from array value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = array(1, 2);
 
     return $value::$prop;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -85,13 +85,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read static property from boolean value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = true;
 
     return $value::$prop;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -100,13 +100,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read static property from float value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = 4.1;
 
     return $value::$prop;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -115,13 +115,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read static property from integer value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = 7;
 
     return $value::$prop;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -130,13 +130,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read static property from null value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $value = null;
 
     return $value::$prop;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class name must be a valid object or a string$/
@@ -145,7 +145,7 @@ EOS
                 expectedStdout: ''
             },
             'reading static property\'s initial value from class referenced via an instance': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -155,14 +155,14 @@ EOS
 
     return $animal::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'writing then reading static property from class referenced via an instance': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -174,14 +174,14 @@ EOS
 
     return $animal::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Mars',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading static property\'s initial value from class referenced via a string containing class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -191,20 +191,20 @@ EOS
 
     return $myClassName::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'attempting to read static property from string containing non-existent class name': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $myClassName = 'Person';
 
     return $myClassName::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'Person' not found$/
@@ -213,13 +213,13 @@ EOS
                 expectedStdout: ''
             },
             'attempting to read undefined static property from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
     return Earth::$legLength;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Access to undeclared static property: Earth::\$legLength$/
@@ -229,13 +229,13 @@ EOS
             },
             // Ensure we use .hasOwnProperty(...) checks internally
             'attempting to read undefined static property called "constructor" from class referenced statically': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
     return Earth::$constructor;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Access to undeclared static property: Earth::\$constructor$/
@@ -244,7 +244,7 @@ EOS
                 expectedStdout: ''
             },
             'storing reference in static property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Human {
         static $planet;
@@ -256,7 +256,7 @@ EOS
 
     return Human::$planet;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Earth',
                 expectedResultType: 'string',
                 expectedStderr: '',

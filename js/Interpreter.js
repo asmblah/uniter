@@ -10,7 +10,7 @@
 /*global define */
 define([
     'js/util',
-    'js/Exception'
+    'js/Exception/Exception'
 ], function (
     util,
     Exception

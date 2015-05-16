@@ -36,7 +36,7 @@ define([
 
         util.each({
             'empty class that extends a previously defined empty class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {}
 
@@ -44,18 +44,18 @@ define([
 
     var_dump(new Human);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(Human)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'calling inherited public method as instance method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public function getAge() {
@@ -68,14 +68,14 @@ EOS
     $human = new Human;
     return $human->getAge();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'calling inherited public method as static method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public function getAge() {
@@ -87,7 +87,7 @@ EOS
 
     return Human::getAge();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 // Note that the method's actual owner class Animal is referred to
@@ -95,7 +95,7 @@ EOS
                 expectedStdout: ''
             },
             'reading inherited public property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Animal {
         public $warmBlooded = true;
@@ -106,7 +106,7 @@ EOS
     $human = new Human;
     return $human->warmBlooded;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: true,
                 expectedResultType: 'boolean',
                 expectedStderr: '',

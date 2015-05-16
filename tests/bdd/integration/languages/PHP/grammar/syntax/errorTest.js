@@ -59,7 +59,7 @@ define([
                 }
             },
             'concatenation expression with superfluous dot preceded by whitespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     print 'hello and ';
 
@@ -67,7 +67,7 @@ define([
           .'my website!';
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected '.' in \(program\) on line 5$/
@@ -89,13 +89,13 @@ EOS
             },
             // Ensure the invalid token's line is referred to, not the last valid token's line
             'concatenation with invalid comma after dot operator preceded by newlines': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     print 'hello and ' .
 
     ,
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPParseError,
                     match: /^PHP Parse error: syntax error, unexpected ',' in \(program\) on line 4$/

@@ -38,7 +38,7 @@ define([
 
         util.each({
             'attempting to define an static method with a body for an interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private static function getYours() {
@@ -46,7 +46,7 @@ define([
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Interface function Mine::getYours\(\) cannot contain body$/

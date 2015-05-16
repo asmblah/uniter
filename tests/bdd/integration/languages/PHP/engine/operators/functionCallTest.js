@@ -38,7 +38,7 @@ define([
 
         util.each({
             'calling function in global namespace with prefixed path': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function printIt() {
         echo 'it';
@@ -46,12 +46,12 @@ define([
 
     \printIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStderr: '',
                 expectedStdout: 'it'
             },
             'calling function in another deep namespace with prefixed path': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyStuff\Tools;
 
@@ -63,12 +63,12 @@ EOS
 
     \MyStuff\Tools\printIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStderr: '',
                 expectedStdout: 'it'
             },
             'call to function that is defined in current namespace should not fall back to global namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function printIt() {
         echo 'global-it';
@@ -82,12 +82,12 @@ EOS
     namespace MyStuff;
     printIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStderr: '',
                 expectedStdout: 'MyStuff-it'
             },
             'call to function not defined in current namespace should fall back to global and not a parent namespace': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function printIt() {
         echo 'global-it';
@@ -102,12 +102,12 @@ EOS
 
     printIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedStderr: '',
                 expectedStdout: 'global-it'
             },
             'call to function defined in current namespace via prefixed string': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyTest;
     function myFunc() {
@@ -117,14 +117,14 @@ EOS
     $fn = 'MyTest\myFunc';
     return $fn();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'call to instance method via array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class MyClass {
         public function printMsg($msg) {
@@ -139,14 +139,14 @@ EOS
 
     return $ref('it');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: 'it'
             },
             'call to static method via array': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class MyClass {
         public static function printMsg($msg) {
@@ -160,14 +160,14 @@ EOS
 
     return $ref('it');
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 24,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: 'it'
             },
             'attempting to call instance method via array with only one element should fail': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class MyClass {
         public function printIt() {
@@ -182,7 +182,7 @@ EOS
 
     return $ref();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Function name must be a string$/
@@ -191,7 +191,7 @@ EOS
                 expectedStdout: ''
             },
             'call to function defined in current namespace via unprefixed string should fail': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace MyTest;
     function myFunc() {}
@@ -199,7 +199,7 @@ EOS
     $fn = 'myFunc';
     $fn();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function myFunc\(\)$/
@@ -208,12 +208,12 @@ EOS
                 expectedStdout: ''
             },
             'call to undefined function in another namespace with prefixed path': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Test;
     \Creator\Stuff\doSomething();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function Creator\\Stuff\\doSomething\(\)$/
@@ -222,12 +222,12 @@ EOS
                 expectedStdout: ''
             },
             'call to undefined function in another namespace with unprefixed path': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     namespace Test;
     Creator\Stuff\doSomething();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Call to undefined function Test\\Creator\\Stuff\\doSomething\(\)$/

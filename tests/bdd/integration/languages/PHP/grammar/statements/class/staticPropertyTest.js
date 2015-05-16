@@ -26,13 +26,13 @@ define([
 
         util.each({
             'class with a single public static suffixed property with no value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         public static $name;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -50,13 +50,13 @@ EOS
                 }
             },
             'class with a single public static suffixed property with a string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         public static $job = 'Engineer';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -78,13 +78,13 @@ EOS
                 }
             },
             'class with a single public static prefixed property with no value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         static public $name;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -102,13 +102,13 @@ EOS
                 }
             },
             'class with a single public static prefixed property with a string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         static public $job = 'Engineer';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -130,13 +130,13 @@ EOS
                 }
             },
             'class with a single implicitly public static prefixed property with no value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         static $name;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -153,13 +153,13 @@ EOS
                 }
             },
             'class with a single implicitly public static prefixed property with a string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OneProperty {
         static $job = 'Engineer';
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

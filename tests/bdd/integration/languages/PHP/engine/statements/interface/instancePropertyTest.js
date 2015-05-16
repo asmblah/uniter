@@ -38,13 +38,13 @@ define([
 
         util.each({
             'attempting to define an instance property for an interface': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private $yours = false;
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Interfaces may not include member variables$/

@@ -36,42 +36,42 @@ define([
 
         util.each({
             'capturing line number when opening tag and __LINE__ are both on first line': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php echo __LINE__;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '1'
             },
             'capturing line number when opening tag is on first but __LINE__ is on second line': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     echo __LINE__;
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '2'
             },
             'capturing line number in required module': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     require_once 'get_line.php';
 
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 options: {
                     include: function (path, promise) {
-                        promise.resolve(util.heredoc(function (/*<<<EOS
+                        promise.resolve(util.heredoc(function () {/*<<<EOS
 <?php
 
     echo __LINE__;
 
 EOS
-*/) {}));
+*/;})); // jshint ignore:line
                     }
                 },
                 expectedResult: null,

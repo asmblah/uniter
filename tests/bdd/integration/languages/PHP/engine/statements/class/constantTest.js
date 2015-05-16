@@ -36,7 +36,7 @@ define([
 
         util.each({
             'defining class constant with string value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const CATEGORY = 'Misc';
@@ -44,14 +44,14 @@ define([
 
     return Stuff::CATEGORY;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Misc',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'defining class constant with integer value': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const RANDOM = 3546;
@@ -59,14 +59,14 @@ EOS
 
     return Stuff::RANDOM;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 3546,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'reading class constant from a child class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Parent {
         const MYVAL = 4;
@@ -76,14 +76,14 @@ EOS
 
     return Child::MYVAL;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 4,
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'overriding class constant in child class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Parent {
         const MYVAL = 4;
@@ -95,7 +95,7 @@ EOS
 
     return Child::MYVAL;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 7,
                 expectedResultType: 'integer',
                 expectedStderr: '',

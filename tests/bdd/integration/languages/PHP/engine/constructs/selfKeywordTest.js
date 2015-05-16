@@ -39,7 +39,7 @@ define([
         util.each({
             // Ensure we don't allow keyword 'self' to be used with variable classes
             'attempting to read static property from current class via keyword "self" as variable class': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {
         private static $type = 'planet';
@@ -53,7 +53,7 @@ define([
 
     return Earth::getType();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'self' not found$/
@@ -62,7 +62,7 @@ EOS
                 expectedStdout: ''
             },
             'reading static property from current class via keyword "self"': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Earth {
         private static $hasHumans = true;
@@ -82,7 +82,7 @@ EOS
 
     return array(Earth::hasHumans(), Mars::hasHumans());
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: [true, false],
                 expectedResultDeep: true,
                 expectedResultType: 'array',
@@ -90,11 +90,11 @@ EOS
                 expectedStdout: ''
             },
             'attempting to access "self::" when no class scope is active': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     echo self::$something;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Cannot access self:: when no class scope is active$/

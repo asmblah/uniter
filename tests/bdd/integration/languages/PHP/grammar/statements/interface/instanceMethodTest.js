@@ -26,13 +26,13 @@ define([
 
         util.each({
             'instance method with body in interface - semantically invalid but still parseable': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     interface Thing {
         public function doNothing() {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{

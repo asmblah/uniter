@@ -104,6 +104,10 @@ define([
             return this.type;
         },
 
+        getValue: function () {
+            return this;
+        },
+
         isEqualTo: function (rightValue) {
             /*jshint eqeqeq:false */
             var leftValue = this;

@@ -38,7 +38,7 @@ define([
 
         util.each({
             'class that does not extend or implement': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -46,36 +46,36 @@ define([
 
     var_dump($object);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             // Test for pre-hoisting
             'instantiating a class before its definition outside of any blocks eg. conditionals': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(new FunTime);
 
     class FunTime {}
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(FunTime)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'instantiating a class before its definition where definition is inside of a conditional': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     var_dump(new FunTime);
 
@@ -83,7 +83,7 @@ EOS
         class FunTime {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'FunTime' not found$/
@@ -92,7 +92,7 @@ EOS
                 expectedStdout: ''
             },
             'instantiating a class before its definition where definition is inside of a function': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     function doDeclare() {
         var_dump(new FunTime);
@@ -102,7 +102,7 @@ EOS
 
     doDeclare();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'FunTime' not found$/
@@ -111,7 +111,7 @@ EOS
                 expectedStdout: ''
             },
             'instantiating a class before its definition where definition is inside of a while loop': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $a = 1;
 
@@ -121,7 +121,7 @@ EOS
         class FunTime {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'FunTime' not found$/
@@ -130,7 +130,7 @@ EOS
                 expectedStdout: ''
             },
             'instantiating a class before its definition where definition is inside of a foreach loop': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     $items = array(1);
 
@@ -140,7 +140,7 @@ EOS
         class FunTime {}
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: PHPFatalError,
                     match: /^PHP Fatal error: Class 'FunTime' not found$/
@@ -149,7 +149,7 @@ EOS
                 expectedStdout: ''
             },
             'class with one public property': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class OnePub {
         public $prop = 'ok';
@@ -157,20 +157,20 @@ EOS
 
     var_dump(new OnePub);
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(OnePub)#1 (1) {
   ["prop"]=>
   string(2) "ok"
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'class with one public method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function doIt() {
@@ -181,16 +181,16 @@ EOS
     $object = new Test();
     $object->doIt();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 21
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'class with one public method using $this variable': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function dumpMe() {
@@ -201,18 +201,18 @@ EOS
     $object = new Test();
     $object->dumpMe();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
-                expectedStdout: util.heredoc(function (/*<<<EOS
+                expectedStdout: util.heredoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
-*/) {})
+*/;}) // jshint ignore:line
             },
             'class with magic __construct(...) method (PHP5-style constructor)': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Person {
         public $name;
@@ -225,14 +225,14 @@ EOS
     $me = new Person('Dan');
     return $me->name;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Dan',
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
             },
             'class with PHP4-style constructor': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Person {
         public $name;
@@ -245,7 +245,7 @@ EOS
     $you = new Person('Fred');
     return $you->name;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 'Fred',
                 expectedResultType: 'string',
                 expectedStderr: '',
@@ -253,7 +253,7 @@ EOS
             },
             // No errors when both used in this order: second method is just treated as a normal method
             'instantiating class with PHP5-style constructor followed by PHP4-style': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function __construct() {
@@ -267,13 +267,13 @@ EOS
 
     new Test();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: '1'
             },
             'instantiating class with PHP4-style constructor followed by PHP5-style': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function Test() {
@@ -287,13 +287,13 @@ EOS
 
     new Test();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
                 expectedStdout: '2'
             },
             'unused class with PHP4-style constructor followed by PHP5-style': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class Test {
         public function Test() {
@@ -305,13 +305,13 @@ EOS
         }
     }
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: null,
                 expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
                 expectedStdout: ''
             },
             'class with magic __invoke(...) method': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     class CallableClass {
         public function __invoke() {
@@ -324,7 +324,7 @@ EOS
     $object = new CallableClass();
     return $object();
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedResult: 7,
                 expectedResultType: 'integer',
                 expectedStderr: '',

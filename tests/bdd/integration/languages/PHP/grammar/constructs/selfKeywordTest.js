@@ -51,11 +51,11 @@ define([
                 }
             },
             '"self" used to dereference a static class property with no whitespace before the "::" operator': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     echo self::$something;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
@@ -74,11 +74,11 @@ EOS
                 }
             },
             '"self" used to dereference a static class property with whitespace before the "::" operator': {
-                code: util.heredoc(function (/*<<<EOS
+                code: util.heredoc(function () {/*<<<EOS
 <?php
     echo self ::$something;
 EOS
-*/) {}),
+*/;}), // jshint ignore:line
                 expectedAST: {
                     name: 'N_PROGRAM',
                     statements: [{
