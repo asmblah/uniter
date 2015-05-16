@@ -48,6 +48,7 @@
     "mocha": "^2.2.4",
     "mochify": "^2.8.1",
     "phantomjs": "^1.9.16",
+    "requirejs": "^2.1.17",
     "sinon-chai": "^2.7.0",
     "unamdify": "^0.1.5"
   },
@@ -66,8 +67,7 @@
     }
   },
   "engines": {
-    "node": ">=0.6",
-    "npm": "1"
+    "node": ">=0.6"
   },
   "licenses": [
     {
