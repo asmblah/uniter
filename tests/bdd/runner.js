@@ -54,6 +54,7 @@ define([
             'bdd/integration/languages/PHP/engine/builtin/functions/constant/defineTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/spl/spl_autoload_registerTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/string/strlenTest',
+            'bdd/integration/languages/PHP/engine/builtin/functions/time/usleepTest',
             'bdd/integration/languages/PHP/engine/builtin/functions/variableHandling/var_dumpTest',
             'bdd/integration/languages/PHP/engine/constructs/doubleQuotedStringTest',
             'bdd/integration/languages/PHP/engine/constructs/issetTest',
