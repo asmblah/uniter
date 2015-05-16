@@ -110,13 +110,30 @@ EOS
 */;}), // jshint ignore:line
                 options: {
                     include: function (path, promise) {
-                        // Note that the path is passed back for testing
                         promise.resolve('<?php return "welcome back";');
                     }
                 },
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'and welcome back!'
+            },
+            'requiring a file where include transport resolves promise asynchronously': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+    print 'and ' . (require 'print_hello.php') . '!';
+
+EOS
+*/;}), // jshint ignore:line
+                options: {
+                    include: function (path, promise) {
+                        setTimeout(function () {
+                            promise.resolve('<?php return "welcome back from ' + path + '";');
+                        });
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'and welcome back from print_hello.php!'
             }
         }, function (scenario, description) {
             describe(description, function () {

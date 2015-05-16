@@ -85,14 +85,23 @@ define([
         function include(path) {
             var done = false,
                 promise = new Promise(),
+                pause = null,
                 result;
+
+            function completeWith(moduleResult) {
+                if (pause) {
+                    pause.resume(moduleResult);
+                } else {
+                    result = moduleResult;
+                }
+            }
 
             promise.done(function (contents) {
                 done = true;
 
                 engine.execute(contents, path).done(function (resultNative) {
                     // TODO: This is inefficient, we should just have access to the Value object
-                    result = valueFactory.coerce(resultNative);
+                    completeWith(valueFactory.coerce(resultNative));
                 }).fail(function (exception) {
                     throw exception;
                 });
@@ -102,7 +111,7 @@ define([
                 callStack.raiseError(PHPError.E_WARNING, 'include(' + path + '): failed to open stream: No such file or directory');
                 callStack.raiseError(PHPError.E_WARNING, 'include(): Failed opening \'' + path + '\' for inclusion');
 
-                result = valueFactory.createNull();
+                completeWith(valueFactory.createNull());
             });
 
             if (!options[INCLUDE_OPTION]) {
@@ -111,11 +120,12 @@ define([
 
             options[INCLUDE_OPTION](path, promise);
 
-            if (!done) {
-                throw new Exception('include() :: Must be called synchronously for now.');
+            if (done) {
+                return result;
             }
 
-            return result;
+            pause = resumable.createPause();
+            pause.now();
         }
 
         var engine = state.getEngine(),
