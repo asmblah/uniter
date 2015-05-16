@@ -71,7 +71,8 @@ EOS
         var javascriptCode = javascriptEditor.getSession().getValue(),
             phpCode = phpEditor.getSession().getValue(),
             resultIframe = global.document.getElementById('result'),
-            resultBody = resultIframe.contentWindow.document.body;
+            resultDocument = resultIframe.contentWindow.document,
+            resultBody;
 
         function clear() {
             resultBody.innerHTML = '';
@@ -84,6 +85,11 @@ EOS
         function printText(text) {
             resultBody.appendChild(global.document.createTextNode(text));
         }
+
+        // Ensure the document has a body for IE9
+        resultDocument.write('<body></body>');
+        resultDocument.close();
+        resultBody = resultDocument.body;
 
         clear();
 
