@@ -5670,7 +5670,7 @@ module.exports = {
                 return objectVariableCode + propertyCode + suffix;
             },
             'N_PRINT_EXPRESSION': function (node, interpret) {
-                return '(stdout.write(' + interpret(node.operand) + '.coerceToString().getNative()), tools.valueFactory.createInteger(1))';
+                return '(stdout.write(' + interpret(node.operand, {getValue: true}) + '.coerceToString().getNative()), tools.valueFactory.createInteger(1))';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
@@ -7461,7 +7461,7 @@ module.exports = Value;}());
 
 /*global define */
 (function () {'use strict';
-var util = require('./../../../../js/util'), ElementReference = require('../Reference/Element'), KeyValuePair = require('../KeyValuePair'), NullReference = require('../Reference/Null'), PHPError = require('../Error'), PHPFatalError = require('../Error/Fatal'), Value = require('../Value');
+var util = require('./../../../../js/util'), ElementReference = require('../Reference/Element'), KeyValuePair = require('../KeyValuePair'), NullReference = require('../Reference/Null'), PHPError = require('../Error'), PHPFatalError = require('../Error/Fatal'), Value = require('../Value'), Variable = require('../Variable');
 var hasOwn = {}.hasOwnProperty;
 function ArrayValue(factory, callStack, orderedElements, type) {
         var elements = [],
@@ -7479,7 +7479,11 @@ function ArrayValue(factory, callStack, orderedElements, type) {
                     key = factory.createFromNative(key);
                 }
 
-                element = factory.coerce(element);
+                if (element instanceof Variable) {
+                    element = element.getValue();
+                } else {
+                    element = factory.coerce(element);
+                }
             }
 
             element = new ElementReference(factory, callStack, value, key, element);
@@ -7777,7 +7781,7 @@ util.extend(ArrayValue.prototype, {
     });
 module.exports = ArrayValue;}());
 
-},{"../Error":61,"../Error/Fatal":62,"../KeyValuePair":64,"../Reference/Element":69,"../Reference/Null":70,"../Value":76,"./../../../../js/util":51}],78:[function(require,module,exports){
+},{"../Error":61,"../Error/Fatal":62,"../KeyValuePair":64,"../Reference/Element":69,"../Reference/Null":70,"../Value":76,"../Variable":86,"./../../../../js/util":51}],78:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -9053,7 +9057,7 @@ module.exports = function (internals) {
 
 /*global define */
 (function () {'use strict';
-var PHPError = require('./../../Error'), Variable = require('./../../Variable');
+var util = require('./../../../../../js/util'), PHPError = require('./../../Error'), Variable = require('./../../Variable');
 module.exports = function (internals) {
         var callStack = internals.callStack,
             valueFactory = internals.valueFactory;
@@ -9069,11 +9073,97 @@ module.exports = function (internals) {
                 }
 
                 return valueFactory.createInteger(stringValue.getLength());
+            },
+
+            'str_replace': function (
+                searchReference,
+                replaceReference,
+                subjectReference,
+                countReference
+            ) {
+                function getNative(reference) {
+                    var isReference = (reference instanceof Variable),
+                        value = isReference ? reference.getValue() : reference;
+
+                    return value.getNative();
+                }
+
+                var count = 0,
+                    search,
+                    replacement,
+                    subject,
+                    replace = countReference ?
+                        function replace(search, replacement, subject) {
+                            return subject.replace(search, function () {
+                                count++;
+
+                                return replacement;
+                            });
+                        } :
+                        function replace(search, replacement, subject) {
+                            return subject.replace(search, replacement);
+                        };
+
+                if (arguments.length < 3) {
+                    callStack.raiseError(
+                        PHPError.E_WARNING,
+                        'str_replace() expects at least 3 parameters, ' + arguments.length + ' given'
+                    );
+
+                    return valueFactory.createNull();
+                }
+
+                search = getNative(searchReference);
+                replacement = getNative(replaceReference);
+                subject = getNative(subjectReference);
+
+                // Use a regex to search for substrings, for speed
+                function buildRegex(search) {
+                    return new RegExp(
+                        util.regexEscape(search),
+                        'g'
+                    );
+                }
+
+                if (util.isArray(search)) {
+                    if (util.isArray(replacement)) {
+                        // Search and replacement are both arrays
+                        util.each(search, function (search, index) {
+                            subject = replace(
+                                buildRegex(search),
+                                index < replacement.length ? replacement[index] : '',
+                                subject
+                            );
+                        });
+                    } else {
+                        // Only search is an array, replacement is just a string
+                        util.each(search, function (search) {
+                            subject = replace(
+                                buildRegex(search),
+                                replacement,
+                                subject
+                            );
+                        });
+                    }
+                } else {
+                    // Simple case: search and replacement are both strings
+                    subject = replace(
+                        buildRegex(search),
+                        replacement,
+                        subject
+                    );
+                }
+
+                if (countReference) {
+                    countReference.setValue(valueFactory.createInteger(count));
+                }
+
+                return valueFactory.createString(subject);
             }
         };
     };}());
 
-},{"./../../Error":61,"./../../Variable":86}],94:[function(require,module,exports){
+},{"./../../../../../js/util":51,"./../../Error":61,"./../../Variable":86}],94:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
