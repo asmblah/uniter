@@ -42,10 +42,17 @@ define([
                 subjectReference,
                 countReference
             ) {
+                function getNative(reference) {
+                    var isReference = (reference instanceof Variable),
+                        value = isReference ? reference.getValue() : reference;
+
+                    return value.getNative();
+                }
+
                 var count = 0,
-                    search = searchReference.getNative(),
-                    replacement = replaceReference.getNative(),
-                    subject = subjectReference.getNative(),
+                    search = getNative(searchReference),
+                    replacement = getNative(replaceReference),
+                    subject = getNative(subjectReference),
                     replace = countReference ?
                         function replace(search, replacement, subject) {
                             return subject.replace(search, function () {

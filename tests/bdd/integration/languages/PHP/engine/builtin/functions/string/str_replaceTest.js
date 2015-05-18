@@ -56,6 +56,13 @@ define([
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'replace of array with array when using variables': {
+                code: '<?php $a = "a"; $c = "c"; $x = "x"; $y = "y"; $abc = "abc"; return str_replace(array($a, $c), array($x, $y), $abc);',
+                expectedResult: 'xby',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'replace of array with array, when some replacements are missing': {
                 code: '<?php return str_replace(array("a", "b"), array("x"), "abc");',
                 expectedResult: 'xc', // `b` is simply discarded
