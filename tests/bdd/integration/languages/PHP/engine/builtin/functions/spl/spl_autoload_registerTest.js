@@ -128,6 +128,25 @@ EOS
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'passing the class name argument directly to a print expression': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+    spl_autoload_register(function ($className) {
+        class MyClass {}
+
+        print $className;
+    });
+
+    $object = new MyClass();
+
+    return 27;
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 27,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: 'MyClass'
             }
         }, function (scenario, description) {
             describe(description, function () {

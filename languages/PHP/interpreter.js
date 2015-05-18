@@ -864,7 +864,7 @@ define([
                 return objectVariableCode + propertyCode + suffix;
             },
             'N_PRINT_EXPRESSION': function (node, interpret) {
-                return '(stdout.write(' + interpret(node.operand) + '.coerceToString().getNative()), tools.valueFactory.createInteger(1))';
+                return '(stdout.write(' + interpret(node.operand, {getValue: true}) + '.coerceToString().getNative()), tools.valueFactory.createInteger(1))';
             },
             'N_PROGRAM': function (node, interpret, state, stdin, stdout, stderr) {
                 var body = '',
