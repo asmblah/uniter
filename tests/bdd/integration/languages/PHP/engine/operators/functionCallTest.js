@@ -166,6 +166,24 @@ EOS
                 expectedStderr: '',
                 expectedStdout: 'it'
             },
+            'passing an array literal referencing variable directly to a function when calling': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+    function getFirst($numbers) {
+        return $numbers[0];
+    }
+
+    $seven = 7;
+    $eight = 8;
+
+    return getFirst(array($seven, '1' => $eight));
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 7,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'attempting to call instance method via array with only one element should fail': {
                 code: util.heredoc(function () {/*<<<EOS
 <?php

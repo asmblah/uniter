@@ -15,7 +15,8 @@ define([
     '../Reference/Null',
     '../Error',
     '../Error/Fatal',
-    '../Value'
+    '../Value',
+    '../Variable'
 ], function (
     util,
     ElementReference,
@@ -23,7 +24,8 @@ define([
     NullReference,
     PHPError,
     PHPFatalError,
-    Value
+    Value,
+    Variable
 ) {
     'use strict';
 
@@ -45,7 +47,11 @@ define([
                     key = factory.createFromNative(key);
                 }
 
-                element = factory.coerce(element);
+                if (element instanceof Variable) {
+                    element = element.getValue();
+                } else {
+                    element = factory.coerce(element);
+                }
             }
 
             element = new ElementReference(factory, callStack, value, key, element);
