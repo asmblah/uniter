@@ -44,6 +44,10 @@ define([
             return variable.valueFactory.createNull();
         },
 
+        getNative: function () {
+            return this.getValue().getNative();
+        },
+
         getReference: function () {
             return new VariableReference(this);
         },

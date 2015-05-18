@@ -53,6 +53,27 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'require closure argument': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+    spl_autoload_register(function ($class) {
+        require_once $class;
+
+        class MyClass {}
+    });
+
+    new MyClass();
+EOS
+*/;}), // jshint ignore:line
+                options: {
+                    include: function (path, promise) {
+                        promise.resolve('');
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'requiring a file where no include transport is specified': {
                 code: util.heredoc(function () {/*<<<EOS
 <?php
