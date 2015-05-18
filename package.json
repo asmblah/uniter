@@ -34,13 +34,14 @@
     "test": "mocha tests/bdd/harness/node"
   },
   "dependencies": {
+    "aliasify": "^1.7.2",
     "escodegen": "^1.6.1",
     "esprima": "^2.2.0",
     "estraverse": "^4.0.0",
-    "node-getopt": "0.2.x"
+    "node-getopt": "0.2.x",
+    "unamdify": "^0.1.5"
   },
   "devDependencies": {
-    "aliasify": "^1.7.2",
     "browserify": "^9.0.8",
     "chai": "^2.3.0",
     "express": "3.2.x",
@@ -49,8 +50,7 @@
     "mochify": "^2.8.1",
     "phantomjs": "^1.9.16",
     "requirejs": "^2.1.17",
-    "sinon-chai": "^2.7.0",
-    "unamdify": "^0.1.5"
+    "sinon-chai": "^2.7.0"
   },
   "browserify": {
     "transform": [
