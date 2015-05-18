@@ -83,6 +83,13 @@ define([
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'passing no arguments': {
+                code: '<?php return str_replace();',
+                expectedResult: null,
+                expectedResultType: 'null',
+                expectedStderr: 'PHP Warning: str_replace() expects at least 3 parameters, 0 given\n',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

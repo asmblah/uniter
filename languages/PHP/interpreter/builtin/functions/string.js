@@ -50,9 +50,9 @@ define([
                 }
 
                 var count = 0,
-                    search = getNative(searchReference),
-                    replacement = getNative(replaceReference),
-                    subject = getNative(subjectReference),
+                    search,
+                    replacement,
+                    subject,
                     replace = countReference ?
                         function replace(search, replacement, subject) {
                             return subject.replace(search, function () {
@@ -64,6 +64,19 @@ define([
                         function replace(search, replacement, subject) {
                             return subject.replace(search, replacement);
                         };
+
+                if (arguments.length < 3) {
+                    callStack.raiseError(
+                        PHPError.E_WARNING,
+                        'str_replace() expects at least 3 parameters, ' + arguments.length + ' given'
+                    );
+
+                    return valueFactory.createNull();
+                }
+
+                search = getNative(searchReference);
+                replacement = getNative(replaceReference);
+                subject = getNative(subjectReference);
 
                 // Use a regex to search for substrings, for speed
                 function buildRegex(search) {
