@@ -86,7 +86,7 @@ define([
                 return factory.createArray(nativeValue);
             }
 
-            return factory.createObject(nativeValue, factory.globalNamespace.getClass('stdClass'));
+            return factory.createObject(nativeValue, factory.globalNamespace.getClass('JSObject'));
         },
         createInteger: function (value) {
             var factory = this;

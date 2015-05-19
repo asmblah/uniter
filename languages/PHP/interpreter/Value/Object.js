@@ -76,7 +76,8 @@ define([
             var defined = true,
                 value = this,
                 object = value.value,
-                otherObject;
+                otherObject,
+                thisObject = value;
 
             // Allow methods inherited via the prototype chain up to but not including Object.prototype
             if (!hasOwn.call(object, name)) {
@@ -95,7 +96,16 @@ define([
                 throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.classObject.getName(), methodName: name});
             }
 
-            return value.factory.coerce(object[name].apply(value, args));
+            // Unwrap thisObj and argument Value objects when calling out
+            // to a native JS object method
+            if (value.classObject.getName() === 'JSObject') {
+                thisObject = object;
+                util.each(args, function (arg, index) {
+                    args[index] = arg.getNative();
+                });
+            }
+
+            return value.factory.coerce(object[name].apply(thisObject, args));
         },
 
         callStaticMethod: function (nameValue, args) {

@@ -16,7 +16,9 @@ define([
     './functions/string',
     './functions/time',
     './functions/variableHandling',
-    './classes/Exception'
+    './classes/Closure',
+    './classes/Exception',
+    './classes/JSObject'
 ], function (
     arrayFunctions,
     constantFunctions,
@@ -25,14 +27,18 @@ define([
     stringFunctions,
     timeFunctions,
     variableHandlingFunctions,
-    Exception
+    Closure,
+    Exception,
+    JSObject
 ) {
     'use strict';
 
     return {
         classes: {
             'stdClass': stdClass,
-            'Exception': Exception
+            'Closure': Closure,
+            'Exception': Exception,
+            'JSObject': JSObject
         },
         functionGroups: [
             arrayFunctions,

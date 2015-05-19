@@ -39,14 +39,15 @@ define([
                 'plain object from JavaScript with instance method': {
                     code: util.heredoc(function () {/*<<<EOS
 <?php
-    return $tools->getValue();
+    return $tools->addThisDotMyvalueTo(16);
 EOS
 */;}), // jshint ignore:line
                     expose: {
                         'tools': {
-                            getValue: function () {
-                                return 21;
-                            }
+                            addThisDotMyvalueTo: function (number) {
+                                return number + this.myValue;
+                            },
+                            myValue: 5
                         }
                     },
                     expectedResult: 21,

@@ -141,7 +141,10 @@ define([
             tools = {
                 createClosure: function (func) {
                     func[INVOKE_MAGIC_METHOD] = func;
-                    return tools.valueFactory.createObject(func, 'Closure');
+                    return tools.valueFactory.createObject(
+                        func,
+                        globalNamespace.getClass('Closure')
+                    );
                 },
                 createInstance: function (namespaceScope, classNameValue, args) {
                     var className = classNameValue.getNative(),
