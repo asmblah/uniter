@@ -23,9 +23,13 @@ define([
                 var engine;
 
                 beforeEach(function () {
+                    var expose = util.isFunction(scenario.expose) ?
+                        scenario.expose() :
+                        scenario.expose;
+
                     engine = getData().engine;
 
-                    util.each(scenario.expose, function (object, name) {
+                    util.each(expose, function (object, name) {
                         engine.expose(object, name);
                     });
 

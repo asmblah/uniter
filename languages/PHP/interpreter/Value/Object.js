@@ -10,30 +10,34 @@
 /*global define */
 define([
     'js/util',
-    './Array',
     '../KeyValuePair',
+    '../Reference/Null',
     '../Error',
-    '../Error/Fatal'
+    '../Error/Fatal',
+    '../Reference/Property',
+    '../Value'
 ], function (
     util,
-    ArrayValue,
     KeyValuePair,
+    NullReference,
     PHPError,
-    PHPFatalError
+    PHPFatalError,
+    PropertyReference,
+    Value
 ) {
     'use strict';
 
     var hasOwn = {}.hasOwnProperty;
 
     function ObjectValue(factory, callStack, object, classObject, id) {
-        ArrayValue.call(this, factory, callStack, object, 'object');
+        Value.call(this, factory, callStack, 'object', object);
 
         this.classObject = classObject;
         this.id = id;
-        this.object = object;
+        this.properties = {};
     }
 
-    util.inherit(ObjectValue).from(ArrayValue);
+    util.inherit(ObjectValue).from(Value);
 
     util.extend(ObjectValue.prototype, {
         add: function (rightValue) {
@@ -71,7 +75,7 @@ define([
         callMethod: function (name, args) {
             var defined = true,
                 value = this,
-                object = value.object,
+                object = value.value,
                 otherObject;
 
             // Allow methods inherited via the prototype chain up to but not including Object.prototype
@@ -104,10 +108,16 @@ define([
 
         coerceToArray: function () {
             var elements = [],
-                value = this;
+                value = this,
+                factory = value.factory;
 
-            util.each(value.getKeys(), function (key) {
-                elements.push(new KeyValuePair(key, value.getElementByKey(key).getValue()));
+            util.each(value.value, function (propertyValue, propertyName) {
+                elements.push(
+                    new KeyValuePair(
+                        factory.coerce(propertyName),
+                        factory.coerce(propertyValue)
+                    )
+                );
             });
 
             return value.factory.createArray(elements);
@@ -129,6 +139,22 @@ define([
             return this.classObject.getConstantByName(name);
         },
 
+        getElementByIndex: function (index) {
+            var value = this,
+                names = value.getInstancePropertyNames();
+
+            if (!hasOwn.call(names, index)) {
+                value.callStack.raiseError(
+                    PHPError.E_NOTICE,
+                    'Undefined ' + value.referToElement(index)
+                );
+
+                return new NullReference(value.factory);
+            }
+
+            return value.getInstancePropertyByName(names[index]);
+        },
+
         getForAssignment: function () {
             return this;
         },
@@ -138,18 +164,59 @@ define([
         },
 
         getInstancePropertyByName: function (nameValue) {
-            var name = nameValue.getNative(),
+            var nameKey = nameValue.coerceToKey(),
+                name = nameKey.getNative(),
                 value = this;
 
             if (value.classObject.hasStaticPropertyByName(name)) {
                 value.callStack.raiseError(PHPError.E_STRICT, 'Accessing static property ' + value.classObject.getName() + '::$' + name + ' as non static');
             }
 
-            return value.getElementByKey(nameValue);
+            if (!hasOwn.call(value.properties, name)) {
+                value.properties[name] = new PropertyReference(
+                    value.factory,
+                    value.callStack,
+                    value,
+                    nameKey
+                );
+            }
+
+            return value.properties[name];
+        },
+
+        getInstancePropertyNames: function () {
+            var nameHash = {},
+                names = [],
+                value = this;
+
+            util.each(value.value, function (value, name) {
+                nameHash[name] = true;
+            });
+
+            util.each(value.properties, function (value, name) {
+                nameHash[name] = true;
+            });
+
+            util.each(nameHash, function (t, name) {
+                names.push(value.factory.coerce(name));
+            });
+
+            return names;
+        },
+
+        getKeyByIndex: function (index) {
+            var value = this,
+                keys = value.getInstancePropertyNames();
+
+            return keys[index] || null;
+        },
+
+        getLength: function () {
+            return this.getInstancePropertyNames().length;
         },
 
         getNative: function () {
-            return this.object;
+            return this.value;
         },
 
         getStaticPropertyByName: function (nameValue) {
@@ -181,12 +248,20 @@ define([
                 leftValue = this,
                 factory = leftValue.factory;
 
-            if (rightValue.value.length !== leftValue.value.length || rightValue.getClassName() !== leftValue.getClassName()) {
+            if (
+                rightValue.getLength() !== leftValue.getLength() ||
+                rightValue.getClassName() !== leftValue.getClassName()
+            ) {
                 return factory.createBoolean(false);
             }
 
-            util.each(rightValue.keysToElements, function (element, nativeKey) {
-                if (!hasOwn.call(leftValue.keysToElements, nativeKey) || element.getValue().isNotEqualTo(leftValue.keysToElements[nativeKey].getValue()).getNative()) {
+            util.each(rightValue.value, function (element, nativeKey) {
+                if (
+                    !hasOwn.call(leftValue.value, nativeKey) ||
+                    factory.coerce(element).isNotEqualTo(
+                        leftValue.value[nativeKey].getValue()
+                    ).getNative()
+                ) {
                     equal = false;
                     return false;
                 }
@@ -216,6 +291,18 @@ define([
 
         referToElement: function (key) {
             return 'property: ' + this.getClassName() + '::$' + key;
+        },
+
+        reset: function () {
+            var value = this;
+
+            value.pointer = 0;
+
+            return value;
+        },
+
+        setPointer: function (pointer) {
+            this.pointer = pointer;
         }
     });
 

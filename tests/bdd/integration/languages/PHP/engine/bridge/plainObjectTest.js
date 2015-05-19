@@ -83,9 +83,33 @@ EOS
                     expectedResultType: 'integer',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'plain object with circular reference': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+    return $order->payments[1];
+EOS
+*/;}), // jshint ignore:line
+                    expose: function () {
+                        var order = {
+                                'payments': [10, 20]
+                            };
+
+                        order.myself = order;
+
+                        return {
+                            'order': order
+                        };
+                    },
+                    expectedResult: 20,
+                    expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
-            }, function (scenario) {
-                check(scenario);
+            }, function (scenario, description) {
+                describe(description, function () {
+                    check(scenario);
+                });
             });
         });
     });

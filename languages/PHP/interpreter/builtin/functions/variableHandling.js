@@ -40,7 +40,7 @@ define([
 
                 function dump(value, depth, isReference) {
                     var currentIndentation = new Array(depth).join('  '),
-                        keys,
+                        names,
                         nativeValue,
                         nextIndentation = new Array(depth + 1).join('  '),
                         representation = currentIndentation;
@@ -79,15 +79,23 @@ define([
                         representation += 'NULL';
                         break;
                     case 'object':
-                        keys = value.getKeys();
+                        names = value.getInstancePropertyNames();
 
-                        representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + keys.length + ') {\n';
+                        representation += 'object(' + value.getClassName() + ')#' + value.getID() + ' (' + names.length + ') {\n';
 
                         objects.push(value);
 
-                        util.each(keys, function (key) {
-                            var element = value.getElementByKey(key);
-                            representation += nextIndentation + '[' + JSON.stringify(key.getNative()) + ']=>\n' + dump(element.getValue(), depth + 1, element.isReference());
+                        util.each(names, function (nameValue) {
+                            var property = value.getInstancePropertyByName(nameValue);
+                            representation += nextIndentation +
+                                '[' +
+                                JSON.stringify(nameValue.getNative()) +
+                                ']=>\n' +
+                                dump(
+                                    property.getValue(),
+                                    depth + 1,
+                                    property.isReference()
+                                );
                         });
 
                         representation += currentIndentation + '}';
