@@ -70,6 +70,33 @@ define([
                         }
                     }]
                 }
+            },
+            'call to statically referenced method of object returned by closure call': {
+                code: '$getObj()->doSomething();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_METHOD_CALL',
+                            object: {
+                                name: 'N_FUNCTION_CALL',
+                                func: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'getObj'
+                                },
+                                args: []
+                            },
+                            calls: [{
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'doSomething'
+                                },
+                                args: []
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {

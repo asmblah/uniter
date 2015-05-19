@@ -42,6 +42,23 @@ define([
                     }]
                 }
             },
+            'call to callable': {
+                code: '$myCallable();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_FUNCTION_CALL',
+                            func: {
+                                name: 'N_VARIABLE',
+                                variable: 'myCallable'
+                            },
+                            args: []
+                        }
+                    }]
+                }
+            },
             'function call as term in expression with arguments including an expression': {
                 code: '$a = doSomething(1, 4 + 2, "test");',
                 expectedAST: {

@@ -296,9 +296,24 @@ define([
                 components: ['T_DO', {name: 'body', what: 'N_STATEMENT'}, 'T_WHILE', (/\(/), {name: 'condition', what: 'N_EXPRESSION'}, (/\)/), (/;/)]
             },
             'N_EXPRESSION_LEVEL_1_B': {
+                captureAs: 'N_FUNCTION_CALL',
+                components: {oneOf: [
+                    [
+                        {name: 'func', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_1_A']},
+                        [
+                            (/\(/),
+                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                            (/\)/)
+                        ]
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_A'}
+                ]},
+                ifNoMatch: {component: 'func', capture: 'next'}
+            },
+            'N_EXPRESSION_LEVEL_1_C': {
                 captureAs: 'N_METHOD_CALL',
                 components: [
-                    {name: 'object', what: 'N_EXPRESSION_LEVEL_1_A'},
+                    {name: 'object', what: 'N_EXPRESSION_LEVEL_1_B'},
                     {optionally: {
                         name: 'calls',
                         oneOrMoreOf: [
@@ -311,21 +326,6 @@ define([
                     }}
                 ],
                 ifNoMatch: {component: 'calls', capture: 'object'}
-            },
-            'N_EXPRESSION_LEVEL_1_C': {
-                captureAs: 'N_FUNCTION_CALL',
-                components: {oneOf: [
-                    [
-                        {name: 'func', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_1_B']},
-                        [
-                            (/\(/),
-                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
-                            (/\)/)
-                        ]
-                    ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_B'}
-                ]},
-                ifNoMatch: {component: 'func', capture: 'next'}
             },
             'N_EXPRESSION_LEVEL_1_D': {
                 captureAs: 'N_UNARY_EXPRESSION',
