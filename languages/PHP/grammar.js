@@ -310,26 +310,9 @@ define([
                 ]},
                 ifNoMatch: {component: 'func', capture: 'next'}
             },
-            'N_EXPRESSION_LEVEL_1_C': {
-                captureAs: 'N_METHOD_CALL',
-                components: [
-                    {name: 'object', what: 'N_EXPRESSION_LEVEL_1_B'},
-                    {optionally: {
-                        name: 'calls',
-                        oneOrMoreOf: [
-                            'T_OBJECT_OPERATOR',
-                            {name: 'func', oneOf: ['N_STRING', 'N_VARIABLE']},
-                            (/\(/),
-                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
-                            (/\)/)
-                        ]
-                    }}
-                ],
-                ifNoMatch: {component: 'calls', capture: 'object'}
-            },
             'N_EXPRESSION_LEVEL_1_D': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_C'}],
+                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_B'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
@@ -346,7 +329,7 @@ define([
             },
             'N_EXPRESSION_LEVEL_2_B': {
                 captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_INSTANCE_MEMBER'}]}],
+                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_INSTANCE_MEMBER'}, (/(?!\()/)]}],
                 ifNoMatch: {component: 'properties', capture: 'object'}
             },
             // Second occurrence of N_ARRAY_INDEX (see above)
@@ -395,8 +378,25 @@ define([
                 ]},
                 ifNoMatch: {component: 'property', capture: 'next'}
             },
+            'N_EXPRESSION_LEVEL_2_G': {
+                captureAs: 'N_METHOD_CALL',
+                components: [
+                    {name: 'object', what: 'N_EXPRESSION_LEVEL_2_F'},
+                    {optionally: {
+                        name: 'calls',
+                        oneOrMoreOf: [
+                            'T_OBJECT_OPERATOR',
+                            {name: 'func', oneOf: ['N_STRING', 'N_VARIABLE']},
+                            (/\(/),
+                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                            (/\)/)
+                        ]
+                    }}
+                ],
+                ifNoMatch: {component: 'calls', capture: 'object'}
+            },
             'N_EXPRESSION_LEVEL_3_A': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_F']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_G']
             },
             'N_EXPRESSION_LEVEL_3_B': {
                 oneOf: ['N_ARRAY_CAST', 'N_EXPRESSION_LEVEL_3_A']
@@ -406,13 +406,13 @@ define([
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_G'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_G'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },

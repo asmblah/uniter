@@ -97,6 +97,70 @@ define([
                         }
                     }]
                 }
+            },
+            'call to statically referenced method of array element': {
+                code: '$obj[4]->doSomething();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_METHOD_CALL',
+                            object: {
+                                name: 'N_ARRAY_INDEX',
+                                array: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'obj'
+                                },
+                                indices: [{
+                                    index: {
+                                        name: 'N_INTEGER',
+                                        number: '4'
+                                    }
+                                }]
+                            },
+                            calls: [{
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'doSomething'
+                                },
+                                args: []
+                            }]
+                        }
+                    }]
+                }
+            },
+            'call to statically referenced method of statically referenced property': {
+                code: '$obj->prop->doSomething();',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_METHOD_CALL',
+                            object: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'obj'
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop'
+                                    }
+                                }]
+                            },
+                            calls: [{
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'doSomething'
+                                },
+                                args: []
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
