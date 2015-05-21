@@ -783,7 +783,13 @@ function Parser(grammarSpec, stderr) {
             util.each(grammarSpec.rules, function (ruleSpec, name) {
                 var rule;
 
-                rule = new Rule(name, ruleSpec.captureAs || null, ruleSpec.ifNoMatch || null, ruleSpec.options || null);
+                rule = new Rule(
+                    name,
+                    ruleSpec.captureAs || null,
+                    ruleSpec.ifNoMatch || null,
+                    ruleSpec.processor || null,
+                    ruleSpec.options || null
+                );
                 rules[name] = rule;
             });
 
@@ -3550,12 +3556,13 @@ module.exports = Transpiler;}());
 /*global define */
 (function () {'use strict';
 var util = require('./util');
-function Rule(name, captureName, ifNoMatch, options) {
+function Rule(name, captureName, ifNoMatch, processor, options) {
         this.captureName = captureName;
         this.component = null;
         this.ifNoMatch = ifNoMatch;
         this.name = name;
         this.options = options;
+        this.processor = processor;
     }
 util.extend(Rule.prototype, {
         match: function (text, offset, options) {
@@ -3585,6 +3592,10 @@ util.extend(Rule.prototype, {
                 if (!util.isString(match.components) && !match.components.name) {
                     match.components.name = rule.captureName || rule.name;
                 }
+            }
+
+            if (rule.processor) {
+                match.components = rule.processor(match.components);
             }
 
             return match;
@@ -4037,7 +4048,7 @@ module.exports = util;}());
 
 /*global define */
 (function () {'use strict';
-var PHPErrorHandler = require('./grammar/ErrorHandler'), PHPGrammarState = require('./grammar/State');
+var util = require('./../../js/util'), PHPErrorHandler = require('./grammar/ErrorHandler'), PHPGrammarState = require('./grammar/State');
 var uppercaseReplacements = [{
             pattern: /.*/g,
             replacement: function (all) {
@@ -4322,93 +4333,158 @@ module.exports = {
                 ]},
                 ifNoMatch: {component: 'func', capture: 'next'}
             },
-            'N_EXPRESSION_LEVEL_1_C': {
-                captureAs: 'N_METHOD_CALL',
-                components: [
-                    {name: 'object', what: 'N_EXPRESSION_LEVEL_1_B'},
-                    {optionally: {
-                        name: 'calls',
-                        oneOrMoreOf: [
-                            'T_OBJECT_OPERATOR',
-                            {name: 'func', oneOf: ['N_STRING', 'N_VARIABLE']},
-                            (/\(/),
-                            {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
-                            (/\)/)
-                        ]
-                    }}
-                ],
-                ifNoMatch: {component: 'calls', capture: 'object'}
-            },
             'N_EXPRESSION_LEVEL_1_D': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_C'}],
+                components: [{name: 'operator', optionally: 'T_CLONE'}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_1_B'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
-            // Array index and object property must have identical precedence: with LL grammar we have to repeat
+
             'N_EXPRESSION_LEVEL_2_A': {
-                captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_1_D'}, {oneOf: ['N_EMPTY_ARRAY_INDEX', {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}]}],
-                ifNoMatch: {component: 'indices', capture: 'array'}
+                captureAs: 'N_CLASS_CONSTANT',
+                components: {oneOf: [
+                    [
+                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_1_D']},
+                        'T_DOUBLE_COLON',
+                        {name: 'constant', what: ['T_STRING', (/(?!\()/)]}
+                    ],
+                    {name: 'next', what: 'N_EXPRESSION_LEVEL_1_D'}
+                ]},
+                ifNoMatch: {component: 'constant', capture: 'next'}
             },
+            'N_CLASS_CONSTANT': 'N_EXPRESSION_LEVEL_2_A',
             'N_EMPTY_ARRAY_INDEX': {
                 captureAs: 'N_ARRAY_INDEX',
                 components: {name: 'indices', what: [(/\[/), (/\]/)]},
                 options: {indices: true}
             },
             'N_EXPRESSION_LEVEL_2_B': {
-                captureAs: 'N_OBJECT_PROPERTY',
-                components: [{name: 'object', what: 'N_EXPRESSION_LEVEL_2_A'}, {name: 'properties', zeroOrMoreOf: ['T_OBJECT_OPERATOR', {name: 'property', what: 'N_INSTANCE_MEMBER'}]}],
-                ifNoMatch: {component: 'properties', capture: 'object'}
-            },
-            // Second occurrence of N_ARRAY_INDEX (see above)
-            'N_EXPRESSION_LEVEL_2_C': {
-                captureAs: 'N_ARRAY_INDEX',
-                components: [{name: 'array', what: 'N_EXPRESSION_LEVEL_2_B'}, {oneOf: ['N_EMPTY_ARRAY_INDEX', {name: 'indices', zeroOrMoreOf: [(/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)]}]}],
-                ifNoMatch: {component: 'indices', capture: 'array'}
-            },
-            'N_EXPRESSION_LEVEL_2_D': {
-                captureAs: 'N_CLASS_CONSTANT',
-                components: {oneOf: [
-                    [
-                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_C']},
-                        'T_DOUBLE_COLON',
-                        {name: 'constant', what: ['T_STRING', (/(?!\()/)]}
-                    ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_C'}
-                ]},
-                ifNoMatch: {component: 'constant', capture: 'next'}
-            },
-            'N_CLASS_CONSTANT': 'N_EXPRESSION_LEVEL_2_D',
-            'N_EXPRESSION_LEVEL_2_E': {
-                captureAs: 'N_STATIC_METHOD_CALL',
-                components: {oneOf: [
-                    [
-                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_D']},
-                        'T_DOUBLE_COLON',
-                        {name: 'method', oneOf: ['N_STRING', 'N_VARIABLE', 'N_VARIABLE_EXPRESSION']},
-                        (/\(/),
-                        {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
-                        (/\)/)
-                    ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_D'}
-                ]},
-                ifNoMatch: {component: 'method', capture: 'next'}
-            },
-            'N_EXPRESSION_LEVEL_2_F': {
-                captureAs: 'N_STATIC_PROPERTY',
-                components: {oneOf: [
-                    [
-                        {name: 'className', oneOf: ['N_NAMESPACED_REFERENCE', 'N_EXPRESSION_LEVEL_2_E']},
-                        'T_DOUBLE_COLON',
-                        {name: 'property', what: 'N_STATIC_MEMBER'}
-                    ],
-                    {name: 'next', what: 'N_EXPRESSION_LEVEL_2_E'}
-                ]},
-                ifNoMatch: {component: 'property', capture: 'next'}
+                components: [
+                    {
+                        name: 'expression',
+                        oneOf: ['N_EXPRESSION_LEVEL_2_A', 'N_NAMESPACED_REFERENCE']
+                    },
+                    {
+                        name: 'member',
+                        zeroOrMoreOf: {
+                            oneOf: [
+                                // Array index
+                                {
+                                    name: 'array_index',
+                                    oneOf: [
+                                        'N_EMPTY_ARRAY_INDEX',
+                                        {
+                                            name: 'indices',
+                                            oneOrMoreOf: [
+                                                (/\[/), {name: 'index', what: 'N_EXPRESSION'}, (/\]/)
+                                            ]
+                                        }
+                                    ]
+                                },
+                                // Method call
+                                {
+                                    name: 'method_call',
+                                    what: {
+                                        name: 'calls',
+                                        oneOrMoreOf: [
+                                            'T_OBJECT_OPERATOR',
+                                            {name: 'func', oneOf: ['N_STRING', 'N_VARIABLE']},
+                                            (/\(/),
+                                            {
+                                                name: 'args',
+                                                zeroOrMoreOf: ['N_EXPRESSION', {
+                                                    what: (/(,|(?=\)))()/),
+                                                    captureIndex: 2
+                                                }]
+                                            },
+                                            (/\)/)
+                                        ]
+                                    }
+                                },
+                                // Object property
+                                {
+                                    name: 'object_property',
+                                    what: {
+                                        name: 'properties',
+                                        oneOrMoreOf: [
+                                            'T_OBJECT_OPERATOR',
+                                            {name: 'property', what: 'N_INSTANCE_MEMBER'},
+                                            (/(?!\()/)
+                                        ]
+                                    }
+                                },
+                                // Static method call
+                                {
+                                    name: 'static_method_call',
+                                    what: [
+                                        'T_DOUBLE_COLON',
+                                        {name: 'method', oneOf: ['N_STRING', 'N_VARIABLE', 'N_VARIABLE_EXPRESSION']},
+                                        (/\(/),
+                                        {name: 'args', zeroOrMoreOf: ['N_EXPRESSION', {what: (/(,|(?=\)))()/), captureIndex: 2}]},
+                                        (/\)/)
+                                    ]
+                                },
+                                // Static object property
+                                {
+                                    name: 'static_property',
+                                    what: [
+                                        'T_DOUBLE_COLON',
+                                        {name: 'property', what: 'N_STATIC_MEMBER'}
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                processor: function (node) {
+                    var result;
+
+                    if (!node || !node.expression) {
+                        return node;
+                    }
+
+                    result = node.expression;
+
+                    util.each(node.member, function (member) {
+                        if (member.array_index) {
+                            result = {
+                                name: 'N_ARRAY_INDEX',
+                                array: result,
+                                indices: member.array_index.indices
+                            };
+                        } else if (member.method_call) {
+                            result = {
+                                name: 'N_METHOD_CALL',
+                                object: result,
+                                calls: member.method_call.calls
+                            };
+                        } else if (member.object_property) {
+                            result = {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: result,
+                                properties: member.object_property.properties
+                            };
+                        } else if (member.static_method_call) {
+                            result = {
+                                name: 'N_STATIC_METHOD_CALL',
+                                className: result,
+                                method: member.static_method_call.method,
+                                args: member.static_method_call.args
+                            };
+                        } else if (member.static_property) {
+                            result = {
+                                name: 'N_STATIC_PROPERTY',
+                                className: result,
+                                property: member.static_property.property
+                            };
+                        }
+                    });
+
+                    return result;
+                }
             },
             'N_EXPRESSION_LEVEL_3_A': {
-                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_F']
+                oneOf: ['N_UNARY_PREFIX_EXPRESSION', 'N_UNARY_SUFFIX_EXPRESSION', 'N_EXPRESSION_LEVEL_2_B']
             },
             'N_EXPRESSION_LEVEL_3_B': {
                 oneOf: ['N_ARRAY_CAST', 'N_EXPRESSION_LEVEL_3_A']
@@ -4418,13 +4494,13 @@ module.exports = {
             },
             'N_UNARY_PREFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}],
+                components: [{name: 'operator', oneOf: ['T_INC', 'T_DEC', (/~/)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: true}
             },
             'N_UNARY_SUFFIX_EXPRESSION': {
                 captureAs: 'N_UNARY_EXPRESSION',
-                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_F'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
+                components: [{name: 'operand', what: 'N_EXPRESSION_LEVEL_2_B'}, {name: 'operator', oneOf: ['T_INC', 'T_DEC']}],
                 ifNoMatch: {component: 'operator', capture: 'operand'},
                 options: {prefix: false}
             },
@@ -4763,7 +4839,7 @@ module.exports = {
         start: 'N_PROGRAM'
     };}());
 
-},{"./grammar/ErrorHandler":53,"./grammar/State":54}],53:[function(require,module,exports){
+},{"./../../js/util":51,"./grammar/ErrorHandler":53,"./grammar/State":54}],53:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
