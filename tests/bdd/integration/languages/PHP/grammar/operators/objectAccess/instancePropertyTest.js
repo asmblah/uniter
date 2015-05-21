@@ -208,6 +208,149 @@ define([
                         }
                     }]
                 }
+            },
+            'assignment to statically referenced property of method call result': {
+                code: '$anObject->getIt()->prop1 = 3;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_METHOD_CALL',
+                                    object: {
+                                        name: 'N_VARIABLE',
+                                        variable: 'anObject'
+                                    },
+                                    calls: [{
+                                        func: {
+                                            name: 'N_STRING',
+                                            string: 'getIt'
+                                        },
+                                        args: []
+                                    }]
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop1'
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'assignment to statically referenced property of array index method call result': {
+                code: '$anArray[2]->getIt()->prop1 = 3;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_METHOD_CALL',
+                                    object: {
+                                        name: 'N_ARRAY_INDEX',
+                                        array: {
+                                            name: 'N_VARIABLE',
+                                            variable: 'anArray'
+                                        },
+                                        indices: [{
+                                            index: {
+                                                name: 'N_INTEGER',
+                                                number: '2'
+                                            }
+                                        }]
+                                    },
+                                    calls: [{
+                                        func: {
+                                            name: 'N_STRING',
+                                            string: 'getIt'
+                                        },
+                                        args: []
+                                    }]
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop1'
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
+                                }
+                            }]
+                        }
+                    }]
+                }
+            },
+            'assignment to variable->prop->index->prop': {
+                code: '$anObject->prop[2]->prop1 = 3;',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_OBJECT_PROPERTY',
+                                object: {
+                                    name: 'N_ARRAY_INDEX',
+                                    array: {
+                                        name: 'N_OBJECT_PROPERTY',
+                                        object: {
+                                            name: 'N_VARIABLE',
+                                            variable: 'anObject'
+                                        },
+                                        properties: [{
+                                            property: {
+                                                name: 'N_STRING',
+                                                string: 'prop'
+                                            }
+                                        }]
+                                    },
+                                    indices: [{
+                                        index: {
+                                            name: 'N_INTEGER',
+                                            number: '2'
+                                        }
+                                    }]
+                                },
+                                properties: [{
+                                    property: {
+                                        name: 'N_STRING',
+                                        string: 'prop1'
+                                    }
+                                }]
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_INTEGER',
+                                    number: '3'
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
