@@ -38,6 +38,31 @@ define([
                 });
             }
 
+            describe('processor option', function () {
+                check({
+                    grammarSpec: {
+                        rules: {
+                            'number': {
+                                name: 'value',
+                                what: /\d+/,
+                                processor: function (match) {
+                                    return {
+                                        name: 'custom',
+                                        value: 'before ' + match.value + ' after'
+                                    };
+                                }
+                            }
+                        },
+                        start: 'number'
+                    },
+                    text: '128',
+                    expectedAST: {
+                        name: 'custom',
+                        value: 'before 128 after'
+                    }
+                });
+            });
+
             describe('when given a single token and grammar contains only a matching rule', function () {
                 check({
                     grammarSpec: {

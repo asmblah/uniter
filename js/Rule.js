@@ -15,12 +15,13 @@ define([
 ) {
     'use strict';
 
-    function Rule(name, captureName, ifNoMatch, options) {
+    function Rule(name, captureName, ifNoMatch, processor, options) {
         this.captureName = captureName;
         this.component = null;
         this.ifNoMatch = ifNoMatch;
         this.name = name;
         this.options = options;
+        this.processor = processor;
     }
 
     util.extend(Rule.prototype, {
@@ -51,6 +52,10 @@ define([
                 if (!util.isString(match.components) && !match.components.name) {
                     match.components.name = rule.captureName || rule.name;
                 }
+            }
+
+            if (rule.processor) {
+                match.components = rule.processor(match.components);
             }
 
             return match;
