@@ -101,7 +101,7 @@ define([
             if (value.classObject.getName() === 'JSObject') {
                 thisObject = object;
                 util.each(args, function (arg, index) {
-                    args[index] = arg.getNative();
+                    args[index] = arg.unwrapForJS();
                 });
             }
 
@@ -313,6 +313,29 @@ define([
 
         setPointer: function (pointer) {
             this.pointer = pointer;
+        },
+
+        unwrapForJS: function () {
+            var value = this;
+
+            if (value.classObject.getName() === 'Closure') {
+                // When calling a PHP closure from JS, preserve thisObj
+                // by passing it in (wrapped) as the first argument
+                return function () {
+                    // Wrap thisObj in *Value object
+                    var thisObj = value.factory.coerce(this),
+                        args = [thisObj];
+
+                    // Wrap all native JS values in *Value objects
+                    util.each(arguments, function (arg) {
+                        args.push(value.factory.coerce(arg));
+                    });
+
+                    return value.value.apply(null, args);
+                };
+            }
+
+            return value.getNative();
         }
     });
 

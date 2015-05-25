@@ -72,9 +72,39 @@ EOS
                     expectedResultType: 'string',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'calling PHP closure from JS': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+$tools->setAdder(function ($thisObj, $num1, $num2) {
+    return $thisObj->start + $num1 + $num2;
+});
+return $tools->getValue(4, 2);
+EOS
+*/;}), // jshint ignore:line
+                    expose: function () {
+                        var adder;
+
+                        return {
+                            'tools': {
+                                getValue: function (num1, num2) {
+                                    return adder.call({start: 10}, num1, num2);
+                                },
+                                setAdder: function (newAdder) {
+                                    adder = newAdder;
+                                }
+                            }
+                        };
+                    },
+                    expectedResult: 16,
+                    expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
-            }, function (scenario) {
-                check(scenario);
+            }, function (scenario, description) {
+                describe(description, function () {
+                    check(scenario);
+                });
             });
         });
     });
