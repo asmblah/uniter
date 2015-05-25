@@ -70,6 +70,10 @@ define([
         createFromNative: function (nativeValue) {
             var factory = this;
 
+            if (nativeValue === null || typeof nativeValue === 'undefined') {
+                return factory.createNull();
+            }
+
             if (util.isString(nativeValue)) {
                 return factory.createString(nativeValue);
             }

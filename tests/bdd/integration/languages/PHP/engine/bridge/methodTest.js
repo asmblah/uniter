@@ -100,6 +100,38 @@ EOS
                     expectedResultType: 'integer',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'calling PHP closure from JS with null thisObj': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+$tools->setCallback(function ($thisObj) {
+    var_dump($thisObj);
+});
+return $tools->callBack(4, 2);
+EOS
+*/;}), // jshint ignore:line
+                    expose: function () {
+                        var callback;
+
+                        return {
+                            'tools': {
+                                callBack: function () {
+                                    callback.call(null);
+                                },
+                                setCallback: function (newCallback) {
+                                    callback = newCallback;
+                                }
+                            }
+                        };
+                    },
+                    expectedResult: null,
+                    expectedResultType: 'null',
+                    expectedStderr: '',
+                    expectedStdout: util.heredoc(function () {/*<<<EOS
+NULL
+
+EOS
+*/;}), // jshint ignore:line
                 }
             }, function (scenario, description) {
                 describe(description, function () {
