@@ -34,12 +34,41 @@ define([
             engine = phpTools.createEngine();
         });
 
-        describe('when given no arguments', function () {
-            check({
+        util.each({
+            'when given no arguments': {
                 code: '<?php return var_dump();',
                 expectedResult: null,
                 expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given\n',
                 expectedStdout: ''
+            },
+            'attempting to dump property of undefined variable': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+var_dump($undefinedVar->prop);
+echo 'Done';
+EOS
+*/
+;
+}), // jshint ignore:line
+                expectedResult: null,
+                expectedStderr: util.heredoc(function () {/*<<<EOS
+PHP Notice: Undefined variable: undefinedVar
+PHP Notice: Trying to get property of non-object
+
+EOS
+*/
+;
+}), // jshint ignore:line
+                // Note that the 'Done' echo following the dump must be executed, this is only a notice
+                expectedStdout: util.heredoc(function () {/*<<<EOS
+NULL
+Done
+EOS
+*/;}) // jshint ignore:line
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
 

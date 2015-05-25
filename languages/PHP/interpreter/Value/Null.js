@@ -10,9 +10,11 @@
 /*global define */
 define([
     'js/util',
+    '../Error',
     '../Value'
 ], function (
     util,
+    PHPError,
     Value
 ) {
     'use strict';
@@ -47,6 +49,17 @@ define([
 
         coerceToString: function () {
             return this.factory.createString('');
+        },
+
+        getInstancePropertyByName: function (name) {
+            var value = this;
+
+            value.callStack.raiseError(
+                PHPError.E_NOTICE,
+                'Trying to get property of non-object'
+            );
+
+            return value.factory.createNull();
         },
 
         isEqualTo: function (rightValue) {
