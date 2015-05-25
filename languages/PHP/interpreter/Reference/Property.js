@@ -68,11 +68,30 @@ define([
         },
 
         isDefined: function () {
-            var property = this,
+            var defined = true,
+                otherObject,
+                property = this,
                 nativeObject = property.objectValue.getNative(),
                 nativeKey = property.key.getNative();
 
-            return !!(hasOwn.call(nativeObject, nativeKey) || property.reference);
+            if (property.reference) {
+                return true;
+            }
+
+            // Allow properties inherited via the prototype chain up to but not including Object.prototype
+            if (!hasOwn.call(nativeObject, nativeKey)) {
+                otherObject = nativeObject;
+
+                do {
+                    otherObject = Object.getPrototypeOf(otherObject);
+                    if (!otherObject || otherObject === Object.prototype) {
+                        defined = false;
+                        break;
+                    }
+                } while (!hasOwn.call(otherObject, nativeKey));
+            }
+
+            return defined;
         },
 
         isReference: function () {
