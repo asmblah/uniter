@@ -6310,7 +6310,8 @@ var MESSAGE_PREFIXES = {
             15: 'Undefined class constant \'${name}\'',
             16: 'Interfaces may not include member variables',
             17: 'Interface function ${className}::${methodName}() cannot contain body',
-            18: 'Cannot use ${source} as ${alias} because the name is already in use'
+            18: 'Cannot use ${source} as ${alias} because the name is already in use',
+            19: 'Call to a member function ${name}() on a non-object'
         };
 function PHPFatalError(code, variables) {
         PHPError.call(this, PHPError.E_FATAL, util.stringTemplate(MESSAGE_PREFIXES[code], variables));
@@ -6334,7 +6335,8 @@ util.extend(PHPFatalError, {
         UNDEFINED_CLASS_CONSTANT: 15,
         INTERFACE_PROPERTY_NOT_ALLOWED: 16,
         INTERFACE_METHOD_BODY_NOT_ALLOWED: 17,
-        NAME_ALREADY_IN_USE: 18
+        NAME_ALREADY_IN_USE: 18,
+        NON_OBJECT_METHOD_CALL: 19
     });
 module.exports = PHPFatalError;}());
 
@@ -7496,6 +7498,12 @@ util.extend(Value.prototype, {
             return stringValue.coerceToNumber().add(this.coerceToNumber());
         },
 
+        callMethod: function (name) {
+            throw new PHPFatalError(PHPFatalError.NON_OBJECT_METHOD_CALL, {
+                name: name
+            });
+        },
+
         callStaticMethod: function () {
             throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
         },
@@ -7626,6 +7634,10 @@ util.extend(Value.prototype, {
 
         toValue: function () {
             return this;
+        },
+
+        unwrapForJS: function () {
+            return this.getNative();
         }
     });
 module.exports = Value;}());
@@ -8411,7 +8423,7 @@ module.exports = IntegerValue;}());
 
 /*global define */
 (function () {'use strict';
-var util = require('./../../../../js/util'), Value = require('../Value');
+var util = require('./../../../../js/util'), PHPError = require('../Error'), Value = require('../Value');
 function NullValue(factory, callStack) {
         Value.call(this, factory, callStack, 'null', null);
     }
@@ -8442,6 +8454,17 @@ util.extend(NullValue.prototype, {
             return this.factory.createString('');
         },
 
+        getInstancePropertyByName: function (name) {
+            var value = this;
+
+            value.callStack.raiseError(
+                PHPError.E_NOTICE,
+                'Trying to get property of non-object'
+            );
+
+            return value.factory.createNull();
+        },
+
         isEqualTo: function (rightValue) {
             return rightValue.isEqualToNull(this);
         },
@@ -8468,7 +8491,7 @@ util.extend(NullValue.prototype, {
     });
 module.exports = NullValue;}());
 
-},{"../Value":77,"./../../../../js/util":51}],84:[function(require,module,exports){
+},{"../Error":61,"../Value":77,"./../../../../js/util":51}],84:[function(require,module,exports){
 /*
  * Uniter - JavaScript PHP interpreter
  * Copyright 2013 Dan Phillimore (asmblah)
@@ -8552,7 +8575,7 @@ util.extend(ObjectValue.prototype, {
             if (value.classObject.getName() === 'JSObject') {
                 thisObject = object;
                 util.each(args, function (arg, index) {
-                    args[index] = arg.getNative();
+                    args[index] = arg.unwrapForJS();
                 });
             }
 
@@ -8764,6 +8787,29 @@ util.extend(ObjectValue.prototype, {
 
         setPointer: function (pointer) {
             this.pointer = pointer;
+        },
+
+        unwrapForJS: function () {
+            var value = this;
+
+            if (value.classObject.getName() === 'Closure') {
+                // When calling a PHP closure from JS, preserve thisObj
+                // by passing it in (wrapped) as the first argument
+                return function () {
+                    // Wrap thisObj in *Value object
+                    var thisObj = value.factory.coerce(this),
+                        args = [thisObj];
+
+                    // Wrap all native JS values in *Value objects
+                    util.each(arguments, function (arg) {
+                        args.push(value.factory.coerce(arg));
+                    });
+
+                    return value.value.apply(null, args);
+                };
+            }
+
+            return value.getNative();
         }
     });
 module.exports = ObjectValue;}());
@@ -8938,6 +8984,10 @@ util.extend(ValueFactory.prototype, {
         },
         createFromNative: function (nativeValue) {
             var factory = this;
+
+            if (nativeValue === null || typeof nativeValue === 'undefined') {
+                return factory.createNull();
+            }
 
             if (util.isString(nativeValue)) {
                 return factory.createString(nativeValue);
