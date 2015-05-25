@@ -44,6 +44,12 @@ define([
             return stringValue.coerceToNumber().add(this.coerceToNumber());
         },
 
+        callMethod: function (name) {
+            throw new PHPFatalError(PHPFatalError.NON_OBJECT_METHOD_CALL, {
+                name: name
+            });
+        },
+
         callStaticMethod: function () {
             throw new PHPFatalError(PHPFatalError.CLASS_NAME_NOT_VALID);
         },

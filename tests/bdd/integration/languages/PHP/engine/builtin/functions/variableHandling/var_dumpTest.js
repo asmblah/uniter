@@ -11,11 +11,13 @@
 define([
     '../../../tools',
     '../../../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -65,6 +67,23 @@ NULL
 Done
 EOS
 */;}) // jshint ignore:line
+            },
+            'attempting to dump result of undefined variable method call': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+var_dump($undefinedVar->myMethod());
+EOS
+*/;}), // jshint ignore:line
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to a member function myMethod\(\) on a non-object$/
+                },
+                expectedStderr: util.heredoc(function () {/*<<<EOS
+PHP Notice: Undefined variable: undefinedVar
+PHP Fatal error: Call to a member function myMethod() on a non-object
+EOS
+*/;}), // jshint ignore:line
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

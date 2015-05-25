@@ -35,7 +35,8 @@ define([
             15: 'Undefined class constant \'${name}\'',
             16: 'Interfaces may not include member variables',
             17: 'Interface function ${className}::${methodName}() cannot contain body',
-            18: 'Cannot use ${source} as ${alias} because the name is already in use'
+            18: 'Cannot use ${source} as ${alias} because the name is already in use',
+            19: 'Call to a member function ${name}() on a non-object'
         };
 
     function PHPFatalError(code, variables) {
@@ -62,7 +63,8 @@ define([
         UNDEFINED_CLASS_CONSTANT: 15,
         INTERFACE_PROPERTY_NOT_ALLOWED: 16,
         INTERFACE_METHOD_BODY_NOT_ALLOWED: 17,
-        NAME_ALREADY_IN_USE: 18
+        NAME_ALREADY_IN_USE: 18,
+        NON_OBJECT_METHOD_CALL: 19
     });
 
     return PHPFatalError;
