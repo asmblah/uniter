@@ -4932,8 +4932,7 @@ module.exports = State;}());
 /*global define */
 (function () {'use strict';
 var util = require('./../../js/util'), Call = require('./interpreter/Call'), Exception = require('./../../js/Exception/Exception'), KeyValuePair = require('./interpreter/KeyValuePair'), LabelRepository = require('./interpreter/LabelRepository'), List = require('./interpreter/List'), NamespaceScope = require('./interpreter/NamespaceScope'), ObjectValue = require('./interpreter/Value/Object'), PHPEnvironment = require('./interpreter/Environment'), PHPError = require('./interpreter/Error'), PHPFatalError = require('./interpreter/Error/Fatal'), PHPState = require('./interpreter/State'), Promise = require('./../../js/Promise'), Scope = require('./interpreter/Scope');
-var INVOKE_MAGIC_METHOD = '__invoke',
-        INCLUDE_OPTION = 'include',
+var INCLUDE_OPTION = 'include',
         binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
@@ -5025,8 +5024,9 @@ function evaluateModule(state, code, context, stdin, stdout, stderr) {
             options = state.getOptions(),
             resumable = state.getResumable(),
             tools = {
-                createClosure: function (func) {
-                    func[INVOKE_MAGIC_METHOD] = func;
+                createClosure: function (func, scope) {
+                    func.scopeWhenCreated = scope;
+
                     return tools.valueFactory.createObject(
                         func,
                         globalNamespace.getClass('Closure')
@@ -5382,7 +5382,7 @@ module.exports = {
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
 
-                return 'tools.createClosure(' + func + ')';
+                return 'tools.createClosure(' + func + ', scope)';
             },
             'N_COMMA_EXPRESSION': function (node, interpret) {
                 var expressionCodes = [];
@@ -8827,9 +8827,17 @@ util.extend(ObjectValue.prototype, {
         },
 
         unwrapForJS: function () {
-            var value = this;
+            var value = this,
+                thisObject,
+                thisVariable;
 
             if (value.classObject.getName() === 'Closure') {
+                // Store the current PHP thisObj to set for the closure
+                thisVariable = value.value.scopeWhenCreated.getVariable('this');
+                thisObject = thisVariable.isDefined() ?
+                    thisVariable.getValue() :
+                    null;
+
                 // When calling a PHP closure from JS, preserve thisObj
                 // by passing it in (wrapped) as the first argument
                 return function () {
@@ -8842,7 +8850,7 @@ util.extend(ObjectValue.prototype, {
                         args.push(value.factory.coerce(arg));
                     });
 
-                    return value.value.apply(null, args);
+                    return value.value.apply(thisObject, args);
                 };
             }
 
