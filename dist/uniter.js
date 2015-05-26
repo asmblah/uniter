@@ -4949,7 +4949,8 @@ var INCLUDE_OPTION = 'include',
             '=': {
                 'false': 'setValue',
                 'true': 'setReference'
-            }
+            },
+            '&&': 'logicalAnd'
         },
         hasOwn = {}.hasOwnProperty,
         unaryOperatorToMethod = {
@@ -5439,6 +5440,10 @@ module.exports = {
                     }
 
                     method = binaryOperatorToMethod[operation.operator];
+
+                    if (!method) {
+                        throw new Exception('Unsupported binary operator "' + operation.operator + '"');
+                    }
 
                     if (util.isPlainObject(method)) {
                         method = method[isReference];
@@ -7647,6 +7652,15 @@ util.extend(Value.prototype, {
         isSet: function () {
             // All values except NULL are classed as 'set'
             return true;
+        },
+
+        logicalAnd: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(
+                leftValue.coerceToBoolean().getNative() &&
+                rightValue.coerceToBoolean().getNative()
+            );
         },
 
         logicalNot: function () {
