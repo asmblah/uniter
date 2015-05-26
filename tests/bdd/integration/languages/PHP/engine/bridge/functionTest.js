@@ -58,7 +58,8 @@ EOS
                 'expose a JS function as a PHP global variable': {
                     code: util.heredoc(function () {/*<<<EOS
 <?php
-return $add(4, 3);
+$three = 3;
+return $add(4, $three);
 EOS
 */;}), // jshint ignore:line
                     expose: {
@@ -68,6 +69,22 @@ EOS
                     },
                     expectedResult: 7,
                     expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
+                },
+                'passing undefined variable to JS function exposed as PHP global variable': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+return $getIt($result);
+EOS
+*/;}), // jshint ignore:line
+                    expose: {
+                        'getIt': function (anArg) {
+                            return anArg === null;
+                        }
+                    },
+                    expectedResult: true,
+                    expectedResultType: 'boolean',
                     expectedStderr: '',
                     expectedStdout: ''
                 }
