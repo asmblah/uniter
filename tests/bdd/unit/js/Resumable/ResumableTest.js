@@ -391,6 +391,51 @@ EOS
                     });
                 }
             },
+            'logical AND (&&) operator with short-circuit evaluation, where left operand evaluates to falsy': {
+                code: util.heredoc(function () {/*<<<EOS
+var result = tools.falsy() && otherTools.truthy();
+
+exports.result = result;
+EOS
+*/;}), // jshint ignore:line
+                expose: function (state) {
+                    var falsy = sinon.stub().returns(false),
+                        truthy = sinon.stub().returns(true),
+                        getOtherTools = sinon.stub(),
+                        expose = {
+                            tools: {
+                                falsy: falsy
+                            }
+                        };
+
+                    getOtherTools.returns({
+                        truthy: truthy
+                    });
+
+                    Object.defineProperty(expose, 'otherTools', {
+                        get: getOtherTools
+                    });
+
+                    state.getOtherTools = getOtherTools;
+                    state.falsy = falsy;
+                    state.truthy = truthy;
+
+                    return expose;
+                },
+                expectedExports: {
+                    result: false
+                },
+                expect: function () {
+                    it('should only call the .falsy() method, not the .truthy() method', function () {
+                        expect(this.falsy).to.have.been.calledOnce;
+                        expect(this.truthy).not.to.have.been.called;
+                    });
+
+                    it('should not attempt to read the object variable for the right operand', function () {
+                        expect(this.getOtherTools).not.to.have.been.called;
+                    });
+                }
+            },
             'throwing error synchronously, no pause': {
                 code: util.heredoc(function () {/*<<<EOS
 throw new Error('Good, I have worked sync');
