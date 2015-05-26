@@ -54,6 +54,22 @@ EOS
                     expectedResultType: 'integer',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'expose a JS function as a PHP global variable': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+return $add(4, 3);
+EOS
+*/;}), // jshint ignore:line
+                    expose: {
+                        'add': function (num1, num2) {
+                            return num1 + num2;
+                        }
+                    },
+                    expectedResult: 7,
+                    expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {
