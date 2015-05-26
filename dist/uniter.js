@@ -5791,7 +5791,7 @@ module.exports = {
             },
             'N_SELF': function (node, interpret, context) {
                 if (context.inClass) {
-                    return 'tools.valueFactory.createString(currentClass.getName())';
+                    return 'tools.valueFactory.createString(currentClass.getUnprefixedName())';
                 }
 
                 return 'tools.throwNoActiveClassScope()';
@@ -6111,6 +6111,10 @@ util.extend(Class.prototype, {
 
         getName: function () {
             return this.name;
+        },
+
+        getUnprefixedName: function () {
+            return this.name.replace(/^.*\\/, '');
         },
 
         getStaticPropertyByName: function (name) {
