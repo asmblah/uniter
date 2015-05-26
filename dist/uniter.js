@@ -4949,8 +4949,7 @@ var INCLUDE_OPTION = 'include',
             '=': {
                 'false': 'setValue',
                 'true': 'setReference'
-            },
-            '&&': 'logicalAnd'
+            }
         },
         hasOwn = {}.hasOwnProperty,
         unaryOperatorToMethod = {
@@ -5432,6 +5431,7 @@ module.exports = {
                     var getValueIfApplicable,
                         isReference = false,
                         method,
+                        rightOperand,
                         valuePostProcess = '';
 
                     if (isAssignment && operation.operand.reference) {
@@ -5439,20 +5439,32 @@ module.exports = {
                         valuePostProcess = '.getReference()';
                     }
 
-                    method = binaryOperatorToMethod[operation.operator];
-
-                    if (!method) {
-                        throw new Exception('Unsupported binary operator "' + operation.operator + '"');
-                    }
-
-                    if (util.isPlainObject(method)) {
-                        method = method[isReference];
-                    }
-
                     getValueIfApplicable = (!isAssignment || index === node.right.length - 1) && !isReference;
 
-                    expressionStart += '.' + method + '(' + interpret(operation.operand, {getValue: getValueIfApplicable}) + valuePostProcess;
-                    expressionEnd += ')';
+                    rightOperand = interpret(operation.operand, {getValue: getValueIfApplicable});
+
+                    if (operation.operator === '&&') {
+                        expressionStart = 'tools.valueFactory.createBoolean(' +
+                            expressionStart +
+                            '.coerceToBoolean().getNative() && (' +
+                            rightOperand +
+                            valuePostProcess +
+                            '.coerceToBoolean().getNative()';
+                        expressionEnd += '))';
+                    } else {
+                        method = binaryOperatorToMethod[operation.operator];
+
+                        if (!method) {
+                            throw new Exception('Unsupported binary operator "' + operation.operator + '"');
+                        }
+
+                        if (util.isPlainObject(method)) {
+                            method = method[isReference];
+                        }
+
+                        expressionStart += '.' + method + '(' + rightOperand + valuePostProcess;
+                        expressionEnd += ')';
+                    }
                 });
 
                 return expressionStart + expressionEnd;
