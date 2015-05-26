@@ -9214,6 +9214,12 @@ util.extend(Variable.prototype, {
 
         toValue: function () {
             return this.getValue();
+        },
+
+        unwrapForJS: function () {
+            var value = this;
+
+            return value.value ? value.value.unwrapForJS() : null;
         }
     });
 module.exports = Variable;}());
