@@ -45,8 +45,7 @@ define([
 ) {
     'use strict';
 
-    var INVOKE_MAGIC_METHOD = '__invoke',
-        INCLUDE_OPTION = 'include',
+    var INCLUDE_OPTION = 'include',
         binaryOperatorToMethod = {
             '+': 'add',
             '-': 'subtract',
@@ -139,8 +138,9 @@ define([
             options = state.getOptions(),
             resumable = state.getResumable(),
             tools = {
-                createClosure: function (func) {
-                    func[INVOKE_MAGIC_METHOD] = func;
+                createClosure: function (func, scope) {
+                    func.scopeWhenCreated = scope;
+
                     return tools.valueFactory.createObject(
                         func,
                         globalNamespace.getClass('Closure')
@@ -500,7 +500,7 @@ define([
             'N_CLOSURE': function (node, interpret) {
                 var func = interpretFunction(node.args, node.bindings, node.body, interpret);
 
-                return 'tools.createClosure(' + func + ')';
+                return 'tools.createClosure(' + func + ', scope)';
             },
             'N_COMMA_EXPRESSION': function (node, interpret) {
                 var expressionCodes = [];

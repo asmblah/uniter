@@ -87,6 +87,44 @@ EOS
                     expectedResultType: 'boolean',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'calling PHP closure referencing "this" object from JS land': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+class Stuff {
+    public $value;
+
+    public function getIt() {
+        return function () {
+            return $this->value;
+        };
+    }
+}
+
+$stuff = new Stuff();
+$stuff->value = 22;
+
+$setCallback($stuff->getIt());
+
+return $getValue();
+EOS
+*/;}), // jshint ignore:line
+                    expose: function () {
+                        var callback;
+
+                        return {
+                            getValue: function () {
+                                return callback();
+                            },
+                            setCallback: function (newCallback) {
+                                callback = newCallback;
+                            }
+                        };
+                    },
+                    expectedResult: 22,
+                    expectedResultType: 'integer',
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

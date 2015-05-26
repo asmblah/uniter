@@ -330,9 +330,17 @@ define([
         },
 
         unwrapForJS: function () {
-            var value = this;
+            var value = this,
+                thisObject,
+                thisVariable;
 
             if (value.classObject.getName() === 'Closure') {
+                // Store the current PHP thisObj to set for the closure
+                thisVariable = value.value.scopeWhenCreated.getVariable('this');
+                thisObject = thisVariable.isDefined() ?
+                    thisVariable.getValue() :
+                    null;
+
                 // When calling a PHP closure from JS, preserve thisObj
                 // by passing it in (wrapped) as the first argument
                 return function () {
@@ -345,7 +353,7 @@ define([
                         args.push(value.factory.coerce(arg));
                     });
 
-                    return value.value.apply(null, args);
+                    return value.value.apply(thisObject, args);
                 };
             }
 
