@@ -33,6 +33,10 @@ phpEngine.getStdout().on('data', function (data) {
     print(data);
 });
 
+phpEngine.getStderr().on('data', function (data) {
+    print(data);
+});
+
 phpEngine.execute(phpCode).fail(function (error) {
     print(error.toString());
 });
