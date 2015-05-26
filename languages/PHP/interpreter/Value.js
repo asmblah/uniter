@@ -172,6 +172,15 @@ define([
             return true;
         },
 
+        logicalAnd: function (rightValue) {
+            var leftValue = this;
+
+            return leftValue.factory.createBoolean(
+                leftValue.coerceToBoolean().getNative() &&
+                rightValue.coerceToBoolean().getNative()
+            );
+        },
+
         logicalNot: function () {
             var value = this;
 

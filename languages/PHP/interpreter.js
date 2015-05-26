@@ -62,7 +62,8 @@ define([
             '=': {
                 'false': 'setValue',
                 'true': 'setReference'
-            }
+            },
+            '&&': 'logicalAnd'
         },
         hasOwn = {}.hasOwnProperty,
         unaryOperatorToMethod = {
@@ -557,6 +558,10 @@ define([
                     }
 
                     method = binaryOperatorToMethod[operation.operator];
+
+                    if (!method) {
+                        throw new Exception('Unsupported binary operator "' + operation.operator + '"');
+                    }
 
                     if (util.isPlainObject(method)) {
                         method = method[isReference];
