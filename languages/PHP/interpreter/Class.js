@@ -123,6 +123,10 @@ define([
             return this.name;
         },
 
+        getUnprefixedName: function () {
+            return this.name.replace(/^.*\\/, '');
+        },
+
         getStaticPropertyByName: function (name) {
             var classObject = this,
                 currentClass,

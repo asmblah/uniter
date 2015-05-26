@@ -909,7 +909,7 @@ define([
             },
             'N_SELF': function (node, interpret, context) {
                 if (context.inClass) {
-                    return 'tools.valueFactory.createString(currentClass.getName())';
+                    return 'tools.valueFactory.createString(currentClass.getUnprefixedName())';
                 }
 
                 return 'tools.throwNoActiveClassScope()';

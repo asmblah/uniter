@@ -89,6 +89,27 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'reading static property from current class via keyword "self" inside namespace': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+namespace My\Test\App;
+
+class Earth {
+    private static $type = 'planet';
+
+    public static function getType() {
+        return self::$type;
+    }
+}
+
+return Earth::getType();
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 'planet',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
             'attempting to access "self::" when no class scope is active': {
                 code: util.heredoc(function () {/*<<<EOS
 <?php
