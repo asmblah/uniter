@@ -89,6 +89,25 @@ EOS
                 expectedResultType: 'boolean',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'logical And of falsy and truthy values': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+function falsy() {
+    print 'falsy';
+    return false;
+}
+function truthy() {
+    print 'truthy';
+    return true;
+}
+return falsy() && truthy();
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: false,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: 'falsy'
             }
         }, function (scenario, description) {
             describe(description, function () {
