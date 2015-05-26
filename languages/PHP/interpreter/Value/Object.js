@@ -74,26 +74,40 @@ define([
 
         callMethod: function (name, args) {
             var defined = true,
+                func,
                 value = this,
                 object = value.value,
                 otherObject,
                 thisObject = value;
 
-            // Allow methods inherited via the prototype chain up to but not including Object.prototype
-            if (!hasOwn.call(object, name)) {
-                otherObject = object;
+            // Call functions directly when invoking the magic method
+            if (name === '__invoke' && util.isFunction(object)) {
+                func = object;
+            } else {
+                // Allow methods inherited via the prototype chain up to but not including Object.prototype
+                if (!hasOwn.call(object, name)) {
+                    otherObject = object;
 
-                do {
-                    otherObject = Object.getPrototypeOf(otherObject);
-                    if (!otherObject || otherObject === Object.prototype) {
-                        defined = false;
-                        break;
-                    }
-                } while (!hasOwn.call(otherObject, name));
+                    do {
+                        otherObject = Object.getPrototypeOf(otherObject);
+                        if (!otherObject || otherObject === Object.prototype) {
+                            defined = false;
+                            break;
+                        }
+                    } while (!hasOwn.call(otherObject, name));
+                }
+
+                func = object[name];
             }
 
-            if (!defined || !util.isFunction(object[name])) {
-                throw new PHPFatalError(PHPFatalError.UNDEFINED_METHOD, {className: value.classObject.getName(), methodName: name});
+            if (!defined || !util.isFunction(func)) {
+                throw new PHPFatalError(
+                    PHPFatalError.UNDEFINED_METHOD,
+                    {
+                        className: value.classObject.getName(),
+                        methodName: name
+                    }
+                );
             }
 
             // Unwrap thisObj and argument Value objects when calling out
@@ -105,7 +119,7 @@ define([
                 });
             }
 
-            return value.factory.coerce(object[name].apply(thisObject, args));
+            return value.factory.coerce(func.apply(thisObject, args));
         },
 
         callStaticMethod: function (nameValue, args) {
