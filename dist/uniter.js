@@ -4679,7 +4679,14 @@ module.exports = {
                 components: {what: 'T_LINE', replace: uppercaseReplacements, captureOffsetAs: 'offset'}
             },
             'N_METHOD_DEFINITION': {
-                components: [{name: 'visibility', oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}]
+                components: [{name: 'visibility', optionally: {oneOf: ['T_PUBLIC', 'T_PRIVATE', 'T_PROTECTED']}}, 'T_FUNCTION', {name: 'func', what: 'T_STRING'}, (/\(/), {name: 'args', zeroOrMoreOf: ['N_ARGUMENT', {what: (/(,|(?=\)))()/), captureIndex: 2}]}, (/\)/), {name: 'body', what: 'N_STATEMENT'}],
+                processor: function (node) {
+                    if (!node.visibility) {
+                        node.visibility = 'public';
+                    }
+
+                    return node;
+                }
             },
             'N_NAMESPACE': {
                 components: [(/(?!(?:new|use)\b)/i), {optionally: 'T_STRING'}, {oneOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
