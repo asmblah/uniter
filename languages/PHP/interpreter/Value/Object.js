@@ -78,7 +78,8 @@ define([
                 value = this,
                 object = value.value,
                 otherObject,
-                thisObject = value;
+                thisObject = value,
+                thisVariable;
 
             // Call functions directly when invoking the magic method
             if (name === '__invoke' && util.isFunction(object)) {
@@ -117,6 +118,13 @@ define([
                 util.each(args, function (arg, index) {
                     args[index] = arg.unwrapForJS();
                 });
+            // Use the current object as $this for PHP closures by default
+            } else if (value.classObject.getName() === 'Closure') {
+                // Store the current PHP thisObj to set for the closure
+                thisVariable = object.scopeWhenCreated.getVariable('this');
+                thisObject = thisVariable.isDefined() ?
+                    thisVariable.getValue() :
+                    null;
             }
 
             return value.factory.coerce(func.apply(thisObject, args));
@@ -330,30 +338,22 @@ define([
         },
 
         unwrapForJS: function () {
-            var value = this,
-                thisObject,
-                thisVariable;
+            var value = this;
 
             if (value.classObject.getName() === 'Closure') {
-                // Store the current PHP thisObj to set for the closure
-                thisVariable = value.value.scopeWhenCreated.getVariable('this');
-                thisObject = thisVariable.isDefined() ?
-                    thisVariable.getValue() :
-                    null;
-
                 // When calling a PHP closure from JS, preserve thisObj
                 // by passing it in (wrapped) as the first argument
                 return function () {
                     // Wrap thisObj in *Value object
                     var thisObj = value.factory.coerce(this),
-                        args = [thisObj];
+                        args = [];
 
                     // Wrap all native JS values in *Value objects
                     util.each(arguments, function (arg) {
                         args.push(value.factory.coerce(arg));
                     });
 
-                    return value.value.apply(thisObject, args);
+                    return value.value.apply(thisObj, args);
                 };
             }
 

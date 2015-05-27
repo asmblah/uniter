@@ -92,8 +92,6 @@ EOS
                     code: util.heredoc(function () {/*<<<EOS
 <?php
 class Stuff {
-    public $value;
-
     public function getIt() {
         return function () {
             return $this->value;
@@ -102,7 +100,6 @@ class Stuff {
 }
 
 $stuff = new Stuff();
-$stuff->value = 22;
 
 $setCallback($stuff->getIt());
 
@@ -114,7 +111,7 @@ EOS
 
                         return {
                             getValue: function () {
-                                return callback();
+                                return callback.call({value: 22});
                             },
                             setCallback: function (newCallback) {
                                 callback = newCallback;

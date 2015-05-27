@@ -146,6 +146,32 @@ EOS
                 expectedResult: 7,
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'calling closure referencing $this': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+class Stuff {
+    public $value;
+
+    public function getIt() {
+        return function () {
+            return $this->value;
+        };
+    }
+}
+
+$stuff = new Stuff();
+$stuff->value = 21;
+
+$callback = $stuff->getIt();
+
+return $callback();
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 21,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {

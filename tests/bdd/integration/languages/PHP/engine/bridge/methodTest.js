@@ -76,8 +76,8 @@ EOS
                 'calling PHP closure from JS': {
                     code: util.heredoc(function () {/*<<<EOS
 <?php
-$tools->setAdder(function ($thisObj, $num1, $num2) {
-    return $thisObj->start + $num1 + $num2;
+$tools->setAdder(function ($num1, $num2) {
+    return $this->start + $num1 + $num2;
 });
 return $tools->getValue(4, 2);
 EOS
@@ -104,8 +104,8 @@ EOS
                 'calling PHP closure from JS with null thisObj': {
                     code: util.heredoc(function () {/*<<<EOS
 <?php
-$tools->setCallback(function ($thisObj) {
-    var_dump($thisObj);
+$tools->setCallback(function () {
+    var_dump($this);
 });
 return $tools->callBack(4, 2);
 EOS
