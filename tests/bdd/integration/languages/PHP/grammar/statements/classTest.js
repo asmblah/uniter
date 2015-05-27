@@ -156,6 +156,38 @@ EOS
                         }]
                     }]
                 }
+            },
+            'class with one implicitly public instance method': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+class OneMethod {
+    function printIt($msg) echo $msg;
+}
+EOS
+*/;}), // jshint ignore:line
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_CLASS_STATEMENT',
+                        className: 'OneMethod',
+                        members: [{
+                            name: 'N_METHOD_DEFINITION',
+                            visibility: 'public',
+                            func: 'printIt',
+                            args: [{
+                                name: 'N_VARIABLE',
+                                variable: 'msg'
+                            }],
+                            body: {
+                                name: 'N_ECHO_STATEMENT',
+                                expression: {
+                                    name: 'N_VARIABLE',
+                                    variable: 'msg'
+                                }
+                            }
+                        }]
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
