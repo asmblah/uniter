@@ -3,7 +3,7 @@ Uniter
 
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
 
-Uniter allows you to execute PHP in the browser or in Node.js.
+Run PHP client-side in the browser or in Node.js.
 
 As an on-the-fly recompiling interpreter (or transpiler) it results in the closest possible translation
 from PHP to native JavaScript code.
