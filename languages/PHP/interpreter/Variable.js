@@ -28,6 +28,12 @@ define([
     }
 
     util.extend(Variable.prototype, {
+        decrementBy: function (rightValue) {
+            var variable = this;
+
+            variable.setValue(variable.getValue().subtract(rightValue));
+        },
+
         getValue: function () {
             var variable = this;
 

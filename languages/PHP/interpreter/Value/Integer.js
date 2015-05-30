@@ -168,6 +168,12 @@ define([
             return factory.createInteger(leftValue.getNative() - rightValue.getNative());
         },
 
+        subtractFromNull: function () {
+            var value = this;
+
+            return value.factory.createInteger(-value.getNative());
+        },
+
         toNegative: function () {
             var value = this;
 

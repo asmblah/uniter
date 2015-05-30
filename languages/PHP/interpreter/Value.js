@@ -191,6 +191,10 @@ define([
             return value.factory.createBoolean(!value.coerceToBoolean().getNative());
         },
 
+        subtractFromNull: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
+        },
+
         toValue: function () {
             return this;
         },

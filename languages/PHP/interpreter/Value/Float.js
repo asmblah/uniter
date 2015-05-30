@@ -129,6 +129,15 @@ define([
             return this.coerceToInteger().shiftRightBy(rightValue);
         },
 
+        subtract: function (rightValue) {
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            rightValue = rightValue.coerceToNumber();
+
+            return factory.createFloat(leftValue.getNative() - rightValue.getNative());
+        },
+
         toNegative: function () {
             var value = this;
 

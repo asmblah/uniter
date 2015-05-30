@@ -84,6 +84,10 @@ define([
 
         isSet: function () {
             return false;
+        },
+
+        subtract: function (rightValue) {
+            return rightValue.subtractFromNull();
         }
     });
 

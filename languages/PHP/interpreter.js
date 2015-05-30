@@ -55,6 +55,7 @@ define([
             '<<': 'shiftLeftBy',
             '>>': 'shiftRightBy',
             '+=': 'incrementBy',
+            '-=': 'decrementBy',
             '==': 'isEqualTo',
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',
@@ -542,7 +543,7 @@ define([
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },
             'N_EXPRESSION': function (node, interpret) {
-                var isAssignment = /^[+]?=$/.test(node.right[0].operator),
+                var isAssignment = /^[+-]?=$/.test(node.right[0].operator),
                     expressionEnd = '',
                     expressionStart = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
 
