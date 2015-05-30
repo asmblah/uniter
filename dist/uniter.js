@@ -4578,7 +4578,7 @@ module.exports = {
             },
             'N_EXPRESSION_LEVEL_17_A': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_16'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_16'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_16'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/[+-]?=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_16'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_17_B': {
@@ -4948,6 +4948,8 @@ var INCLUDE_OPTION = 'include',
             '.': 'concat',
             '<<': 'shiftLeftBy',
             '>>': 'shiftRightBy',
+            '+=': 'incrementBy',
+            '-=': 'decrementBy',
             '==': 'isEqualTo',
             '!=': 'isNotEqualTo',
             '===': 'isIdenticalTo',
@@ -5430,7 +5432,7 @@ module.exports = {
                 return 'stdout.write(' + interpret(node.expression) + '.coerceToString().getNative());';
             },
             'N_EXPRESSION': function (node, interpret) {
-                var isAssignment = node.right[0].operator === '=',
+                var isAssignment = /^[+-]?=$/.test(node.right[0].operator),
                     expressionEnd = '',
                     expressionStart = interpret(node.left, {assignment: isAssignment, getValue: !isAssignment});
 
@@ -7541,6 +7543,10 @@ util.extend(Value.prototype, {
             return leftValue.factory.createFloat(leftValue.coerceToFloat().getNative() + floatValue.getNative());
         },
 
+        addToNull: function () {
+            return this;
+        },
+
         addToString: function (stringValue) {
             return stringValue.coerceToNumber().add(this.coerceToNumber());
         },
@@ -7686,6 +7692,10 @@ util.extend(Value.prototype, {
             var value = this;
 
             return value.factory.createBoolean(!value.coerceToBoolean().getNative());
+        },
+
+        subtractFromNull: function () {
+            throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },
 
         toValue: function () {
@@ -8277,6 +8287,15 @@ util.extend(FloatValue.prototype, {
             return this.coerceToInteger().shiftRightBy(rightValue);
         },
 
+        subtract: function (rightValue) {
+            var leftValue = this,
+                factory = leftValue.factory;
+
+            rightValue = rightValue.coerceToNumber();
+
+            return factory.createFloat(leftValue.getNative() - rightValue.getNative());
+        },
+
         toNegative: function () {
             var value = this;
 
@@ -8453,6 +8472,12 @@ util.extend(IntegerValue.prototype, {
             return factory.createInteger(leftValue.getNative() - rightValue.getNative());
         },
 
+        subtractFromNull: function () {
+            var value = this;
+
+            return value.factory.createInteger(-value.getNative());
+        },
+
         toNegative: function () {
             var value = this;
 
@@ -8543,6 +8568,10 @@ util.extend(NullValue.prototype, {
 
         isSet: function () {
             return false;
+        },
+
+        subtract: function (rightValue) {
+            return rightValue.subtractFromNull();
         }
     });
 module.exports = NullValue;}());
@@ -9136,6 +9165,12 @@ function Variable(callStack, valueFactory, name) {
         this.valueFactory = valueFactory;
     }
 util.extend(Variable.prototype, {
+        decrementBy: function (rightValue) {
+            var variable = this;
+
+            variable.setValue(variable.getValue().subtract(rightValue));
+        },
+
         getValue: function () {
             var variable = this;
 
@@ -9158,6 +9193,12 @@ util.extend(Variable.prototype, {
 
         getReference: function () {
             return new VariableReference(this);
+        },
+
+        incrementBy: function (rightValue) {
+            var variable = this;
+
+            variable.setValue(variable.getValue().add(rightValue));
         },
 
         isDefined: function () {
