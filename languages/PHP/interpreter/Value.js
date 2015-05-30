@@ -40,6 +40,10 @@ define([
             return leftValue.factory.createFloat(leftValue.coerceToFloat().getNative() + floatValue.getNative());
         },
 
+        addToNull: function () {
+            return this;
+        },
+
         addToString: function (stringValue) {
             return stringValue.coerceToNumber().add(this.coerceToNumber());
         },

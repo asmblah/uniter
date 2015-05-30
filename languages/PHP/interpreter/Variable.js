@@ -52,6 +52,12 @@ define([
             return new VariableReference(this);
         },
 
+        incrementBy: function (rightValue) {
+            var variable = this;
+
+            variable.setValue(variable.getValue().add(rightValue));
+        },
+
         isDefined: function () {
             var variable = this;
 
