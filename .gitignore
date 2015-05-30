@@ -1,3 +1,4 @@
+/.idea
 /bower_components/
 /dist/*
 !/dist/uniter.js
