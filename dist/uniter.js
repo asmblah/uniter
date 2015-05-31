@@ -7180,10 +7180,19 @@ util.extend(PropertyReference.prototype, {
                 nativeKey = property.key.getNative(),
                 isFirstProperty = (property.objectValue.getLength() === 0);
 
+            // Ensure we write the native value to properties on native JS objects
+            function getValueForAssignment() {
+                if (property.objectValue.getClassName() === 'JSObject') {
+                    return value.getNative();
+                }
+
+                return value.getForAssignment();
+            }
+
             if (property.reference) {
                 property.reference.setValue(value);
             } else {
-                nativeObject[nativeKey] = value.getForAssignment();
+                nativeObject[nativeKey] = getValueForAssignment();
             }
 
             if (isFirstProperty) {

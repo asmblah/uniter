@@ -17,7 +17,7 @@ require('./../vendor/ace/src-min-noconflict/mode-php');
 require('./../vendor/ace/src-min-noconflict/theme-twilight');
 var global = util.global,
         ace = global.ace,
-        javascriptCode = '/*global clear, phpCode, uniter */\n' + util.heredoc(function () {/*<<<EOS
+        javascriptCode = '/*global phpCode, resultBody, uniter */\n' + util.heredoc(function () {/*<<<EOS
 'use strict';
 
 var phpEngine = uniter.createEngine('PHP');
@@ -94,7 +94,7 @@ function updateResult() {
 
         try {
             /*jshint evil: true */
-            new Function('phpCode, print, clear', javascriptCode)(phpCode, print, clear);
+            new Function('phpCode, print, resultBody', javascriptCode)(phpCode, print, resultBody);
         } catch (error) {
             printText('<JavaScript error> ' + error.toString());
         }
