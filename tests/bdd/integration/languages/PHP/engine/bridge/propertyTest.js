@@ -51,6 +51,29 @@ EOS
                     expectedResultType: 'string',
                     expectedStderr: '',
                     expectedStdout: ''
+                },
+                'assigning string value to JavaScript object property': {
+                    code: util.heredoc(function () {/*<<<EOS
+<?php
+$document->body->innerHTML = '<p>Earth</p>';
+EOS
+*/;}), // jshint ignore:line
+                    expose: function () {
+                        var document = {
+                            body: {}
+                        };
+
+                        this.document = document;
+
+                        return {
+                            document: document
+                        };
+                    },
+                    expectedResultCallback: function () {
+                        expect(this.document.body.innerHTML).to.equal('<p>Earth</p>');
+                    },
+                    expectedStderr: '',
+                    expectedStdout: ''
                 }
             }, function (scenario, description) {
                 describe(description, function () {

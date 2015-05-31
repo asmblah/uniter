@@ -173,6 +173,10 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
+                },
                 expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
                 expectedStdout: ''
             }

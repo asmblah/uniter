@@ -36,7 +36,7 @@ define([
                     }
 
                     expose = util.isFunction(scenario.expose) ?
-                        scenario.expose() :
+                        scenario.expose.call(this) :
                         scenario.expose;
 
                     engine = getData().engine;
@@ -79,7 +79,7 @@ define([
                             expect(scenarioException.message).to.match(scenario.expectedException.match);
                         }
                     });
-                } else if (hasOwn.call(scenario, 'expectedResult')) {
+                } else {
                     it('should not have thrown an exception', function () {
                         if (scenarioException) {
                             throw new Error(
@@ -89,17 +89,22 @@ define([
                         }
                     });
 
-                    it('should return the expected result', function () {
-                        if (hasOwn.call(scenario, 'expectedResult')) {
-                            if (scenario.expectedResultDeep) {
-                                expect(scenarioResult).to.deep.equal(scenario.expectedResult);
+                    if (
+                        hasOwn.call(scenario, 'expectedResult') ||
+                        scenario.expectedResultCallback
+                    ) {
+                        it('should return the expected result', function () {
+                            if (hasOwn.call(scenario, 'expectedResult')) {
+                                if (scenario.expectedResultDeep) {
+                                    expect(scenarioResult).to.deep.equal(scenario.expectedResult);
+                                } else {
+                                    expect(scenarioResult).to.equal(scenario.expectedResult);
+                                }
                             } else {
-                                expect(scenarioResult).to.equal(scenario.expectedResult);
+                                scenario.expectedResultCallback.call(this, scenarioResult);
                             }
-                        } else {
-                            scenario.expectedResultCallback(scenarioResult);
-                        }
-                    });
+                        });
+                    }
 
                     if (scenario.expectedResultType) {
                         it('should return a value of type "' + scenario.expectedResultType + '"', function () {
