@@ -19,10 +19,10 @@ Demos
 Getting started
 ---------------
 ```shell
-npm install uniter
+$ npm install uniter
+$ node
 ```
 ```javascript
-node
 > var php = require('./').createEngine('PHP');
 > php.getStdout().on('data', function (text) { console.log(text); });
 > php.execute('<?php print "Hello from PHP!";');
