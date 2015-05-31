@@ -5,8 +5,7 @@ Uniter
 
 Run PHP client-side in the browser or in Node.js.
 
-As an on-the-fly recompiling interpreter (or transpiler) it results in the closest possible translation
-from PHP to native JavaScript code.
+![Manipulating the DOM using PHP with Uniter](https://asmblah.github.io/uniter/img/uniter_dom_demo.gif)
 
 Features
 --------
