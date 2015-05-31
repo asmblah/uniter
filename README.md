@@ -7,6 +7,8 @@ Run PHP client-side in the browser or in Node.js.
 
 ![Manipulating the DOM using PHP with Uniter](https://asmblah.github.io/uniter/img/uniter_dom_demo.gif)
 
+[Try it now](https://asmblah.github.io/uniter/demo/interactive.html)
+
 Features
 --------
 - Environment-agnostic architecture: should run in any modern browser (IE < 9 support coming soon) and Node.js
@@ -31,11 +33,6 @@ Features
     - Strict equality `===` and inequality `!==` comparison operators
 
     And others... see [the `Engine` integration tests](https://github.com/asmblah/uniter/tree/master/tests/bdd/integration/languages/PHP/engine) for more info.
-
-Can I try it now?
------------------
-
-[Sure you can](http://asmblah.github.io/uniter/demo/interactive.html).
 
 Using on the command line
 -------------------------
