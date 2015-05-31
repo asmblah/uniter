@@ -5,7 +5,9 @@ Uniter
 
 Run PHP client-side in the browser or in Node.js.
 
+[
 ![Manipulating the DOM using PHP with Uniter](https://asmblah.github.io/uniter/img/uniter_dom_demo.gif)
+](https://asmblah.github.io/uniter/demo/interactive.html)
 
 [Try it now](https://asmblah.github.io/uniter/demo/interactive.html)
 
