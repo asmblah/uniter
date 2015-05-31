@@ -11,6 +11,11 @@ Run PHP client-side in the browser or in Node.js.
 
 [Try it now](https://asmblah.github.io/uniter/demo/interactive.html)
 
+Demos
+-----
+- [jQuery + PHP + Browserify (with PHPUnit)](https://uniter.github.io/uniter-jquery)
+- [Interactive demo (above)](https://asmblah.github.io/uniter/demo/interactive.html)
+
 Features
 --------
 - Environment-agnostic architecture: should run in any modern browser (IE < 9 support coming soon) and Node.js
