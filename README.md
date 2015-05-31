@@ -23,7 +23,7 @@ $ npm install uniter
 $ node
 ```
 ```javascript
-> var php = require('./').createEngine('PHP');
+> var php = require('uniter').createEngine('PHP');
 > php.getStdout().on('data', function (text) { console.log(text); });
 > php.execute('<?php print "Hello from PHP!";');
 Hello from PHP!
