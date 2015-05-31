@@ -16,6 +16,19 @@ Demos
 - [jQuery + PHP + Browserify (with PHPUnit)](https://uniter.github.io/uniter-jquery)
 - [Interactive demo (above)](https://asmblah.github.io/uniter/demo/interactive.html)
 
+Getting started
+---------------
+```shell
+npm install uniter
+```
+```javascript
+node
+> var php = require('./').createEngine('PHP');
+> php.getStdout().on('data', function (text) { console.log(text); });
+> php.execute('<?php print "Hello from PHP!";');
+Hello from PHP!
+```
+
 Features
 --------
 - Environment-agnostic architecture: should run in any modern browser (IE < 9 support coming soon) and Node.js
