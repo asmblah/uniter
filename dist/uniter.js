@@ -4070,7 +4070,34 @@ var uppercaseReplacements = [{
                     '"': '"'
                 }[chr];
             }
-        }];
+        }],
+        buildTree = function (first, rest, buildNode) {
+            var i,
+                length,
+                result = first;
+
+            for (i = 0, length = rest.length; i < length; i++) {
+                result = buildNode(result, rest[i]);
+            }
+
+            return result;
+        },
+        buildBinaryExpression = function (first, rest) {
+            // Transform the captured flat list into an AST
+            // which will eliminate any ambiguity over precedence.
+            return buildTree(first, rest, function (result, element) {
+                return {
+                    name: 'N_EXPRESSION',
+                    left: result,
+                    right: [
+                        {
+                            operator: element.operator,
+                            operand: element.operand
+                        }
+                    ]
+                };
+            });
+        };
 module.exports = {
         ErrorHandler: PHPErrorHandler,
         State: PHPGrammarState,
@@ -4529,7 +4556,13 @@ module.exports = {
             'N_EXPRESSION_LEVEL_7_B': {
                 captureAs: 'N_EXPRESSION',
                 components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_7_A'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', oneOf: [(/\+/), (/-/), (/\./)]}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_7_A'}]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
+                processor: function (node) {
+                    if (!node.right) {
+                        return node.left;
+                    }
+
+                    return buildBinaryExpression(node.left, node.right);
+                }
             },
             'N_EXPRESSION_LEVEL_8': {
                 captureAs: 'N_EXPRESSION',
