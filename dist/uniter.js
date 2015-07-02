@@ -4581,7 +4581,7 @@ module.exports = {
             },
             'N_EXPRESSION_LEVEL_11': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_10'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_10'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_10'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_10'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_12': {
@@ -4596,7 +4596,7 @@ module.exports = {
             },
             'N_EXPRESSION_LEVEL_14': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_13'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_13'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_13'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/&/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_13'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_15': {
