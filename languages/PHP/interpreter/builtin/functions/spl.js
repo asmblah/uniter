@@ -16,7 +16,8 @@ define([
     'use strict';
 
     return function (internals) {
-        var classAutoloader = internals.classAutoloader;
+        var classAutoloader = internals.classAutoloader,
+            valueFactory = internals.valueFactory;
 
         return {
             'spl_autoload_register': function (callableReference) {
@@ -24,6 +25,14 @@ define([
                     callableValue = isReference ? callableReference.getValue() : callableReference;
 
                 classAutoloader.appendAutoloadCallable(callableValue);
+            },
+            'spl_autoload_unregister': function (callableReference) {
+                var isReference = (callableReference instanceof Variable),
+                    callableValue = isReference ? callableReference.getValue() : callableReference;
+
+                return valueFactory.createBoolean(
+                    classAutoloader.removeAutoloadCallable(callableValue)
+                );
             }
         };
     };
