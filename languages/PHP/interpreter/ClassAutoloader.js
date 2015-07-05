@@ -45,6 +45,11 @@ define([
             if (splStack) {
                 util.each(splStack, function (autoloadCallable) {
                     autoloadCallable.call([autoloader.valueFactory.createString(name)], globalNamespace);
+
+                    if (globalNamespace.getClass(name)) {
+                        // Autoloader has defined the class: no need to call any further autoloaders
+                        return false;
+                    }
                 });
             } else {
                 magicAutoloadFunction = globalNamespace.getOwnFunction(MAGIC_AUTOLOAD_FUNCTION);

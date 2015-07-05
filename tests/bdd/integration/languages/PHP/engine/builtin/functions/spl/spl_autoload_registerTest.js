@@ -129,6 +129,27 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'prevents further autoload functions from being called once one has defined the class': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+function firstAutoloader($className) {
+    class MyClass {}
+    print 'First: ' . $className;
+}
+spl_autoload_register('firstAutoloader');
+function secondAutoloader($className) {
+    class MyClass {}
+    print 'Second: ' . $className;
+}
+spl_autoload_register('secondAutoloader');
+
+new MyClass();
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: 'First: MyClass'
+            },
             'passing the class name argument directly to a print expression': {
                 code: util.heredoc(function () {/*<<<EOS
 <?php
