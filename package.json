@@ -46,7 +46,7 @@
     "chai": "^2.3.0",
     "express": "3.2.x",
     "glob": "^5.0.5",
-    "mocha": "^2.2.4",
+    "mocha": "^2.2.5",
     "mochify": "^2.8.1",
     "phantomjs": "^1.9.16",
     "requirejs": "^2.1.17",
