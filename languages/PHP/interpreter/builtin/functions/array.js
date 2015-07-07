@@ -9,9 +9,11 @@
 
 /*global define */
 define([
+    'js/util',
     'languages/PHP/interpreter/Error',
     'languages/PHP/interpreter/Variable'
 ], function (
+    util,
     PHPError,
     Variable
 ) {
@@ -46,6 +48,27 @@ define([
                 }
 
                 return arrayValue.getCurrentElement().getValue();
+            },
+            'implode': function (glueReference, piecesReference) {
+                var glueValue = glueReference.getValue(),
+                    piecesValue = piecesReference.getValue(),
+                    tmp,
+                    values;
+
+                // For backwards-compatibility, PHP supports receiving args in either order
+                if (glueValue.getType() === 'array') {
+                    tmp = glueValue;
+                    glueValue = piecesValue;
+                    piecesValue = tmp;
+                }
+
+                values = piecesValue.getValues();
+
+                util.each(values, function (value, key) {
+                    values[key] = value.coerceToString().getNative();
+                });
+
+                return valueFactory.createString(values.join(glueValue.getNative()));
             },
             'next': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),

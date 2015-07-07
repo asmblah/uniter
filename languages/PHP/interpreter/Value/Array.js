@@ -240,6 +240,16 @@ define([
             return this.pointer;
         },
 
+        getValues: function () {
+            var values = [];
+
+            util.each(this.value, function (element) {
+                values.push(element.getValue());
+            });
+
+            return values;
+        },
+
         isEqualTo: function (rightValue) {
             return rightValue.isEqualToArray(this);
         },

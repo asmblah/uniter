@@ -163,6 +163,10 @@ define([
             this.callStack.raiseError(PHPError.E_WARNING, 'Illegal offset type');
         },
 
+        coerceToString: function () {
+            return this.callMethod('__toString');
+        },
+
         getClassName: function () {
             return this.classObject.getName();
         },

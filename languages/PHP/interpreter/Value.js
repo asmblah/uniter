@@ -70,6 +70,10 @@ define([
             return value.factory.createFloat(Number(value.value));
         },
 
+        coerceToString: function () {
+            throw new Error('Unimplemented');
+        },
+
         concat: function (rightValue) {
             var leftValue = this;
 
