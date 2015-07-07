@@ -128,6 +128,7 @@ define([
                     namespace = scope.globalNamespace.getDescendant(path);
                 } else {
                     name = name.substr(1);
+                    namespace = scope.globalNamespace;
                 }
             // Check whether the namespace prefix is an alias
             } else {

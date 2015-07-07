@@ -179,6 +179,22 @@ EOS
                 },
                 expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
                 expectedStdout: ''
+            },
+            'attempting to call undefined function in the global namespace with same name as in current': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+namespace My\Stuff;
+function my_func() {}
+
+\my_func();
+EOS
+*/;}), // jshint ignore:line
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Call to undefined function my_func\(\)$/
+                },
+                expectedStderr: 'PHP Fatal error: Call to undefined function my_func()',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
