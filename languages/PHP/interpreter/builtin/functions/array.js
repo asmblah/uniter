@@ -19,11 +19,14 @@ define([
 ) {
     'use strict';
 
+    var IMPLODE = 'implode';
+
     return function (internals) {
         var callStack = internals.callStack,
+            methods,
             valueFactory = internals.valueFactory;
 
-        return {
+        methods = {
             'array_push': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference,
@@ -70,6 +73,9 @@ define([
 
                 return valueFactory.createString(values.join(glueValue.getNative()));
             },
+            'join': function (glueReference, piecesReference) {
+                return methods[IMPLODE](glueReference, piecesReference);
+            },
             'next': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference;
@@ -88,5 +94,7 @@ define([
                 return arrayValue.getCurrentElement().getValue();
             }
         };
+
+        return methods;
     };
 });
