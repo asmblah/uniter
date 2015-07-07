@@ -847,6 +847,11 @@ define([
                     body += interpret(statement);
                 });
 
+                if (node.namespace === '') {
+                    // Global namespace
+                    return body;
+                }
+
                 return 'if (namespaceResult = (function (globalNamespace) {var namespace = globalNamespace.getDescendant(' + JSON.stringify(node.namespace) + '), namespaceScope = tools.createNamespaceScope(namespace);' + body + '}(namespace))) { return namespaceResult; }';
             },
             'N_NEW_EXPRESSION': function (node, interpret) {

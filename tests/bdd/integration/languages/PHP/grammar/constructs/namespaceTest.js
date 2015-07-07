@@ -57,7 +57,7 @@ define([
                     }]
                 }
             },
-            'two level namespace definitions with single expression statements': {
+            'top level namespace definitions with single expression statements': {
                 code: '<?php namespace Here; myFunc(); namespace There; yourFunc();',
                 expectedAST: {
                     name: 'N_PROGRAM',
@@ -78,6 +78,76 @@ define([
                     }, {
                         name: 'N_NAMESPACE_STATEMENT',
                         namespace: 'There',
+                        statements: [{
+                            name: 'N_EXPRESSION_STATEMENT',
+                            expression: {
+                                name: 'N_FUNCTION_CALL',
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'yourFunc'
+                                },
+                                args: []
+                            }
+                        }]
+                    }]
+                }
+            },
+            'top level braced namespace definitions with single expression statements': {
+                code: '<?php namespace Here { myFunc(); } namespace There { yourFunc(); }',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_NAMESPACE_STATEMENT',
+                        namespace: 'Here',
+                        statements: [{
+                            name: 'N_EXPRESSION_STATEMENT',
+                            expression: {
+                                name: 'N_FUNCTION_CALL',
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'myFunc'
+                                },
+                                args: []
+                            }
+                        }]
+                    }, {
+                        name: 'N_NAMESPACE_STATEMENT',
+                        namespace: 'There',
+                        statements: [{
+                            name: 'N_EXPRESSION_STATEMENT',
+                            expression: {
+                                name: 'N_FUNCTION_CALL',
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'yourFunc'
+                                },
+                                args: []
+                            }
+                        }]
+                    }]
+                }
+            },
+            'top level braced global namespace definition with single expression statements': {
+                code: '<?php namespace Here { myFunc(); } namespace { yourFunc(); }',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_NAMESPACE_STATEMENT',
+                        namespace: 'Here',
+                        statements: [{
+                            name: 'N_EXPRESSION_STATEMENT',
+                            expression: {
+                                name: 'N_FUNCTION_CALL',
+                                func: {
+                                    name: 'N_STRING',
+                                    string: 'myFunc'
+                                },
+                                args: []
+                            }
+                        }]
+                    }, {
+                        name: 'N_NAMESPACE_STATEMENT',
+                        namespace: '',
                         statements: [{
                             name: 'N_EXPRESSION_STATEMENT',
                             expression: {

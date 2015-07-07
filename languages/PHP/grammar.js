@@ -704,7 +704,15 @@ define([
                 components: [(/(?!(?:new|use)\b)/i), {optionally: 'T_STRING'}, {oneOrMoreOf: ['T_NS_SEPARATOR', 'T_STRING']}]
             },
             'N_NAMESPACE_STATEMENT': {
+                oneOf: ['N_SEMICOLON_NAMESPACE_STATEMENT', 'N_BRACED_NAMESPACE_STATEMENT']
+            },
+            'N_SEMICOLON_NAMESPACE_STATEMENT': {
+                captureAs: 'N_NAMESPACE_STATEMENT',
                 components: ['T_NAMESPACE', {name: 'namespace', oneOf: ['N_NAMESPACE', 'T_STRING']}, (/;/), {name: 'statements', zeroOrMoreOf: 'N_NAMESPACE_SCOPED_STATEMENT'}]
+            },
+            'N_BRACED_NAMESPACE_STATEMENT': {
+                captureAs: 'N_NAMESPACE_STATEMENT',
+                components: ['T_NAMESPACE', {name: 'namespace', oneOf: ['N_NAMESPACE', 'T_STRING', (/()/)]}, (/\{/), {name: 'statements', zeroOrMoreOf: 'N_NAMESPACE_SCOPED_STATEMENT'}, (/\}/)]
             },
             'N_NAMESPACED_REFERENCE': {
                 captureAs: 'N_STRING',
