@@ -22,6 +22,21 @@ define([
             valueFactory = internals.valueFactory;
 
         return {
+            'array_push': function (arrayReference) {
+                var isReference = (arrayReference instanceof Variable),
+                    arrayValue = isReference ? arrayReference.getValue() : arrayReference,
+                    i,
+                    reference,
+                    value;
+
+                for (i = 1; i < arguments.length; i++) {
+                    reference = arguments[i];
+                    value = (reference instanceof Variable) ? reference.getValue() : reference;
+                    arrayValue.push(value);
+                }
+
+                return valueFactory.createInteger(arrayValue.getLength());
+            },
             'current': function (arrayReference) {
                 var isReference = (arrayReference instanceof Variable),
                     arrayValue = isReference ? arrayReference.getValue() : arrayReference;

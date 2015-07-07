@@ -325,6 +325,15 @@ define([
             throw new PHPFatalError(PHPFatalError.UNSUPPORTED_OPERAND_TYPES);
         },
 
+        push: function (otherValue) {
+            var value = this,
+                index = value.factory.createInteger(value.getLength());
+
+            value.getElementByKey(index).setValue(otherValue);
+
+            return value;
+        },
+
         referToElement: function (key) {
             return 'offset: ' + key;
         },
