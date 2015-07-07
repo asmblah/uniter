@@ -35,6 +35,9 @@ define([
                 pathValue = valueFactory.createString(path);
 
                 return pathValue;
+            },
+            'get_include_path': function () {
+                return valueFactory.createString('.');
             }
         };
     };
