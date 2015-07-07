@@ -27,7 +27,7 @@
   "main": "index",
   "bin": "bin/uniter",
   "scripts": {
-    "build": "mkdir -p ./dist && browserify --standalone=uniter js/main > ./dist/uniter.js",
+    "build": "mkdir -p ./dist && browserify --standalone=uniter js/main | uglifyjs > ./dist/uniter.js",
     "build-demo": "npm run build && mkdir -p ./dist/demo && browserify demo/interactive-main > ./dist/demo/interactive.js",
     "test-browser": "mochify --require ./tests/bdd/harness/common.js --reporter spec --phantomjs ./node_modules/.bin/phantomjs ./tests/bdd/unit/**/*Test.js ./tests/bdd/integration/**/*Test.js",
     "test-browser-watch": "mochify --require ./tests/bdd/harness/common.js --reporter spec --phantomjs ./node_modules/.bin/phantomjs ./tests/bdd/unit/**/*Test.js ./tests/bdd/integration/**/*Test.js -w",
@@ -39,6 +39,7 @@
     "esprima": "^2.2.0",
     "estraverse": "^4.0.0",
     "node-getopt": "0.2.x",
+    "uglify-js": "^2.4.23",
     "unamdify": "^0.1.5"
   },
   "devDependencies": {
