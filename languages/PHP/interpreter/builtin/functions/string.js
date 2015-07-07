@@ -120,6 +120,48 @@ define([
                 }
 
                 return valueFactory.createString(subject);
+            },
+
+            'strtr': function (stringReference) {
+                var from,
+                    to,
+                    i,
+                    replacePairs,
+                    replaceKeys,
+                    replaceValues,
+                    string = stringReference.getValue().getNative();
+
+                if (arguments.length === 2) {
+                    // 2-operand form: second argument is an associative array
+                    // mapping substrings to search for to their replacements
+                    replacePairs = arguments[1].getValue();
+                    replaceKeys = replacePairs.getKeys();
+                    replaceValues = replacePairs.getValues();
+
+                    util.each(replaceKeys, function (key, index) {
+                        var find = key.coerceToString().getNative(),
+                            replace = replaceValues[index].coerceToString().getNative();
+
+                        string = string.replace(
+                            new RegExp(util.regexEscape(find), 'g'),
+                            replace
+                        );
+                    });
+                } else {
+                    // 3-operand form: replace all characters in $from
+                    // with their counterparts at that index in $to
+                    from = arguments[1].getValue().getNative();
+                    to = arguments[2].getValue().getNative();
+
+                    for (i = 0; i < from.length && i < to.length; i++) {
+                        string = string.replace(
+                            new RegExp(util.regexEscape(from.charAt(i)), 'g'),
+                            to.charAt(i)
+                        );
+                    }
+                }
+
+                return valueFactory.createString(string);
             }
         };
     };
