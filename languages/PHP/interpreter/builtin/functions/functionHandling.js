@@ -17,8 +17,10 @@ define(function () {
 
         return {
             'function_exists': function (nameReference) {
+                var name = nameReference.getValue().getNative().replace(/^\\/, '');
+
                 try {
-                    globalNamespace.getFunction(nameReference.getValue().getNative());
+                    globalNamespace.getFunction(name);
                 } catch (e) {
                     return valueFactory.createBoolean(false);
                 }

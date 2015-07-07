@@ -103,6 +103,17 @@ EOS
                 expectedResultType: 'boolean',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'standard global function when prefixed with backslash': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+return function_exists('\strlen');
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: true,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
