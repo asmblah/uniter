@@ -14,6 +14,7 @@ define([
     'js/util',
     './CallStack',
     './ClassAutoloader',
+    './INIState',
     './Namespace',
     './ReferenceFactory',
     'js/Resumable/Resumable',
@@ -26,6 +27,7 @@ define([
     util,
     CallStack,
     ClassAutoloader,
+    INIState,
     Namespace,
     ReferenceFactory,
     Resumable,
@@ -50,6 +52,7 @@ define([
         this.engine = engine;
         this.globalNamespace = globalNamespace;
         this.globalScope = new Scope(callStack, valueFactory, null, null);
+        this.iniState = new INIState();
         this.options = options;
         this.path = null;
         this.referenceFactory = new ReferenceFactory(valueFactory);
@@ -119,6 +122,7 @@ define([
                 callStack: state.callStack,
                 classAutoloader: state.classAutoloader,
                 globalNamespace: globalNamespace,
+                iniState: state.iniState,
                 resumable: state.resumable,
                 stdout: state.stdout,
                 valueFactory: state.valueFactory

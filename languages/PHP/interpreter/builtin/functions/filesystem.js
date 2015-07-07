@@ -17,8 +17,11 @@ define([
 ) {
     'use strict';
 
+    var INCLUDE_PATH_INI = 'include_path';
+
     return function (internals) {
-        var valueFactory = internals.valueFactory;
+        var iniState = internals.iniState,
+            valueFactory = internals.valueFactory;
 
         return {
             'dirname': function (pathReference) {
@@ -37,7 +40,14 @@ define([
                 return pathValue;
             },
             'get_include_path': function () {
-                return valueFactory.createString('.');
+                return valueFactory.createString(iniState.get(INCLUDE_PATH_INI));
+            },
+            'set_include_path': function (newIncludePathReference) {
+                var oldIncludePath = iniState.get(INCLUDE_PATH_INI);
+
+                iniState.set(INCLUDE_PATH_INI, newIncludePathReference.getValue().getNative());
+
+                return valueFactory.createString(oldIncludePath);
             }
         };
     };
