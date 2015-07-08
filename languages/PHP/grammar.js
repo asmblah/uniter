@@ -49,6 +49,11 @@ define([
                 }[chr];
             }
         }],
+        singleQuotedStringEscapeReplacements = [{
+            // Escaped backslash should result in just one backslash
+            pattern: /\\\\/g,
+            replacement: '\\'
+        }],
         buildTree = function (first, rest, buildNode) {
             var i,
                 length,
@@ -107,7 +112,7 @@ define([
             'T_CONST': /const\b/i,
             'T_CONSTANT_ENCAPSED_STRING': {oneOf: [
                 // Single-quoted
-                {what: /'((?:[^']|\\')*)'/, captureIndex: 1},
+                {what: /'((?:[^']|\\')*)'/, captureIndex: 1, replace: singleQuotedStringEscapeReplacements},
                 // Double-quoted
                 {what: /"((?:(?!\$\{?[\$a-z0-9_]+)(?:[^\\"]|\\[\s\S]))*)"/, captureIndex: 1, replace: stringEscapeReplacements}
             ]},

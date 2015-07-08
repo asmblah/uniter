@@ -101,6 +101,17 @@ EOS
                 expectedResultType: 'string',
                 expectedStderr: '',
                 expectedStdout: ''
+            },
+            'escaped backslash should end up as just a single backslash': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+return 'a\\b';
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 'a\\b',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
             }
         }, function (scenario, description) {
             describe(description, function () {
