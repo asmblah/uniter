@@ -182,6 +182,25 @@ define([
                 }
 
                 return valueFactory.createString(string);
+            },
+
+            'substr': function (stringReference, startReference, lengthReference) {
+                var string = stringReference.getValue().getNative(),
+                    start = startReference.getValue().getNative(),
+                    length = lengthReference ? lengthReference.getValue().getNative() : string.length,
+                    substring;
+
+                if (start < 0) {
+                    start = string.length + start;
+                }
+
+                if (length < 0) {
+                    length = string.length - start + length;
+                }
+
+                substring = string.substr(start, length);
+
+                return valueFactory.createString(substring);
             }
         };
     };
