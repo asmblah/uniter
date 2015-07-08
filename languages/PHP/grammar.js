@@ -560,7 +560,7 @@ define([
             },
             'N_EXPRESSION_LEVEL_10': {
                 captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_9'}, {name: 'right', wrapInArray: true, optionally: [{name: 'operator', oneOf: ['T_IS_IDENTICAL', 'T_IS_EQUAL', 'T_IS_NOT_IDENTICAL', 'T_IS_NOT_EQUAL']}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_9'}]}],
+                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_9'}, {name: 'right', wrapInArray: true, optionally: [{name: 'operator', oneOf: ['T_IS_IDENTICAL', 'T_IS_EQUAL', 'T_IS_NOT_IDENTICAL', 'T_IS_NOT_EQUAL']}, {name: 'operand', what: 'N_EXPRESSION'}]}],
                 ifNoMatch: {component: 'right', capture: 'left'}
             },
             'N_EXPRESSION_LEVEL_11': {
@@ -593,11 +593,19 @@ define([
                 components: [{name: 'condition', what: 'N_EXPRESSION_LEVEL_15'}, {name: 'options', zeroOrMoreOf: [(/\?/), {name: 'consequent', what: 'N_EXPRESSION_LEVEL_15'}, (/:/), {name: 'alternate', what: 'N_EXPRESSION_LEVEL_15'}]}],
                 ifNoMatch: {component: 'options', capture: 'condition'}
             },
-            'N_EXPRESSION_LEVEL_17_A': {
-                captureAs: 'N_EXPRESSION',
-                components: [{name: 'left', what: 'N_EXPRESSION_LEVEL_16'}, {name: 'right', zeroOrMoreOf: [{name: 'operator', what: (/[+-]?=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_16'}]}],
-                ifNoMatch: {component: 'right', capture: 'left'}
-            },
+             'N_EXPRESSION_LEVEL_17_A': {
+                 captureAs: 'N_EXPRESSION',
+                 components: {
+                     // Don't allow binary expressions on the left-hand side of assignments
+                     oneOf: [
+                         [
+                             {name: 'left', what: 'N_EXPRESSION_LEVEL_2_B'},
+                             {name: 'right', oneOrMoreOf: [{name: 'operator', what: (/[+-]?=/)}, {name: 'operand', what: 'N_EXPRESSION_LEVEL_17_A'}]}
+                         ],
+                         'N_EXPRESSION_LEVEL_16'
+                     ]
+                 }
+             },
             'N_EXPRESSION_LEVEL_17_B': {
                 captureAs: 'N_PRINT_EXPRESSION',
                 components: {oneOf: [

@@ -577,5 +577,26 @@ define([
                 });
             });
         });
+
+        util.each({
+            'yoda condition with assignment inside operand': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+$class = 'My\Class';
+$assignmentInsideYoda = (false !== $pos = strrpos($class, '\\'));
+
+return $assignmentInsideYoda;
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: true,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
+            });
+        });
     });
 });
