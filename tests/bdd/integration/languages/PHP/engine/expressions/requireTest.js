@@ -134,6 +134,32 @@ EOS
                 expectedResult: null,
                 expectedStderr: '',
                 expectedStdout: 'and welcome back from print_hello.php!'
+            },
+            'requiring a file where include transport resolves promise with assoc. array asynchronously': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+var_dump(require 'get_stuff.php');
+EOS
+*/;}), // jshint ignore:line
+                options: {
+                    include: function (path, promise) {
+                        setTimeout(function () {
+                            promise.resolve('<?php return array("first" => 21, "second" => 23);');
+                        });
+                    }
+                },
+                expectedResult: null,
+                expectedStderr: '',
+                expectedStdout: util.heredoc(function () {/*<<<EOS
+array(2) {
+  ["first"]=>
+  int(21)
+  ["second"]=>
+  int(23)
+}
+
+EOS
+*/;}), // jshint ignore:line
             }
         }, function (scenario, description) {
             describe(description, function () {

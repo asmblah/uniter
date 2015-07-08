@@ -24,20 +24,21 @@ define([
     function Promise() {
         this.mode = PENDING;
         this.thens = [];
-        this.value = null;
+        this.valueArgs = null;
     }
 
     util.extend(Promise.prototype, {
         reject: function (exception) {
-            var promise = this;
+            var args = [].slice.call(arguments),
+                promise = this;
 
             if (promise.mode === PENDING) {
                 promise.mode = REJECTED;
-                promise.value = exception;
+                promise.valueArgs = args;
 
                 util.each(promise.thens, function (callbacks) {
                     if (callbacks.onReject) {
-                        callbacks.onReject(exception);
+                        callbacks.onReject.apply(null, args);
                     }
                 });
             }
@@ -46,15 +47,16 @@ define([
         },
 
         resolve: function (result) {
-            var promise = this;
+            var args = [].slice.call(arguments),
+                promise = this;
 
             if (promise.mode === PENDING) {
                 promise.mode = RESOLVED;
-                promise.value = result;
+                promise.valueArgs = args;
 
                 util.each(promise.thens, function (callbacks) {
                     if (callbacks.onResolve) {
-                        callbacks.onResolve(result);
+                        callbacks.onResolve.apply(null, args);
                     }
                 });
             }
@@ -72,11 +74,11 @@ define([
                 });
             } else if (promise.mode === REJECTED) {
                 if (onReject) {
-                    onReject(promise.value);
+                    onReject.apply(null, promise.valueArgs);
                 }
             } else if (promise.mode === RESOLVED) {
                 if (onResolve) {
-                    onResolve(promise.value);
+                    onResolve.apply(null, promise.valueArgs);
                 }
             }
 

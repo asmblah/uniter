@@ -41,8 +41,8 @@ define([
 
             try {
                 ast = engine.parser.parse(code);
-                engine.interpreter.interpret(ast).done(function (value, type) {
-                    promise.resolve(value, type);
+                engine.interpreter.interpret(ast).done(function (native, type, value) {
+                    promise.resolve(native, type, value);
                 }).fail(function (exception) {
                     promise.reject(exception);
                 });

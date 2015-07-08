@@ -100,9 +100,8 @@ define([
             promise.done(function (contents) {
                 done = true;
 
-                engine.execute(contents, path).done(function (resultNative) {
-                    // TODO: This is inefficient, we should just have access to the Value object
-                    completeWith(valueFactory.coerce(resultNative));
+                engine.execute(contents, path).done(function (resultNative, resultType, resultValue) {
+                    completeWith(resultValue);
                 }).fail(function (exception) {
                     throw exception;
                 });
@@ -229,7 +228,7 @@ define([
                 namespace: globalNamespace
             }
         }).done(function () {
-            promise.resolve(exports.result.getNative(), exports.result.getType());
+            promise.resolve(exports.result.getNative(), exports.result.getType(), exports.result);
         }).fail(function (exception) {
             if (exception instanceof ObjectValue) {
                 // Uncaught PHP Exceptions become E_FATAL errors
