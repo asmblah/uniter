@@ -11,11 +11,13 @@
 define([
     '../../../tools',
     '../../../../tools',
-    'js/util'
+    'js/util',
+    'languages/PHP/interpreter/Error/Fatal'
 ], function (
     engineTools,
     phpTools,
-    util
+    util,
+    PHPFatalError
 ) {
     'use strict';
 
@@ -168,6 +170,24 @@ EOS
                 expectedResultType: 'integer',
                 expectedStderr: '',
                 expectedStdout: 'MyClass'
+            },
+            'should be called when undefined class is used, erroring if class is still not defined by autoloader': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+spl_autoload_register(function ($class) {
+    echo 'autoloading ' . $class;
+});
+
+$object = new TeSt;
+EOS
+*/;}), // jshint ignore:line
+                expectedException: {
+                    instanceOf: PHPFatalError,
+                    match: /^PHP Fatal error: Class 'TeSt' not found$/
+                },
+                // Note additional check for case preservation in class name string passed to autoloader
+                expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
+                expectedStdout: 'autoloading TeSt'
             }
         }, function (scenario, description) {
             describe(description, function () {

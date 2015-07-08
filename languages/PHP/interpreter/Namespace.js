@@ -143,18 +143,11 @@ define([
 
         getClass: function (name) {
             var lowerName = name.toLowerCase(),
-                match = name.match(/^(.*?)\\([^\\]+)$/),
                 namespace = this,
-                path,
-                subNamespace;
+                parsed = namespace.parseClassName(name);
 
-            if (match) {
-                path = match[1];
-                name = match[2];
-
-                subNamespace = namespace.getDescendant(path);
-
-                return subNamespace.getClass(name);
+            if (parsed) {
+                return parsed.namespace.getClass(parsed.name);
             }
 
             if (!hasOwn.call(namespace.classes, lowerName)) {
@@ -280,6 +273,39 @@ define([
             }
 
             return (namespace.parent ? namespace.parent.getPrefix() : '') + namespace.name + '\\';
+        },
+
+        hasClass: function (name) {
+            var lowerName = name.toLowerCase(),
+                namespace = this,
+                parsed = namespace.parseClassName(name);
+
+            if (parsed) {
+                return parsed.namespace.hasClass(parsed.name);
+            }
+
+            return hasOwn.call(namespace.classes, lowerName);
+        },
+
+        parseClassName: function (name) {
+            var match = name.match(/^(.*?)\\([^\\]+)$/),
+                namespace = this,
+                path,
+                subNamespace;
+
+            if (match) {
+                path = match[1];
+                name = match[2];
+
+                subNamespace = namespace.getDescendant(path);
+
+                return {
+                    namespace: subNamespace,
+                    name: name
+                };
+            }
+
+            return null;
         }
     });
 
