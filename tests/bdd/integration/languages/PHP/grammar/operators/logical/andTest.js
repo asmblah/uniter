@@ -57,6 +57,57 @@ define([
                         }
                     }]
                 }
+            },
+            'assigning condition with assignment inside operand to variable': {
+                code: '$result = (first_func() && $pos = second_func());',
+                expectedAST: {
+                    name: 'N_PROGRAM',
+                    statements: [{
+                        name: 'N_EXPRESSION_STATEMENT',
+                        expression: {
+                            name: 'N_EXPRESSION',
+                            left: {
+                                name: 'N_VARIABLE',
+                                variable: 'result'
+                            },
+                            right: [{
+                                operator: '=',
+                                operand: {
+                                    name: 'N_EXPRESSION',
+                                    left: {
+                                        name: 'N_FUNCTION_CALL',
+                                        func: {
+                                            name: 'N_STRING',
+                                            string: 'first_func'
+                                        },
+                                        args: []
+                                    },
+                                    right: [{
+                                        operator: '&&',
+                                        operand: {
+                                            name: 'N_EXPRESSION',
+                                            left: {
+                                                name: 'N_VARIABLE',
+                                                variable: 'pos'
+                                            },
+                                            right: [{
+                                                operator: '=',
+                                                operand: {
+                                                    name: 'N_FUNCTION_CALL',
+                                                    func: {
+                                                        name: 'N_STRING',
+                                                        string: 'second_func'
+                                                    },
+                                                    args: []
+                                                }
+                                            }]
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    }]
+                }
             }
         }, function (scenario, description) {
             describe(description, function () {
