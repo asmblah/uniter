@@ -122,6 +122,26 @@ define([
                 return valueFactory.createString(subject);
             },
 
+            'strrpos': function (haystackReference, needleReference, offsetReference) {
+                var haystack = haystackReference.getValue().getNative(),
+                    needle = needleReference.getValue().getNative(),
+                    offset = offsetReference ? offsetReference.getValue().getNative() : 0,
+                    position;
+
+                // Negative offsets indicate no. of chars at end of haystack to scan
+                if (offset < 0) {
+                    offset = haystack.length + offset;
+                }
+
+                position = haystack.substr(offset).lastIndexOf(needle);
+
+                if (position === -1) {
+                    return valueFactory.createBoolean(false);
+                }
+
+                return valueFactory.createInteger(offset + position);
+            },
+
             'strtr': function (stringReference) {
                 var from,
                     to,
