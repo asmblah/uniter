@@ -164,26 +164,43 @@ define([
         },
 
         getConstant: function (name, usesNamespace) {
-            var lowercaseName,
+            var globalNamespace,
+                lowercaseName,
                 namespace = this;
 
-            if (!hasOwn.call(namespace.constants, name)) {
-                lowercaseName = name.toLowerCase();
-
-                if (!hasOwn.call(namespace.constants, lowercaseName) || !namespace.constants[lowercaseName].caseInsensitive) {
-                    if (usesNamespace) {
-                        throw new PHPFatalError(PHPFatalError.UNDEFINED_CONSTANT, {name: namespace.getPrefix() + name});
-                    } else {
-                        namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
-
-                        return this.valueFactory.createString(name);
-                    }
-                }
-
-                name = lowercaseName;
+            if (hasOwn.call(namespace.constants, name)) {
+                return namespace.constants[name].value;
             }
 
-            return namespace.constants[name].value;
+            lowercaseName = name.toLowerCase();
+
+            if (
+                hasOwn.call(namespace.constants, lowercaseName) &&
+                namespace.constants[lowercaseName].caseInsensitive
+            ) {
+                return namespace.constants[lowercaseName].value;
+            }
+
+            globalNamespace = namespace.getGlobal();
+
+            if (hasOwn.call(globalNamespace.constants, name)) {
+                return globalNamespace.constants[name].value;
+            }
+
+            if (
+                hasOwn.call(globalNamespace.constants, lowercaseName) &&
+                globalNamespace.constants[lowercaseName].caseInsensitive
+            ) {
+                return globalNamespace.constants[lowercaseName].value;
+            }
+
+            if (usesNamespace) {
+                throw new PHPFatalError(PHPFatalError.UNDEFINED_CONSTANT, {name: namespace.getPrefix() + name});
+            } else {
+                namespace.callStack.raiseError(PHPError.E_NOTICE, 'Use of undefined constant ' + name + ' - assumed \'' + name + '\'');
+
+                return this.valueFactory.createString(name);
+            }
         },
 
         getDescendant: function (name) {

@@ -195,6 +195,36 @@ EOS
                 expectedStderr: '',
                 expectedStdout: ''
             },
+            'constant from global namespace should be used if not defined in current one, case-insensitive': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+namespace Test;
+
+define('PLANET', 'Earth', true);
+
+return pLaNET;
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'constant from global namespace should not be used if not defined in current one, case-sensitive': {
+                code: util.heredoc(function () {/*<<<EOS
+<?php
+namespace Test;
+
+define('PLANET', 'Earth', false);
+
+return pLaNET;
+EOS
+*/;}), // jshint ignore:line
+                expectedResult: 'pLaNET',
+                expectedResultType: 'string',
+                expectedStderr: 'PHP Notice: Use of undefined constant pLaNET - assumed \'pLaNET\'\n',
+                expectedStdout: ''
+            },
             'attempting to read undefined constant from global namespace with prefix': {
                 code: util.heredoc(function () {/*<<<EOS
 <?php
