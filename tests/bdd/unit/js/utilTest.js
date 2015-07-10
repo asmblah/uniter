@@ -45,6 +45,92 @@ define([
             });
         });
 
+        describe('each()', function () {
+            beforeEach(function () {
+                this.callback = sinon.stub();
+            });
+
+            describe('when iterating over an array with one element', function () {
+                beforeEach(function () {
+                    this.array = ['hello'];
+                    this.callEach = function () {
+                        util.each(this.array, this.callback);
+                    }.bind(this);
+                });
+
+                it('should call the callback once', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledOnce;
+                });
+
+                it('should use the value as the thisObj', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledOn('hello');
+                });
+
+                it('should pass the value as the first argument', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledWith('hello');
+                });
+
+                it('should pass the index as the second argument', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledWith(sinon.match.any, 0);
+                });
+
+                it('should pass the array as the third argument', function () {
+                    this.callEach();
+
+                    expect(this.callback)
+                        .to.have.been.calledWith(sinon.match.any, sinon.match.any, sinon.match.same(this.array));
+                });
+            });
+
+            describe('when iterating over an object with one property', function () {
+                beforeEach(function () {
+                    this.object = {'myProp': 'my-value'};
+                    this.callEach = function () {
+                        util.each(this.object, this.callback);
+                    }.bind(this);
+                });
+
+                it('should call the callback once', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledOnce;
+                });
+
+                it('should use the value as the thisObj', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledOn('my-value');
+                });
+
+                it('should pass the value as the first argument', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledWith('my-value');
+                });
+
+                it('should pass the property name as the second argument', function () {
+                    this.callEach();
+
+                    expect(this.callback).to.have.been.calledWith(sinon.match.any, 'myProp');
+                });
+
+                it('should pass the object as the third argument', function () {
+                    this.callEach();
+
+                    expect(this.callback)
+                        .to.have.been.calledWith(sinon.match.any, sinon.match.any, sinon.match.same(this.object));
+                });
+            });
+        });
+
         describe('heredoc()', function () {
             util.each([
                 {
