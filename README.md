@@ -1,6 +1,8 @@
 Uniter
 ======
 
+[![Join the chat at https://gitter.im/asmblah/uniter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/asmblah/uniter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
 
 Run PHP client-side in the browser or in Node.js.
