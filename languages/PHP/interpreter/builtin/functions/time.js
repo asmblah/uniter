@@ -19,7 +19,7 @@ define([
 
     return function (internals) {
         var callStack = internals.callStack,
-            resumable = internals.resumable;
+            pausable = internals.pausable;
 
         return {
             'usleep': function (microsecondsReference) {
@@ -32,7 +32,7 @@ define([
                     return;
                 }
 
-                pause = resumable.createPause();
+                pause = pausable.createPause();
 
                 setTimeout(function () {
                     pause.resume();

@@ -10,6 +10,7 @@
 /*global define */
 define([
     './builtin/builtins',
+    'pausable',
     '../util',
     'js/util',
     './CallStack',
@@ -17,12 +18,11 @@ define([
     './INIState',
     './Namespace',
     './ReferenceFactory',
-    'js/Resumable/Resumable',
-    'js/Resumable/Transpiler',
     './Scope',
     './ValueFactory'
 ], function (
     builtinTypes,
+    pausable,
     phpUtil,
     util,
     CallStack,
@@ -30,8 +30,6 @@ define([
     INIState,
     Namespace,
     ReferenceFactory,
-    Resumable,
-    ResumableTranspiler,
     Scope,
     ValueFactory
 ) {
@@ -58,7 +56,7 @@ define([
         this.referenceFactory = new ReferenceFactory(valueFactory);
         this.callStack = callStack;
         this.classAutoloader = classAutoloader;
-        this.resumable = new Resumable(new ResumableTranspiler());
+        this.pausable = pausable.create();
         this.stdout = stdout;
         this.valueFactory = valueFactory;
         this.PHPException = null;
@@ -99,8 +97,8 @@ define([
             return this.referenceFactory;
         },
 
-        getResumable: function () {
-            return this.resumable;
+        getPausable: function () {
+            return this.pausable;
         },
 
         getValueFactory: function () {
@@ -123,7 +121,7 @@ define([
                 classAutoloader: state.classAutoloader,
                 globalNamespace: globalNamespace,
                 iniState: state.iniState,
-                resumable: state.resumable,
+                pausable: state.pausable,
                 stdout: state.stdout,
                 valueFactory: state.valueFactory
             };

@@ -124,7 +124,7 @@ define([
                 return result;
             }
 
-            pause = resumable.createPause();
+            pause = pausable.createPause();
             pause.now();
         }
 
@@ -137,7 +137,7 @@ define([
             callStack = state.getCallStack(),
             globalScope = state.getGlobalScope(),
             options = state.getOptions(),
-            resumable = state.getResumable(),
+            pausable = state.getPausable(),
             tools = {
                 createClosure: function (func, scope) {
                     func.scopeWhenCreated = scope;
@@ -216,7 +216,7 @@ define([
 
         code = 'exports.result = (function () {' + code + '}());';
 
-        resumable.execute(code, {
+        pausable.execute(code, {
             expose: {
                 exports: exports,
                 stdin: stdin,

@@ -39,6 +39,7 @@
     "esprima": "^2.2.0",
     "estraverse": "^4.0.0",
     "node-getopt": "0.2.x",
+    "pausable": "^1.0.0",
     "uglify-js": "^2.4.23",
     "unamdify": "^0.1.5"
   },
