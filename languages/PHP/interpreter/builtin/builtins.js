@@ -11,6 +11,7 @@
 define([
     './functions/array',
     './functions/constant',
+    './constants/filesystem',
     './functions/filesystem',
     './functions/functionHandling',
     './functions/spl',
@@ -24,6 +25,7 @@ define([
 ], function (
     arrayFunctions,
     constantFunctions,
+    filesystemConstants,
     filesystemFunctions,
     functionHandlingFunctions,
     splFunctions,
@@ -44,6 +46,9 @@ define([
             'Exception': Exception,
             'JSObject': JSObject
         },
+        constantGroups: [
+            filesystemConstants
+        ],
         functionGroups: [
             arrayFunctions,
             constantFunctions,

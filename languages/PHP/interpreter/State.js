@@ -143,6 +143,14 @@ define([
 
             globalNamespace.defineClass(name, Class);
         });
+
+        util.each(builtinTypes.constantGroups, function (groupFactory) {
+            var groupBuiltins = groupFactory(internals);
+
+            util.each(groupBuiltins, function (value, name) {
+                globalNamespace.defineConstant(name, state.valueFactory.coerce(value));
+            });
+        });
     }
 
     return PHPState;
