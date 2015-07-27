@@ -9,16 +9,16 @@
 
 /*global define */
 define([
+    'parsing',
     'js/util',
     'js/Engine',
     'js/Interpreter',
-    'js/Parser',
     'js/Stream'
 ], function (
+    parsing,
     util,
     Engine,
     Interpreter,
-    Parser,
     Stream
 ) {
     'use strict';
@@ -36,7 +36,7 @@ define([
                 stdin = new Stream(),
                 stdout = new Stream(),
                 interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr, options),
-                parser = new Parser(language.grammarSpec, stderr),
+                parser = parsing.create(language.grammarSpec, stderr),
                 engine = new Engine(parser, interpreter);
 
             interpreter.setEngine(engine);
@@ -47,7 +47,7 @@ define([
         createParser: function () {
             var language = this,
                 stderr = new Stream(),
-                parser = new Parser(language.grammarSpec, stderr);
+                parser = parsing.create(language.grammarSpec, stderr);
 
             return parser;
         },

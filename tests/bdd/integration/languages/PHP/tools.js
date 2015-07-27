@@ -9,18 +9,18 @@
 
 /*global define */
 define([
+    'parsing',
     'languages/PHP/grammar',
     'languages/PHP/interpreter',
     'js/Engine',
     'js/Interpreter',
-    'js/Parser',
     'js/Stream'
 ], function (
+    parsing,
     phpGrammarSpec,
     phpInterpreterSpec,
     Engine,
     Interpreter,
-    Parser,
     Stream
 ) {
     'use strict';
@@ -32,7 +32,7 @@ define([
                 stdin = new Stream(),
                 stdout = new Stream(),
                 interpreter = tools.createInterpreter(stdin, stdout, stderr, options),
-                parser = new Parser(phpGrammarSpec, stderr),
+                parser = parsing.create(phpGrammarSpec, stderr),
                 engine = new Engine(parser, interpreter);
 
             interpreter.setEngine(engine);
@@ -47,7 +47,7 @@ define([
         createParser: function () {
             var stderr = new Stream();
 
-            return new Parser(phpGrammarSpec, stderr);
+            return parsing.create(phpGrammarSpec, stderr);
         },
 
         getGrammarSpec: function () {
