@@ -9,16 +9,14 @@
 
 /*global define */
 define([
-    'parsing',
-    'languages/PHP/grammar',
     'languages/PHP/interpreter',
+    'phptoast',
     'js/Engine',
     'js/Interpreter',
     'js/Stream'
 ], function (
-    parsing,
-    phpGrammarSpec,
     phpInterpreterSpec,
+    phpToAST,
     Engine,
     Interpreter,
     Stream
@@ -32,7 +30,7 @@ define([
                 stdin = new Stream(),
                 stdout = new Stream(),
                 interpreter = tools.createInterpreter(stdin, stdout, stderr, options),
-                parser = parsing.create(phpGrammarSpec, stderr),
+                parser = phpToAST.create(stderr),
                 engine = new Engine(parser, interpreter);
 
             interpreter.setEngine(engine);
@@ -47,11 +45,7 @@ define([
         createParser: function () {
             var stderr = new Stream();
 
-            return parsing.create(phpGrammarSpec, stderr);
-        },
-
-        getGrammarSpec: function () {
-            return phpGrammarSpec;
+            return phpToAST.create(stderr);
         }
     };
 });

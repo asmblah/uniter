@@ -41,6 +41,8 @@
     "node-getopt": "0.2.x",
     "parsing": "^1.0.3",
     "pausable": "^1.0.0",
+    "phpcommon": "~1.0",
+    "phptoast": "^2.0.0",
     "uglify-js": "^2.4.23",
     "unamdify": "^0.1.5"
   },

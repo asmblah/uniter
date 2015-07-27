@@ -23,10 +23,10 @@ define([
 ) {
     'use strict';
 
-    function Language(name, grammarSpec, interpreterSpec) {
+    function Language(name, parserFactory, interpreterSpec) {
         this.name = name;
-        this.grammarSpec = grammarSpec;
         this.interpreterSpec = interpreterSpec;
+        this.parserFactory = parserFactory;
     }
 
     util.extend(Language.prototype, {
@@ -36,7 +36,7 @@ define([
                 stdin = new Stream(),
                 stdout = new Stream(),
                 interpreter = new Interpreter(language.interpreterSpec, stdin, stdout, stderr, options),
-                parser = parsing.create(language.grammarSpec, stderr),
+                parser = language.parserFactory.create(stderr),
                 engine = new Engine(parser, interpreter);
 
             interpreter.setEngine(engine);
@@ -47,7 +47,7 @@ define([
         createParser: function () {
             var language = this,
                 stderr = new Stream(),
-                parser = parsing.create(language.grammarSpec, stderr);
+                parser = language.parserFactory.create(stderr);
 
             return parser;
         },

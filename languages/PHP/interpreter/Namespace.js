@@ -9,20 +9,21 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     './Class',
-    './Error',
     './Error/Fatal'
 ], function (
+    phpCommon,
     util,
     Class,
-    PHPError,
     PHPFatalError
 ) {
     'use strict';
 
     var IS_STATIC = 'isStatic',
-        hasOwn = {}.hasOwnProperty;
+        hasOwn = {}.hasOwnProperty,
+        PHPError = phpCommon.PHPError;
 
     function Namespace(callStack, valueFactory, classAutoloader, parent, name) {
         this.callStack = callStack;

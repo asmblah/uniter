@@ -9,13 +9,15 @@
 
 /*global define */
 define([
-    'js/util',
-    './Error'
+    'phpcommon',
+    'js/util'
 ], function (
-    util,
-    PHPError
+    phpCommon,
+    util
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     function CallStack(stderr) {
         this.calls = [];
@@ -54,7 +56,7 @@ define([
 
             error = new PHPError(level, message);
 
-            chain.stderr.write(error.getMessage() + '\n');
+            chain.stderr.write(error.message + '\n');
         }
     });
 

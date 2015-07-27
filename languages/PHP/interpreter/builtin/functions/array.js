@@ -9,17 +9,18 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
-    'languages/PHP/interpreter/Error',
     'languages/PHP/interpreter/Variable'
 ], function (
+    phpCommon,
     util,
-    PHPError,
     Variable
 ) {
     'use strict';
 
-    var IMPLODE = 'implode';
+    var IMPLODE = 'implode',
+        PHPError = phpCommon.PHPError;
 
     return function (internals) {
         var callStack = internals.callStack,

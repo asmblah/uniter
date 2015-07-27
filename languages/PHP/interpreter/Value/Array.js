@@ -9,27 +9,28 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     '../Reference/Element',
     '../KeyValuePair',
     '../Reference/Null',
-    '../Error',
     '../Error/Fatal',
     '../Value',
     '../Variable'
 ], function (
+    phpCommon,
     util,
     ElementReference,
     KeyValuePair,
     NullReference,
-    PHPError,
     PHPFatalError,
     Value,
     Variable
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
+    var hasOwn = {}.hasOwnProperty,
+        PHPError = phpCommon.PHPError;
 
     function ArrayValue(factory, callStack, orderedElements, type) {
         var elements = [],

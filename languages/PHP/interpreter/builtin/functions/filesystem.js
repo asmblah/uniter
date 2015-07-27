@@ -9,10 +9,8 @@
 
 /*global define */
 define([
-    'languages/PHP/interpreter/Error',
     'languages/PHP/interpreter/Variable'
 ], function (
-    PHPError,
     Variable
 ) {
     'use strict';

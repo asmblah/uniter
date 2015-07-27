@@ -9,15 +9,16 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Error'
+    'phpcommon',
+    'js/util'
 ], function (
-    util,
-    PHPError
+    phpCommon,
+    util
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
+    var hasOwn = {}.hasOwnProperty,
+        PHPError = phpCommon.PHPError;
 
     function PropertyReference(valueFactory, callStack, objectValue, key) {
         this.objectValue = objectValue;

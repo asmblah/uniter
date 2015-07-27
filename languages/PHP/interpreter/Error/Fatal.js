@@ -9,11 +9,11 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Error',
+    'phpcommon',
+    'js/util'
 ], function (
-    util,
-    PHPError
+    phpCommon,
+    util
 ) {
     'use strict';
 
@@ -37,7 +37,8 @@ define([
             17: 'Interface function ${className}::${methodName}() cannot contain body',
             18: 'Cannot use ${source} as ${alias} because the name is already in use',
             19: 'Call to a member function ${name}() on a non-object'
-        };
+        },
+        PHPError = phpCommon.PHPError;
 
     function PHPFatalError(code, variables) {
         PHPError.call(this, PHPError.E_FATAL, util.stringTemplate(MESSAGE_PREFIXES[code], variables));

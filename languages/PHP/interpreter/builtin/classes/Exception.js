@@ -9,13 +9,15 @@
 
 /*global define */
 define([
-    'js/util',
-    'languages/PHP/interpreter/Error'
+    'phpcommon',
+    'js/util'
 ], function (
-    util,
-    PHPError
+    phpCommon,
+    util
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     return function () {
         function Exception() {

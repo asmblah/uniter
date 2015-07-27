@@ -9,13 +9,15 @@
 
 /*global define */
 define([
-    'js/util',
-    '../Error'
+    'phpcommon',
+    'js/util'
 ], function (
-    util,
-    PHPError
+    phpCommon,
+    util
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     function ElementReference(valueFactory, callStack, arrayValue, key, value) {
         this.arrayValue = arrayValue;

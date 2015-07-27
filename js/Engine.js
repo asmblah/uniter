@@ -10,11 +10,9 @@
 /*global define */
 define([
     'js/util',
-    'js/Exception/Exception',
     'js/Promise'
 ], function (
     util,
-    Exception,
     Promise
 ) {
     'use strict';
@@ -47,9 +45,6 @@ define([
                     promise.reject(exception);
                 });
             } catch (exception) {
-                if (!(exception instanceof Exception)) {
-                    throw exception;
-                }
                 promise.reject(exception);
             }
 

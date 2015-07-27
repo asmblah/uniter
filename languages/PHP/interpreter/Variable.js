@@ -9,15 +9,17 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
-    './Error',
     './Reference/Variable'
 ], function (
+    phpCommon,
     util,
-    PHPError,
     VariableReference
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     function Variable(callStack, valueFactory, name) {
         this.name = name;

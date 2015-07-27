@@ -9,13 +9,13 @@
 
 /*global define */
 define([
-    'languages/PHP/grammar',
     'languages/PHP/interpreter',
+    'phptoast',
     'js/Language',
     'js/Uniter'
 ], function (
-    phpGrammarSpec,
     phpInterpreterSpec,
+    phpToAST,
     Language,
     Uniter
 ) {
@@ -23,7 +23,13 @@ define([
 
     var uniter = new Uniter();
 
-    uniter.registerLanguage(new Language('PHP', phpGrammarSpec, phpInterpreterSpec));
+    uniter.registerLanguage(
+        new Language(
+            'PHP',
+            phpToAST,
+            phpInterpreterSpec
+        )
+    );
 
     return uniter;
 });

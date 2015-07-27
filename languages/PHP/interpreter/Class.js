@@ -9,13 +9,13 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
-    './Error',
     './Error/Fatal',
     './Reference/StaticProperty'
 ], function (
+    phpCommon,
     util,
-    PHPError,
     PHPFatalError,
     StaticPropertyReference
 ) {
@@ -24,7 +24,8 @@ define([
     var IS_STATIC = 'isStatic',
         VALUE = 'value',
         VISIBILITY = 'visibility',
-        hasOwn = {}.hasOwnProperty;
+        hasOwn = {}.hasOwnProperty,
+        PHPError = phpCommon.PHPError;
 
     function Class(valueFactory, callStack, name, constructorName, InternalClass, staticPropertiesData, constants, superClass, interfaceNames, namespaceScope) {
         var classObject = this,

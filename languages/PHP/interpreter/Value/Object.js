@@ -9,25 +9,26 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     '../KeyValuePair',
     '../Reference/Null',
-    '../Error',
     '../Error/Fatal',
     '../Reference/Property',
     '../Value'
 ], function (
+    phpCommon,
     util,
     KeyValuePair,
     NullReference,
-    PHPError,
     PHPFatalError,
     PropertyReference,
     Value
 ) {
     'use strict';
 
-    var hasOwn = {}.hasOwnProperty;
+    var hasOwn = {}.hasOwnProperty,
+        PHPError = phpCommon.PHPError;
 
     function ObjectValue(factory, callStack, object, classObject, id) {
         Value.call(this, factory, callStack, 'object', object);

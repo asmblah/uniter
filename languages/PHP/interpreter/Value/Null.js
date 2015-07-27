@@ -9,15 +9,17 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
-    '../Error',
     '../Value'
 ], function (
+    phpCommon,
     util,
-    PHPError,
     Value
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     function NullValue(factory, callStack) {
         Value.call(this, factory, callStack, 'null', null);

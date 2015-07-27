@@ -13,6 +13,7 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     './interpreter/Call',
     'js/Exception/Exception',
@@ -22,12 +23,12 @@ define([
     './interpreter/NamespaceScope',
     './interpreter/Value/Object',
     './interpreter/Environment',
-    './interpreter/Error',
     './interpreter/Error/Fatal',
     './interpreter/State',
     'js/Promise',
     './interpreter/Scope'
 ], function (
+    phpCommon,
     util,
     Call,
     Exception,
@@ -37,7 +38,6 @@ define([
     NamespaceScope,
     ObjectValue,
     PHPEnvironment,
-    PHPError,
     PHPFatalError,
     PHPState,
     Promise,
@@ -80,7 +80,8 @@ define([
                 '++': 'postIncrement',
                 '--': 'postDecrement'
             }
-        };
+        },
+        PHPError = phpCommon.PHPError;
 
     function evaluateModule(state, code, context, stdin, stdout, stderr) {
         function include(path) {

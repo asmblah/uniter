@@ -11,12 +11,10 @@
 define([
     'js/util',
     'js/Engine',
-    'js/Exception/Exception',
     'js/Language'
 ], function (
     util,
     Engine,
-    Exception,
     Language
 ) {
     'use strict';
@@ -36,7 +34,7 @@ define([
             options = util.extend({}, uniter.options, options);
 
             if (!hasOwn.call(uniter.languages, name)) {
-                throw new Exception('Uniter.createEngine() :: Language with name "' + name + '" is not registered');
+                throw new Error('Uniter.createEngine() :: Language with name "' + name + '" is not registered');
             }
 
             language = uniter.languages[name];
@@ -67,7 +65,7 @@ define([
                 uniter = this;
 
             if (!hasOwn.call(uniter.languages, name)) {
-                throw new Exception('Uniter.createParser() :: Language with name "' + name + '" is not registered');
+                throw new Error('Uniter.createParser() :: Language with name "' + name + '" is not registered');
             }
 
             language = uniter.languages[name];
@@ -80,13 +78,13 @@ define([
                 uniter = this;
 
             if (!(language instanceof Language)) {
-                throw new Exception('Uniter.registerLanguage() :: "language" must be a valid Language object');
+                throw new Error('Uniter.registerLanguage() :: "language" must be a valid Language object');
             }
 
             name = language.getName();
 
             if (hasOwn.call(uniter.languages, name)) {
-                throw new Exception('Uniter.registerLanguage() :: Language with name "' + name + '" is already registered');
+                throw new Error('Uniter.registerLanguage() :: Language with name "' + name + '" is already registered');
             }
 
             uniter.languages[name] = language;

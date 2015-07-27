@@ -9,17 +9,19 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     './Reference/Null',
-    './Error',
     './Error/Fatal'
 ], function (
+    phpCommon,
     util,
     NullReference,
-    PHPError,
     PHPFatalError
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     function Value(factory, callStack, type, value) {
         this.factory = factory;

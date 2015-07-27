@@ -10,16 +10,18 @@
 /*global define */
 define([
     '../tools',
+    'phpcommon',
     '../../tools',
-    'js/util',
-    'languages/PHP/interpreter/Error/Parse'
+    'js/util'
 ], function (
     engineTools,
+    phpCommon,
     phpTools,
-    util,
-    PHPParseError
+    util
 ) {
     'use strict';
+
+    var PHPParseError = phpCommon.PHPParseError;
 
     describe('PHP Engine syntax error handling integration', function () {
         var engine;

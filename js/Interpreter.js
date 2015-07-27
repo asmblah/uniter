@@ -9,11 +9,9 @@
 
 /*global define */
 define([
-    'js/util',
-    'js/Exception/Exception'
+    'js/util'
 ], function (
-    util,
-    Exception
+    util
 ) {
     'use strict';
 
@@ -76,7 +74,7 @@ define([
                 stdout = interpreter.stdout;
 
             if (!hasOwn.call(node, 'name')) {
-                throw new Exception('Interpreter.interpret() :: Invalid AST node provided');
+                throw new Error('Interpreter.interpret() :: Invalid AST node provided');
             }
 
             if (arguments.length === 1) {
@@ -86,7 +84,7 @@ define([
             nodeName = node.name;
 
             if (!hasOwn.call(spec.nodes, nodeName)) {
-                throw new Exception('Interpreter.interpret() :: Spec does not define how to handle node "' + nodeName + '"');
+                throw new Error('Interpreter.interpret() :: Spec does not define how to handle node "' + nodeName + '"');
             }
 
             return spec.nodes[nodeName].call(interpreter, node, function (node, newData) {

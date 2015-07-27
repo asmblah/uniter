@@ -9,13 +9,15 @@
 
 /*global define, setTimeout */
 define([
-    'languages/PHP/interpreter/Error',
+    'phpcommon',
     'languages/PHP/interpreter/Variable'
 ], function (
-    PHPError,
+    phpCommon,
     Variable
 ) {
     'use strict';
+
+    var PHPError = phpCommon.PHPError;
 
     return function (internals) {
         var callStack = internals.callStack,
