@@ -39,24 +39,6 @@ define([
 
             language = uniter.languages[name];
 
-            /*engine.globalScope.define({
-                'const': {
-                    '__WINDOW__': engine.global
-                },
-                'function': {
-                    'fopen': {
-                        args: [{type: 'string'}, {type: 'string'}],
-                        options: {async: true},
-                        handler: function (promise, path, mode) {
-
-                        }
-                    }
-                },
-                'class': {
-                    DOMDocument: DOMDocument
-                }
-            });*/
-
             return language.createEngine(options);
         },
 
