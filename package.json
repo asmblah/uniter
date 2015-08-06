@@ -56,6 +56,7 @@
     "mochify": "^2.8.1",
     "phantomjs": "^1.9.16",
     "requirejs": "^2.1.17",
+    "sinon": "~1.15",
     "sinon-chai": "^2.7.0"
   },
   "browserify": {
@@ -75,10 +76,5 @@
   "engines": {
     "node": ">=0.6"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt"
-    }
-  ]
+  "license": "MIT"
 }
