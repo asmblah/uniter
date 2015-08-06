@@ -147,6 +147,7 @@ util = {
 
         each: function (obj, callback, options) {
             var key,
+                keys,
                 length;
 
             if (!obj || typeof obj !== 'object') {
@@ -162,11 +163,11 @@ util = {
                     }
                 }
             } else {
-                for (key in obj) {
-                    if (hasOwn.call(obj, key)) {
-                        if (callback.call(obj[key], obj[key], key, obj) === false) {
-                            break;
-                        }
+                keys = Object.keys(obj);
+
+                for (key = 0, length = keys.length; key < length; key += 1) { // Keep JSLint happy with '+= 1'
+                    if (callback.call(obj[keys[key]], obj[keys[key]], keys[key], obj) === false) {
+                        break;
                     }
                 }
             }

@@ -9,66 +9,92 @@
 
 /*global define */
 define([
+    'phpcommon',
     'js/util',
     'js/Promise'
 ], function (
+    phpCommon,
     util,
     Promise
 ) {
     'use strict';
 
-    function Engine(parser, interpreter) {
-        this.interpreter = interpreter;
-        this.parser = parser;
+    var PHPError = phpCommon.PHPError;
+
+    function Engine(phpParser, phpToJS, phpRuntime, environment, options) {
+        this.environment = environment;
+        this.options = options || {};
+        this.phpParser = phpParser;
+        this.phpRuntime = phpRuntime;
+        this.phpToJS = phpToJS;
     }
 
     util.extend(Engine.prototype, {
         configure: function (options) {
-            this.interpreter.configure(options);
+            util.extend(this.options, options);
         },
 
         execute: function (code, path) {
-            var ast,
-                engine = this,
-                promise = new Promise();
+            var engine = this,
+                module,
+                options,
+                promise = new Promise(),
+                subEngine,
+                wrapper;
 
-            path = arguments.length > 1 ? path : null;
-
-            engine.parser.getState().setPath(path);
-            engine.interpreter.getState().setPath(path);
+            path = path || null;
+            options = util.extend({}, engine.options, {
+                path: path
+            });
 
             try {
-                ast = engine.parser.parse(code);
-                engine.interpreter.interpret(ast).done(function (native, type, value) {
-                    promise.resolve(native, type, value);
-                }).fail(function (exception) {
-                    promise.reject(exception);
-                });
-            } catch (exception) {
-                promise.reject(exception);
+                code = 'return ' +
+                    engine.phpToJS.transpile(
+                        engine.phpParser.parse(code),
+                        {'bare': true}
+                    ) +
+                    ';';
+            } catch (error) {
+                // Any PHP errors from the transpiler or parser should be written to stdout by default
+                if (path === null && error instanceof PHPError) {
+                    engine.getStderr().write(error.message);
+                }
+
+                return promise.reject(error);
             }
+
+            /*jshint evil: true */
+            wrapper = new Function(code)();
+
+            module = engine.phpRuntime.compile(wrapper);
+            subEngine = module(options, engine.environment);
+
+            subEngine.execute().then(
+                function (resultValue) {
+                    promise.resolve(resultValue.getNative(), resultValue.getType(), resultValue);
+                },
+                function (error) {
+                    promise.reject(error);
+                }
+            );
 
             return promise;
         },
 
         expose: function (object, name) {
-            this.interpreter.expose(object, name);
-        },
-
-        getEnvironment: function () {
-            return this.interpreter.getEnvironment();
+            this.environment.expose(object, name);
         },
 
         getStderr: function () {
-            return this.interpreter.stderr;
+            return this.environment.getStderr();
         },
 
         getStdin: function () {
-            return this.interpreter.stdin;
+            return this.environment.getStdin();
         },
 
         getStdout: function () {
-            return this.interpreter.stdout;
+            return this.environment.getStdout();
         }
     });
 

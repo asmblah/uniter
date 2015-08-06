@@ -10,16 +10,18 @@
 /*global define */
 define([
     './tools',
+    'phpcommon',
     '../../../tools',
-    'js/util',
-    'languages/PHP/interpreter/Error/Fatal'
+    'js/util'
 ], function (
     arithmeticTools,
+    phpCommon,
     phpTools,
-    util,
-    PHPFatalError
+    util
 ) {
     'use strict';
+
+    var PHPFatalError = phpCommon.PHPFatalError;
 
     describe('PHP Engine addition operator integration', function () {
         function check(scenario) {

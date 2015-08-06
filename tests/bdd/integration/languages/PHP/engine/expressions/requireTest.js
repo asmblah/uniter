@@ -10,16 +10,18 @@
 /*global define */
 define([
     '../tools',
+    'phpcommon',
     '../../tools',
-    'js/util',
-    'js/Exception/Exception'
+    'js/util'
 ], function (
     engineTools,
+    phpCommon,
     phpTools,
-    util,
-    Exception
+    util
 ) {
     'use strict';
+
+    var Exception = phpCommon.Exception;
 
     describe('PHP Engine require(...) expression integration', function () {
         var engine;
@@ -62,7 +64,7 @@ EOS
 */;}), // jshint ignore:line
                 expectedException: {
                     instanceOf: Exception,
-                    match: /^include\(\) :: No "include" transport is available for loading the module\.$/
+                    match: /^include\(test_file\.php\) :: No "include" transport is available for loading the module\.$/
                 },
                 expectedStderr: '',
                 expectedStdout: ''

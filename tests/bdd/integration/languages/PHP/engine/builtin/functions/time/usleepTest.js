@@ -17,6 +17,8 @@ define([
 ) {
     'use strict';
 
+    var realSetTimeout = setTimeout;
+
     describe('PHP Engine usleep() builtin function integration', function () {
         var clock,
             engine;
@@ -44,22 +46,28 @@ define([
         }, function (scenario, description) {
             describe(description, function () {
                 if (scenario.expectDone) {
-                    it('should have resolved the promise from .execute()', function () {
-                        var onDone = sinon.spy();
-                        engine.execute('<?php usleep(' + scenario.delay + '); print "done";').done(onDone);
+                    it('should have resolved the promise from .execute()', function (done) {
+                        engine.execute('<?php usleep(' + scenario.delay + '); print "done";').then(function () {
+                            done();
+                        });
 
                         clock.tick(scenario.tick);
-
-                        expect(onDone).to.have.been.calledOnce;
                     });
                 } else {
-                    it('should not have resolved the promise from .execute()', function () {
+                    it('should not have resolved the promise from .execute()', function (done) {
                         var onDone = sinon.spy();
                         engine.execute('<?php usleep(' + scenario.delay + '); print "done";').done(onDone);
 
                         clock.tick(scenario.tick);
 
-                        expect(onDone).not.to.have.been.called;
+                        realSetTimeout(function () {
+                            try {
+                                expect(onDone).not.to.have.been.called;
+                                done();
+                            } catch (error) {
+                                done(error);
+                            }
+                        }, 200);
                     });
                 }
             });

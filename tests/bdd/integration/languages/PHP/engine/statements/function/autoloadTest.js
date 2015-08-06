@@ -10,16 +10,18 @@
 /*global define */
 define([
     '../../tools',
+    'phpcommon',
     '../../../tools',
-    'js/util',
-    'languages/PHP/interpreter/Error/Fatal'
+    'js/util'
 ], function (
     engineTools,
+    phpCommon,
     phpTools,
-    util,
-    PHPFatalError
+    util
 ) {
     'use strict';
+
+    var PHPFatalError = phpCommon.PHPFatalError;
 
     describe('PHP Engine magic "__autoload" function statement integration', function () {
         var engine;

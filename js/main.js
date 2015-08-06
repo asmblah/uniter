@@ -9,27 +9,17 @@
 
 /*global define */
 define([
-    'languages/PHP/interpreter',
+    'phpruntime',
     'phptoast',
-    'js/Language',
+    'phptojs',
     'js/Uniter'
 ], function (
-    phpInterpreterSpec,
+    phpRuntime,
     phpToAST,
-    Language,
+    phpToJS,
     Uniter
 ) {
     'use strict';
 
-    var uniter = new Uniter();
-
-    uniter.registerLanguage(
-        new Language(
-            'PHP',
-            phpToAST,
-            phpInterpreterSpec
-        )
-    );
-
-    return uniter;
+    return new Uniter(phpToAST, phpToJS, phpRuntime);
 });

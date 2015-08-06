@@ -10,18 +10,19 @@
 /*global define */
 define([
     '../tools',
+    'phpcommon',
     '../../tools',
-    'js/util',
-    'languages/PHP/interpreter/Error/Fatal'
+    'js/util'
 ], function (
     engineTools,
+    phpCommon,
     phpTools,
-    util,
-    PHPFatalError
+    util
 ) {
     'use strict';
 
-    var DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
+    var DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/],
+        PHPFatalError = phpCommon.PHPFatalError;
 
     describe('PHP Engine bitwise operators integration', function () {
         var engine;

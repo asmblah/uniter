@@ -9,43 +9,27 @@
 
 /*global define */
 define([
-    'languages/PHP/interpreter',
+    'phpruntime',
     'phptoast',
-    'js/Engine',
-    'js/Interpreter',
-    'js/Stream'
+    'phptojs',
+    'js/Engine'
 ], function (
-    phpInterpreterSpec,
+    phpRuntime,
     phpToAST,
-    Engine,
-    Interpreter,
-    Stream
+    phpToJS,
+    Engine
 ) {
     'use strict';
 
     return {
         createEngine: function (options) {
-            var tools = this,
-                stderr = new Stream(),
-                stdin = new Stream(),
-                stdout = new Stream(),
-                interpreter = tools.createInterpreter(stdin, stdout, stderr, options),
-                parser = phpToAST.create(stderr),
-                engine = new Engine(parser, interpreter);
-
-            interpreter.setEngine(engine);
-
-            return engine;
-        },
-
-        createInterpreter: function (stdin, stdout, stderr, options) {
-            return new Interpreter(phpInterpreterSpec, stdin, stdout, stderr, options);
-        },
-
-        createParser: function () {
-            var stderr = new Stream();
-
-            return phpToAST.create(stderr);
+            return new Engine(
+                phpToAST.create(),
+                phpToJS,
+                phpRuntime,
+                phpRuntime.createEnvironment(),
+                options
+            );
         }
     };
 });
