@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine while statement integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine while statement integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'while loop with bool(false) condition - should never execute body statements': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'while loop with bool(false) condition - should never execute body statements': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     while (false) {
         echo 1;
@@ -46,12 +41,12 @@ define([
     echo 'Done.';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'Done.'
-            },
-            'while loop with counter to only execute 2 times': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'Done.'
+        },
+        'while loop with counter to only execute 2 times': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $a = 0;
 
@@ -60,12 +55,12 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '0,1,'
-            },
-            'while loop with non-boolean falsy value - countdown from 2 to 0': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '0,1,'
+        },
+        'while loop with non-boolean falsy value - countdown from 2 to 0': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $a = 2;
 
@@ -74,14 +69,13 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '2,1,'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '2,1,'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

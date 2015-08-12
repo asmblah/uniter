@@ -7,70 +7,64 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine __DIR__ magic constant expression integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine __DIR__ magic constant expression integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'capturing current file\'s directory from initial program code': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'capturing current file\'s directory from initial program code': {
+            code: nowdoc(function () {/*<<<EOS
 <?php echo __DIR__;
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '(program)'
-            },
-            'capturing current file\'s directory in required module': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '(program)'
+        },
+        'capturing current file\'s directory in required module': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     require_once 'vendor/producer/get_dir.php';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.resolve(util.heredoc(function () {/*<<<EOS
+            options: {
+                include: function (path, promise) {
+                    promise.resolve(nowdoc(function () {/*<<<EOS
 <?php
 
     echo __DIR__;
 
 EOS
 */;})); // jshint ignore:line
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'vendor/producer'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+                }
+            },
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'vendor/producer'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

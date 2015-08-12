@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine closure expression default argument value integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine closure expression default argument value integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'self-executed closure with default argument value': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'self-executed closure with default argument value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $result = 4;
 
@@ -48,14 +43,13 @@ define([
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 10,
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 10,
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

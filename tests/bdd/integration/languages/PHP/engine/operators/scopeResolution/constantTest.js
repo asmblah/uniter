@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    'phpcommon',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine scope resolution operator "::" constant integratio', function () {
-        var engine;
+describe('PHP Engine scope resolution operator "::" constant integratio', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'reading defined class constant from statically specified class name': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'reading defined class constant from statically specified class name': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const CATEGORY = 'Misc';
@@ -49,13 +42,13 @@ define([
     return Stuff::CATEGORY;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Misc',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading defined class constant from instance variable': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Misc',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading defined class constant from instance variable': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const TEST = 'cmp';
@@ -66,30 +59,29 @@ EOS
     return $object::TEST;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'cmp',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'attempting to read undefined class constant from statically specified class name': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'cmp',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'attempting to read undefined class constant from statically specified class name': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Stuff {}
 
     return Stuff::THINGS;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Undefined class constant 'THINGS'$/
-                },
-                expectedStderr: 'PHP Fatal error: Undefined class constant \'THINGS\'',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Undefined class constant 'THINGS'$/
+            },
+            expectedStderr: 'PHP Fatal error: Undefined class constant \'THINGS\'',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

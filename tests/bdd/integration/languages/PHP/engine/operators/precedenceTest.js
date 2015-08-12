@@ -7,45 +7,38 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine operator precedence integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
+describe('PHP Engine operator precedence integration', function () {
+    var engine;
+
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
+
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'addition with subtraction': {
+            code: '<?php return 1 + 2 - 3 + 4;',
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
         }
-
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
-
-        util.each({
-            'addition with subtraction': {
-                code: '<?php return 1 + 2 - 3 + 4;',
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

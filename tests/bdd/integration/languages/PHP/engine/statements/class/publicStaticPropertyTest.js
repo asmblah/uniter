@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine class statement public static property integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine class statement public static property integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'defining static property without initial value and reading from outside class': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'defining static property without initial value and reading from outside class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet;
@@ -45,12 +40,12 @@ define([
     return Animal::$planet;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'defining static property with initial value and reading from outside class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'defining static property with initial value and reading from outside class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $planet = 'Earth';
@@ -59,13 +54,13 @@ EOS
     return Animal::$planet;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'trying to read public static property as instance property from outside class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Earth',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'trying to read public static property as instance property from outside class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static $species = 'Human';
@@ -74,19 +69,18 @@ EOS
     return (new Animal)->species;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: nowdoc(function () {/*<<<EOS
 PHP Strict standards: Accessing static property Animal::$species as non static
 PHP Notice: Undefined property: Animal::$species
 
 EOS
 */;}), // jshint ignore:line
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

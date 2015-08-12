@@ -7,50 +7,44 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine join() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine join() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'joining an array with ($glue, $pieces)': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'joining an array with ($glue, $pieces)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 $myArray = array('a', 'b', 'c');
 return join(':', $myArray);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'a:b:c',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'a:b:c',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

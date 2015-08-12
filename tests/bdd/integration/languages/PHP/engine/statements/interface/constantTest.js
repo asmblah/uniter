@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    'phpcommon',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine interface statement constant integration', function () {
-        var engine;
+describe('PHP Engine interface statement constant integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'defining interface constant with string value': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'defining interface constant with string value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const CATEGORY = 'Misc';
@@ -49,13 +42,13 @@ define([
     return Stuff::CATEGORY;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Misc',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'defining interface constant with integer value': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Misc',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'defining interface constant with integer value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const RANDOM = 3546;
@@ -64,13 +57,13 @@ EOS
     return Stuff::RANDOM;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 3546,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'defining interface constant referencing another using "self::"': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 3546,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'defining interface constant referencing another using "self::"': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Stuff {
         const FIRST = 5;
@@ -80,13 +73,13 @@ EOS
     return Stuff::SECOND;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 5,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading interface constant from a child interface': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 5,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading interface constant from a child interface': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Parent {
         const MYVAL = 4;
@@ -97,45 +90,44 @@ EOS
     return Child::MYVAL;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'attempting to define an instance variable for an interface': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'attempting to define an instance variable for an interface': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private $yours = false;
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Interfaces may not include member variables$/
-                },
-                expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Interfaces may not include member variables$/
             },
-            'attempting to define a static variable for an interface': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
+            expectedStdout: ''
+        },
+        'attempting to define a static variable for an interface': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private static $yours = false;
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Interfaces may not include member variables$/
-                },
-                expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Interfaces may not include member variables$/
+            },
+            expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

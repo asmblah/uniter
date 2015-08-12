@@ -7,50 +7,45 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine array literal expression integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine array literal expression integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'empty array': {
-                code: '<?php var_dump(array());',
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'empty array': {
+            code: '<?php var_dump(array());',
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'array with one auto-indexed element': {
-                code: '<?php var_dump(array(2));',
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+        },
+        'array with one auto-indexed element': {
+            code: '<?php var_dump(array(2));',
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   int(2)
@@ -58,12 +53,12 @@ array(1) {
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'array with one explicitly-indexed element': {
-                code: '<?php var_dump(array(7 => 4));',
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+        },
+        'array with one explicitly-indexed element': {
+            code: '<?php var_dump(array(7 => 4));',
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(1) {
   [7]=>
   int(4)
@@ -71,12 +66,12 @@ array(1) {
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'array with one explicitly-indexed element used as base for next implicitly-indexed element': {
-                code: '<?php var_dump(array(7 => "a", "b"));',
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+        },
+        'array with one explicitly-indexed element used as base for next implicitly-indexed element': {
+            code: '<?php var_dump(array(7 => "a", "b"));',
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(2) {
   [7]=>
   string(1) "a"
@@ -86,11 +81,10 @@ array(2) {
 
 EOS
 */;}) // jshint ignore:line
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

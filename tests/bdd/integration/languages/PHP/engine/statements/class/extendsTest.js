@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine class statement "extends" integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine class statement "extends" integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'empty class that extends a previously defined empty class': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'empty class that extends a previously defined empty class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {}
 
@@ -45,17 +40,17 @@ define([
     var_dump(new Human);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Human)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'calling inherited public method as instance method': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'calling inherited public method as instance method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public function getAge() {
@@ -69,13 +64,13 @@ EOS
     return $human->getAge();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 24,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'calling inherited public method as static method': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 24,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'calling inherited public method as static method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public function getAge() {
@@ -88,14 +83,14 @@ EOS
     return Human::getAge();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 24,
-                expectedResultType: 'integer',
-                // Note that the method's actual owner class Animal is referred to
-                expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically\n',
-                expectedStdout: ''
-            },
-            'reading inherited public property': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 24,
+            expectedResultType: 'integer',
+            // Note that the method's actual owner class Animal is referred to
+            expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically\n',
+            expectedStdout: ''
+        },
+        'reading inherited public property': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public $warmBlooded = true;
@@ -107,15 +102,14 @@ EOS
     return $human->warmBlooded;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: true,
-                expectedResultType: 'boolean',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: true,
+            expectedResultType: 'boolean',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

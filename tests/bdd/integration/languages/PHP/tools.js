@@ -7,29 +7,21 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    'phpruntime',
-    'phptoast',
-    'phptojs',
-    'js/Engine'
-], function (
-    phpRuntime,
-    phpToAST,
-    phpToJS,
-    Engine
-) {
-    'use strict';
+'use strict';
 
-    return {
-        createEngine: function (options) {
-            return new Engine(
-                phpToAST.create(),
-                phpToJS,
-                phpRuntime,
-                phpRuntime.createEnvironment(),
-                options
-            );
-        }
-    };
-});
+var phpRuntime = require('phpruntime'),
+    phpToAST = require('phptoast'),
+    phpToJS = require('phptojs'),
+    Engine = require('../../../../../js/Engine');
+
+module.exports = {
+    createEngine: function (options) {
+        return new Engine(
+            phpToAST.create(),
+            phpToJS,
+            phpRuntime,
+            phpRuntime.createEnvironment(),
+            options
+        );
+    }
+};

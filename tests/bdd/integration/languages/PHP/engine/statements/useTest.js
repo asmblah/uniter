@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine use statement integration', function () {
-        var engine;
+describe('PHP Engine use statement integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'simple use for aliasing standard "stdClass" class when in global namespace scope': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'simple use for aliasing standard "stdClass" class when in global namespace scope': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     use stdClass as EmptyClass;
 
@@ -48,17 +41,17 @@ define([
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(stdClass)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'simple use for aliasing standard "stdClass" class when in a specific namespace scope using unprefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'simple use for aliasing standard "stdClass" class when in a specific namespace scope using unprefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Uniter\Tool;
 
@@ -68,17 +61,17 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(stdClass)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'use for aliasing class from another namespace when in a specific namespace scope using unprefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'use for aliasing class from another namespace when in a specific namespace scope using unprefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Catalogue\Tool;
 
@@ -92,17 +85,17 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Catalogue\Tool\Drill)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'use for aliasing entire other namespace when in a specific namespace scope using unprefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'use for aliasing entire other namespace when in a specific namespace scope using unprefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Catalogue\Tool;
     class Drill {}
@@ -119,9 +112,9 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Catalogue\Tool\Drill)#1 (0) {
 }
 object(Catalogue\Tool\Wrench\Torque)#2 (0) {
@@ -129,9 +122,9 @@ object(Catalogue\Tool\Wrench\Torque)#2 (0) {
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'simple use for aliasing standard "stdClass" class when in a specific namespace scope using prefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'simple use for aliasing standard "stdClass" class when in a specific namespace scope using prefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Uniter\Tool;
 
@@ -141,17 +134,17 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(stdClass)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'use for importing another namespace (with implicit alias name) using prefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'use for importing another namespace (with implicit alias name) using prefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Uniter\Tool;
     class Drill {}
@@ -163,17 +156,17 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Uniter\Tool\Drill)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'use for importing another namespace (with implicit alias name) using unprefixed path': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'use for importing another namespace (with implicit alias name) using unprefixed path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace Uniter\Tool;
     class Drill {}
@@ -187,34 +180,33 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Uniter\Tool\Drill)#1 (0) {
 }
 A tool
 EOS
 */;}) // jshint ignore:line
-            },
-            'multiple identical use statements': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'multiple identical use statements': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     use Uniter\Tool\Stuff;
     use Uniter\Tool\Stuff;
 
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use$/
-                },
-                expectedStderr: 'PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use$/
+            },
+            expectedStderr: 'PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

@@ -7,93 +7,87 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine substr() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine substr() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'from offset 0, no length': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'from offset 0, no length': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return substr('Hello world!', 0);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Hello world!',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'from positive offset, no length': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Hello world!',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'from positive offset, no length': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return substr('Hello there!', 4);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'o there!',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'from positive offset, with length': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'o there!',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'from positive offset, with length': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return substr('Hello there!', 4, 5);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'o the',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'from positive offset, with negative length': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'o the',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'from positive offset, with negative length': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return substr('Hello there!', 3, -4);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'lo th',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'from negative offset, with length': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'lo th',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'from negative offset, with length': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return substr('Hello there!', -4, 2);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'er',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'er',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

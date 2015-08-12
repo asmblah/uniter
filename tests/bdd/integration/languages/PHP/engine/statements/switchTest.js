@@ -7,60 +7,55 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine switch statement integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine switch statement integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'empty switch statement with no cases': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'empty switch statement with no cases': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     switch (null) {}
 
     echo 'done';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'done'
-            },
-            'switch statement with no cases - still check that expression is evaluated': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'done'
+        },
+        'switch statement with no cases - still check that expression is evaluated': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     switch ($a = 21) {}
 
     echo 'a is ' . $a;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'a is 21'
-            },
-            'switch statement with one matched and one unmatched case': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'a is 21'
+        },
+        'switch statement with one matched and one unmatched case': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     switch (7) {
     case 6:
@@ -72,12 +67,12 @@ EOS
     echo ' - done';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'yep, seven - done'
-            },
-            'switch statement with one matched (with break) and two unmatched cases': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'yep, seven - done'
+        },
+        'switch statement with one matched (with break) and two unmatched cases': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     switch (7) {
     case 6:
@@ -92,12 +87,12 @@ EOS
     echo ' - done';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'yep, seven - done'
-            },
-            'switch statement with deliberate fallthrough': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'yep, seven - done'
+        },
+        'switch statement with deliberate fallthrough': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     switch (7) {
     case 6:
@@ -111,12 +106,12 @@ EOS
     echo ' - done';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'yep, seven - yep, eight - done'
-            },
-            'nested switch with break should only break out of the inner switch': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'yep, seven - yep, eight - done'
+        },
+        'nested switch with break should only break out of the inner switch': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -140,12 +135,12 @@ EOS
     echo 'sixth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdfifthsixth'
-            },
-            'nested switch with continue should only "break" out of the inner switch (continue is identical to break)': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdfifthsixth'
+        },
+        'nested switch with continue should only "break" out of the inner switch (continue is identical to break)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -169,12 +164,12 @@ EOS
     echo 'sixth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdfifthsixth'
-            },
-            'switch with one unmatched case and "default" case': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdfifthsixth'
+        },
+        'switch with one unmatched case and "default" case': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -192,12 +187,12 @@ EOS
     echo 'fourth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstthirdfourth'
-            },
-            'switch with two unmatched cases but "default" case falling through to unmatched one': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstthirdfourth'
+        },
+        'switch with two unmatched cases but "default" case falling through to unmatched one': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -216,12 +211,12 @@ EOS
     echo 'fourth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstthirdfourth'
-            },
-            'breaking out of nested switch and its parent with "break"': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstthirdfourth'
+        },
+        'breaking out of nested switch and its parent with "break"': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -247,12 +242,12 @@ EOS
     echo 'sixth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdsixth'
-            },
-            'breaking out of nested switch and its parent with "continue"': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdsixth'
+        },
+        'breaking out of nested switch and its parent with "continue"': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $done = true;
 
@@ -278,14 +273,13 @@ EOS
     echo 'sixth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdsixth'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdsixth'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

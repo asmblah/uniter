@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine class statement integration', function () {
-        var engine;
+describe('PHP Engine class statement integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'class that does not extend or implement': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'class that does not extend or implement': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -49,35 +42,35 @@ define([
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            // Test for pre-hoisting
-            'instantiating a class before its definition outside of any blocks eg. conditionals': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        // Test for pre-hoisting
+        'instantiating a class before its definition outside of any blocks eg. conditionals': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     var_dump(new FunTime);
 
     class FunTime {}
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(FunTime)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'instantiating a class before its definition where definition is inside of a conditional': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'instantiating a class before its definition where definition is inside of a conditional': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     var_dump(new FunTime);
 
@@ -86,15 +79,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'FunTime' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'FunTime' not found$/
             },
-            'instantiating a class before its definition where definition is inside of a function': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+            expectedStdout: ''
+        },
+        'instantiating a class before its definition where definition is inside of a function': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     function doDeclare() {
         var_dump(new FunTime);
@@ -105,15 +98,15 @@ EOS
     doDeclare();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'FunTime' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'FunTime' not found$/
             },
-            'instantiating a class before its definition where definition is inside of a while loop': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+            expectedStdout: ''
+        },
+        'instantiating a class before its definition where definition is inside of a while loop': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $a = 1;
 
@@ -124,15 +117,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'FunTime' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'FunTime' not found$/
             },
-            'instantiating a class before its definition where definition is inside of a foreach loop': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+            expectedStdout: ''
+        },
+        'instantiating a class before its definition where definition is inside of a foreach loop': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $items = array(1);
 
@@ -143,15 +136,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'FunTime' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'FunTime' not found$/
             },
-            'class with one public property': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
+            expectedStdout: ''
+        },
+        'class with one public property': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class OnePub {
         public $prop = 'ok';
@@ -160,9 +153,9 @@ EOS
     var_dump(new OnePub);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(OnePub)#1 (1) {
   ["prop"]=>
   string(2) "ok"
@@ -170,9 +163,9 @@ object(OnePub)#1 (1) {
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'class with one public method': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'class with one public method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function doIt() {
@@ -184,15 +177,15 @@ EOS
     $object->doIt();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 21
 EOS
 */;}) // jshint ignore:line
-            },
-            'class with one public method using $this variable': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'class with one public method using $this variable': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function dumpMe() {
@@ -204,17 +197,17 @@ EOS
     $object->dumpMe();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'class with magic __construct(...) method (PHP5-style constructor)': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'class with magic __construct(...) method (PHP5-style constructor)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Person {
         public $name;
@@ -228,13 +221,13 @@ EOS
     return $me->name;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Dan',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'class with PHP4-style constructor': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Dan',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'class with PHP4-style constructor': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Person {
         public $name;
@@ -248,14 +241,14 @@ EOS
     return $you->name;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Fred',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            // No errors when both used in this order: second method is just treated as a normal method
-            'instantiating class with PHP5-style constructor followed by PHP4-style': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Fred',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        // No errors when both used in this order: second method is just treated as a normal method
+        'instantiating class with PHP5-style constructor followed by PHP4-style': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function __construct() {
@@ -270,12 +263,12 @@ EOS
     new Test();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '1'
-            },
-            'instantiating class with PHP4-style constructor followed by PHP5-style': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '1'
+        },
+        'instantiating class with PHP4-style constructor followed by PHP5-style': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function Test() {
@@ -290,12 +283,12 @@ EOS
     new Test();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
-                expectedStdout: '2'
-            },
-            'unused class with PHP4-style constructor followed by PHP5-style': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
+            expectedStdout: '2'
+        },
+        'unused class with PHP4-style constructor followed by PHP5-style': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function Test() {
@@ -308,12 +301,12 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
-                expectedStdout: ''
-            },
-            'class with magic __invoke(...) method': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
+            expectedStdout: ''
+        },
+        'class with magic __invoke(...) method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class CallableClass {
         public function __invoke() {
@@ -327,15 +320,14 @@ EOS
     return $object();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 7,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: 'in here'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 7,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: 'in here'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

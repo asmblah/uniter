@@ -7,7 +7,11 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global module, require */
 'use strict';
 
-module.exports = require('./dist/uniter');
+var phpRuntime = require('phpruntime'),
+    phpToAST = require('phptoast'),
+    phpToJS = require('phptojs'),
+    Uniter = require('./js/Uniter');
+
+module.exports = new Uniter(phpToAST, phpToJS, phpRuntime);

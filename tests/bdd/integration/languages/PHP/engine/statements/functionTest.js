@@ -7,59 +7,52 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine function definition statement integration', function () {
-        var engine;
+describe('PHP Engine function definition statement integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'simple function call': {
-                code: '<?php function show($string) { echo $string; } show("hello!");',
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'hello!'
-            },
-            'make sure variables defined in inner scopes are not defined in the outer one': {
-                code: '<?php function doSomething() { $a = 1; } echo $a;',
-                expectedResult: null,
-                expectedStderr: 'PHP Notice: Undefined variable: a\n',
-                expectedStdout: ''
-            },
-            'make sure variables defined in outer scopes are not defined in the inner one': {
-                code: '<?php $a = 1; function doSomething() { echo $a; } doSomething();',
-                expectedResult: null,
-                expectedStderr: 'PHP Notice: Undefined variable: a\n',
-                expectedStdout: ''
-            },
-            // Test for pre-hoisting
-            'calling a function before its definition outside of any blocks eg. conditionals': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'simple function call': {
+            code: '<?php function show($string) { echo $string; } show("hello!");',
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'hello!'
+        },
+        'make sure variables defined in inner scopes are not defined in the outer one': {
+            code: '<?php function doSomething() { $a = 1; } echo $a;',
+            expectedResult: null,
+            expectedStderr: 'PHP Notice: Undefined variable: a\n',
+            expectedStdout: ''
+        },
+        'make sure variables defined in outer scopes are not defined in the inner one': {
+            code: '<?php $a = 1; function doSomething() { echo $a; } doSomething();',
+            expectedResult: null,
+            expectedStderr: 'PHP Notice: Undefined variable: a\n',
+            expectedStdout: ''
+        },
+        // Test for pre-hoisting
+        'calling a function before its definition outside of any blocks eg. conditionals': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return add1(7);
 
@@ -68,12 +61,12 @@ define([
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 8,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'calling a function before its definition where definition is inside of a conditional': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 8,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'calling a function before its definition where definition is inside of a conditional': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return add1(7);
 
@@ -84,15 +77,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function add1\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function add1\(\)$/
             },
-            'calling a function before its definition where definition is inside of a function': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
+            expectedStdout: ''
+        },
+        'calling a function before its definition where definition is inside of a function': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     function declareFunc() {
         secondFunc();
@@ -103,15 +96,15 @@ EOS
     declareFunc();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function secondFunc\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function secondFunc()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function secondFunc\(\)$/
             },
-            'calling a function before its definition where definition is inside of a while loop': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined function secondFunc()',
+            expectedStdout: ''
+        },
+        'calling a function before its definition where definition is inside of a while loop': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $a = 1;
 
@@ -122,15 +115,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
             },
-            'calling a function before its definition where definition is inside of a foreach loop': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
+            expectedStdout: ''
+        },
+        'calling a function before its definition where definition is inside of a foreach loop': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $items = array(1);
 
@@ -141,15 +134,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
             },
-            'using the name "tools" for a function argument': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
+            expectedStdout: ''
+        },
+        'using the name "tools" for a function argument': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     function getResult($tools) {
         return $tools->result;
@@ -161,12 +154,12 @@ EOS
     return getResult($tools);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 7,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'function declarations inside conditionals should not be hoisted within the block': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 7,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'function declarations inside conditionals should not be hoisted within the block': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     if (true) {
         doSomething();
@@ -175,15 +168,15 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
             },
-            'attempting to call undefined function in the global namespace with same name as in current': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
+            expectedStdout: ''
+        },
+        'attempting to call undefined function in the global namespace with same name as in current': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 namespace My\Stuff;
 function my_func() {}
@@ -191,17 +184,16 @@ function my_func() {}
 \my_func();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined function my_func\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined function my_func()',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined function my_func\(\)$/
+            },
+            expectedStderr: 'PHP Fatal error: Call to undefined function my_func()',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

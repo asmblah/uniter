@@ -7,39 +7,37 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    'js/util',
-    'js/Engine'
-], function (
-    util,
-    Engine
-) {
-    'use strict';
+'use strict';
 
-    function Uniter(phpToAST, phpToJS, phpRuntime) {
-        this.phpRuntime = phpRuntime;
-        this.phpToAST = phpToAST;
-        this.phpToJS = phpToJS;
-    }
+var _ = require('lodash'),
+    Engine = require('./Engine');
 
-    util.extend(Uniter.prototype, {
-        createEngine: function (name, options) {
-            var uniter = this;
+function Uniter(phpToAST, phpToJS, phpRuntime) {
+    this.phpRuntime = phpRuntime;
+    this.phpToAST = phpToAST;
+    this.phpToJS = phpToJS;
+}
 
-            if (name !== 'PHP') {
-                throw new Error('Uniter.createEngine() :: Only language "PHP" is supported');
-            }
+_.extend(Uniter.prototype, {
+    createEngine: function (name, options) {
+        var uniter = this;
 
-            return new Engine(
-                uniter.phpToAST.create(),
-                uniter.phpToJS,
-                uniter.phpRuntime,
-                uniter.phpRuntime.createEnvironment(),
-                options
-            );
+        if (name !== 'PHP') {
+            throw new Error('Uniter.createEngine() :: Only language "PHP" is supported');
         }
-    });
 
-    return Uniter;
+        return new Engine(
+            uniter.phpToAST.create(),
+            uniter.phpToJS,
+            uniter.phpRuntime,
+            uniter.phpRuntime.createEnvironment(),
+            options
+        );
+    },
+
+    createParser: function () {
+        return this.phpToAST.create();
+    }
 });
+
+module.exports = Uniter;

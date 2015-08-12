@@ -7,45 +7,38 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine get_include_path() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
+describe('PHP Engine get_include_path() builtin function integration', function () {
+    var engine;
+
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
+
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'returns the current directory symbol': {
+            code: '<?php return get_include_path();',
+            expectedResult: '.',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
         }
-
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
-
-        util.each({
-            'returns the current directory symbol': {
-                code: '<?php return get_include_path();',
-                expectedResult: '.',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

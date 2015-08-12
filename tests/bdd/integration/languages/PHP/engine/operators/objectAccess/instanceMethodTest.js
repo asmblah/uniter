@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    'phpcommon',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine object access operator "->" instance method integration', function () {
-        var engine;
+describe('PHP Engine object access operator "->" instance method integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'call to statically referenced instance method returning value': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'call to statically referenced instance method returning value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function getIt() {
@@ -53,12 +46,12 @@ define([
     return $object->getIt();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 7,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'call to statically referenced instance method with argument and returning value': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 7,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'call to statically referenced instance method with argument and returning value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function addOne($number) {
@@ -71,12 +64,12 @@ EOS
     return $object->addOne(3);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'call to dynamically referenced instance method returning value': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'call to dynamically referenced instance method returning value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {
         public function getIt() {
@@ -90,12 +83,12 @@ EOS
     return $object->$methodName();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 6,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'call to undefined method of object when class is in global namespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 6,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'call to undefined method of object when class is in global namespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -104,15 +97,15 @@ EOS
     var_dump($object->iDontExist());
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined method Test::iDontExist()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
             },
-            'call to undefined method of object when class is in a namespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined method Test::iDontExist()',
+            expectedStdout: ''
+        },
+        'call to undefined method of object when class is in a namespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace MyStuff;
 
@@ -123,16 +116,16 @@ EOS
     var_dump($object->iDontExist());
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist\(\)$/
             },
-            // Ensure we use .hasOwnProperty(...) checks internally
-            'call to undefined instance method called "constructor"': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist()',
+            expectedStdout: ''
+        },
+        // Ensure we use .hasOwnProperty(...) checks internally
+        'call to undefined instance method called "constructor"': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Earth {}
 
@@ -141,15 +134,15 @@ EOS
     return $planet->constructor();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
-                },
-                expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
             },
-            'calling static method as instance method': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
+            expectedStdout: ''
+        },
+        'calling static method as instance method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         public static function getPlanet() {
@@ -162,16 +155,15 @@ EOS
     return $animal->getPlanet();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                // Note that no notices are generated at all
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'Earth',
+            expectedResultType: 'string',
+            // Note that no notices are generated at all
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

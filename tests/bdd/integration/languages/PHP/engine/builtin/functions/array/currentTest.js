@@ -7,76 +7,71 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine current() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine current() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('outside foreach (...) {...}', function () {
-            util.each({
-                'getting value of current element of empty array': {
-                    code: '<?php $array = array(); return current($array);',
-                    expectedResult: false,
-                    expectedStderr: '',
-                    expectedStdout: ''
-                },
-                'getting value of current indexed element of 1-element array when just created': {
-                    code: '<?php $array = array(7); return current($array);',
-                    expectedResult: 7,
-                    expectedStderr: '',
-                    expectedStdout: ''
-                },
-                'getting value of current associative element of 1-element array when just created': {
-                    code: '<?php $array = array("a" => "b"); return current($array);',
-                    expectedResult: 'b',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                },
-                'getting value of current indexed element of array when initially empty then setting an element at index > 0': {
-                    code: '<?php $array = array(); $array[7] = 2; return current($array);',
-                    expectedResult: 2,
-                    expectedStderr: '',
-                    expectedStdout: ''
-                },
-                'getting value of current associative element of array when initially empty then set': {
-                    code: '<?php $array = array(); $array["me"] = 3; return current($array);',
-                    expectedResult: 3,
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('outside foreach (...) {...}', function () {
+        _.each({
+            'getting value of current element of empty array': {
+                code: '<?php $array = array(); return current($array);',
+                expectedResult: false,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'getting value of current indexed element of 1-element array when just created': {
+                code: '<?php $array = array(7); return current($array);',
+                expectedResult: 7,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'getting value of current associative element of 1-element array when just created': {
+                code: '<?php $array = array("a" => "b"); return current($array);',
+                expectedResult: 'b',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'getting value of current indexed element of array when initially empty then setting an element at index > 0': {
+                code: '<?php $array = array(); $array[7] = 2; return current($array);',
+                expectedResult: 2,
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'getting value of current associative element of array when initially empty then set': {
+                code: '<?php $array = array(); $array["me"] = 3; return current($array);',
+                expectedResult: 3,
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
+    });
 
-        describe('inside foreach (...) {...}', function () {
-            util.each({
-                'foreach should reset internal pointer but not advance during': {
-                    code: util.heredoc(function () {/*<<<EOS
+    describe('inside foreach (...) {...}', function () {
+        _.each({
+            'foreach should reset internal pointer but not advance during': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     $array = array(1, 2, 3);
     $result = '';
@@ -91,14 +86,13 @@ define([
     return $result;
 EOS
 */;}), // jshint ignore:line
-                    expectedResult: '1,1,1,',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+                expectedResult: '1,1,1,',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
     });

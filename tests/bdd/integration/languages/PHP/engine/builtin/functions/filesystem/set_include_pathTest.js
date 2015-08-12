@@ -7,63 +7,57 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine set_include_path() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine set_include_path() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'updates the include path': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'updates the include path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 set_include_path('my/first/path:my/second/path');
 
 return get_include_path();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'my/first/path:my/second/path',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'returns the previous include path': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'my/first/path:my/second/path',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'returns the previous include path': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 set_include_path('my/first/path');
 return set_include_path('my/second/path');
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'my/first/path',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'my/first/path',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

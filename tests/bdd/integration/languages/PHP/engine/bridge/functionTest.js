@@ -7,89 +7,84 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine function bridge integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine function bridge integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('exposing via global PHP variables', function () {
-            util.each({
-                'copying reference to JS object method as a function and calling standalone': {
-                    code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('exposing via global PHP variables', function () {
+        _.each({
+            'copying reference to JS object method as a function and calling standalone': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 $aFunc = $tools->add;
 return $aFunc(3, 2);
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'tools': {
-                            add: function (num1, num2) {
-                                return num1 + num2;
-                            }
+                expose: {
+                    'tools': {
+                        add: function (num1, num2) {
+                            return num1 + num2;
                         }
-                    },
-                    expectedResult: 5,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                    }
                 },
-                'expose a JS function as a PHP global variable': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 5,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'expose a JS function as a PHP global variable': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 $three = 3;
 return $add(4, $three);
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'add': function (num1, num2) {
-                            return num1 + num2;
-                        }
-                    },
-                    expectedResult: 7,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'add': function (num1, num2) {
+                        return num1 + num2;
+                    }
                 },
-                'passing undefined variable to JS function exposed as PHP global variable': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 7,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'passing undefined variable to JS function exposed as PHP global variable': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 return $getIt($result);
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'getIt': function (anArg) {
-                            return anArg === null;
-                        }
-                    },
-                    expectedResult: true,
-                    expectedResultType: 'boolean',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'getIt': function (anArg) {
+                        return anArg === null;
+                    }
                 },
-                'calling PHP closure referencing "this" object from JS land': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: true,
+                expectedResultType: 'boolean',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'calling PHP closure referencing "this" object from JS land': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 class Stuff {
     public function getIt() {
@@ -106,27 +101,26 @@ $setCallback($stuff->getIt());
 return $getValue();
 EOS
 */;}), // jshint ignore:line
-                    expose: function () {
-                        var callback;
+                expose: function () {
+                    var callback;
 
-                        return {
-                            getValue: function () {
-                                return callback.call({value: 22});
-                            },
-                            setCallback: function (newCallback) {
-                                callback = newCallback;
-                            }
-                        };
-                    },
-                    expectedResult: 22,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+                    return {
+                        getValue: function () {
+                            return callback.call({value: 22});
+                        },
+                        setCallback: function (newCallback) {
+                            callback = newCallback;
+                        }
+                    };
+                },
+                expectedResult: 22,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
     });

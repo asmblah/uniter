@@ -7,69 +7,64 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine __FILE__ magic constant expression integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine __FILE__ magic constant expression integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'capturing current file from initial program code': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'capturing current file from initial program code': {
+            code: nowdoc(function () {/*<<<EOS
 <?php echo __FILE__;
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '(program)'
-            },
-            'capturing current file in required module': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '(program)'
+        },
+        'capturing current file in required module': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     require_once 'get_file.php';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.resolve(util.heredoc(function () {/*<<<EOS
+            options: {
+                include: function (path, promise) {
+                    promise.resolve(nowdoc(function () {/*<<<EOS
 <?php
 
     echo __FILE__;
 
 EOS
 */;})); // jshint ignore:line
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'get_file.php'
+                }
             },
-            // Ensure the state is not shared between main program and required module
-            'capturing current file in main program before and after required module': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'get_file.php'
+        },
+        // Ensure the state is not shared between main program and required module
+        'capturing current file in main program before and after required module': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo __FILE__;
     require_once 'get_file.php';
@@ -77,25 +72,24 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.resolve(util.heredoc(function () {/*<<<EOS
+            options: {
+                include: function (path, promise) {
+                    promise.resolve(nowdoc(function () {/*<<<EOS
 <?php
 
     echo __FILE__;
 
 EOS
 */;})); // jshint ignore:line
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '(program)get_file.php(program)'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+                }
+            },
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '(program)get_file.php(program)'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

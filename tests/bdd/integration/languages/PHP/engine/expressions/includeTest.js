@@ -7,168 +7,160 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var Exception = phpCommon.Exception;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    Exception = phpCommon.Exception;
 
-    describe('PHP Engine include(...) expression integration', function () {
-        var engine;
+describe('PHP Engine include(...) expression integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'including a file where include transport resolves promise with empty string': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'including a file where include transport resolves promise with empty string': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     include 'test_file.php';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.resolve('');
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: ''
+            options: {
+                include: function (path, promise) {
+                    promise.resolve('');
+                }
             },
-            'including a file where no include transport is specified': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'including a file where no include transport is specified': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     include 'test_file.php';
 
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: Exception,
-                    match: /^include\(test_file\.php\) :: No "include" transport is available for loading the module\.$/
-                },
-                expectedStderr: '',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: Exception,
+                match: /^include\(test_file\.php\) :: No "include" transport is available for loading the module\.$/
             },
-            'including a file where include transport resolves promise with code that just contains inline HTML': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'including a file where include transport resolves promise with code that just contains inline HTML': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     include 'print_hello_world.php';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        // Note that the path is passed back for testing
-                        promise.resolve('hello world from ' + path + '!');
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'hello world from print_hello_world.php!'
+            options: {
+                include: function (path, promise) {
+                    // Note that the path is passed back for testing
+                    promise.resolve('hello world from ' + path + '!');
+                }
             },
-            'including a file where include transport resolves promise with code that contains PHP code to echo a string': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'hello world from print_hello_world.php!'
+        },
+        'including a file where include transport resolves promise with code that contains PHP code to echo a string': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     include 'print_hello.php';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        // Note that the path is passed back for testing
-                        promise.resolve('<?php echo "hello from ' + path + '!";');
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'hello from print_hello.php!'
+            options: {
+                include: function (path, promise) {
+                    // Note that the path is passed back for testing
+                    promise.resolve('<?php echo "hello from ' + path + '!";');
+                }
             },
-            'including a file where include transport resolves promise with code that returns a string': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'hello from print_hello.php!'
+        },
+        'including a file where include transport resolves promise with code that returns a string': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     print 'and ' . (include 'print_hello.php') . '!';
 
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        // Note that the path is passed back for testing
-                        promise.resolve('<?php return "welcome back";');
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'and welcome back!'
+            options: {
+                include: function (path, promise) {
+                    // Note that the path is passed back for testing
+                    promise.resolve('<?php return "welcome back";');
+                }
             },
-            'including a file where include transport rejects promise to indicate module "i_do_not_exist.php" cannot be loaded': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'and welcome back!'
+        },
+        'including a file where include transport rejects promise to indicate module "i_do_not_exist.php" cannot be loaded': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     print 'and ' . (include 'i_do_not_exist.php') . '!';
 
     echo 'Done';
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.reject();
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: util.heredoc(function () {/*<<<EOS
+            options: {
+                include: function (path, promise) {
+                    promise.reject();
+                }
+            },
+            expectedResult: null,
+            expectedStderr: nowdoc(function () {/*<<<EOS
 PHP Warning: include(i_do_not_exist.php): failed to open stream: No such file or directory
 PHP Warning: include(): Failed opening 'i_do_not_exist.php' for inclusion
 
 EOS
 */;}), // jshint ignore:line
-                expectedStdout: 'and !Done'
-            },
-            'including a file where include transport rejects promise to indicate module "i_also_do_not_exist.php" cannot be loaded': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStdout: 'and !Done'
+        },
+        'including a file where include transport rejects promise to indicate module "i_also_do_not_exist.php" cannot be loaded': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     print 'and ' . (include 'i_also_do_not_exist.php') . '!';
 
     echo 'Done';
 EOS
 */;}), // jshint ignore:line
-                options: {
-                    include: function (path, promise) {
-                        promise.reject();
-                    }
-                },
-                expectedResult: null,
-                expectedStderr: util.heredoc(function () {/*<<<EOS
+            options: {
+                include: function (path, promise) {
+                    promise.reject();
+                }
+            },
+            expectedResult: null,
+            expectedStderr: nowdoc(function () {/*<<<EOS
 PHP Warning: include(i_also_do_not_exist.php): failed to open stream: No such file or directory
 PHP Warning: include(): Failed opening 'i_also_do_not_exist.php' for inclusion
 
 EOS
 */;}), // jshint ignore:line
-                // Note that the 'Done' echo following the include must be executed, this is only a warning
-                expectedStdout: 'and !Done'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            // Note that the 'Done' echo following the include must be executed, this is only a warning
+            expectedStdout: 'and !Done'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

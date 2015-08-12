@@ -7,57 +7,51 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine filesystem builtin constants integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine filesystem builtin constants integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('DIRECTORY_SEPARATOR', function () {
-            util.each({
-                'should be a forward-slash': {
-                    code: '<?php return DIRECTORY_SEPARATOR;',
-                    expectedResult: '/',
-                    expectedResultType: 'string',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                },
-                'should be case-sensitive': {
-                    code: '<?php return Directory_Separator;',
-                    expectedResult: 'Directory_Separator',
-                    expectedResultType: 'string',
-                    expectedStderr: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('DIRECTORY_SEPARATOR', function () {
+        _.each({
+            'should be a forward-slash': {
+                code: '<?php return DIRECTORY_SEPARATOR;',
+                expectedResult: '/',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'should be case-sensitive': {
+                code: '<?php return Directory_Separator;',
+                expectedResult: 'Directory_Separator',
+                expectedResultType: 'string',
+                expectedStderr: nowdoc(function () {/*<<<EOS
 PHP Notice: Use of undefined constant Directory_Separator - assumed 'Directory_Separator'
 
 EOS
 */;}), // jshint ignore:line
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
     });

@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine class statement constant integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine class statement constant integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'defining class constant with string value': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'defining class constant with string value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const CATEGORY = 'Misc';
@@ -45,13 +40,13 @@ define([
     return Stuff::CATEGORY;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Misc',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'defining class constant with integer value': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Misc',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'defining class constant with integer value': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Stuff {
         const RANDOM = 3546;
@@ -60,13 +55,13 @@ EOS
     return Stuff::RANDOM;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 3546,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading class constant from a child class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 3546,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading class constant from a child class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Parent {
         const MYVAL = 4;
@@ -77,13 +72,13 @@ EOS
     return Child::MYVAL;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'overriding class constant in child class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'overriding class constant in child class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Parent {
         const MYVAL = 4;
@@ -96,15 +91,14 @@ EOS
     return Child::MYVAL;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 7,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 7,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

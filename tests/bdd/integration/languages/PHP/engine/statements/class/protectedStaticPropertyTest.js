@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    'phpcommon',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine class statement protected static property integration', function () {
-        var engine;
+describe('PHP Engine class statement protected static property integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'reading protected static property from instance method': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'reading protected static property from instance method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -53,13 +46,13 @@ define([
     return (new Animal())->getPlanet();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading protected static property from static method': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Earth',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading protected static property from static method': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -72,13 +65,13 @@ EOS
     return Animal::getPlanet();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading protected static property from instance method of derived class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Earth',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading protected static property from instance method of derived class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -93,13 +86,13 @@ EOS
     return (new Chicken())->getPlanet();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'Earth',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'trying to read protected static property from outside class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'Earth',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'trying to read protected static property from outside class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -108,15 +101,15 @@ EOS
     return (new Animal())::$planet;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/
-                },
-                expectedStderr: 'PHP Fatal error: Cannot access protected property Animal::$planet',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/
             },
-            'trying to read protected static property from instance method of another, unrelated class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Cannot access protected property Animal::$planet',
+            expectedStdout: ''
+        },
+        'trying to read protected static property from instance method of another, unrelated class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Animal {
         protected static $planet = 'Earth';
@@ -131,17 +124,16 @@ EOS
     return (new Wall())->getPlanet();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/
-                },
-                expectedStderr: 'PHP Fatal error: Cannot access protected property Animal::$planet',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Cannot access protected property Animal::\$planet$/
+            },
+            expectedStderr: 'PHP Fatal error: Cannot access protected property Animal::$planet',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

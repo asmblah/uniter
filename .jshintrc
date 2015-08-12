@@ -3,6 +3,9 @@
     "curly": true,
     "eqeqeq": true,
     "forin": true,
+    "globals": {
+        "Promise": true
+    },
     "immed": true,
     "indent": 4,
     "latedef": true,

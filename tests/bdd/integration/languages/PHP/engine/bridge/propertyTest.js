@@ -7,78 +7,73 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine object property bridge integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    expect = require('chai').expect,
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine object property bridge integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('exposing as global PHP variables', function () {
-            util.each({
-                'object from JavaScript with inherited instance property': {
-                    code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('exposing as global PHP variables', function () {
+        _.each({
+            'object from JavaScript with inherited instance property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 return $info->planet;
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'info': Object.create({
-                            'planet': 'Earth'
-                        })
-                    },
-                    expectedResult: 'Earth',
-                    expectedResultType: 'string',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'info': Object.create({
+                        'planet': 'Earth'
+                    })
                 },
-                'assigning string value to JavaScript object property': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 'Earth',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'assigning string value to JavaScript object property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
 $document->body->innerHTML = '<p>Earth</p>';
 EOS
 */;}), // jshint ignore:line
-                    expose: function () {
-                        var document = {
-                            body: {}
-                        };
+                expose: function () {
+                    var document = {
+                        body: {}
+                    };
 
-                        this.document = document;
+                    this.document = document;
 
-                        return {
-                            document: document
-                        };
-                    },
-                    expectedResultCallback: function () {
-                        expect(this.document.body.innerHTML).to.equal('<p>Earth</p>');
-                    },
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+                    return {
+                        document: document
+                    };
+                },
+                expectedResultCallback: function () {
+                    expect(this.document.body.innerHTML).to.equal('<p>Earth</p>');
+                },
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
     });

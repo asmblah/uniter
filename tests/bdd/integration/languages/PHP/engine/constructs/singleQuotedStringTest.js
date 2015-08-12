@@ -7,116 +7,110 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine single-quoted string construct integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine single-quoted string construct integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'empty string': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'empty string': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return '';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: '',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'string with plain text': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: '',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'string with plain text': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return 'hello world';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'hello world',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'string with plain text and one dollar sign surrounded by whitespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'hello world',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'string with plain text and one dollar sign surrounded by whitespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return 'this $ is a dollar';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'this $ is a dollar',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'string with plain text and partial variable interpolation surrounded by whitespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'this $ is a dollar',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'string with plain text and partial variable interpolation surrounded by whitespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return 'this ${ should not be interpolated';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'this ${ should not be interpolated',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'string with plain text and full variable interpolation surrounded by whitespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'this ${ should not be interpolated',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'string with plain text and full variable interpolation surrounded by whitespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return 'this ${var} should not be interpolated';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'this ${var} should not be interpolated',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'string with newline escape sequence (should be ignored in single-quoted strings)': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'this ${var} should not be interpolated',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'string with newline escape sequence (should be ignored in single-quoted strings)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     return 'this \n is not a newline';
 EOS
 */;}), // jshint ignore:line
-                // Double-escape the JS backslash escape as we want a literal '\' followed by 'n'
-                expectedResult: 'this \\n is not a newline',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'escaped backslash should end up as just a single backslash': {
-                code: util.heredoc(function () {/*<<<EOS
+            // Double-escape the JS backslash escape as we want a literal '\' followed by 'n'
+            expectedResult: 'this \\n is not a newline',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'escaped backslash should end up as just a single backslash': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return 'a\\b';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'a\\b',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'a\\b',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

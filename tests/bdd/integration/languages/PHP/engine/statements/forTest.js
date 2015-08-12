@@ -7,60 +7,55 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine for loop statement integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine for loop statement integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'for loop that does not even iterate once': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'for loop that does not even iterate once': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     for ($i = 4; $i < 4; $i++) {
         echo $i;
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'for loop that iterates twice': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'for loop that iterates twice': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     for ($i = 0; $i < 2; $i++) {
         echo $i . ',';
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: '0,1,'
-            },
-            '"infinite" for loop should continue iterating until broken out of': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: '0,1,'
+        },
+        '"infinite" for loop should continue iterating until broken out of': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $i = 0;
 
@@ -73,15 +68,14 @@ EOS
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

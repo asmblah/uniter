@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine goto statement integration', function () {
-        var engine;
+describe('PHP Engine goto statement integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'jumping over first echo to second': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'jumping over first echo to second': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto second;
     echo 'first';
@@ -49,12 +42,12 @@ second:
     echo 'second';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'second'
-            },
-            'jumping over unused label': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'second'
+        },
+        'jumping over unused label': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto second;
 
@@ -64,12 +57,12 @@ second:
     echo 'second';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'second'
-            },
-            'jumping over first echo to second inside if with falsy condition': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'second'
+        },
+        'jumping over first echo to second inside if with falsy condition': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto second;
     echo 'first';
@@ -80,12 +73,12 @@ second:
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'second'
-            },
-            'jumping over first echo to third inside if with falsy condition': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'second'
+        },
+        'jumping over first echo to third inside if with falsy condition': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto second;
     echo 'first';
@@ -97,12 +90,12 @@ second:
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'third'
-            },
-            'jumping over first if statement to echo inside second if with falsy condition': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'third'
+        },
+        'jumping over first if statement to echo inside second if with falsy condition': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto end;
     echo 'first';
@@ -118,12 +111,12 @@ end:
     }
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'fourth'
-            },
-            'jumping out of if statement': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'fourth'
+        },
+        'jumping out of if statement': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -139,12 +132,12 @@ end:
     echo 'fifth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondfifth'
-            },
-            'jumping out of first if statement to echo inside second if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondfifth'
+        },
+        'jumping out of first if statement to echo inside second if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -165,12 +158,12 @@ sixth:
     echo 'seventh';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondsixthseventh'
-            },
-            'jumping into nested if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondsixthseventh'
+        },
+        'jumping into nested if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
     goto end;
@@ -190,12 +183,12 @@ end:
     echo 'seventh';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstfifthsixthseventh'
-            },
-            'jumping out of nested if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstfifthsixthseventh'
+        },
+        'jumping out of nested if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -215,12 +208,12 @@ end:
     echo 'seventh';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdseventh'
-            },
-            'jumping out of nested if into nested if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdseventh'
+        },
+        'jumping out of nested if into nested if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -249,12 +242,12 @@ end:
     echo 'eleventh';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstsecondthirdninthtentheleventh'
-            },
-            'jumping backward into if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstsecondthirdninthtentheleventh'
+        },
+        'jumping backward into if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -271,12 +264,12 @@ backward:
     echo 'sixth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstfifththird'
-            },
-            'jumping backward from if into previous if': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstfifththird'
+        },
+        'jumping backward from if into previous if': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -297,12 +290,12 @@ backward:
     echo 'eighth';
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstfifthsixththird'
-            },
-            'reusing label name inside function': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstfifthsixththird'
+        },
+        'reusing label name inside function': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo 'first';
 
@@ -325,12 +318,12 @@ myLabel:
 
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'firstfifthsecondfourthsixtheighth'
-            },
-            'invalid jump into while loop': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'firstfifthsecondfourthsixtheighth'
+        },
+        'invalid jump into while loop': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     goto invalid;
 
@@ -339,17 +332,16 @@ invalid:
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: 'goto' into loop or switch statement is disallowed$/
-                },
-                expectedStderr: 'PHP Fatal error: \'goto\' into loop or switch statement is disallowed',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: 'goto' into loop or switch statement is disallowed$/
+            },
+            expectedStderr: 'PHP Fatal error: \'goto\' into loop or switch statement is disallowed',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine array_push() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine array_push() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'pushing one string onto empty array': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'pushing one string onto empty array': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 $myArray = array();
 $result = array_push($myArray, 'hello');
@@ -44,10 +39,10 @@ var_dump($myArray);
 return $result;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 1, // Should return new length of array
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: 1, // Should return new length of array
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(1) {
   [0]=>
   string(5) "hello"
@@ -55,9 +50,9 @@ array(1) {
 
 EOS
 */;}), // jshint ignore:line
-            },
-            'pushing one string and one number onto existing array': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'pushing one string and one number onto existing array': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 $myArray = array('my-value');
 $result = array_push($myArray, 'world', 123);
@@ -65,10 +60,10 @@ var_dump($myArray);
 return $result;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 3, // Should return new length of array
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: 3, // Should return new length of array
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 array(3) {
   [0]=>
   string(8) "my-value"
@@ -80,11 +75,10 @@ array(3) {
 
 EOS
 */;}), // jshint ignore:line
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

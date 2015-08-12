@@ -9,7 +9,6 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global __dirname, process, require */
 (function () {
     'use strict';
 
@@ -52,7 +51,7 @@
             output();
         }).fail(function (exception) {
             output();
-            process.stderr.write(exception.getMessage());
+            process.stderr.write(exception.message);
             process.stdout.write('\n');
         });
     }

@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    'phpcommon',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine spl_autoload_register() builtin function integration', function () {
-        var engine;
+describe('PHP Engine spl_autoload_register() builtin function integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'registered autoloader function should not be called when no classes are referenced': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'registered autoloader function should not be called when no classes are referenced': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -49,13 +42,13 @@ define([
     return 27;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 27,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'registered autoloader function should not be called when a previously defined class is referenced': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 27,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'registered autoloader function should not be called when a previously defined class is referenced': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -67,13 +60,13 @@ EOS
     return 27;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 27,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'registered autoloader function should be called with the class name when an undefined class is referenced': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 27,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'registered autoloader function should be called with the class name when an undefined class is referenced': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         var_dump($className);
@@ -86,13 +79,13 @@ EOS
     return 27;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 27,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: 'string(12) "MyUndefClass"\n'
-            },
-            'registered autoloader string callable should be called with the class name when an undefined class is referenced': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 27,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: 'string(12) "MyUndefClass"\n'
+        },
+        'registered autoloader string callable should be called with the class name when an undefined class is referenced': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     function myAutoloader($className) {
         var_dump($className);
@@ -107,13 +100,13 @@ EOS
     return 27;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 27,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: 'string(12) "MyUndefClass"\n'
-            },
-            'magic __autoload() function should not be called with the class name when an undefined class is referenced after the SPL stack has been enabled': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 27,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: 'string(12) "MyUndefClass"\n'
+        },
+        'magic __autoload() function should not be called with the class name when an undefined class is referenced after the SPL stack has been enabled': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     function __autoload($className) {
         print 'Wrong';
@@ -128,13 +121,13 @@ EOS
     return 31;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 31,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'prevents further autoload functions from being called once one has defined the class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 31,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'prevents further autoload functions from being called once one has defined the class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 function firstAutoloader($className) {
     class MyClass {}
@@ -150,12 +143,12 @@ spl_autoload_register('secondAutoloader');
 new MyClass();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: 'First: MyClass'
-            },
-            'passing the class name argument directly to a print expression': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: 'First: MyClass'
+        },
+        'passing the class name argument directly to a print expression': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     spl_autoload_register(function ($className) {
         class MyClass {}
@@ -168,13 +161,13 @@ EOS
     return 27;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 27,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: 'MyClass'
-            },
-            'should be called when undefined class is used, erroring if class is still not defined by autoloader': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 27,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: 'MyClass'
+        },
+        'should be called when undefined class is used, erroring if class is still not defined by autoloader': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 spl_autoload_register(function ($class) {
     echo 'autoloading ' . $class;
@@ -183,18 +176,17 @@ spl_autoload_register(function ($class) {
 $object = new TeSt;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'TeSt' not found$/
-                },
-                // Note additional check for case preservation in class name string passed to autoloader
-                expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
-                expectedStdout: 'autoloading TeSt'
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'TeSt' not found$/
+            },
+            // Note additional check for case preservation in class name string passed to autoloader
+            expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
+            expectedStdout: 'autoloading TeSt'
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

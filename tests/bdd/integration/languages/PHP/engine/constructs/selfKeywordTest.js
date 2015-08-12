@@ -7,41 +7,34 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine "self" keyword construct integration', function () {
-        var engine;
+describe('PHP Engine "self" keyword construct integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            // Ensure we don't allow keyword 'self' to be used with variable classes
-            'attempting to read static property from current class via keyword "self" as variable class': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        // Ensure we don't allow keyword 'self' to be used with variable classes
+        'attempting to read static property from current class via keyword "self" as variable class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Earth {
         private static $type = 'planet';
@@ -56,15 +49,15 @@ define([
     return Earth::getType();
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'self' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'self\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'self' not found$/
             },
-            'reading static property from current class via keyword "self"': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'self\' not found',
+            expectedStdout: ''
+        },
+        'reading static property from current class via keyword "self"': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Earth {
         private static $hasHumans = true;
@@ -85,14 +78,14 @@ EOS
     return array(Earth::hasHumans(), Mars::hasHumans());
 EOS
 */;}), // jshint ignore:line
-                expectedResult: [true, false],
-                expectedResultDeep: true,
-                expectedResultType: 'array',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading static property from current class via keyword "self" inside namespace': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: [true, false],
+            expectedResultDeep: true,
+            expectedResultType: 'array',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading static property from current class via keyword "self" inside namespace': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 namespace My\Test\App;
 
@@ -107,28 +100,27 @@ class Earth {
 return Earth::getType();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'planet',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'attempting to access "self::" when no class scope is active': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'planet',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'attempting to access "self::" when no class scope is active': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     echo self::$something;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Cannot access self:: when no class scope is active$/
-                },
-                expectedStderr: 'PHP Fatal error: Cannot access self:: when no class scope is active',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Cannot access self:: when no class scope is active$/
+            },
+            expectedStderr: 'PHP Fatal error: Cannot access self:: when no class scope is active',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

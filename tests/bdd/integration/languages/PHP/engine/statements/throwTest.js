@@ -7,98 +7,90 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine throw statement integration', function () {
-        var engine;
+describe('PHP Engine throw statement integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'throwing newly created instance of Exception (unprefixed class path)': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'throwing newly created instance of Exception (unprefixed class path)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     throw new Exception;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Uncaught exception 'Exception'$/
-                },
-                expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught exception 'Exception'$/
             },
-            'throwing newly created instance of Exception (prefixed class path)': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
+            expectedStdout: ''
+        },
+        'throwing newly created instance of Exception (prefixed class path)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     throw new \Exception;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Uncaught exception 'Exception'$/
-                },
-                expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught exception 'Exception'$/
             },
-            'throwing newly created instance of Exception child class (unprefixed class path)': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
+            expectedStdout: ''
+        },
+        'throwing newly created instance of Exception child class (unprefixed class path)': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class MyException extends Exception {}
 
     throw new MyException;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Uncaught exception 'MyException'$/
-                },
-                expectedStderr: 'PHP Fatal error: Uncaught exception \'MyException\'',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught exception 'MyException'$/
             },
-            'throwing instance of Exception stored in variable': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Uncaught exception \'MyException\'',
+            expectedStdout: ''
+        },
+        'throwing instance of Exception stored in variable': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $exception = new Exception;
 
     throw $exception;
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Uncaught exception 'Exception'$/
-                },
-                expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught exception 'Exception'$/
+            },
+            expectedStderr: 'PHP Fatal error: Uncaught exception \'Exception\'',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

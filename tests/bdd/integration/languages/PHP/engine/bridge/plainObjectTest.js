@@ -7,109 +7,103 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine plain object bridge integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine plain object bridge integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('exposing as global PHP variables', function () {
-            util.each({
-                'plain object with one scalar string property': {
-                    code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('exposing as global PHP variables', function () {
+        _.each({
+            'plain object with one scalar string property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $me->name;
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'me': {
-                            name: 'Dan'
-                        }
-                    },
-                    expectedResult: 'Dan',
-                    expectedResultType: 'string',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'me': {
+                        name: 'Dan'
+                    }
                 },
-                'plain object with one scalar integer property': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 'Dan',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'plain object with one scalar integer property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $me->age;
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'me': {
-                            age: 23
-                        }
-                    },
-                    expectedResult: 23,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'me': {
+                        age: 23
+                    }
                 },
-                'plain object with one array property': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 23,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'plain object with one array property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $order->payments[0];
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'order': {
-                            'payments': [10, 20]
-                        }
-                    },
-                    expectedResult: 10,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'order': {
+                        'payments': [10, 20]
+                    }
                 },
-                'plain object with circular reference': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 10,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'plain object with circular reference': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $order->payments[1];
 EOS
 */;}), // jshint ignore:line
-                    expose: function () {
-                        var order = {
-                                'payments': [10, 20]
-                            };
-
-                        order.myself = order;
-
-                        return {
-                            'order': order
+                expose: function () {
+                    var order = {
+                            'payments': [10, 20]
                         };
-                    },
-                    expectedResult: 20,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario, description) {
-                describe(description, function () {
-                    check(scenario);
-                });
+
+                    order.myself = order;
+
+                    return {
+                        'order': order
+                    };
+                },
+                expectedResult: 20,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario, description) {
+            describe(description, function () {
+                check(scenario);
             });
         });
     });

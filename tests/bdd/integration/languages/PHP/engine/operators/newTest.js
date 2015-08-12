@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    'phpcommon',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine "new <class>" operator integration', function () {
-        var engine;
+describe('PHP Engine "new <class>" operator integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'creating instance of class with no argument brackets': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'creating instance of class with no argument brackets': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -49,17 +42,17 @@ define([
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'creating instance of class from other namespace with no argument brackets': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'creating instance of class from other namespace with no argument brackets': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     namespace You;
     class Test {}
@@ -70,17 +63,17 @@ EOS
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(You\Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'creating instance of class with argument brackets but no arguments': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'creating instance of class with argument brackets but no arguments': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -89,47 +82,47 @@ EOS
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'creating instance of class that does not exist with no argument brackets': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'creating instance of class that does not exist with no argument brackets': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $object = new IDontExist;
 
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class \'IDontExist\' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'IDontExist\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class \'IDontExist\' not found$/
             },
-            'creating instance of class that does not exist in namespace with no argument brackets': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'IDontExist\' not found',
+            expectedStdout: ''
+        },
+        'creating instance of class that does not exist in namespace with no argument brackets': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     $object = new \Creator\Autoload\ClassLoader;
 
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Class 'Creator\\Autoload\\ClassLoader' not found$/
-                },
-                expectedStderr: 'PHP Fatal error: Class \'Creator\\Autoload\\ClassLoader\' not found',
-                expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Class 'Creator\\Autoload\\ClassLoader' not found$/
             },
-            'creating instance of class using variable class': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedStderr: 'PHP Fatal error: Class \'Creator\\Autoload\\ClassLoader\' not found',
+            expectedStdout: ''
+        },
+        'creating instance of class using variable class': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -139,17 +132,17 @@ EOS
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            },
-            'class name should be case insensitive': {
-                code: util.heredoc(function () {/*<<<EOS
+        },
+        'class name should be case insensitive': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Test {}
 
@@ -158,19 +151,18 @@ EOS
     var_dump($object);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: null,
-                expectedStderr: '',
-                expectedStdout: util.heredoc(function () {/*<<<EOS
+            expectedResult: null,
+            expectedStderr: '',
+            expectedStdout: nowdoc(function () {/*<<<EOS
 object(Test)#1 (0) {
 }
 
 EOS
 */;}) // jshint ignore:line
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

@@ -7,68 +7,62 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../tools',
-    '../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine array bridge integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine array bridge integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        describe('exposing as global PHP variables', function () {
-            util.each({
-                'array with one scalar element': {
-                    code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    describe('exposing as global PHP variables', function () {
+        _.each({
+            'array with one scalar element': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $names[0];
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'names': ['Fred']
-                    },
-                    expectedResult: 'Fred',
-                    expectedResultType: 'string',
-                    expectedStderr: '',
-                    expectedStdout: ''
+                expose: {
+                    'names': ['Fred']
                 },
-                'array with one plain object property': {
-                    code: util.heredoc(function () {/*<<<EOS
+                expectedResult: 'Fred',
+                expectedResultType: 'string',
+                expectedStderr: '',
+                expectedStdout: ''
+            },
+            'array with one plain object property': {
+                code: nowdoc(function () {/*<<<EOS
 <?php
     return $orders[0]->amount;
 EOS
 */;}), // jshint ignore:line
-                    expose: {
-                        'orders': [{
-                            'amount': 28
-                        }]
-                    },
-                    expectedResult: 28,
-                    expectedResultType: 'integer',
-                    expectedStderr: '',
-                    expectedStdout: ''
-                }
-            }, function (scenario) {
-                check(scenario);
-            });
+                expose: {
+                    'orders': [{
+                        'amount': 28
+                    }]
+                },
+                expectedResult: 28,
+                expectedResultType: 'integer',
+                expectedStderr: '',
+                expectedStdout: ''
+            }
+        }, function (scenario) {
+            check(scenario);
         });
     });
 });

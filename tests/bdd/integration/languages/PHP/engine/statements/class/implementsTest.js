@@ -7,36 +7,31 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine class statement interface "implements" integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine class statement interface "implements" integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'creating instance of class that implements empty interface': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'creating instance of class that implements empty interface': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface DoesNothing {}
 
@@ -51,13 +46,13 @@ define([
     return $object->getOK();
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'ok',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading constant from interface implemented by class, where interface occurs after class in module': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'ok',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading constant from interface implemented by class, where interface occurs after class in module': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Earth implements Planet {}
 
@@ -68,13 +63,13 @@ EOS
     return Earth::SHAPE;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'sphere',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'reading constant from second interface implemented by class, where interface occurs after class in module': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 'sphere',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'reading constant from second interface implemented by class, where interface occurs after class in module': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     class Earth implements Habitable, Planet {}
 
@@ -87,15 +82,14 @@ EOS
     return Earth::SHAPE;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 'sphere',
-                expectedResultType: 'string',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: 'sphere',
+            expectedResultType: 'string',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

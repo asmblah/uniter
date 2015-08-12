@@ -7,40 +7,33 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../tools',
-    'phpcommon',
-    '../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpCommon,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    var PHPFatalError = phpCommon.PHPFatalError;
+var _ = require('lodash'),
+    engineTools = require('../../tools'),
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
-    describe('PHP Engine interface statement static method integration', function () {
-        var engine;
+describe('PHP Engine interface statement static method integration', function () {
+    var engine;
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
 
-        util.each({
-            'attempting to define an static method with a body for an interface': {
-                code: util.heredoc(function () {/*<<<EOS
+    _.each({
+        'attempting to define an static method with a body for an interface': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
     interface Mine {
         private static function getYours() {
@@ -49,17 +42,16 @@ define([
     }
 EOS
 */;}), // jshint ignore:line
-                expectedException: {
-                    instanceOf: PHPFatalError,
-                    match: /^PHP Fatal error: Interface function Mine::getYours\(\) cannot contain body$/
-                },
-                expectedStderr: 'PHP Fatal error: Interface function Mine::getYours() cannot contain body',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Interface function Mine::getYours\(\) cannot contain body$/
+            },
+            expectedStderr: 'PHP Fatal error: Interface function Mine::getYours() cannot contain body',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });

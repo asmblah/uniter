@@ -7,137 +7,131 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
-/*global define */
-define([
-    '../../../tools',
-    '../../../../tools',
-    'js/util'
-], function (
-    engineTools,
-    phpTools,
-    util
-) {
-    'use strict';
+'use strict';
 
-    describe('PHP Engine strrpos() builtin function integration', function () {
-        var engine;
+var _ = require('lodash'),
+    engineTools = require('../../../tools'),
+    nowdoc = require('nowdoc'),
+    phpTools = require('../../../../tools');
 
-        function check(scenario) {
-            engineTools.check(function () {
-                return {
-                    engine: engine
-                };
-            }, scenario);
-        }
+describe('PHP Engine strrpos() builtin function integration', function () {
+    var engine;
 
-        beforeEach(function () {
-            engine = phpTools.createEngine();
-        });
+    function check(scenario) {
+        engineTools.check(function () {
+            return {
+                engine: engine
+            };
+        }, scenario);
+    }
 
-        util.each({
-            'finding only occurrence of character in string, no offset': {
-                code: util.heredoc(function () {/*<<<EOS
+    beforeEach(function () {
+        engine = phpTools.createEngine();
+    });
+
+    _.each({
+        'finding only occurrence of character in string, no offset': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abc', 'a');
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 0,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, no offset': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 0,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, no offset': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b');
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, positive offset is before occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, positive offset is before occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b', 2);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, positive offset is at occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, positive offset is at occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b', 4);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, positive offset is after occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, positive offset is after occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccbaaa', 'b', 5);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: false,
-                expectedResultType: 'boolean',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, negative offset is before occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: false,
+            expectedResultType: 'boolean',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, negative offset is before occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b', -3);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, negative offset is at occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, negative offset is at occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b', -2);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: 4,
-                expectedResultType: 'integer',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding last occurrence of character in string, negative offset is after occurrence': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: 4,
+            expectedResultType: 'integer',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding last occurrence of character in string, negative offset is after occurrence': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('abccba', 'b', -1);
 EOS
 */;}), // jshint ignore:line
-                expectedResult: false,
-                expectedResultType: 'boolean',
-                expectedStderr: '',
-                expectedStdout: ''
-            },
-            'finding character in empty string, no offset': {
-                code: util.heredoc(function () {/*<<<EOS
+            expectedResult: false,
+            expectedResultType: 'boolean',
+            expectedStderr: '',
+            expectedStdout: ''
+        },
+        'finding character in empty string, no offset': {
+            code: nowdoc(function () {/*<<<EOS
 <?php
 return strrpos('', 'a');
 EOS
 */;}), // jshint ignore:line
-                expectedResult: false,
-                expectedResultType: 'boolean',
-                expectedStderr: '',
-                expectedStdout: ''
-            }
-        }, function (scenario, description) {
-            describe(description, function () {
-                check(scenario);
-            });
+            expectedResult: false,
+            expectedResultType: 'boolean',
+            expectedStderr: '',
+            expectedStdout: ''
+        }
+    }, function (scenario, description) {
+        describe(description, function () {
+            check(scenario);
         });
     });
 });
