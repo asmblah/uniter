@@ -39,9 +39,9 @@
     "estraverse": "^4.0.0",
     "lodash": "^3.10.0",
     "node-getopt": "0.2.x",
-    "pausable": "~1.1",
+    "pausable": "~3.0",
     "phpcommon": "~1.2",
-    "phpruntime": "~2.3",
+    "phpruntime": "~2.5",
     "phptoast": "~2.1",
     "phptojs": "~1.2",
     "uglify-js": "^2.4.23"

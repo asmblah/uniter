@@ -126,7 +126,7 @@ EOS
 NULL
 
 EOS
-*/;}), // jshint ignore:line
+*/;}) // jshint ignore:line
                 }
         }, function (scenario, description) {
             describe(description, function () {
