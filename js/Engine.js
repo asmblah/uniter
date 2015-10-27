@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     phpCommon = require('phpcommon'),
     PHPError = phpCommon.PHPError,
     Promise = require('./Promise');

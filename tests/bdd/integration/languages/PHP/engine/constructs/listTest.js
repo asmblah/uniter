@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     engineTools = require('../tools'),
     phpTools = require('../../tools');
 

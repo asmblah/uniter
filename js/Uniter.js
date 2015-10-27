@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     Engine = require('./Engine');
 
 function Uniter(phpToAST, phpToJS, phpRuntime) {

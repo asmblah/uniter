@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     slice = [].slice,
     util = require('util'),
     SimplePromise = require('./SimplePromise'),

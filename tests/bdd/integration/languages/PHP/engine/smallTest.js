@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     engineTools = require('./tools'),
     expect = require('chai').expect,
     phpTools = require('../tools');

@@ -9,7 +9,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object', 'string'],
     engineTools = require('../../tools'),
     hasOwn = {}.hasOwnProperty;

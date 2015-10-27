@@ -11,7 +11,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
+var _ = require('microdash'),
     PENDING = 0,
     REJECTED = 1,
     RESOLVED = 2;
