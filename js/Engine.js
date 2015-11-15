@@ -10,7 +10,9 @@
 'use strict';
 
 var _ = require('microdash'),
+    hasOwn = {}.hasOwnProperty,
     phpCommon = require('phpcommon'),
+    INCLUDE = 'include',
     PHPError = phpCommon.PHPError,
     Promise = require('./Promise');
 
@@ -35,18 +37,52 @@ _.extend(Engine.prototype, {
             subEngine,
             wrapper;
 
-        path = path || null;
-        options = _.extend({}, engine.options, {
-            path: path
-        });
+        function transpile(code, path) {
+            engine.phpParser.getState().setPath(path || null);
 
-        try {
             code = 'return ' +
                 engine.phpToJS.transpile(
                     engine.phpParser.parse(code),
                     {'bare': true}
                 ) +
                 ';';
+
+            /*jshint evil: true */
+            wrapper = new Function(code)();
+
+            return engine.phpRuntime.compile(wrapper);
+        }
+
+        path = path || null;
+        options = _.extend({}, engine.options, {
+            path: path
+        });
+
+        // Install an include transport wrapper for transports that return PHP code strings
+        if (hasOwn.call(options, INCLUDE)) {
+            options[INCLUDE] = (function (configuredInclude) {
+                return function (path, promise, callerPath) {
+                    var subPromise = {
+                            reject: promise.reject,
+                            resolve: function (result) {
+                                // Support include transports that return PHP code strings
+                                // by transpiling them before passing back to the core
+                                if (_.isString(result)) {
+                                    promise.resolve(transpile(result, path));
+                                    return;
+                                }
+
+                                promise.resolve(result);
+                            }
+                        };
+
+                    configuredInclude(path, subPromise, callerPath);
+                };
+            }(options[INCLUDE]));
+        }
+
+        try {
+            module = transpile(code, path);
         } catch (error) {
             // Any PHP errors from the transpiler or parser should be written to stdout by default
             if (path === null && error instanceof PHPError) {
@@ -56,10 +92,6 @@ _.extend(Engine.prototype, {
             return promise.reject(error);
         }
 
-        /*jshint evil: true */
-        wrapper = new Function(code)();
-
-        module = engine.phpRuntime.compile(wrapper);
         subEngine = module(options, engine.environment);
 
         subEngine.execute().then(
