@@ -61,7 +61,7 @@ _.extend(Engine.prototype, {
         // Install an include transport wrapper for transports that return PHP code strings
         if (hasOwn.call(options, INCLUDE)) {
             options[INCLUDE] = (function (configuredInclude) {
-                return function (path, promise, callerPath) {
+                return function (path, promise, callerPath, valueFactory) {
                     var subPromise = {
                             reject: promise.reject,
                             resolve: function (result) {
@@ -76,7 +76,7 @@ _.extend(Engine.prototype, {
                             }
                         };
 
-                    configuredInclude(path, subPromise, callerPath);
+                    configuredInclude(path, subPromise, callerPath, valueFactory);
                 };
             }(options[INCLUDE]));
         }
