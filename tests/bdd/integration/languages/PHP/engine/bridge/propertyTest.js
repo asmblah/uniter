@@ -56,7 +56,10 @@ EOS
 */;}), // jshint ignore:line
                 expose: function () {
                     var document = {
-                        body: {}
+                        toForceObjectCast: function () {},
+                        body: {
+                            toForceObjectCast: function () {}
+                        }
                     };
 
                     this.document = document;
