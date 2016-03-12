@@ -39,6 +39,7 @@ EOS
 */;}), // jshint ignore:line
                 expose: {
                     'me': {
+                        toForceObjectCast: function () {},
                         name: 'Dan'
                     }
                 },
@@ -55,6 +56,7 @@ EOS
 */;}), // jshint ignore:line
                 expose: {
                     'me': {
+                        toForceObjectCast: function () {},
                         age: 23
                     }
                 },
@@ -71,6 +73,7 @@ EOS
 */;}), // jshint ignore:line
                 expose: {
                     'order': {
+                        toForceObjectCast: function () {},
                         'payments': [10, 20]
                     }
                 },
@@ -87,6 +90,7 @@ EOS
 */;}), // jshint ignore:line
                 expose: function () {
                     var order = {
+                            toForceObjectCast: function () {},
                             'payments': [10, 20]
                         };
 

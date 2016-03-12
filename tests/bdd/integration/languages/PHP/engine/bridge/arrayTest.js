@@ -53,6 +53,7 @@ EOS
 */;}), // jshint ignore:line
                 expose: {
                     'orders': [{
+                        toForceObjectCast: function () {},
                         'amount': 28
                     }]
                 },
