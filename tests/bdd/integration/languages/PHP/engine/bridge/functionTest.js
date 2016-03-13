@@ -80,7 +80,9 @@ EOS
                 },
                 expectedResult: true,
                 expectedResultType: 'boolean',
-                expectedStderr: '',
+                // Notice should be displayed because JSObject-wrapped functions
+                // always auto-unwrap any arguments, at which point the variable will be read
+                expectedStderr: 'PHP Notice: Undefined variable: result\n',
                 expectedStdout: ''
             },
             'calling PHP closure referencing "this" object from JS land': {
