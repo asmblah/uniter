@@ -42,8 +42,8 @@
     "pausable": "~4",
     "phpcommon": "~1",
     "phpruntime": "~5",
-    "phptoast": "~3",
-    "phptojs": "~3",
+    "phptoast": "~4",
+    "phptojs": "~4",
     "uglify-js": "^2.4.23"
   },
   "devDependencies": {
