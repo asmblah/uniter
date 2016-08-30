@@ -27,6 +27,7 @@ Uniter is split into several NPM packages, each with a separate repository:
 | [`phptojs`](https://github.com/uniter/phptojs) | [![npm](https://img.shields.io/npm/v/phptojs.svg?maxAge=2592000)](https://www.npmjs.com/package/phptojs) | [![Dependency Status](https://david-dm.org/uniter/phptojs.svg)](https://david-dm.org/uniter/phptojs) |
 | [`phpcore`](https://github.com/uniter/phpcore) | [![npm](https://img.shields.io/npm/v/phpcore.svg?maxAge=2592000)](https://www.npmjs.com/package/phpcore) | [![Dependency Status](https://david-dm.org/uniter/phpcore.svg)](https://david-dm.org/uniter/phpcore) |
 | [`phpruntime`](https://github.com/uniter/phpruntime) | [![npm](https://img.shields.io/npm/v/phpruntime.svg?maxAge=2592000)](https://www.npmjs.com/package/phpruntime) | [![Dependency Status](https://david-dm.org/uniter/phpruntime.svg)](https://david-dm.org/uniter/phpruntime) |
+| [`phpcommon`](https://github.com/uniter/phpcommon) | [![npm](https://img.shields.io/npm/v/phpcommon.svg?maxAge=2592000)](https://www.npmjs.com/package/phpcommon) | [![Dependency Status](https://david-dm.org/uniter/phpcommon.svg)](https://david-dm.org/uniter/phpcommon) |
 | [`phpify`](https://github.com/uniter/phpify) | [![npm](https://img.shields.io/npm/v/phpify.svg?maxAge=2592000)](https://www.npmjs.com/package/phpify) | [![Dependency Status](https://david-dm.org/uniter/phpify.svg)](https://david-dm.org/uniter/phpify) |
 
 [`uniter`](https://github.com/asmblah/uniter) is the main Uniter library (this repository).
@@ -48,6 +49,9 @@ It contains some builtin PHP classes and functions, but only those that are requ
 After pulling in `phpcore`, it installs the remaining builtin classes and functions, such as `array_merge(...)`.
 Only a small subset of PHP's standard library has been implemented so far - please open a GitHub issue
 in the `phpruntime` repository if you would like to request something that is missing.
+
+[`phpcommon`](https://github.com/uniter/phpcommon) contains various tools that are shared between the different
+packages, such as the `PHPFatalError` class used by both the parser (`phptoast`) and runtime (`phpcore`).
 
 [`phpify`](https://github.com/uniter/phpify) is a Browserify transform that can be used to require PHP modules
 (and entire libraries) from JavaScript.
