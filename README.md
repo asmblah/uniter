@@ -43,7 +43,7 @@ that can then be executed.
 
 [`phpcore`](https://github.com/uniter/phpcore) is the minimal runtime library required for code transpiled by `phptojs` to execute.
 It contains some builtin PHP classes and functions, but only those that are required
-(eg. the `Closure` class or `spl_autoload_register` function).
+(eg. the `Closure` class or `spl_autoload_register(...)` function).
 
 [`phpruntime`](https://github.com/uniter/phpruntime) is the extended "full" runtime library.
 After pulling in `phpcore`, it installs the remaining builtin classes and functions, such as `array_merge(...)`.
