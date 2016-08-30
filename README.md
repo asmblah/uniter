@@ -28,19 +28,24 @@ Uniter is split into several NPM packages, each with a separate repository:
 | [`phpruntime`](https://github.com/uniter/phpruntime) | [![npm](https://img.shields.io/npm/v/phpruntime.svg?maxAge=2592000)](https://www.npmjs.com/package/phpruntime) | [![Dependency Status](https://david-dm.org/uniter/phpruntime.svg)](https://david-dm.org/uniter/phpruntime) |
 | [`phpify`](https://github.com/uniter/phpify) | [![npm](https://img.shields.io/npm/v/phpify.svg?maxAge=2592000)](https://www.npmjs.com/package/phpify) | [![Dependency Status](https://david-dm.org/uniter/phpify.svg)](https://david-dm.org/uniter/phpify) |
 
-`phptoast` is the parser for Uniter. It takes PHP code as a string and returns an AST comprised of plain JavaScript objects.
+[`phptoast`](https://github.com/uniter/phptoast) is the parser for Uniter. It takes PHP code as a string
+and returns an AST comprised of plain JavaScript objects.
 
-`phptojs` is the transpiler. It takes an AST (such as the one returned by `phptoast`) and translates it into JavaScript
+[`phptojs`](https://github.com/uniter/phptojs) is the transpiler. It takes an AST (such as the one returned by `phptoast`)
+and translates it into JavaScript
 that can then be executed.
 
-`phpcore` is the minimal runtime library required for code transpiled by `phptojs` to execute. It contains some builtin
-PHP classes and functions, but only those that are required (eg. the `Closure` class or `spl_autoload_register` function).
+[`phpcore`](https://github.com/uniter/phpcore) is the minimal runtime library required for code transpiled by `phptojs` to execute.
+It contains some builtin PHP classes and functions, but only those that are required
+(eg. the `Closure` class or `spl_autoload_register` function).
 
-`phpruntime` is the extended "full" runtime library. After pulling in `phpcore`, it installs the remaining builtin
-classes and functions, such as `array_merge(...)`. Only a small subset of PHP's standard library has been implemented
-so far - please open a GitHub issue in the `phpruntime` repository if you would like to request something that is missing.
+[`phpruntime`](https://github.com/uniter/phpruntime) is the extended "full" runtime library.
+After pulling in `phpcore`, it installs the remaining builtin classes and functions, such as `array_merge(...)`.
+Only a small subset of PHP's standard library has been implemented so far - please open a GitHub issue
+in the `phpruntime` repository if you would like to request something that is missing.
 
-`phpify` is a Browserify transform that can be used to require PHP modules (and entire libraries) from JavaScript.
+[`phpify`](https://github.com/uniter/phpify) is a Browserify transform that can be used to require PHP modules
+(and entire libraries) from JavaScript.
 For an example of compiling a PHP library down to JavaScript,
 see the [Uniter Symfony EventDispatcher demo](https://github.com/uniter/event-dispatcher-demo).
 
