@@ -44,7 +44,7 @@
     "phpruntime": "~5",
     "phptoast": "~4",
     "phptojs": "~4",
-    "uglify-js": "^2.4.23"
+    "uglify-js": "~2.7"
   },
   "devDependencies": {
     "browserify": "^9.0.8",
