@@ -22,11 +22,16 @@ Uniter is split into several NPM packages, each with a separate repository:
 
 | Package | Version | Dependencies |
 |--------|-------|------------|
+| [`uniter`](https://github.com/asmblah/uniter) | [![npm](https://img.shields.io/npm/v/uniter.svg?maxAge=2592000)](https://www.npmjs.com/package/uniter) | [![Dependency Status](https://david-dm.org/asmblah/uniter.svg)](https://david-dm.org/asmblah/uniter) |
 | [`phptoast`](https://github.com/uniter/phptoast) | [![npm](https://img.shields.io/npm/v/phptoast.svg?maxAge=2592000)](https://www.npmjs.com/package/phptoast) | [![Dependency Status](https://david-dm.org/uniter/phptoast.svg)](https://david-dm.org/uniter/phptoast) |
 | [`phptojs`](https://github.com/uniter/phptojs) | [![npm](https://img.shields.io/npm/v/phptojs.svg?maxAge=2592000)](https://www.npmjs.com/package/phptojs) | [![Dependency Status](https://david-dm.org/uniter/phptojs.svg)](https://david-dm.org/uniter/phptojs) |
 | [`phpcore`](https://github.com/uniter/phpcore) | [![npm](https://img.shields.io/npm/v/phpcore.svg?maxAge=2592000)](https://www.npmjs.com/package/phpcore) | [![Dependency Status](https://david-dm.org/uniter/phpcore.svg)](https://david-dm.org/uniter/phpcore) |
 | [`phpruntime`](https://github.com/uniter/phpruntime) | [![npm](https://img.shields.io/npm/v/phpruntime.svg?maxAge=2592000)](https://www.npmjs.com/package/phpruntime) | [![Dependency Status](https://david-dm.org/uniter/phpruntime.svg)](https://david-dm.org/uniter/phpruntime) |
 | [`phpify`](https://github.com/uniter/phpify) | [![npm](https://img.shields.io/npm/v/phpify.svg?maxAge=2592000)](https://www.npmjs.com/package/phpify) | [![Dependency Status](https://david-dm.org/uniter/phpify.svg)](https://david-dm.org/uniter/phpify) |
+
+[`uniter`](https://github.com/asmblah/uniter) is the main Uniter library (this repository).
+It pulls in all the required components (below) to take a string of PHP code, evaluate it and return the result
+with a simple API.
 
 [`phptoast`](https://github.com/uniter/phptoast) is the parser for Uniter. It takes PHP code as a string
 and returns an AST comprised of plain JavaScript objects.
