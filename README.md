@@ -158,4 +158,4 @@ There are two supported ways of running the Mocha test suite:
 
 License
 -------
-[MIT](/asmblah/uniter/blob/master/MIT-LICENSE.txt)
+[MIT](/MIT-LICENSE.txt)
