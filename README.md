@@ -16,6 +16,34 @@ Demos
 - [jQuery + PHP + Browserify (with PHPUnit)](https://uniter.github.io/uniter-jquery)
 - [Interactive demo (above)](https://asmblah.github.io/uniter/demo/interactive.html)
 
+Packages
+--------
+Uniter is split into several NPM packages, each with a separate repository:
+
+| Package | Version | Dependencies |
+|--------|-------|------------|
+| [`phptoast`](https://github.com/uniter/phptoast) | [![npm](https://img.shields.io/npm/v/phptoast.svg?maxAge=2592000)](https://www.npmjs.com/package/phptoast) | [![Dependency Status](https://david-dm.org/uniter/phptoast.svg)](https://david-dm.org/uniter/phptoast) |
+| [`phptojs`](https://github.com/uniter/phptojs) | [![npm](https://img.shields.io/npm/v/phptojs.svg?maxAge=2592000)](https://www.npmjs.com/package/phptojs) | [![Dependency Status](https://david-dm.org/uniter/phptojs.svg)](https://david-dm.org/uniter/phptojs) |
+| [`phpcore`](https://github.com/uniter/phpcore) | [![npm](https://img.shields.io/npm/v/phpcore.svg?maxAge=2592000)](https://www.npmjs.com/package/phpcore) | [![Dependency Status](https://david-dm.org/uniter/phpcore.svg)](https://david-dm.org/uniter/phpcore) |
+| [`phpruntime`](https://github.com/uniter/phpruntime) | [![npm](https://img.shields.io/npm/v/phpruntime.svg?maxAge=2592000)](https://www.npmjs.com/package/phpruntime) | [![Dependency Status](https://david-dm.org/uniter/phpruntime.svg)](https://david-dm.org/uniter/phpruntime) |
+| [`phpify`](https://github.com/uniter/phpify) | [![npm](https://img.shields.io/npm/v/phpify.svg?maxAge=2592000)](https://www.npmjs.com/package/phpify) | [![Dependency Status](https://david-dm.org/uniter/phpify.svg)](https://david-dm.org/uniter/phpify) |
+
+`phptoast` is the parser for Uniter. It takes PHP code as a string and returns an AST comprised of plain JavaScript objects.
+
+`phptojs` is the transpiler. It takes an AST (such as the one returned by `phptoast`) and translates it into JavaScript
+that can then be executed.
+
+`phpcore` is the minimal runtime library required for code transpiled by `phptojs` to execute. It contains some builtin
+PHP classes and functions, but only those that are required (eg. the `Closure` class or `spl_autoload_register` function).
+
+`phpruntime` is the extended "full" runtime library. After pulling in `phpcore`, it installs the remaining builtin
+classes and functions, such as `array_merge(...)`. Only a small subset of PHP's standard library has been implemented
+so far - please open a GitHub issue in the `phpruntime` repository if you would like to request something that is missing.
+
+`phpify` is a Browserify transform that can be used to require PHP modules (and entire libraries) from JavaScript.
+For an example of compiling a PHP library down to JavaScript,
+see the [Uniter Symfony EventDispatcher demo](https://github.com/uniter/event-dispatcher-demo).
+
 Getting started
 ---------------
 ```shell
@@ -113,3 +141,7 @@ There are two supported ways of running the Mocha test suite:
         npm run-script webtest
 
    You should then be able to run the tests by visiting http://127.0.0.1:6700 in a supported web browser.
+
+License
+-------
+[MIT](/asmblah/uniter/blob/master/MIT-LICENSE.txt)
