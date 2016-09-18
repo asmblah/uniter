@@ -29,6 +29,7 @@ Uniter is split into several NPM packages, each with a separate repository:
 | [`phpruntime`](https://github.com/uniter/phpruntime) | [![npm](https://img.shields.io/npm/v/phpruntime.svg?maxAge=2592000)](https://www.npmjs.com/package/phpruntime) | [![Dependency Status](https://david-dm.org/uniter/phpruntime.svg)](https://david-dm.org/uniter/phpruntime) |
 | [`phpcommon`](https://github.com/uniter/phpcommon) | [![npm](https://img.shields.io/npm/v/phpcommon.svg?maxAge=2592000)](https://www.npmjs.com/package/phpcommon) | [![Dependency Status](https://david-dm.org/uniter/phpcommon.svg)](https://david-dm.org/uniter/phpcommon) |
 | [`phpify`](https://github.com/uniter/phpify) | [![npm](https://img.shields.io/npm/v/phpify.svg?maxAge=2592000)](https://www.npmjs.com/package/phpify) | [![Dependency Status](https://david-dm.org/uniter/phpify.svg)](https://david-dm.org/uniter/phpify) |
+| [`dotphp`](https://github.com/uniter/dotphp) | [![npm](https://img.shields.io/npm/v/dotphp.svg?maxAge=2592000)](https://www.npmjs.com/package/dotphp) | [![Dependency Status](https://david-dm.org/uniter/dotphp.svg)](https://david-dm.org/uniter/dotphp) |
 
 [`uniter`](https://github.com/asmblah/uniter) is the main Uniter library (this repository).
 It pulls in all the required components (below) to take a string of PHP code, evaluate it and return the result
@@ -57,6 +58,11 @@ packages, such as the `PHPFatalError` class used by both the parser (`phptoast`)
 (and entire libraries) from JavaScript.
 For an example of compiling a PHP library down to JavaScript,
 see the [Uniter Symfony EventDispatcher demo](https://github.com/uniter/event-dispatcher-demo).
+
+[`dotphp`](https://github.com/uniter/dotphp) allows for easily including PHP files from Node.js.
+A `require(...)` extension may be installed by using the `/register` script` or PHP files may simply be required
+with the exported `.require(..)` method. Stderr and stdout are mapped to the process' stderr and stdout respectively,
+and the filesystem/ `include/require/_once(...)` access is mapped to the real filesystem.
 
 Getting started
 ---------------
