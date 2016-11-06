@@ -60,7 +60,7 @@ For an example of compiling a PHP library down to JavaScript,
 see the [Uniter Symfony EventDispatcher demo](https://github.com/uniter/event-dispatcher-demo).
 
 [`dotphp`](https://github.com/uniter/dotphp) allows for easily including PHP files from Node.js.
-A `require(...)` extension may be installed by using the `/register` script` or PHP files may simply be required
+A `require(...)` extension may be installed by using the `/register` script or PHP files may simply be required
 with the exported `.require(..)` method. Stderr and stdout are mapped to the process' stderr and stdout respectively,
 and the filesystem/ `include/require/_once(...)` access is mapped to the real filesystem.
 
