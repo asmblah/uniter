@@ -1,4 +1,5 @@
-![Uniter PHP](http://www.isophp.org.uk/assets/images/uniter_logos/uniter-small.png)
+![Uniter PHP](http://www.isophp.org.uk/assets/images/uniter_logos/uniter-small.png
+https://github.com/PharaohTools/uniter/raw/gh-pages/img/uniter_dom_demo.gif)
 ======
 
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
@@ -165,3 +166,7 @@ There are two supported ways of running the Mocha test suite:
 License
 -------
 [MIT](/MIT-LICENSE.txt)
+
+Contributors
+-------
+[Pharaoh Tools](https://github.com/PharaohTools)
