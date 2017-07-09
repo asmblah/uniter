@@ -1,4 +1,4 @@
-Uniter
+![Uniter PHP](http://www.isophp.org.uk/assets/images/uniter_logos/uniter-small.png)
 ======
 
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
