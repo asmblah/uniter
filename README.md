@@ -1,5 +1,4 @@
-![Uniter PHP](http://www.isophp.org.uk/assets/images/uniter_logos/uniter-small.png
-https://github.com/PharaohTools/uniter/raw/gh-pages/img/uniter_dom_demo.gif)
+![Uniter PHP](http://www.isophp.org.uk/assets/images/uniter_logos/uniter-small.png)
 ======
 
 [![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter)
@@ -62,7 +61,7 @@ see the [Uniter Symfony EventDispatcher demo](https://github.com/uniter/event-di
 
 [`dotphp`](https://github.com/uniter/dotphp) allows for easily including PHP files from Node.js.
 A `require(...)` extension may be installed by using the `/register` script or PHP files may simply be required
-with the exported `.require(..)` method. Stderr and stdout are mapped to the process' stderr and stdout respectively,
+with the exported `.require(...)` method. Stderr and stdout are mapped to the process' stderr and stdout respectively,
 and the filesystem/ `include/require/_once(...)` access is mapped to the real filesystem.
 
 Getting started
