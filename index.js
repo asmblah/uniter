@@ -12,6 +12,14 @@
 var phpRuntime = require('phpruntime'),
     phpToAST = require('phptoast'),
     phpToJS = require('phptojs'),
-    Uniter = require('./js/Uniter');
+    ScriptLoader = require('./js/ScriptLoader'),
+    Uniter = require('./js/Uniter'),
+    scriptLoader,
+    uniter;
 
-module.exports = new Uniter(phpToAST, phpToJS, phpRuntime);
+uniter = new Uniter(phpToAST, phpToJS, phpRuntime);
+scriptLoader = new ScriptLoader(global, 'script[type="text/x-uniter-php"]', uniter);
+
+scriptLoader.loadScripts();
+
+module.exports = uniter;
