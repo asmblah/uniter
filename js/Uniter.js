@@ -27,7 +27,7 @@ _.extend(Uniter.prototype, {
         }
 
         return new Engine(
-            uniter.phpToAST.create(),
+            uniter.phpToAST.create(null, {'captureAllOffsets': true}),
             uniter.phpToJS,
             uniter.phpRuntime,
             uniter.phpRuntime.createEnvironment(),

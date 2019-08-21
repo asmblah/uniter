@@ -1,5 +1,5 @@
 {
-  "version": "2.12.1",
+  "version": "2.13.0",
   "name": "uniter",
   "publishConfig": {
     "proprietary-attribs": false
@@ -34,28 +34,24 @@
     "test": "npm run jshint && npm run mocha"
   },
   "dependencies": {
-    "escodegen": "^1.6.1",
-    "esprima": "^2.2.0",
-    "estraverse": "^4.0.0",
+    "dotphp": "^3.5.0",
     "microdash": "~1",
-    "node-getopt": "0.2.x",
-    "pausable": "~4",
-    "phpcommon": "~1",
-    "phpruntime": "~5",
-    "phptoast": "~5",
-    "phptojs": "~5"
+    "phpcommon": "^1.12.1",
+    "phpruntime": "^6.0.1",
+    "phptoast": "^6.0.4",
+    "phptojs": "^6.1.2"
   },
   "devDependencies": {
-    "browserify": "^9.0.8",
+    "browserify": "^16.5.0",
     "chai": "^2.3.0",
-    "express": "3.2.x",
+    "express": "^4.17.1",
     "glob": "^5.0.5",
-    "jshint": "2.8.0",
-    "mocha": "^2.2.5",
+    "jshint": "^2.10.2",
+    "mocha": "^6.2.0",
     "nowdoc": "^1.0.0",
     "sinon": "~1.15",
     "sinon-chai": "^2.7.0",
-    "uglify-js": "^2.7.3"
+    "uglify-js": "^2.8.29"
   },
   "engines": {
     "node": ">=0.6"

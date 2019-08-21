@@ -70,7 +70,7 @@ describe('PHP Engine current() builtin function integration', function () {
 
     describe('inside foreach (...) {...}', function () {
         _.each({
-            'foreach should reset internal pointer but not advance during': {
+            'foreach should not affect the internal array pointer': {
                 code: nowdoc(function () {/*<<<EOS
 <?php
     $array = array(1, 2, 3);
@@ -86,7 +86,7 @@ describe('PHP Engine current() builtin function integration', function () {
     return $result;
 EOS
 */;}), // jshint ignore:line
-                expectedResult: '1,1,1,',
+                expectedResult: '2,2,2,',
                 expectedStderr: '',
                 expectedStdout: ''
             }

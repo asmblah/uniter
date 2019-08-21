@@ -15,6 +15,7 @@ var _ = require('microdash'),
     DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object', 'string'];
 
 describe('PHP Engine loose equality/inequality comparison operators integration', function () {
+    /*jshint latedef: false */
     function check(scenario) {
         engineTools.check(function () {
             return {
