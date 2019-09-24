@@ -34,12 +34,12 @@
     "test": "npm run jshint && npm run mocha"
   },
   "dependencies": {
-    "dotphp": "^3.5.0",
+    "dotphp": "^3.5.2",
     "microdash": "~1",
-    "phpcommon": "^1.12.1",
-    "phpruntime": "^6.0.1",
-    "phptoast": "^6.0.4",
-    "phptojs": "^6.1.2"
+    "phpcommon": "^1.13.0",
+    "phpruntime": "^6.0.2",
+    "phptoast": "^7.0.0",
+    "phptojs": "^7.0.0"
   },
   "devDependencies": {
     "browserify": "^16.5.0",
