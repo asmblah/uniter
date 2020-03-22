@@ -36,7 +36,7 @@ phpEngine.getStderr().on('data', function (data) {
     print(data);
 });
 
-phpEngine.execute(phpCode).fail(function (error) {
+phpEngine.execute(phpCode, 'my_script.php').fail(function (error) {
     print(error.toString());
 });
 
