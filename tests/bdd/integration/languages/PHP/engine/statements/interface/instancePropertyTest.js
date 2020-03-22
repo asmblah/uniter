@@ -42,10 +42,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Interfaces may not include member variables$/
+                match: /^PHP Fatal error: Interfaces may not include member variables in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
-            expectedStdout: ''
+            expectedStderr: 'PHP Fatal error:  Interfaces may not include member variables in /path/to/my_module.php on line 3\n',
+            expectedStdout: '\nFatal error: Interfaces may not include member variables in /path/to/my_module.php on line 3\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

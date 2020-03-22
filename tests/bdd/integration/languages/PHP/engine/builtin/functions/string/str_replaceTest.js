@@ -67,14 +67,14 @@ describe('PHP Engine str_replace() builtin function integration', function () {
         'recording replacement count when string,string and matches 3 times': {
             code: '<?php str_replace("a", "x", "aaabb", $count); return $count;',
             expectedResult: 3,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
         'recording replacement count when array,array and matches 4 times': {
             code: '<?php str_replace(array("a"), array("x"), "aaaabb", $count); return $count;',
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -82,8 +82,8 @@ describe('PHP Engine str_replace() builtin function integration', function () {
             code: '<?php return str_replace();',
             expectedResult: null,
             expectedResultType: 'null',
-            expectedStderr: 'PHP Warning: str_replace() expects at least 3 parameters, 0 given\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  str_replace() expects at least 3 parameters, 0 given in /path/to/my_module.php on line 1\n',
+            expectedStdout: '\nWarning: str_replace() expects at least 3 parameters, 0 given in /path/to/my_module.php on line 1\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

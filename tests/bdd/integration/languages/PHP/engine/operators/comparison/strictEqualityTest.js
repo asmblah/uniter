@@ -7,13 +7,14 @@
  * https://github.com/asmblah/uniter/raw/master/MIT-LICENSE.txt
  */
 
+/*global before */
 'use strict';
 
 var _ = require('microdash'),
     engineTools = require('../../tools'),
     nowdoc = require('nowdoc'),
     phpTools = require('../../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object', 'string'];
+    DATA_TYPES = ['array', 'boolean', 'float', 'int', 'null', 'object', 'string'];
 
 describe('PHP Engine strict/identical equality/inequality comparison operators integration', function () {
     /*jshint latedef: false */
@@ -98,7 +99,7 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                         expectedResult: false,
                         expectedResultType: 'boolean'
                     }],
-                    'integer': [{
+                    'int': [{
                         left: 'array()',
                         right: '1',
                         expectedResult: false,
@@ -179,7 +180,7 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                         expectedResult: false,
                         expectedResultType: 'boolean'
                     }],
-                    'integer': [{
+                    'int': [{
                         left: 'true',
                         right: '0',
                         expectedResult: false,
@@ -269,7 +270,7 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                         expectedResult: true,
                         expectedResultType: 'boolean'
                     }],
-                    'integer': [{
+                    'int': [{
                         left: '0.0',
                         right: '0',
                         // Same number, but different types
@@ -358,9 +359,9 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                     }]
                 }
             },
-            'integer': {
+            'int': {
                 right: {
-                    'integer': [{
+                    'int': [{
                         left: '0',
                         right: '0',
                         expectedResult: true,
@@ -467,7 +468,7 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                         expectedResult: false,
                         expectedResultType: 'boolean'
                     }, {
-                        left: '(function () { class FunTest {} return new FunTest; }())',
+                        left: '(function () { return new FunTest; }())',
                         right: 'new stdClass',
                         expectedResult: false,
                         expectedResultType: 'boolean'
@@ -507,6 +508,11 @@ describe('PHP Engine strict/identical equality/inequality comparison operators i
                 }
             }
         };
+
+    before(function () {
+        // Define a class used by one of the scenarios below
+        return engine.execute('<?php class FunTest {}');
+    });
 
     _.each({
         'equality operator "$val1 === $val2"': {

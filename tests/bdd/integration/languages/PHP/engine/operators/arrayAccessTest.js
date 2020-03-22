@@ -13,7 +13,7 @@ var _ = require('microdash'),
     engineTools = require('../tools'),
     nowdoc = require('nowdoc'),
     phpTools = require('../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
+    DATA_TYPES = ['array', 'boolean', 'float', 'int'/*, 'null', 'object', 'string'*/];
 
 describe('PHP Engine array access/dereference ($array[...]) operator integration', function () {
     var engine;
@@ -40,63 +40,71 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
                             right: 'array()',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Warning: Illegal offset type\n'
+                            expectedStderr: 'PHP Warning:  Illegal offset type in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nWarning: Illegal offset type in /path/to/my_module.php on line 1\n'
                         }],
                         'boolean': [{
                             left: 'array()',
                             right: 'false',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 0\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 0 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 0 in /path/to/my_module.php on line 1\n'
                         }, {
                             left: 'array(2)',
                             right: 'false',
                             expectedResult: 2,
-                            expectedResultType: 'integer'
+                            expectedResultType: 'int'
                         }, {
                             left: 'array()',
                             right: 'true',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 1\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 1 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 1 in /path/to/my_module.php on line 1\n'
                         }, {
                             left: 'array(2)',
                             right: 'true',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 1\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 1 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 1 in /path/to/my_module.php on line 1\n'
                         }],
                         'float': [{
                             left: 'array()',
                             right: '2.0',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 2\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 2 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 2 in /path/to/my_module.php on line 1\n'
                         }, {
                             left: 'array(1)',
                             right: '4.2',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 4\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 4 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 4 in /path/to/my_module.php on line 1\n'
                         }, {
                             left: 'array(1)',
                             right: '5.8',
                             expectedResult: null,
                             expectedResultType: 'null',
                             // Note that float is coerced to 5, not 6 as it is truncated
-                            expectedStderr: 'PHP Notice: Undefined offset: 5\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 5 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 5 in /path/to/my_module.php on line 1\n'
                         }],
-                        'integer': [{
+                        'int': [{
                             left: 'array()',
                             right: '4',
                             expectedResult: null,
                             expectedResultType: 'null',
-                            expectedStderr: 'PHP Notice: Undefined offset: 4\n'
+                            expectedStderr: 'PHP Notice:  Undefined offset: 4 in /path/to/my_module.php on line 1\n',
+                            expectedStdout: '\nNotice: Undefined offset: 4 in /path/to/my_module.php on line 1\n'
                         }, {
                             left: 'array(1)',
                             right: '0',
                             expectedResult: 1,
-                            expectedResultType: 'integer'
+                            expectedResultType: 'int'
                         }]
                     }
                 },
@@ -141,7 +149,7 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
                             expectedResult: null,
                             expectedResultType: 'null'
                         }],
-                        'integer': [{
+                        'int': [{
                             left: 'true',
                             right: '3',
                             // Note that no warning or notice is displayed
@@ -197,7 +205,7 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
                             expectedResult: null,
                             expectedResultType: 'null'
                         }],
-                        'integer': [{
+                        'int': [{
                             left: '3.1',
                             right: '2',
                             // Note that no warning or notice is displayed
@@ -206,7 +214,7 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
                         }]
                     }
                 },
-                'integer': {
+                'int': {
                     right: {
                         'array': [{
                             left: '2',
@@ -247,7 +255,7 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
                             expectedResult: null,
                             expectedResultType: 'null'
                         }],
-                        'integer': [{
+                        'int': [{
                             left: '0',
                             right: '0',
                             // Note that no warning or notice is displayed
@@ -298,7 +306,7 @@ describe('PHP Engine array access/dereference ($array[...]) operator integration
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -327,7 +335,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 5,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -341,7 +349,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 21,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

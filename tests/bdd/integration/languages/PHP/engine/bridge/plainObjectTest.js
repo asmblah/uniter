@@ -61,7 +61,7 @@ EOS
                     }
                 },
                 expectedResult: 23,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             },
@@ -78,7 +78,7 @@ EOS
                     }
                 },
                 expectedResult: 10,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             },
@@ -101,7 +101,7 @@ EOS
                     };
                 },
                 expectedResult: 20,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             }

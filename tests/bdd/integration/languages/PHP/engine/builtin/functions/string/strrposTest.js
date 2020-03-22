@@ -37,7 +37,7 @@ return strrpos('abc', 'a');
 EOS
 */;}), // jshint ignore:line
             expectedResult: 0,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -48,7 +48,7 @@ return strrpos('abccba', 'b');
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -59,7 +59,7 @@ return strrpos('abccba', 'b', 2);
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -70,7 +70,7 @@ return strrpos('abccba', 'b', 4);
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -92,7 +92,7 @@ return strrpos('abccba', 'b', -3);
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -103,7 +103,7 @@ return strrpos('abccba', 'b', -2);
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },

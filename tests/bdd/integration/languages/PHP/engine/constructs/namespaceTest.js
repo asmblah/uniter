@@ -110,7 +110,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 7,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

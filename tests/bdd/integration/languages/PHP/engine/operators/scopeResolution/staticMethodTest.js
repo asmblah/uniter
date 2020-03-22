@@ -78,10 +78,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                match: /^PHP Fatal error: Uncaught Error: Class name must be a valid object or a string in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call static method from boolean value': {
             code: nowdoc(function () {/*<<<EOS
@@ -93,10 +108,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                match: /^PHP Fatal error: Uncaught Error: Class name must be a valid object or a string in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call static method from float value': {
             code: nowdoc(function () {/*<<<EOS
@@ -108,10 +138,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                match: /^PHP Fatal error: Uncaught Error: Class name must be a valid object or a string in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call static method from integer value': {
             code: nowdoc(function () {/*<<<EOS
@@ -123,10 +168,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                match: /^PHP Fatal error: Uncaught Error: Class name must be a valid object or a string in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call static method from null value': {
             code: nowdoc(function () {/*<<<EOS
@@ -138,10 +198,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class name must be a valid object or a string$/
+                match: /^PHP Fatal error: Uncaught Error: Class name must be a valid object or a string in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Class name must be a valid object or a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class name must be a valid object or a string in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling static method from class referenced via an instance': {
             code: nowdoc(function () {/*<<<EOS
@@ -191,10 +266,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'Person' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'Person' not found in \/path\/to\/my_module\.php on line 4/
             },
-            expectedStderr: 'PHP Fatal error: Class \'Person\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'Person' not found in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'Person' not found in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call undefined static method from class referenced statically': {
             code: nowdoc(function () {/*<<<EOS
@@ -206,10 +296,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined method Earth::getLegLength\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined method Earth::getLegLength\(\) in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined method Earth::getLegLength()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined method Earth::getLegLength() in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined method Earth::getLegLength() in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         // Ensure we use .hasOwnProperty(...) checks internally
         'attempting to call undefined static method called "constructor" from class referenced statically': {
@@ -222,10 +327,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined method Earth::constructor\(\) in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined method Earth::constructor() in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined method Earth::constructor() in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling instance method as static method from class referenced via an instance': {
             code: nowdoc(function () {/*<<<EOS
@@ -241,8 +361,8 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'Earth',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Strict standards: Non-static method Animal::getPlanet() should not be called statically\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Strict standards:  Non-static method Animal::getPlanet() should not be called statically in /path/to/my_module.php on line 8\n',
+            expectedStdout: '\nStrict standards: Non-static method Animal::getPlanet() should not be called statically in /path/to/my_module.php on line 8\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

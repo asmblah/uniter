@@ -199,10 +199,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use$/
+                match: /^PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use',
-            expectedStdout: ''
+            expectedStderr: 'PHP Fatal error:  Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use in /path/to/my_module.php on line 3\n',
+            expectedStdout: '\nFatal error: Cannot use Uniter\\Tool\\Stuff as Stuff because the name is already in use in /path/to/my_module.php on line 3\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

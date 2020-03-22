@@ -58,7 +58,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 3546,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -74,7 +74,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 5,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -91,7 +91,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -105,10 +105,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Interfaces may not include member variables$/
+                match: /^PHP Fatal error: Interfaces may not include member variables in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
-            expectedStdout: ''
+            expectedStderr: 'PHP Fatal error:  Interfaces may not include member variables in /path/to/my_module.php on line 3\n',
+            expectedStdout: '\nFatal error: Interfaces may not include member variables in /path/to/my_module.php on line 3\n'
         },
         'attempting to define a static variable for an interface': {
             code: nowdoc(function () {/*<<<EOS
@@ -120,10 +120,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Interfaces may not include member variables$/
+                match: /^PHP Fatal error: Interfaces may not include member variables in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Interfaces may not include member variables',
-            expectedStdout: ''
+            expectedStderr: 'PHP Fatal error:  Interfaces may not include member variables in /path/to/my_module.php on line 3\n',
+            expectedStdout: '\nFatal error: Interfaces may not include member variables in /path/to/my_module.php on line 3\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

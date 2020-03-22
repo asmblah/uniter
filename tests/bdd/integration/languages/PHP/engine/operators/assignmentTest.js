@@ -109,18 +109,20 @@ describe('PHP Engine assignment operators integration', function () {
             'assignment of integer value to index of non-array element': {
                 code: '<?php $notAnArray = 2; $notAnArray[0] = 3; return $notAnArray;',
                 expectedResult: 2,
-                expectedStderr: 'PHP Warning: Cannot use a scalar value as an array\n',
-                expectedStdout: ''
+                expectedStderr: 'PHP Warning:  Cannot use a scalar value as an array in /path/to/my_module.php on line 1\n',
+                expectedStdout: '\nWarning: Cannot use a scalar value as an array in /path/to/my_module.php on line 1\n'
             },
             'assignment of integer value to variable after variable has been read: definitions should not be hoisted': {
                 code: '<?php var_dump($value); $value = 7;',
                 expectedResult: null,
                 expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Notice: Undefined variable: value
+PHP Notice:  Undefined variable: value in /path/to/my_module.php on line 1
 
 EOS
 */;}), // jshint ignore:line
                 expectedStdout: nowdoc(function () {/*<<<EOS
+
+Notice: Undefined variable: value in /path/to/my_module.php on line 1
 NULL
 
 EOS
@@ -130,11 +132,13 @@ EOS
                 code: '<?php if (0) { $value = 1; } var_dump($value);',
                 expectedResult: null,
                 expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Notice: Undefined variable: value
+PHP Notice:  Undefined variable: value in /path/to/my_module.php on line 1
 
 EOS
 */;}), // jshint ignore:line
                 expectedStdout: nowdoc(function () {/*<<<EOS
+
+Notice: Undefined variable: value in /path/to/my_module.php on line 1
 NULL
 
 EOS
@@ -143,7 +147,7 @@ EOS
             'assignment of result of assignment to variable': {
                 code: '<?php $value = $result = 7; return $value + $result;',
                 expectedResult: 14,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             }

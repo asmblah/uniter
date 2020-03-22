@@ -71,12 +71,19 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Strict standards: Accessing static property Animal::$species as non static
-PHP Notice: Undefined property: Animal::$species
+PHP Strict standards:  Accessing static property Animal::$species as non static in /path/to/my_module.php on line 6
+PHP Notice:  Undefined property: Animal::$species in /path/to/my_module.php on line 6
 
 EOS
 */;}), // jshint ignore:line
-            expectedStdout: ''
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Strict standards: Accessing static property Animal::$species as non static in /path/to/my_module.php on line 6
+
+Notice: Undefined property: Animal::$species in /path/to/my_module.php on line 6
+
+EOS
+*/;} )// jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

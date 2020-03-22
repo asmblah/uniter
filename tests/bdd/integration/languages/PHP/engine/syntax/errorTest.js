@@ -40,10 +40,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPParseError,
-                match: /^PHP Parse error: syntax error, unexpected \$end in \(program\) on line 2$/
+                match: /^PHP Parse error: syntax error, unexpected end of file in \/path\/to\/my_module.php on line 2$/
             },
-            expectedStderr: 'PHP Parse error: syntax error, unexpected $end in (program) on line 2',
-            expectedStdout: ''
+            expectedStderr: 'PHP Parse error:  syntax error, unexpected end of file in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nParse error: syntax error, unexpected end of file in /path/to/my_module.php on line 2\n'
         },
         'function call missing end semicolon in required module': {
             code: nowdoc(function () {/*<<<EOS
@@ -58,10 +58,10 @@ EOS
             },
             expectedException: {
                 instanceOf: PHPParseError,
-                match: /^PHP Parse error: syntax error, unexpected \$end in syntax_error\.php on line 1$/
+                match: /^PHP Parse error: syntax error, unexpected end of file in syntax_error\.php on line 1$/
             },
-            expectedStderr: 'PHP Parse error: syntax error, unexpected $end in syntax_error.php on line 1',
-            expectedStdout: ''
+            expectedStderr: 'PHP Parse error:  syntax error, unexpected end of file in syntax_error.php on line 1\n',
+            expectedStdout: '\nParse error: syntax error, unexpected end of file in syntax_error.php on line 1\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

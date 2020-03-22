@@ -38,7 +38,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: null,
             expectedStderr: '',
-            expectedStdout: '(program)'
+            expectedStdout: '/path/to/my_module.php'
         },
         'capturing current file in required module': {
             code: nowdoc(function () {/*<<<EOS
@@ -66,9 +66,9 @@ EOS
         'capturing current file in main program before and after required module': {
             code: nowdoc(function () {/*<<<EOS
 <?php
-    echo __FILE__;
+    echo __FILE__ . PHP_EOL;
     require_once 'get_file.php';
-    echo __FILE__;
+    echo __FILE__ . PHP_EOL;
 
 EOS
 */;}), // jshint ignore:line
@@ -77,7 +77,7 @@ EOS
                     promise.resolve(nowdoc(function () {/*<<<EOS
 <?php
 
-    echo __FILE__;
+    echo __FILE__ . PHP_EOL;
 
 EOS
 */;})); // jshint ignore:line
@@ -85,7 +85,7 @@ EOS
             },
             expectedResult: null,
             expectedStderr: '',
-            expectedStdout: '(program)get_file.php(program)'
+            expectedStdout: '/path/to/my_module.php\nget_file.php\n/path/to/my_module.php\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

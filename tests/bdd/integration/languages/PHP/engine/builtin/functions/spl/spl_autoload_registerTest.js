@@ -43,7 +43,7 @@ describe('PHP Engine spl_autoload_register() builtin function integration', func
 EOS
 */;}), // jshint ignore:line
             expectedResult: 27,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -61,7 +61,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 27,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -80,7 +80,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 27,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'string(12) "MyUndefClass"\n'
         },
@@ -101,7 +101,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 27,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'string(12) "MyUndefClass"\n'
         },
@@ -122,7 +122,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 31,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -162,7 +162,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 27,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'MyClass'
         },
@@ -178,11 +178,26 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'TeSt' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'TeSt' not found in \/path\/to\/my_module\.php on line 6/
             },
             // Note additional check for case preservation in class name string passed to autoloader
-            expectedStderr: 'PHP Fatal error: Class \'TeSt\' not found',
-            expectedStdout: 'autoloading TeSt'
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'TeSt' not found in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+autoloading TeSt
+Fatal error: Uncaught Error: Class 'TeSt' not found in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

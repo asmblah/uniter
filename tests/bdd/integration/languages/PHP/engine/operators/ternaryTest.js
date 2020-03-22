@@ -12,7 +12,7 @@
 var _ = require('microdash'),
     engineTools = require('../tools'),
     phpTools = require('../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/];
+    DATA_TYPES = ['array', 'boolean', 'float', 'int'/*, 'null', 'object', 'string'*/];
 
 describe('PHP Engine ternary expression integration', function () {
     var engine;
@@ -69,7 +69,7 @@ describe('PHP Engine ternary expression integration', function () {
                     // Non-zero negative numbers are truthy
                     expectedResult: 'consequent'
                 }],
-                'integer': [{
+                'int': [{
                     condition: '0',
                     // Positive zero is falsy
                     expectedResult: 'alternate'

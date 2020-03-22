@@ -82,10 +82,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/
+                match: /^PHP Fatal error: Uncaught Error: Cannot access private property Animal::\$planet in \/path\/to\/my_module\.php on line 6$/
             },
-            expectedStderr: 'PHP Fatal error: Cannot access private property Animal::$planet',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}) //jshint ignore:line
         },
         'trying to read private static property from instance method of another, unrelated class': {
             code: nowdoc(function () {/*<<<EOS
@@ -105,10 +120,27 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/
+                match: /^PHP Fatal error: Uncaught Error: Cannot access private property Animal::\$planet in \/path\/to\/my_module\.php on line 8$/
             },
-            expectedStderr: 'PHP Fatal error: Cannot access private property Animal::$planet',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Wall->getPlanet()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Wall->getPlanet()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}) //jshint ignore:line
         },
         'trying to read private static property from instance method of derived class': {
             code: nowdoc(function () {/*<<<EOS
@@ -128,10 +160,27 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Cannot access private property Animal::\$planet$/
+                match: /^PHP Fatal error: Uncaught Error: Cannot access private property Animal::\$planet in \/path\/to\/my_module\.php on line 8$/
             },
-            expectedStderr: 'PHP Fatal error: Cannot access private property Animal::$planet',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Chicken->getPlanet()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Cannot access private property Animal::$planet in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Chicken->getPlanet()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

@@ -38,7 +38,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: null,
             expectedStderr: '',
-            expectedStdout: ''
+            expectedStdout: '/path/to'
         },
         'capturing current file\'s directory in required module': {
             code: nowdoc(function () {/*<<<EOS

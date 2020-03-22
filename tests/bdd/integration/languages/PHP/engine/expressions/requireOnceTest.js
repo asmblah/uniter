@@ -78,7 +78,7 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: Exception,
-                match: /^include\(test_file\.php\) :: No "include" transport is available for loading the module\.$/
+                match: /^include\(test_file\.php\) :: No "include" transport option is available for loading the module\.$/
             },
             expectedStderr: '',
             expectedStdout: ''

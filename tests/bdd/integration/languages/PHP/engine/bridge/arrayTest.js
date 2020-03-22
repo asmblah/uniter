@@ -58,7 +58,7 @@ EOS
                     }]
                 },
                 expectedResult: 28,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             }

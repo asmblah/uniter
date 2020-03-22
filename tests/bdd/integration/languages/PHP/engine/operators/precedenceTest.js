@@ -32,7 +32,7 @@ describe('PHP Engine operator precedence integration', function () {
         'addition with subtraction': {
             code: '<?php return 1 + 2 - 3 + 4;',
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }
