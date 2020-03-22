@@ -46,7 +46,7 @@ EOS
                     }
                 },
                 expectedResult: 5,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             },
@@ -63,7 +63,7 @@ EOS
                     }
                 },
                 expectedResult: 7,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             },
@@ -82,8 +82,8 @@ EOS
                 expectedResultType: 'boolean',
                 // Notice should be displayed because JSObject-wrapped functions
                 // always auto-unwrap any arguments, at which point the variable will be read
-                expectedStderr: 'PHP Notice: Undefined variable: result\n',
-                expectedStdout: ''
+                expectedStderr: 'PHP Notice:  Undefined variable: result in /path/to/my_module.php on line 2\n',
+                expectedStdout: '\nNotice: Undefined variable: result in /path/to/my_module.php on line 2\n'
             },
             'calling PHP closure referencing "this" object from JS land': {
                 code: nowdoc(function () {/*<<<EOS
@@ -108,7 +108,11 @@ EOS
 
                     return {
                         getValue: function () {
-                            return callback.call({value: 22});
+                            return engine.createFFIResult(function () {
+                                throw new Error('Should have been handled asynchronously');
+                            }, function () {
+                                return callback.call({value: 22});
+                            });
                         },
                         setCallback: function (newCallback) {
                             callback = newCallback;
@@ -116,7 +120,7 @@ EOS
                     };
                 },
                 expectedResult: 22,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             }

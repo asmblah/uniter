@@ -41,14 +41,14 @@ describe('PHP Engine function definition statement integration', function () {
         'make sure variables defined in inner scopes are not defined in the outer one': {
             code: '<?php function doSomething() { $a = 1; } echo $a;',
             expectedResult: null,
-            expectedStderr: 'PHP Notice: Undefined variable: a\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Notice:  Undefined variable: a in /path/to/my_module.php on line 1\n',
+            expectedStdout: '\nNotice: Undefined variable: a in /path/to/my_module.php on line 1\n'
         },
         'make sure variables defined in outer scopes are not defined in the inner one': {
             code: '<?php $a = 1; function doSomething() { echo $a; } doSomething();',
             expectedResult: null,
-            expectedStderr: 'PHP Notice: Undefined variable: a\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Notice:  Undefined variable: a in /path/to/my_module.php on line 1\n',
+            expectedStdout: '\nNotice: Undefined variable: a in /path/to/my_module.php on line 1\n'
         },
         // Test for pre-hoisting
         'calling a function before its definition outside of any blocks eg. conditionals': {
@@ -79,10 +79,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function add1\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function add1\(\) in \/path\/to\/my_module\.php on line 2$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function add1()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function add1() in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function add1() in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling a function before its definition where definition is inside of a function': {
             code: nowdoc(function () {/*<<<EOS
@@ -98,10 +113,27 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function secondFunc\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function secondFunc\(\) in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function secondFunc()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function secondFunc() in /path/to/my_module.php:3
+Stack trace:
+#0 /path/to/my_module.php(8): declareFunc()
+#1 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function secondFunc() in /path/to/my_module.php:3
+Stack trace:
+#0 /path/to/my_module.php(8): declareFunc()
+#1 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling a function before its definition where definition is inside of a while loop': {
             code: nowdoc(function () {/*<<<EOS
@@ -117,10 +149,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function doSomething\(\) in \/path\/to\/my_module\.php on line 5$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling a function before its definition where definition is inside of a foreach loop': {
             code: nowdoc(function () {/*<<<EOS
@@ -136,10 +183,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function doSomething\(\) in \/path\/to\/my_module\.php on line 5$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}) //jshint ignore:line
         },
         'using the name "tools" for a function argument': {
             code: nowdoc(function () {/*<<<EOS
@@ -170,10 +232,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function doSomething\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function doSomething\(\) in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function doSomething()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to call undefined function in the global namespace with same name as in current': {
             code: nowdoc(function () {/*<<<EOS
@@ -186,10 +263,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function my_func\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function my_func\(\) in \/path\/to\/my_module\.php on line 5$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function my_func()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function my_func() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function my_func() in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

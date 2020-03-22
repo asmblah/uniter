@@ -60,8 +60,8 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: null,
-            expectedStderr: 'PHP Notice: Undefined property: stdClass::$anUndefinedProperty\n',
-            expectedStdout: 'NULL\n'
+            expectedStderr: 'PHP Notice:  Undefined property: stdClass::$anUndefinedProperty in /path/to/my_module.php on line 4\n',
+            expectedStdout: '\nNotice: Undefined property: stdClass::$anUndefinedProperty in /path/to/my_module.php on line 4\nNULL\n'
         },
         'setting dynamically referenced property of object with expression for key': {
             code: nowdoc(function () {/*<<<EOS

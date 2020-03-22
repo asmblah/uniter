@@ -81,10 +81,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'FunTime' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'FunTime' not found in \/path\/to\/my_module\.php on line 2/
             },
-            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         },
         'instantiating a class before its definition where definition is inside of a function': {
             code: nowdoc(function () {/*<<<EOS
@@ -100,10 +115,27 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'FunTime' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'FunTime' not found in \/path\/to\/my_module\.php on line 3/
             },
-            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:3
+Stack trace:
+#0 /path/to/my_module.php(8): doDeclare()
+#1 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:3
+Stack trace:
+#0 /path/to/my_module.php(8): doDeclare()
+#1 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}) //jshint ignore:line
         },
         'instantiating a class before its definition where definition is inside of a while loop': {
             code: nowdoc(function () {/*<<<EOS
@@ -119,10 +151,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'FunTime' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'FunTime' not found in \/path\/to\/my_module\.php on line 5/
             },
-            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}) //jshint ignore:line
         },
         'instantiating a class before its definition where definition is inside of a foreach loop': {
             code: nowdoc(function () {/*<<<EOS
@@ -138,10 +185,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'FunTime' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'FunTime' not found in \/path\/to\/my_module\.php on line 5/
             },
-            expectedStderr: 'PHP Fatal error: Class \'FunTime\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'FunTime' not found in /path/to/my_module.php:5
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 5
+
+EOS
+*/;}) //jshint ignore:line
         },
         'class with one public property': {
             code: nowdoc(function () {/*<<<EOS
@@ -284,8 +346,8 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: null,
-            expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
-            expectedStdout: '2'
+            expectedStderr: 'PHP Strict standards:  Redefining already defined constructor for class Test in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nStrict standards: Redefining already defined constructor for class Test in /path/to/my_module.php on line 2\n2'
         },
         'unused class with PHP4-style constructor followed by PHP5-style': {
             code: nowdoc(function () {/*<<<EOS
@@ -302,8 +364,8 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: null,
-            expectedStderr: 'PHP Strict standards: Redefining already defined constructor for class Test\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Strict standards:  Redefining already defined constructor for class Test in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nStrict standards: Redefining already defined constructor for class Test in /path/to/my_module.php on line 2\n'
         },
         'class with magic __invoke(...) method': {
             code: nowdoc(function () {/*<<<EOS
@@ -321,7 +383,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 7,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'in here'
         }

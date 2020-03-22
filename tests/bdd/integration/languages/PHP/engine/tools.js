@@ -48,7 +48,7 @@ module.exports = {
 
                 scenarioException = scenarioResult = scenarioResultType = null;
 
-                engine.execute(scenario.code).done(function (result, type) {
+                engine.execute(scenario.code, '/path/to/my_module.php').done(function (result, type) {
                     scenarioResult = result;
                     scenarioResultType = type;
                     done();

@@ -30,28 +30,28 @@
     "build": "mkdir -p ./dist && browserify --standalone=uniter index | uglifyjs --mangle > ./dist/uniter.js",
     "build-demo": "npm run build && mkdir -p ./dist/demo && browserify demo/interactive-main > ./dist/demo/interactive.js",
     "jshint": "jshint .",
-    "mocha": "mocha --recursive tests/bdd/integration/",
+    "mocha": "mocha --recursive -r tests/bdd/harness tests/bdd/integration/",
     "test": "npm run jshint && npm run mocha"
   },
   "dependencies": {
-    "dotphp": "^3.5.2",
-    "microdash": "~1",
-    "phpcommon": "^1.13.0",
-    "phpruntime": "^6.0.2",
-    "phptoast": "^7.0.0",
-    "phptojs": "^7.0.0"
+    "dotphp": "^3.6.1",
+    "microdash": "^1.3.0",
+    "phpcommon": "^2.0.0",
+    "phpruntime": "^6.3.1",
+    "phptoast": "^7.1.0",
+    "phptojs": "^7.2.0"
   },
   "devDependencies": {
     "browserify": "^16.5.0",
-    "chai": "^2.3.0",
+    "chai": "^4.2.0",
     "express": "^4.17.1",
     "glob": "^5.0.5",
-    "jshint": "^2.10.2",
-    "mocha": "^6.2.0",
+    "jshint": "^2.11.0",
+    "mocha": "^7.1.1",
     "nowdoc": "^1.0.0",
-    "sinon": "~1.15",
-    "sinon-chai": "^2.7.0",
-    "uglify-js": "^2.8.29"
+    "sinon": "^9.0.1",
+    "sinon-chai": "^3.5.0",
+    "uglify-js": "^3.8.0"
   },
   "engines": {
     "node": ">=0.6"

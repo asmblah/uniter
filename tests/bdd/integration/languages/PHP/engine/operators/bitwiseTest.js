@@ -11,9 +11,10 @@
 
 var _ = require('microdash'),
     engineTools = require('../tools'),
+    nowdoc = require('nowdoc'),
     phpCommon = require('phpcommon'),
     phpTools = require('../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer'/*, 'null', 'object', 'string'*/],
+    DATA_TYPES = ['array', 'boolean', 'float', 'int'/*, 'null', 'object', 'string'*/],
     PHPFatalError = phpCommon.PHPFatalError;
 
 describe('PHP Engine bitwise operators integration', function () {
@@ -40,24 +41,72 @@ describe('PHP Engine bitwise operators integration', function () {
                         operand: 'array()',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Unsupported operand types$/
+                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
                         },
-                        expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                        expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                     }],
                     'boolean': [{
                         operand: 'true',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Unsupported operand types$/
+                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
                         },
-                        expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                        expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                     }, {
                         operand: 'false',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Unsupported operand types$/
+                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
                         },
-                        expectedStderr: 'PHP Fatal error: Unsupported operand types'
+                        expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                        expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                     }],
                     'float': [{
                         operand: '0.0',
@@ -72,7 +121,7 @@ describe('PHP Engine bitwise operators integration', function () {
                         operand: '4.4',
                         expectedResult: -5
                     }],
-                    'integer': [{
+                    'int': [{
                         operand: '0',
                         expectedResult: -1
                     }, {
@@ -100,7 +149,7 @@ describe('PHP Engine bitwise operators integration', function () {
                             check({
                                 code: '<?php return ' + expression + ';',
                                 expectedResult: operandData.expectedResult,
-                                expectedResultType: 'integer',
+                                expectedResultType: 'int',
                                 expectedException: operandData.expectedException,
                                 expectedStderr: operandData.expectedStderr || '',
                                 expectedStdout: operandData.expectedStdout || ''
@@ -154,7 +203,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '5.8',
                                 expectedResult: 32
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: 'array()',
                                 right: '4',
                                 expectedResult: 0
@@ -194,7 +243,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '3.2',
                                 expectedResult: 0
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: 'true',
                                 right: '3',
                                 expectedResult: 8
@@ -234,14 +283,14 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '4.5',
                                 expectedResult: 16
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: '3.1',
                                 right: '2',
                                 expectedResult: 12
                             }]
                         }
                     },
-                    'integer': {
+                    'int': {
                         right: {
                             'array': [{
                                 left: '2',
@@ -271,7 +320,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '3.7',
                                 expectedResult: 32
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: '0',
                                 right: '0',
                                 expectedResult: 0
@@ -320,7 +369,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '4.2',
                                 expectedResult: 0
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: 'array()',
                                 right: '4',
                                 expectedResult: 0
@@ -364,7 +413,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '3.2',
                                 expectedResult: 0
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: 'true',
                                 right: '3',
                                 expectedResult: 0
@@ -404,14 +453,14 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '4.5',
                                 expectedResult: 0
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: '3.1',
                                 right: '1',
                                 expectedResult: 1
                             }]
                         }
                     },
-                    'integer': {
+                    'int': {
                         right: {
                             'array': [{
                                 left: '2',
@@ -441,7 +490,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 right: '1.2',
                                 expectedResult: 2
                             }],
-                            'integer': [{
+                            'int': [{
                                 left: '0',
                                 right: '0',
                                 expectedResult: 0
@@ -473,7 +522,7 @@ describe('PHP Engine bitwise operators integration', function () {
                                 check({
                                     code: '<?php return ' + expression + ';',
                                     expectedResult: rightOperandData.expectedResult,
-                                    expectedResultType: 'integer',
+                                    expectedResultType: 'int',
                                     expectedStderr: '',
                                     expectedStdout: ''
                                 });

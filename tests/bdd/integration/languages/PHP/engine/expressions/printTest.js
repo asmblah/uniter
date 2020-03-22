@@ -12,7 +12,7 @@
 var _ = require('microdash'),
     engineTools = require('../tools'),
     phpTools = require('../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null'/*, 'object'*/, 'string'];
+    DATA_TYPES = ['array', 'boolean', 'float', 'int', 'null'/*, 'object'*/, 'string'];
 
 describe('PHP Engine print expression integration', function () {
     var engine;
@@ -58,7 +58,7 @@ describe('PHP Engine print expression integration', function () {
                     operand: '2.8888',
                     expectedStdout: '2.8888'
                 }],
-                'integer': [{
+                'int': [{
                     operand: '0',
                     expectedStdout: '0'
                 }, {
@@ -93,7 +93,7 @@ describe('PHP Engine print expression integration', function () {
 
                             // Print expressions should always return int(1)
                             expectedResult: 1,
-                            expectedResultType: 'integer',
+                            expectedResultType: 'int',
 
                             expectedStderr: operandData.expectedStderr || '',
                             expectedStdout: operandData.expectedStdout || ''

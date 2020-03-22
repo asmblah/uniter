@@ -57,7 +57,7 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: Exception,
-                match: /^include\(test_file\.php\) :: No "include" transport is available for loading the module\.$/
+                match: /^include\(test_file\.php\) :: No "include" transport option is available for loading the module\.$/
             },
             expectedStderr: '',
             expectedStdout: ''
@@ -128,12 +128,19 @@ EOS
             },
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Warning: include(i_do_not_exist.php): failed to open stream: No such file or directory
-PHP Warning: include(): Failed opening 'i_do_not_exist.php' for inclusion
+PHP Warning:  include(i_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+PHP Warning:  include(): Failed opening 'i_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 
 EOS
 */;}), // jshint ignore:line
-            expectedStdout: 'and !Done'
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Warning: include(i_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+
+Warning: include(): Failed opening 'i_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
+and !Done
+EOS
+*/;}), // jshint ignore:line
         },
         'including a file where include transport rejects promise to indicate module "i_also_do_not_exist.php" cannot be loaded': {
             code: nowdoc(function () {/*<<<EOS
@@ -150,13 +157,21 @@ EOS
             },
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Warning: include(i_also_do_not_exist.php): failed to open stream: No such file or directory
-PHP Warning: include(): Failed opening 'i_also_do_not_exist.php' for inclusion
+PHP Warning:  include(i_also_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+PHP Warning:  include(): Failed opening 'i_also_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 
 EOS
 */;}), // jshint ignore:line
+
             // Note that the 'Done' echo following the include must be executed, this is only a warning
-            expectedStdout: 'and !Done'
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Warning: include(i_also_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+
+Warning: include(): Failed opening 'i_also_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
+and !Done
+EOS
+*/;}), // jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

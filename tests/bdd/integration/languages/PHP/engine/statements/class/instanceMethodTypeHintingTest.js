@@ -51,7 +51,7 @@ describe('PHP Engine class statement instance method type hinting integration', 
 EOS
 */;}), // jshint ignore:line
             expectedResult: 9,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

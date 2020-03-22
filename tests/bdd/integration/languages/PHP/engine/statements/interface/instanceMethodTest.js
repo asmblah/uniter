@@ -44,10 +44,10 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Interface function Mine::getYours\(\) cannot contain body$/
+                match: /^PHP Fatal error: Interface function Mine::getYours\(\) cannot contain body in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Interface function Mine::getYours() cannot contain body',
-            expectedStdout: ''
+            expectedStderr: 'PHP Fatal error:  Interface function Mine::getYours() cannot contain body in /path/to/my_module.php on line 3\n',
+            expectedStdout: '\nFatal error: Interface function Mine::getYours() cannot contain body in /path/to/my_module.php on line 3\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

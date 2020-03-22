@@ -52,9 +52,9 @@ EOS
         'self-executed closure that just prints a string, no parentheses': {
             code: nowdoc(function () {/*<<<EOS
 <?php
-    function () {
+    (function () {
         echo 'good';
-    }();
+    })();
 
 EOS
 */;}), // jshint ignore:line
@@ -65,9 +65,9 @@ EOS
         'self-executed closure that prints the string passed to it, no parentheses': {
             code: nowdoc(function () {/*<<<EOS
 <?php
-    function ($message) {
+    (function ($message) {
         echo $message;
-    }('welcome!');
+    })('welcome!');
 
 EOS
 */;}), // jshint ignore:line
@@ -80,9 +80,9 @@ EOS
 <?php
     $prefix = 'Hello and ';
 
-    function ($message) use ($prefix) {
+    (function ($message) use ($prefix) {
         echo $prefix . $message;
-    }('welcome!');
+    })('welcome!');
 
 EOS
 */;}), // jshint ignore:line
@@ -96,9 +96,9 @@ EOS
 <?php
     $result = 4;
 
-    function () use ($result) {
+    (function () use ($result) {
         $result = 7;
-    }();
+    })();
 
     return $result;
 
@@ -114,9 +114,9 @@ EOS
 <?php
     $result = 4;
 
-    function () use (&$result) {
+    (function () use (&$result) {
         $result = 7;
-    }();
+    })();
 
     return $result;
 
@@ -130,9 +130,9 @@ EOS
         'self-executed closure that modifies the parameter var (by reference)': {
             code: nowdoc(function () {/*<<<EOS
 <?php
-    function (&$arg) {
+    (function (&$arg) {
         $arg = 7;
-    }($result);
+    })($result);
 
     return $result;
 
@@ -164,7 +164,7 @@ return $callback();
 EOS
 */;}), // jshint ignore:line
             expectedResult: 21,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

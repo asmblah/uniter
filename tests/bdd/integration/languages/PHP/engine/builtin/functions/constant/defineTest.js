@@ -53,8 +53,8 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'NaME',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant NaME - assumed \'NaME\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant NaME - assumed \'NaME\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n',
+            expectedStdout: '\nWarning: Use of undefined constant NaME - assumed \'NaME\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n'
         },
         'defining case-insensitive constant in global namespace then referencing with correct case from global namespace': {
             code: nowdoc(function () {/*<<<EOS
@@ -92,8 +92,8 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'NAME',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant NAME - assumed \'NAME\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant NAME - assumed \'NAME\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n',
+            expectedStdout: '\nWarning: Use of undefined constant NAME - assumed \'NAME\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n'
         }
     }, function (scenario, description) {
         describe(description, function () {

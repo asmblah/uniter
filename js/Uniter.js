@@ -27,7 +27,10 @@ _.extend(Uniter.prototype, {
         }
 
         return new Engine(
-            uniter.phpToAST.create(null, {'captureAllOffsets': true}),
+            uniter.phpToAST.create(null, {
+                // Capture bounds of all nodes for line tracking
+                captureAllBounds: true
+            }),
             uniter.phpToJS,
             uniter.phpRuntime,
             uniter.phpRuntime.createEnvironment(),

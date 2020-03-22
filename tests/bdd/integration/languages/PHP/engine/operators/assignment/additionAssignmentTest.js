@@ -33,7 +33,7 @@ describe('PHP Engine addition assignment "+=" operator integration', function ()
         'adding 4 to a variable': {
             code: '<?php $num = 2; $num += 4; return $num;',
             expectedResult: 6,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -41,12 +41,14 @@ describe('PHP Engine addition assignment "+=" operator integration', function ()
             code: '<?php $num += 5; var_dump($num); print "Done";',
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Notice: Undefined variable: num
+PHP Notice:  Undefined variable: num in /path/to/my_module.php on line 1
 
 EOS
 */;}), // jshint ignore:line
                 // Note that the 'Done' echo following the dump must be executed, this is only a notice
             expectedStdout: nowdoc(function () {/*<<<EOS
+
+Notice: Undefined variable: num in /path/to/my_module.php on line 1
 int(5)
 Done
 EOS

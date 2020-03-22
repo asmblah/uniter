@@ -10,7 +10,7 @@
 'use strict';
 
 var _ = require('microdash'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null', 'object', 'string'],
+    DATA_TYPES = ['array', 'boolean', 'float', 'int', 'null', 'object', 'string'],
     engineTools = require('../../tools'),
     hasOwn = {}.hasOwnProperty;
 

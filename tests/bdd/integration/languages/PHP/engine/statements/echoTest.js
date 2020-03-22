@@ -12,7 +12,7 @@
 var _ = require('microdash'),
     engineTools = require('../tools'),
     phpTools = require('../../tools'),
-    DATA_TYPES = ['array', 'boolean', 'float', 'integer', 'null'/*, 'object'*/, 'string'];
+    DATA_TYPES = ['array', 'boolean', 'float', 'int', 'null'/*, 'object'*/, 'string'];
 
 describe('PHP Engine echo statement integration', function () {
     var engine;
@@ -58,7 +58,7 @@ describe('PHP Engine echo statement integration', function () {
                     operand: '2.8888',
                     expectedStdout: '2.8888'
                 }],
-                'integer': [{
+                'int': [{
                     operand: '0',
                     expectedStdout: '0'
                 }, {

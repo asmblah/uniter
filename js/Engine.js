@@ -16,19 +16,70 @@ var _ = require('microdash'),
     PHPError = phpCommon.PHPError,
     Promise = require('./Promise');
 
+/**
+ * Allows arbitrary PHP code strings to be compiled and executed,
+ * all within the same shared environment (so eg. any classes defined
+ * by a script will be usable from future scripts run by this engine)
+ *
+ * @param {Parser} phpParser
+ * @param {Transpiler} phpToJS
+ * @param {Runtime} phpRuntime
+ * @param {Environment} environment
+ * @param {Object} options
+ * @constructor
+ */
 function Engine(phpParser, phpToJS, phpRuntime, environment, options) {
+    /**
+     * @type {Environment}
+     */
     this.environment = environment;
+    /**
+     * @type {Object}
+     */
     this.options = options || {};
+    /**
+     * @type {Parser}
+     */
     this.phpParser = phpParser;
+    /**
+     * @type {Runtime}
+     */
     this.phpRuntime = phpRuntime;
+    /**
+     * @type {Transpiler}
+     */
     this.phpToJS = phpToJS;
 }
 
 _.extend(Engine.prototype, {
+    /**
+     * Sets one or more configuration options for the engine
+     *
+     * @param {Object} options
+     */
     configure: function (options) {
         _.extend(this.options, options);
     },
 
+    /**
+     * Creates a new FFI Result, to provide the result of a call to a JS function
+     *
+     * @param {Function} syncCallback
+     * @param {Function|null} asyncCallback
+     * @returns {FFIResult}
+     */
+    createFFIResult: function (syncCallback, asyncCallback) {
+        return this.environment.createFFIResult(syncCallback, asyncCallback);
+    },
+
+    /**
+     * Executes the given PHP code string in PHPCore's async mode,
+     * returning a promise to be resolved or rejected based on whether an error occurs
+     *
+     * @param {string} code
+     * @param {string} path
+     * @return {Promise}
+     */
     execute: function (code, path) {
         var engine = this,
             module,
@@ -43,7 +94,14 @@ _.extend(Engine.prototype, {
             code = 'return ' +
                 engine.phpToJS.transpile(
                     engine.phpParser.parse(code),
-                    {'bare': true}
+                    {
+                        'bare': true,
+
+                        // Record line numbers for statements/expressions
+                        lineNumbers: true,
+
+                        path: path || null
+                    }
                 ) +
                 ';';
 
@@ -84,9 +142,10 @@ _.extend(Engine.prototype, {
         try {
             module = transpile(code, path);
         } catch (error) {
-            // Any PHP errors from the transpiler or parser should be written to stdout by default
-            if (path === null && error instanceof PHPError) {
-                engine.getStderr().write(error.message);
+            if (error instanceof PHPError) {
+                // Report parser or transpiler errors via PHPCore,
+                // so that INI settings such as `display_errors` are taken into account
+                engine.environment.reportError(error);
             }
 
             return promise.reject(error);
@@ -106,18 +165,39 @@ _.extend(Engine.prototype, {
         return promise;
     },
 
-    expose: function (object, name) {
-        this.environment.expose(object, name);
+    /**
+     * Defines a global variable in PHP-land to expose the given native value
+     *
+     * @param {*} value
+     * @param {string} name
+     */
+    expose: function (value, name) {
+        this.environment.expose(value, name);
     },
 
+    /**
+     * Fetches PHPCore's stderr stream
+     *
+     * @return {Stream}
+     */
     getStderr: function () {
         return this.environment.getStderr();
     },
 
+    /**
+     * Fetches PHPCore's stdin stream
+     *
+     * @return {Stream}
+     */
     getStdin: function () {
         return this.environment.getStdin();
     },
 
+    /**
+     * Fetches PHPCore's stdout stream
+     *
+     * @return {Stream}
+     */
     getStdout: function () {
         return this.environment.getStdout();
     }

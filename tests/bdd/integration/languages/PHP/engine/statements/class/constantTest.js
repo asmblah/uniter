@@ -56,7 +56,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 3546,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -73,7 +73,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 4,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -92,7 +92,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 7,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

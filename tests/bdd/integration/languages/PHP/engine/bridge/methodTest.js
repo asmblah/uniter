@@ -46,7 +46,7 @@ EOS
                     }
                 },
                 expectedResult: 21,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
             },
@@ -83,7 +83,11 @@ EOS
                     return {
                         'tools': {
                             getValue: function (num1, num2) {
-                                return adder.call({start: 10}, num1, num2);
+                                return engine.createFFIResult(function () {
+                                    throw new Error('Should have been handled asynchronously');
+                                }, function () {
+                                    return adder.call({start: 10}, num1, num2);
+                                });
                             },
                             setAdder: function (newAdder) {
                                 adder = newAdder;
@@ -92,42 +96,10 @@ EOS
                     };
                 },
                 expectedResult: 16,
-                expectedResultType: 'integer',
+                expectedResultType: 'int',
                 expectedStderr: '',
                 expectedStdout: ''
-            },
-            'calling PHP closure from JS with null thisObj': {
-                code: nowdoc(function () {/*<<<EOS
-<?php
-$tools->setCallback(function () {
-    var_dump($this);
-});
-return $tools->callBack(4, 2);
-EOS
-*/;}), // jshint ignore:line
-                expose: function () {
-                    var callback;
-
-                    return {
-                        'tools': {
-                            callBack: function () {
-                                callback.call(null);
-                            },
-                            setCallback: function (newCallback) {
-                                callback = newCallback;
-                            }
-                        }
-                    };
-                },
-                expectedResult: null,
-                expectedResultType: 'null',
-                expectedStderr: '',
-                expectedStdout: nowdoc(function () {/*<<<EOS
-NULL
-
-EOS
-*/;}) // jshint ignore:line
-                }
+            }
         }, function (scenario, description) {
             describe(description, function () {
                 check(scenario);

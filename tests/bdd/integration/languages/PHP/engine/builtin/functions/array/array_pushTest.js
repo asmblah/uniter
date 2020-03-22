@@ -40,7 +40,7 @@ return $result;
 EOS
 */;}), // jshint ignore:line
             expectedResult: 1, // Should return new length of array
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: nowdoc(function () {/*<<<EOS
 array(1) {
@@ -61,7 +61,7 @@ return $result;
 EOS
 */;}), // jshint ignore:line
             expectedResult: 3, // Should return new length of array
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: nowdoc(function () {/*<<<EOS
 array(3) {
