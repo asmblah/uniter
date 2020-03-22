@@ -47,7 +47,7 @@ describe('PHP Engine function statement type hinting integration', function () {
 EOS
 */;}), // jshint ignore:line
             expectedResult: 9,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

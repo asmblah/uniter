@@ -101,10 +101,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class \'IDontExist\' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'IDontExist' not found in \/path\/to\/my_module\.php on line 2$/
             },
-            expectedStderr: 'PHP Fatal error: Class \'IDontExist\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'IDontExist' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'IDontExist' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         },
         'creating instance of class that does not exist in namespace with no argument brackets': {
             code: nowdoc(function () {/*<<<EOS
@@ -116,10 +131,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'Creator\\Autoload\\ClassLoader' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'Creator\\Autoload\\ClassLoader' not found in \/path\/to\/my_module\.php on line 2/
             },
-            expectedStderr: 'PHP Fatal error: Class \'Creator\\Autoload\\ClassLoader\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'Creator\Autoload\ClassLoader' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'Creator\Autoload\ClassLoader' not found in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         },
         'creating instance of class using variable class': {
             code: nowdoc(function () {/*<<<EOS

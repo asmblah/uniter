@@ -81,8 +81,8 @@ EOS
 EOS
 */;}), // jshint ignore:line
                 expectedResult: null,
-                expectedStderr: 'PHP Warning: next() expects parameter 1 to be array, integer given\n',
-                expectedStdout: ''
+                expectedStderr: 'PHP Warning:  next() expects parameter 1 to be array, int given in /path/to/my_module.php on line 4\n',
+                expectedStdout: '\nWarning: next() expects parameter 1 to be array, int given in /path/to/my_module.php on line 4\n'
             }
         }, function (scenario, description) {
             describe(description, function () {

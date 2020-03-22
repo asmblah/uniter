@@ -51,10 +51,27 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Class 'self' not found$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'self' not found in \/path\/to\/my_module\.php on line 8$/
             },
-            expectedStderr: 'PHP Fatal error: Class \'self\' not found',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Class 'self' not found in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Earth::getType()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Class 'self' not found in /path/to/my_module.php:8
+Stack trace:
+#0 /path/to/my_module.php(12): Earth::getType()
+#1 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}) //jshint ignore:line
         },
         'reading static property from current class via keyword "self"': {
             code: nowdoc(function () {/*<<<EOS
@@ -113,10 +130,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Cannot access self:: when no class scope is active$/
+                match: /^PHP Fatal error: Uncaught Error: Cannot access self:: when no class scope is active in \/path\/to\/my_module\.php on line 2$/
             },
-            expectedStderr: 'PHP Fatal error: Cannot access self:: when no class scope is active',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Cannot access self:: when no class scope is active in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Cannot access self:: when no class scope is active in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

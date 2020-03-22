@@ -99,10 +99,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined method Test::iDontExist\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined method Test::iDontExist\(\) in \/path\/to\/my_module\.php on line 6$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined method Test::iDontExist()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined method Test::iDontExist() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined method Test::iDontExist() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}) //jshint ignore:line
         },
         'call to undefined method of object when class is in a namespace': {
             code: nowdoc(function () {/*<<<EOS
@@ -118,10 +133,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined method MyStuff\\Test::iDontExist\(\) in \/path\/to\/my_module\.php on line 8$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined method MyStuff\\Test::iDontExist()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined method MyStuff\Test::iDontExist() in /path/to/my_module.php:8
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined method MyStuff\Test::iDontExist() in /path/to/my_module.php:8
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 8
+
+EOS
+*/;}) //jshint ignore:line
         },
         // Ensure we use .hasOwnProperty(...) checks internally
         'call to undefined instance method called "constructor"': {
@@ -136,10 +166,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined method Earth::constructor\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined method Earth::constructor\(\) in \/path\/to\/my_module\.php on line 6$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined method Earth::constructor()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined method Earth::constructor() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined method Earth::constructor() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}) //jshint ignore:line
         },
         'calling static method as instance method': {
             code: nowdoc(function () {/*<<<EOS

@@ -35,8 +35,17 @@ describe('PHP Engine var_dump() builtin function integration', function () {
         'when given no arguments': {
             code: '<?php return var_dump();',
             expectedResult: null,
-            expectedStderr: 'PHP Warning: var_dump() expects at least 1 parameter, 0 given\n',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Warning:  var_dump() expects at least 1 parameter, 0 given in /path/to/my_module.php on line 1
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Warning: var_dump() expects at least 1 parameter, 0 given in /path/to/my_module.php on line 1
+
+EOS
+*/;}) // jshint ignore:line
         },
         'attempting to dump property of undefined variable': {
             code: nowdoc(function () {/*<<<EOS
@@ -47,13 +56,17 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Notice: Undefined variable: undefinedVar
-PHP Notice: Trying to get property of non-object
+PHP Notice:  Undefined variable: undefinedVar in /path/to/my_module.php on line 2
+PHP Notice:  Trying to get property of non-object in /path/to/my_module.php on line 2
 
 EOS
 */;}), // jshint ignore:line
             // Note that the 'Done' echo following the dump must be executed, this is only a notice
             expectedStdout: nowdoc(function () {/*<<<EOS
+
+Notice: Undefined variable: undefinedVar in /path/to/my_module.php on line 2
+
+Notice: Trying to get property of non-object in /path/to/my_module.php on line 2
 NULL
 Done
 EOS
@@ -67,14 +80,28 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to a member function myMethod\(\) on a non-object$/
+                match: /^PHP Fatal error: Uncaught Error: Call to a member function myMethod\(\) on null in \/path\/to\/my_module\.php on line 2$/
             },
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Notice: Undefined variable: undefinedVar
-PHP Fatal error: Call to a member function myMethod() on a non-object
+PHP Notice:  Undefined variable: undefinedVar in /path/to/my_module.php on line 2
+PHP Fatal error:  Uncaught Error: Call to a member function myMethod() on null in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
 EOS
 */;}), // jshint ignore:line
-            expectedStdout: ''
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Notice: Undefined variable: undefinedVar in /path/to/my_module.php on line 2
+
+Fatal error: Uncaught Error: Call to a member function myMethod() on null in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) // jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {
@@ -143,7 +170,7 @@ EOS
                 value: '2.2',
                 expectedStdout: 'float(2.2)\n'
             },
-            'integer': {
+            'int': {
                 value: '3',
                 expectedStdout: 'int(3)\n'
             },

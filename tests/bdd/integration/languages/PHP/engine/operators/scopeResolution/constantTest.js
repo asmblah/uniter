@@ -16,7 +16,7 @@ var _ = require('microdash'),
     phpTools = require('../../../tools'),
     PHPFatalError = phpCommon.PHPFatalError;
 
-describe('PHP Engine scope resolution operator "::" constant integratio', function () {
+describe('PHP Engine scope resolution operator "::" constant integration', function () {
     var engine;
 
     function check(scenario) {
@@ -74,10 +74,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Undefined class constant 'THINGS'$/
+                match: /^PHP Fatal error: Uncaught Error: Undefined class constant 'THINGS' in \/path\/to\/my_module\.php on line 4$/
             },
-            expectedStderr: 'PHP Fatal error: Undefined class constant \'THINGS\'',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Undefined class constant 'THINGS' in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Undefined class constant 'THINGS' in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

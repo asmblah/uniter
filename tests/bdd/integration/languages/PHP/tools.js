@@ -9,18 +9,32 @@
 
 'use strict';
 
-var phpRuntime = require('phpruntime'),
+var _ = require('microdash'),
+    phpRuntime = require('phpruntime'),
     phpToAST = require('phptoast'),
     phpToJS = require('phptojs'),
     Engine = require('../../../../../js/Engine');
 
 module.exports = {
     createEngine: function (options) {
+        options = options || {};
+
+        options.ini = _.extend(
+            {
+                // Ensure notices are shown during test runs (E_ALL)
+                'error_reporting': 32767
+            },
+            options.ini
+        );
+
         return new Engine(
-            phpToAST.create(),
+            phpToAST.create(null, {
+                // Capture bounds of all nodes for line tracking
+                captureAllBounds: true
+            }),
             phpToJS,
             phpRuntime,
-            phpRuntime.createEnvironment(),
+            phpRuntime.createEnvironment(options),
             options
         );
     }

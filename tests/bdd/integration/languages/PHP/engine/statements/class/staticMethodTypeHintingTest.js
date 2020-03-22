@@ -49,7 +49,7 @@ describe('PHP Engine class statement static method type hinting integration', fu
 EOS
 */;}), // jshint ignore:line
             expectedResult: 9,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         }

@@ -114,7 +114,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -136,7 +136,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'it'
         },
@@ -157,7 +157,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: 'it'
         },
@@ -175,7 +175,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 7,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -198,10 +198,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Function name must be a string$/
+                match: /^PHP Fatal error: Uncaught Error: Function name must be a string in \/path\/to\/my_module\.php on line 13$/
             },
-            expectedStderr: 'PHP Fatal error: Function name must be a string',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Function name must be a string in /path/to/my_module.php:13
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 13
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Function name must be a string in /path/to/my_module.php:13
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 13
+
+EOS
+*/;}) //jshint ignore:line
         },
         'call to function defined in current namespace via unprefixed string should fail': {
             code: nowdoc(function () {/*<<<EOS
@@ -215,10 +230,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function myFunc\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function myFunc\(\) in \/path\/to\/my_module\.php on line 6$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function myFunc()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function myFunc() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function myFunc() in /path/to/my_module.php:6
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 6
+
+EOS
+*/;}) //jshint ignore:line
         },
         'call to undefined function in another namespace with prefixed path': {
             code: nowdoc(function () {/*<<<EOS
@@ -229,10 +259,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function Creator\\Stuff\\doSomething\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function Creator\\Stuff\\doSomething\(\) in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function Creator\\Stuff\\doSomething()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function Creator\Stuff\doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function Creator\Stuff\doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}) //jshint ignore:line
         },
         'call to undefined function in another namespace with unprefixed path': {
             code: nowdoc(function () {/*<<<EOS
@@ -243,10 +288,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Call to undefined function Test\\Creator\\Stuff\\doSomething\(\)$/
+                match: /^PHP Fatal error: Uncaught Error: Call to undefined function Test\\Creator\\Stuff\\doSomething\(\) in \/path\/to\/my_module\.php on line 3$/
             },
-            expectedStderr: 'PHP Fatal error: Call to undefined function Test\\Creator\\Stuff\\doSomething()',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Call to undefined function Test\Creator\Stuff\doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Call to undefined function Test\Creator\Stuff\doSomething() in /path/to/my_module.php:3
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 3
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

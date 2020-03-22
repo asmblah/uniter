@@ -65,7 +65,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -84,10 +84,10 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,
-            expectedResultType: 'integer',
+            expectedResultType: 'int',
             // Note that the method's actual owner class Animal is referred to
-            expectedStderr: 'PHP Strict standards: Non-static method Animal::getAge() should not be called statically\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Strict standards:  Non-static method Animal::getAge() should not be called statically in /path/to/my_module.php on line 10\n',
+            expectedStdout: '\nStrict standards: Non-static method Animal::getAge() should not be called statically in /path/to/my_module.php on line 10\n'
         },
         'reading inherited public property': {
             code: nowdoc(function () {/*<<<EOS

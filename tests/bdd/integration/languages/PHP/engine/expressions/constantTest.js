@@ -43,8 +43,8 @@ EOS
             // Undefined constant should be interpreted as bareword string literal
             expectedResult: 'MY_CONST',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant MY_CONST - assumed \'MY_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nWarning: Use of undefined constant MY_CONST - assumed \'MY_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n'
         },
         'assigning undefined constant called "YOUR_CONST" to variable in global namespace': {
             code: nowdoc(function () {/*<<<EOS
@@ -57,8 +57,8 @@ EOS
             // Undefined constant should be interpreted as bareword string literal
             expectedResult: 'YOUR_CONST',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nWarning: Use of undefined constant YOUR_CONST - assumed \'YOUR_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n'
         },
         'assigning undefined constant called "MY_CONST" to variable in a namespace': {
             code: nowdoc(function () {/*<<<EOS
@@ -73,8 +73,8 @@ EOS
             // Undefined constant should be interpreted as bareword string literal
             expectedResult: 'MY_CONST',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant MY_CONST - assumed \'MY_CONST\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant MY_CONST - assumed \'MY_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n',
+            expectedStdout: '\nWarning: Use of undefined constant MY_CONST - assumed \'MY_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 4\n'
         },
         'undefined constant as default argument value when not called': {
             code: nowdoc(function () {/*<<<EOS
@@ -83,7 +83,7 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedResult: null,
-            // No notice should be raised
+            // No warning should be raised
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -100,8 +100,8 @@ EOS
             // Undefined constant should be interpreted as bareword string literal
             expectedResult: 'UNDEF_CONST',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant UNDEF_CONST - assumed \'UNDEF_CONST\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant UNDEF_CONST - assumed \'UNDEF_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nWarning: Use of undefined constant UNDEF_CONST - assumed \'UNDEF_CONST\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n'
         },
         // Ensure we use .hasOwnProperty(...) checks internally
         'undefined constant called "constructor" as default argument value when called and used': {
@@ -117,8 +117,8 @@ EOS
             // Undefined constant should be interpreted as bareword string literal
             expectedResult: 'constructor',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant constructor - assumed \'constructor\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant constructor - assumed \'constructor\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n',
+            expectedStdout: '\nWarning: Use of undefined constant constructor - assumed \'constructor\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 2\n'
         },
         'undefined constant as default argument value when called but not used': {
             code: nowdoc(function () {/*<<<EOS
@@ -132,7 +132,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'world',
             expectedResultType: 'string',
-            // No notice should be raised
+            // No warning should be raised
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -150,7 +150,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'Earth',
             expectedResultType: 'string',
-            // No notice should be raised
+            // No warning should be raised
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -168,7 +168,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'Dan',
             expectedResultType: 'string',
-            // No notice should be raised
+            // No warning should be raised
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -186,7 +186,7 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'Dan',
             expectedResultType: 'string',
-            // No notice should be raised
+            // No warning should be raised
             expectedStderr: '',
             expectedStdout: ''
         },
@@ -217,8 +217,8 @@ EOS
 */;}), // jshint ignore:line
             expectedResult: 'pLaNET',
             expectedResultType: 'string',
-            expectedStderr: 'PHP Notice: Use of undefined constant pLaNET - assumed \'pLaNET\'\n',
-            expectedStdout: ''
+            expectedStderr: 'PHP Warning:  Use of undefined constant pLaNET - assumed \'pLaNET\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 6\n',
+            expectedStdout: '\nWarning: Use of undefined constant pLaNET - assumed \'pLaNET\' (this will throw an Error in a future version of PHP) in /path/to/my_module.php on line 6\n'
         },
         'attempting to read undefined constant from global namespace with prefix': {
             code: nowdoc(function () {/*<<<EOS
@@ -226,13 +226,28 @@ EOS
     return \NAME;
 EOS
 */;}), // jshint ignore:line
-            // Note that when using namespaces, use of undefined constant is a fatal error not just a notice
+            // Note that when using namespaces, use of undefined constant is a fatal error not just a warning
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Undefined constant 'NAME'$/
+                match: /^PHP Fatal error: Uncaught Error: Undefined constant 'NAME' in \/path\/to\/my_module\.php on line 2/
             },
-            expectedStderr: 'PHP Fatal error: Undefined constant \'NAME\'',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Undefined constant 'NAME' in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Undefined constant 'NAME' in /path/to/my_module.php:2
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 2
+
+EOS
+*/;}) //jshint ignore:line
         },
         'attempting to read undefined constant from another namespace': {
             code: nowdoc(function () {/*<<<EOS
@@ -244,10 +259,25 @@ EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Undefined constant 'Fun\\My\\Stuff\\NAME'$/
+                match: /^PHP Fatal error: Uncaught Error: Undefined constant 'Fun\\My\\Stuff\\NAME' in \/path\/to\/my_module\.php on line 4/
             },
-            expectedStderr: 'PHP Fatal error: Undefined constant \'Fun\\My\\Stuff\\NAME\'',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught Error: Undefined constant 'Fun\My\Stuff\NAME' in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}), //jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught Error: Undefined constant 'Fun\My\Stuff\NAME' in /path/to/my_module.php:4
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 4
+
+EOS
+*/;}) //jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {
