@@ -37,21 +37,21 @@
     "dotphp": "^3.6.1",
     "microdash": "^1.3.0",
     "phpcommon": "^2.0.0",
-    "phpruntime": "^6.3.1",
+    "phpruntime": "^6.4.0",
     "phptoast": "^7.1.0",
     "phptojs": "^7.2.0"
   },
   "devDependencies": {
-    "browserify": "^16.5.0",
+    "browserify": "^16.5.1",
     "chai": "^4.2.0",
     "express": "^4.17.1",
     "glob": "^5.0.5",
     "jshint": "^2.11.0",
-    "mocha": "^7.1.1",
+    "mocha": "^7.1.2",
     "nowdoc": "^1.0.0",
-    "sinon": "^9.0.1",
+    "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
-    "uglify-js": "^3.8.0"
+    "uglify-js": "^3.9.1"
   },
   "engines": {
     "node": ">=0.6"
