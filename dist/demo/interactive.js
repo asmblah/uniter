@@ -148,16 +148,16 @@ var each = require('./src/each'),
 module.exports = {
     each: each,
     escapeRegExp: escapeRegExp,
-    extend: extend,
+    extend: extend(Object),
     filter: filter,
     forOwn: forOwn,
-    isArray: isArray,
+    isArray: isArray(Array),
     isBoolean: isBoolean,
     isFunction: isFunction,
     isNumber: isNumber,
     isPlainObject: isPlainObject,
     isString: isString,
-    map: map
+    map: map(Array)
 };
 
 },{"./src/each":3,"./src/escapeRegExp":4,"./src/extend":5,"./src/filter":6,"./src/forOwn":7,"./src/isArray":9,"./src/isBoolean":10,"./src/isFunction":11,"./src/isNumber":12,"./src/isPlainObject":13,"./src/isString":14,"./src/map":15}],3:[function(require,module,exports){
@@ -173,7 +173,7 @@ module.exports = {
 'use strict';
 
 var hasOwn = {}.hasOwnProperty,
-    isArray = require('./isArray');
+    isArray = require('./isArray')(Array);
 
 module.exports = function (object, iterator, thisArg) {
     var key,
@@ -232,16 +232,18 @@ module.exports = function (string) {
 var each = require('./each'),
     forOwn = require('./forOwn');
 
-module.exports = function (object) {
-    var sources = [].slice.call(arguments, 1);
+module.exports = function (Object) {
+    return Object.assign || function (object) {
+        var sources = [].slice.call(arguments, 1);
 
-    each(sources, function (source) {
-        forOwn(source, function (value, key) {
-            object[key] = value;
+        each(sources, function (source) {
+            forOwn(source, function (value, key) {
+                object[key] = value;
+            });
         });
-    });
 
-    return object;
+        return object;
+    };
 };
 
 },{"./each":3,"./forOwn":7}],6:[function(require,module,exports){
@@ -329,8 +331,10 @@ module.exports = function (object) {
 
 var getType = require('./getType');
 
-module.exports = function (object) {
-    return getType(object) === 'Array';
+module.exports = function (Array) {
+    return Array.isArray || function (object) {
+        return getType(object) === 'Array';
+    };
 };
 
 },{"./getType":8}],10:[function(require,module,exports){
@@ -345,13 +349,11 @@ module.exports = function (object) {
 
 'use strict';
 
-var getType = require('./getType');
-
 module.exports = function (object) {
-    return getType(object) === 'Boolean';
+    return typeof object === 'boolean';
 };
 
-},{"./getType":8}],11:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*
  * Microdash - Tiny utilities for Node and the browser
  * Copyright (c) Dan Phillimore (asmblah)
@@ -363,13 +365,11 @@ module.exports = function (object) {
 
 'use strict';
 
-var getType = require('./getType');
-
 module.exports = function (object) {
-    return getType(object) === 'Function';
+    return typeof object === 'function';
 };
 
-},{"./getType":8}],12:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
  * Microdash - Tiny utilities for Node and the browser
  * Copyright (c) Dan Phillimore (asmblah)
@@ -381,13 +381,11 @@ module.exports = function (object) {
 
 'use strict';
 
-var getType = require('./getType');
-
 module.exports = function (object) {
-    return getType(object) === 'Number';
+    return typeof object === 'number';
 };
 
-},{"./getType":8}],13:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
  * Microdash - Tiny utilities for Node and the browser
  * Copyright (c) Dan Phillimore (asmblah)
@@ -417,13 +415,11 @@ module.exports = function (object) {
 
 'use strict';
 
-var getType = require('./getType');
-
 module.exports = function (object) {
-    return getType(object) === 'String';
+    return typeof object === 'string';
 };
 
-},{"./getType":8}],15:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
  * Microdash - Tiny utilities for Node and the browser
  * Copyright (c) Dan Phillimore (asmblah)
@@ -435,9 +431,32 @@ module.exports = function (object) {
 
 'use strict';
 
-var each = require('./each');
+var each = require('./each'),
+    map = Array.prototype.map;
 
-module.exports = function (collection, iteratee, thisArg) {
+/**
+ * Faster implementation using native Array.map(...) where supported
+ *
+ * @param {Array} collection
+ * @param {Function} iteratee
+ * @param {*} thisArg
+ * @return {Array}
+ */
+function fasterMap(collection, iteratee, thisArg) {
+    return collection !== null && typeof collection !== 'undefined' ?
+        map.call(collection, iteratee.bind(thisArg)) :
+        [];
+}
+
+/**
+ * Manual implementation where Array.map(...) is not supported
+ *
+ * @param {Array} collection
+ * @param {Function} iteratee
+ * @param {*} thisArg
+ * @return {Array}
+ */
+function slowerMap(collection, iteratee, thisArg) {
     var result = [];
 
     each(collection, function (value, key) {
@@ -445,6 +464,10 @@ module.exports = function (collection, iteratee, thisArg) {
     });
 
     return result;
+}
+
+module.exports = function (Array) {
+    return Array.prototype.map ? fasterMap : slowerMap;
 };
 
 },{"./each":3}],16:[function(require,module,exports){
