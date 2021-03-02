@@ -30,7 +30,7 @@
     "build": "mkdir -p ./dist && browserify --standalone=uniter index | uglifyjs --mangle > ./dist/uniter.js",
     "build-demo": "npm run build && mkdir -p ./dist/demo && browserify demo/interactive-main > ./dist/demo/interactive.js",
     "jshint": "jshint .",
-    "mocha": "mocha --recursive -r tests/bdd/harness tests/bdd/integration/",
+    "mocha": "mocha --recursive -r mocha-bootstrap tests/bdd/integration/",
     "test": "npm run jshint && npm run mocha"
   },
   "dependencies": {
@@ -48,6 +48,7 @@
     "glob": "^7.1.6",
     "jshint": "^2.12.0",
     "mocha": "^8.3.0",
+    "mocha-bootstrap": "^1.0.1",
     "nowdoc": "^1.0.0",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
