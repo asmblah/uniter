@@ -18,16 +18,16 @@ describe('PHP Engine __LINE__ magic constant expression integration', function (
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'capturing line number when opening tag and __LINE__ are both on first line': {

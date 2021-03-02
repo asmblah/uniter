@@ -20,16 +20,16 @@ describe('PHP Engine spl_autoload_register() builtin function integration', func
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'registered autoloader function should not be called when no classes are referenced': {

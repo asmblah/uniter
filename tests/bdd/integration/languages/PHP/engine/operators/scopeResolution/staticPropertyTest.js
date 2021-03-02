@@ -20,16 +20,16 @@ describe('PHP Engine scope resolution operator "::" static property integration'
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'reading static property\'s initial value from class referenced statically': {

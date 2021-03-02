@@ -13,10 +13,12 @@ var _ = require('microdash'),
     phpRuntime = require('phpruntime'),
     phpToAST = require('phptoast'),
     phpToJS = require('phptojs'),
-    Engine = require('../../../../../js/Engine');
+    Uniter = require('../../../../../js/Uniter');
 
 module.exports = {
     createEngine: function (options) {
+        var uniter = new Uniter(phpToAST, phpToJS, phpRuntime);
+
         options = options || {};
 
         options.ini = _.extend(
@@ -27,15 +29,6 @@ module.exports = {
             options.ini
         );
 
-        return new Engine(
-            phpToAST.create(null, {
-                // Capture bounds of all nodes for line tracking
-                captureAllBounds: true
-            }),
-            phpToJS,
-            phpRuntime,
-            phpRuntime.createEnvironment(options),
-            options
-        );
+        return uniter.createEngine('PHP', options);
     }
 };
