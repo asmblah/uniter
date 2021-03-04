@@ -18,16 +18,16 @@ describe('PHP Engine substr() builtin function integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'from offset 0, no length': {

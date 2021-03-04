@@ -17,16 +17,16 @@ describe('PHP Engine get_include_path() builtin function integration', function 
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'returns the current directory symbol': {

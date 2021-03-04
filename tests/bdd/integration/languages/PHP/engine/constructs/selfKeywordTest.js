@@ -20,16 +20,16 @@ describe('PHP Engine "self" keyword construct integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         // Ensure we don't allow keyword 'self' to be used with variable classes

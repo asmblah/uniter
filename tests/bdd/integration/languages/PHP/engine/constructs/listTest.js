@@ -17,16 +17,16 @@ describe('PHP Engine "list" construct integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     describe('assignment', function () {
         _.each({

@@ -14,22 +14,22 @@ var _ = require('microdash'),
     nowdoc = require('nowdoc'),
     phpCommon = require('phpcommon'),
     phpTools = require('../../tools'),
-    Exception = phpCommon.Exception;
+    PHPFatalError = phpCommon.PHPFatalError;
 
 describe('PHP Engine require_once(...) expression integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'requiring a file where include transport resolves promise with empty string': {
@@ -77,11 +77,23 @@ EOS
 EOS
 */;}), // jshint ignore:line
             expectedException: {
-                instanceOf: Exception,
-                match: /^include\(test_file\.php\) :: No "include" transport option is available for loading the module\.$/
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: require_once\(\): Failed opening 'test_file.php' for inclusion in \/path\/to\/my_module\.php on line 2$/
             },
-            expectedStderr: '',
-            expectedStdout: ''
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Warning:  require_once(test_file.php): failed to open stream: load(test_file.php) :: No "include" transport option is available for loading the module in /path/to/my_module.php on line 2
+PHP Fatal error:  require_once(): Failed opening 'test_file.php' for inclusion in /path/to/my_module.php on line 2
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Warning: require_once(test_file.php): failed to open stream: load(test_file.php) :: No "include" transport option is available for loading the module in /path/to/my_module.php on line 2
+
+Fatal error: require_once(): Failed opening 'test_file.php' for inclusion in /path/to/my_module.php on line 2
+
+EOS
+*/;}) // jshint ignore:line
         },
         'requiring a file where include transport resolves promise with code that just contains inline HTML': {
             code: nowdoc(function () {/*<<<EOS

@@ -12,24 +12,22 @@
 var _ = require('microdash'),
     engineTools = require('../tools'),
     nowdoc = require('nowdoc'),
-    phpCommon = require('phpcommon'),
-    phpTools = require('../../tools'),
-    Exception = phpCommon.Exception;
+    phpTools = require('../../tools');
 
 describe('PHP Engine include(...) expression integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'including a file where include transport resolves promise with empty string': {
@@ -55,12 +53,21 @@ EOS
 
 EOS
 */;}), // jshint ignore:line
-            expectedException: {
-                instanceOf: Exception,
-                match: /^include\(test_file\.php\) :: No "include" transport option is available for loading the module\.$/
-            },
-            expectedStderr: '',
-            expectedStdout: ''
+            expectedResult: null,
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Warning:  include(test_file.php): failed to open stream: load(test_file.php) :: No "include" transport option is available for loading the module in /path/to/my_module.php on line 2
+PHP Warning:  include(): Failed opening 'test_file.php' for inclusion in /path/to/my_module.php on line 2
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Warning: include(test_file.php): failed to open stream: load(test_file.php) :: No "include" transport option is available for loading the module in /path/to/my_module.php on line 2
+
+Warning: include(): Failed opening 'test_file.php' for inclusion in /path/to/my_module.php on line 2
+
+EOS
+*/;}) // jshint ignore:line
         },
         'including a file where include transport resolves promise with code that just contains inline HTML': {
             code: nowdoc(function () {/*<<<EOS
@@ -123,19 +130,19 @@ EOS
 */;}), // jshint ignore:line
             options: {
                 include: function (path, promise) {
-                    promise.reject();
+                    promise.reject(new Error('Some loader-specific error'));
                 }
             },
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Warning:  include(i_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+PHP Warning:  include(i_do_not_exist.php): failed to open stream: Some loader-specific error in /path/to/my_module.php on line 2
 PHP Warning:  include(): Failed opening 'i_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 
 EOS
 */;}), // jshint ignore:line
             expectedStdout: nowdoc(function () {/*<<<EOS
 
-Warning: include(i_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+Warning: include(i_do_not_exist.php): failed to open stream: Some loader-specific error in /path/to/my_module.php on line 2
 
 Warning: include(): Failed opening 'i_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 and !Done
@@ -152,12 +159,12 @@ EOS
 */;}), // jshint ignore:line
             options: {
                 include: function (path, promise) {
-                    promise.reject();
+                    promise.reject(new Error('Some loader-specific error'));
                 }
             },
             expectedResult: null,
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Warning:  include(i_also_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+PHP Warning:  include(i_also_do_not_exist.php): failed to open stream: Some loader-specific error in /path/to/my_module.php on line 2
 PHP Warning:  include(): Failed opening 'i_also_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 
 EOS
@@ -166,7 +173,7 @@ EOS
             // Note that the 'Done' echo following the include must be executed, this is only a warning
             expectedStdout: nowdoc(function () {/*<<<EOS
 
-Warning: include(i_also_do_not_exist.php): failed to open stream: No such file or directory in /path/to/my_module.php on line 2
+Warning: include(i_also_do_not_exist.php): failed to open stream: Some loader-specific error in /path/to/my_module.php on line 2
 
 Warning: include(): Failed opening 'i_also_do_not_exist.php' for inclusion in /path/to/my_module.php on line 2
 and !Done

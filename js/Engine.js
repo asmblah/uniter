@@ -10,9 +10,7 @@
 'use strict';
 
 var _ = require('microdash'),
-    hasOwn = {}.hasOwnProperty,
     phpCommon = require('phpcommon'),
-    INCLUDE = 'include',
     PHPError = phpCommon.PHPError,
     Promise = require('./Promise');
 
@@ -115,29 +113,6 @@ _.extend(Engine.prototype, {
         options = _.extend({}, engine.options, {
             path: path
         });
-
-        // Install an include transport wrapper for transports that return PHP code strings
-        if (hasOwn.call(options, INCLUDE)) {
-            options[INCLUDE] = (function (configuredInclude) {
-                return function (path, promise, callerPath, valueFactory) {
-                    var subPromise = {
-                            reject: promise.reject,
-                            resolve: function (result) {
-                                // Support include transports that return PHP code strings
-                                // by transpiling them before passing back to the core
-                                if (_.isString(result)) {
-                                    promise.resolve(transpile(result, path));
-                                    return;
-                                }
-
-                                promise.resolve(result);
-                            }
-                        };
-
-                    configuredInclude(path, subPromise, callerPath, valueFactory);
-                };
-            }(options[INCLUDE]));
-        }
 
         try {
             module = transpile(code, path);

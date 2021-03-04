@@ -42,10 +42,6 @@ module.exports = {
                     engine.expose(object, name);
                 });
 
-                if (scenario.options) {
-                    engine.configure(scenario.options);
-                }
-
                 scenarioException = scenarioResult = scenarioResultType = null;
 
                 engine.execute(scenario.code, '/path/to/my_module.php').done(function (result, type) {

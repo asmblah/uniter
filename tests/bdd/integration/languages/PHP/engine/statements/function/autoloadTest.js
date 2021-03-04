@@ -20,16 +20,16 @@ describe('PHP Engine magic "__autoload" function statement integration', functio
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'should throw a fatal error if magic __autoload function in global namespace does not take any arguments': {

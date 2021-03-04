@@ -18,16 +18,16 @@ describe('PHP Engine namespace {...} construct integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'referring to class in same sub-namespace but using var_dump(...) from global namespace (with fallback; no prefix)': {

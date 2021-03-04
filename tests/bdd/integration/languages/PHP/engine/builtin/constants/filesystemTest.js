@@ -18,16 +18,16 @@ describe('PHP Engine filesystem builtin constants integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     describe('DIRECTORY_SEPARATOR', function () {
         _.each({

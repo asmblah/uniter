@@ -17,16 +17,16 @@ describe('PHP Engine update operators integration', function () {
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     describe('when using the pre-increment operator "++$var"', function () {
         describe('in free context', function () {

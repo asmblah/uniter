@@ -18,16 +18,16 @@ describe('PHP Engine __DIR__ magic constant expression integration', function ()
     var engine;
 
     function check(scenario) {
+        beforeEach(function () {
+            engine = phpTools.createEngine(scenario.options);
+        });
+
         engineTools.check(function () {
             return {
                 engine: engine
             };
         }, scenario);
     }
-
-    beforeEach(function () {
-        engine = phpTools.createEngine();
-    });
 
     _.each({
         'capturing current file\'s directory from initial program code': {

@@ -10,6 +10,7 @@
 'use strict';
 
 var _ = require('microdash'),
+    stringTransportAddon = require('phpruntime/src/addon/transport/string'),
     Engine = require('./Engine');
 
 function Uniter(phpToAST, phpToJS, phpRuntime) {
@@ -33,7 +34,13 @@ _.extend(Uniter.prototype, {
             }),
             uniter.phpToJS,
             uniter.phpRuntime,
-            uniter.phpRuntime.createEnvironment(),
+            uniter.phpRuntime.createEnvironment(
+                options,
+                [
+                    // Install an include transport wrapper for transports that return PHP code strings
+                    stringTransportAddon
+                ]
+            ),
             options
         );
     },
