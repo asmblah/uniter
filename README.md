@@ -1,7 +1,7 @@
 ![Uniter PHP](https://asmblah.github.io/uniter/img/logo.jpg)
 ======
 
-[![Build Status](https://secure.travis-ci.org/asmblah/uniter.png?branch=master)](http://travis-ci.org/asmblah/uniter) [![Join the chat at https://gitter.im/asmblah/uniter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/asmblah/uniter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://github.com/asmblah/uniter/workflows/CI/badge.svg)](https://github.com/asmblah/uniter/actions?query=workflow%3ACI) [![Join the chat at https://gitter.im/asmblah/uniter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/asmblah/uniter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Run PHP client-side in the browser or in Node.js.
 
