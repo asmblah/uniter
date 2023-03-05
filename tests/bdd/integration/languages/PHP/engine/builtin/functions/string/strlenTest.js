@@ -11,7 +11,10 @@
 
 var _ = require('microdash'),
     engineTools = require('../../../tools'),
-    phpTools = require('../../../../tools');
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
 describe('PHP Engine strlen() builtin function integration', function () {
     var engine;
@@ -31,9 +34,27 @@ describe('PHP Engine strlen() builtin function integration', function () {
     _.each({
         'getting length of array': {
             code: '<?php return strlen(array());',
-            expectedResult: null,
-            expectedStderr: 'PHP Warning:  strlen() expects parameter 1 to be string, array given in /path/to/my_module.php on line 1\n',
-            expectedStdout: '\nWarning: strlen() expects parameter 1 to be string, array given in /path/to/my_module.php on line 1\n'
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught TypeError: strlen\(\): Argument #1 \(\$str\) must be of type string, array given in \/path\/to\/my_module.php:1 in \/path\/to\/my_module.php on line 1$/
+            },
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, array given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, array given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) // jshint ignore:line
         },
         'getting length of bool(true)': {
             code: '<?php return strlen(true);',
@@ -65,16 +86,51 @@ describe('PHP Engine strlen() builtin function integration', function () {
         },
         'getting length of null': {
             code: '<?php return strlen(null);',
-            expectedResult: 0,
-            expectedResultType: 'int',
-            expectedStderr: '',
-            expectedStdout: ''
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught TypeError: strlen\(\): Argument #1 \(\$str\) must be of type string, null given in \/path\/to\/my_module.php:1 in \/path\/to\/my_module.php on line 1$/
+            },
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, null given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, null given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) // jshint ignore:line
         },
         'getting length of stdClass instance': {
             code: '<?php return strlen(new stdClass);',
-            expectedResult: null,
-            expectedStderr: 'PHP Warning:  strlen() expects parameter 1 to be string, object given in /path/to/my_module.php on line 1\n',
-            expectedStdout: '\nWarning: strlen() expects parameter 1 to be string, object given in /path/to/my_module.php on line 1\n'
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught TypeError: strlen\(\): Argument #1 \(\$str\) must be of type string, stdClass given in \/path\/to\/my_module.php:1 in \/path\/to\/my_module.php on line 1$/
+            },
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, stdClass given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: strlen(): Argument #1 ($str) must be of type string, stdClass given in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) // jshint ignore:line
         },
         'getting length of empty string': {
             code: '<?php $value = ""; return strlen($value);',

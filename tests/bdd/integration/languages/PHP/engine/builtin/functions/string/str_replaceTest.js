@@ -11,7 +11,10 @@
 
 var _ = require('microdash'),
     engineTools = require('../../../tools'),
-    phpTools = require('../../../../tools');
+    nowdoc = require('nowdoc'),
+    phpCommon = require('phpcommon'),
+    phpTools = require('../../../../tools'),
+    PHPFatalError = phpCommon.PHPFatalError;
 
 describe('PHP Engine str_replace() builtin function integration', function () {
     var engine;
@@ -80,10 +83,29 @@ describe('PHP Engine str_replace() builtin function integration', function () {
         },
         'passing no arguments': {
             code: '<?php return str_replace();',
-            expectedResult: null,
-            expectedResultType: 'null',
-            expectedStderr: 'PHP Warning:  str_replace() expects at least 3 parameters, 0 given in /path/to/my_module.php on line 1\n',
-            expectedStdout: '\nWarning: str_replace() expects at least 3 parameters, 0 given in /path/to/my_module.php on line 1\n'
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught ArgumentCountError: str_replace\(\) expects at least 3 arguments, 0 given in \/path\/to\/my_module.php on line 1$/
+            },
+            expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught ArgumentCountError: str_replace() expects at least 3 arguments, 0 given in /path/to/my_module.php:1
+Stack trace:
+#0 /path/to/my_module.php(1): str_replace()
+#1 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), // jshint ignore:line
+            expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught ArgumentCountError: str_replace() expects at least 3 arguments, 0 given in /path/to/my_module.php:1
+Stack trace:
+#0 /path/to/my_module.php(1): str_replace()
+#1 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) // jshint ignore:line
         }
     }, function (scenario, description) {
         describe(description, function () {

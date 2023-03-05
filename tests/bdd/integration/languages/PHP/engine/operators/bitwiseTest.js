@@ -41,10 +41,10 @@ describe('PHP Engine bitwise operators integration', function () {
                         operand: 'array()',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
+                            match: /^PHP Fatal error: Uncaught TypeError: Cannot perform bitwise not on array in \/path\/to\/my_module\.php on line 1$/
                         },
                         expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+PHP Fatal error:  Uncaught TypeError: Cannot perform bitwise not on array in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -53,7 +53,7 @@ EOS
 */;}), //jshint ignore:line
                         expectedStdout: nowdoc(function () {/*<<<EOS
 
-Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Fatal error: Uncaught TypeError: Cannot perform bitwise not on array in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -65,10 +65,10 @@ EOS
                         operand: 'true',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
+                            match: /^PHP Fatal error: Uncaught TypeError: Cannot perform bitwise not on bool in \/path\/to\/my_module\.php on line 1$/
                         },
                         expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+PHP Fatal error:  Uncaught TypeError: Cannot perform bitwise not on bool in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -77,7 +77,7 @@ EOS
 */;}), //jshint ignore:line
                         expectedStdout: nowdoc(function () {/*<<<EOS
 
-Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Fatal error: Uncaught TypeError: Cannot perform bitwise not on bool in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -88,10 +88,10 @@ EOS
                         operand: 'false',
                         expectedException: {
                             instanceOf: PHPFatalError,
-                            match: /^PHP Fatal error: Uncaught Error: Unsupported operand types in \/path\/to\/my_module\.php on line 1$/
+                            match: /^PHP Fatal error: Uncaught TypeError: Cannot perform bitwise not on bool in \/path\/to\/my_module\.php on line 1$/
                         },
                         expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Fatal error:  Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+PHP Fatal error:  Uncaught TypeError: Cannot perform bitwise not on bool in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -100,7 +100,7 @@ EOS
 */;}), //jshint ignore:line
                         expectedStdout: nowdoc(function () {/*<<<EOS
 
-Fatal error: Uncaught Error: Unsupported operand types in /path/to/my_module.php:1
+Fatal error: Uncaught TypeError: Cannot perform bitwise not on bool in /path/to/my_module.php:1
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 1
@@ -171,46 +171,102 @@ EOS
                             'array': [{
                                 left: 'array()',
                                 right: 'array()',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array << array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: 'array()',
                                 right: 'false',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(2)',
-                                right: 'false',
-                                expectedResult: 1
-                            }, {
-                                left: 'array()',
-                                right: 'true',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(2)',
-                                right: 'true',
-                                expectedResult: 2
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array << bool in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array << bool in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array << bool in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'float': [{
                                 left: 'array()',
                                 right: '2.0',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(1)',
-                                right: '4.2',
-                                expectedResult: 16
-                            }, {
-                                left: 'array(1)',
-                                right: '5.8',
-                                expectedResult: 32
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array << float in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array << float in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array << float in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'int': [{
                                 left: 'array()',
                                 right: '4',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(1)',
-                                right: '4',
-                                expectedResult: 16
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array << int in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array << int in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array << int in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }]
                         }
                     },
@@ -219,11 +275,27 @@ EOS
                             'array': [{
                                 left: 'true',
                                 right: 'array()',
-                                expectedResult: 1
-                            }, {
-                                left: 'false',
-                                right: 'array()',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: bool << array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: bool << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: bool << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: 'true',
@@ -259,11 +331,27 @@ EOS
                             'array': [{
                                 left: '3.2',
                                 right: 'array()',
-                                expectedResult: 3
-                            }, {
-                                left: '2.7',
-                                right: 'array(7)',
-                                expectedResult: 4
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: float << array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: float << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: float << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: '1.2',
@@ -295,12 +383,27 @@ EOS
                             'array': [{
                                 left: '2',
                                 right: 'array()',
-                                expectedResult: 2
-                            }, {
-                                left: '2',
-                                right: 'array(3)',
-                                // Even though the array contains int(3), the array is coerced to int(1)
-                                expectedResult: 4
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: int << array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: int << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: int << array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: '5',
@@ -337,50 +440,102 @@ EOS
                             'array': [{
                                 left: 'array()',
                                 right: 'array()',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array >> array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: 'array()',
                                 right: 'false',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(2)',
-                                right: 'false',
-                                expectedResult: 1
-                            }, {
-                                left: 'array()',
-                                right: 'true',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(2)',
-                                right: 'true',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array >> bool in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array >> bool in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array >> bool in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'float': [{
                                 left: 'array(1)',
                                 right: '0.0',
-                                expectedResult: 1
-                            }, {
-                                left: 'array()',
-                                right: '2.0',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(1)',
-                                right: '4.2',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array >> float in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array >> float in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array >> float in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'int': [{
                                 left: 'array()',
                                 right: '4',
-                                expectedResult: 0
-                            }, {
-                                left: 'array(1)',
-                                right: '0',
-                                expectedResult: 1
-                            }, {
-                                left: 'array(1)',
-                                right: '1',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: array >> int in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: array >> int in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: array >> int in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }]
                         }
                     },
@@ -389,11 +544,27 @@ EOS
                             'array': [{
                                 left: 'true',
                                 right: 'array()',
-                                expectedResult: 1
-                            }, {
-                                left: 'false',
-                                right: 'array()',
-                                expectedResult: 0
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: bool >> array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: bool >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: bool >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: 'true',
@@ -429,11 +600,27 @@ EOS
                             'array': [{
                                 left: '3.2',
                                 right: 'array()',
-                                expectedResult: 3
-                            }, {
-                                left: '2.7',
-                                right: 'array(7)',
-                                expectedResult: 1
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: float >> array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: float >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: float >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: '1.2',
@@ -465,12 +652,27 @@ EOS
                             'array': [{
                                 left: '2',
                                 right: 'array()',
-                                expectedResult: 2
-                            }, {
-                                left: '2',
-                                right: 'array(3)',
-                                // Even though the array contains int(3), the array is coerced to int(1)
-                                expectedResult: 1
+                                expectedException: {
+                                    instanceOf: PHPFatalError,
+                                    match: /^PHP Fatal error: Uncaught TypeError: Unsupported operand types: int >> array in \/path\/to\/my_module\.php on line 1$/
+                                },
+                                expectedStderr: nowdoc(function () {/*<<<EOS
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: int >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}), //jshint ignore:line
+                                expectedStdout: nowdoc(function () {/*<<<EOS
+
+Fatal error: Uncaught TypeError: Unsupported operand types: int >> array in /path/to/my_module.php:1
+Stack trace:
+#0 {main}
+  thrown in /path/to/my_module.php on line 1
+
+EOS
+*/;}) //jshint ignore:line
                             }],
                             'boolean': [{
                                 left: '5',
@@ -523,8 +725,9 @@ EOS
                                     code: '<?php return ' + expression + ';',
                                     expectedResult: rightOperandData.expectedResult,
                                     expectedResultType: 'int',
-                                    expectedStderr: '',
-                                    expectedStdout: ''
+                                    expectedException: rightOperandData.expectedException,
+                                    expectedStderr: rightOperandData.expectedStderr || '',
+                                    expectedStdout: rightOperandData.expectedStdout || ''
                                 });
                             });
                         });

@@ -34,15 +34,26 @@ describe('PHP Engine var_dump() builtin function integration', function () {
     _.each({
         'when given no arguments': {
             code: '<?php return var_dump();',
-            expectedResult: null,
+            expectedException: {
+                instanceOf: PHPFatalError,
+                match: /^PHP Fatal error: Uncaught ArgumentCountError: var_dump\(\) expects exactly 1 argument, 0 given in \/path\/to\/my_module.php on line 1$/
+            },
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Warning:  var_dump() expects at least 1 parameter, 0 given in /path/to/my_module.php on line 1
+PHP Fatal error:  Uncaught ArgumentCountError: var_dump() expects exactly 1 argument, 0 given in /path/to/my_module.php:1
+Stack trace:
+#0 /path/to/my_module.php(1): var_dump()
+#1 {main}
+  thrown in /path/to/my_module.php on line 1
 
 EOS
 */;}), // jshint ignore:line
             expectedStdout: nowdoc(function () {/*<<<EOS
 
-Warning: var_dump() expects at least 1 parameter, 0 given in /path/to/my_module.php on line 1
+Fatal error: Uncaught ArgumentCountError: var_dump() expects exactly 1 argument, 0 given in /path/to/my_module.php:1
+Stack trace:
+#0 /path/to/my_module.php(1): var_dump()
+#1 {main}
+  thrown in /path/to/my_module.php on line 1
 
 EOS
 */;}) // jshint ignore:line

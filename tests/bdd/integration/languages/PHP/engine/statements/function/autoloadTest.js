@@ -134,34 +134,36 @@ EOS
         'should be called when undefined class is used in a namespace, erroring if class is still not defined by autoloader': {
             code: nowdoc(function () {/*<<<EOS
 <?php
+namespace {
     function __autoload($class) {
         echo 'autoloading ' . $class;
     }
+}
 
-    namespace My\Library;
-
+namespace My\Library {
     $object = new TeSt;
+}
 EOS
 */;}), // jshint ignore:line
             expectedException: {
                 instanceOf: PHPFatalError,
-                match: /^PHP Fatal error: Uncaught Error: Class 'My\\Library\\TeSt' not found in \/path\/to\/my_module\.php on line 8$/
+                match: /^PHP Fatal error: Uncaught Error: Class 'My\\Library\\TeSt' not found in \/path\/to\/my_module\.php on line 9$/
             },
             // Note additional check for case preservation in class name string passed to autoloader
             expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Fatal error:  Uncaught Error: Class 'My\Library\TeSt' not found in /path/to/my_module.php:8
+PHP Fatal error:  Uncaught Error: Class 'My\Library\TeSt' not found in /path/to/my_module.php:9
 Stack trace:
 #0 {main}
-  thrown in /path/to/my_module.php on line 8
+  thrown in /path/to/my_module.php on line 9
 
 EOS
 */;}), //jshint ignore:line
             expectedStdout: nowdoc(function () {/*<<<EOS
 autoloading My\Library\TeSt
-Fatal error: Uncaught Error: Class 'My\Library\TeSt' not found in /path/to/my_module.php:8
+Fatal error: Uncaught Error: Class 'My\Library\TeSt' not found in /path/to/my_module.php:9
 Stack trace:
 #0 {main}
-  thrown in /path/to/my_module.php on line 8
+  thrown in /path/to/my_module.php on line 9
 
 EOS
 */;}) //jshint ignore:line
