@@ -65,17 +65,21 @@ EOS
         'call to function that is defined in current namespace should not fall back to global namespace': {
             code: nowdoc(function () {/*<<<EOS
 <?php
+namespace {
     function printIt() {
         echo 'global-it';
     }
+}
 
-    namespace MyStuff;
+namespace MyStuff {
     function printIt() {
         echo 'MyStuff-it';
     }
+}
 
-    namespace MyStuff;
+namespace MyStuff {
     printIt();
+}
 EOS
 */;}), // jshint ignore:line
             expectedStderr: '',
@@ -84,18 +88,21 @@ EOS
         'call to function not defined in current namespace should fall back to global and not a parent namespace': {
             code: nowdoc(function () {/*<<<EOS
 <?php
+namespace {
     function printIt() {
         echo 'global-it';
     }
+}
 
-    namespace MyStuff;
+namespace MyStuff {
     function printIt() {
         echo 'MyStuff-it';
     }
+}
 
-    namespace MyStuff\Tools;
-
+namespace MyStuff\Tools {
     printIt();
+}
 EOS
 */;}), // jshint ignore:line
             expectedStderr: '',
@@ -104,13 +111,16 @@ EOS
         'call to function defined in current namespace via prefixed string': {
             code: nowdoc(function () {/*<<<EOS
 <?php
-    namespace MyTest;
+namespace MyTest {
     function myFunc() {
         return 24;
     }
+}
 
+namespace {
     $fn = 'MyTest\myFunc';
     return $fn();
+}
 EOS
 */;}), // jshint ignore:line
             expectedResult: 24,

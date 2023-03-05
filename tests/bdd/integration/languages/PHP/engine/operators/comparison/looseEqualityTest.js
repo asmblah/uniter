@@ -315,22 +315,30 @@ describe('PHP Engine loose equality/inequality comparison operators integration'
                         left: '0.0',
                         right: 'new stdClass',
                         expectedResult: false,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n'
                     }, {
                         left: '0.1',
                         right: 'new stdClass',
                         expectedResult: false,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n'
                     }, {
                         left: '1.0',
                         right: 'new stdClass',
                         expectedResult: true,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n'
                     }, {
                         left: '1.1',
                         right: 'new stdClass',
                         expectedResult: false,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to float in /path/to/my_module.php on line 1\n'
                     }],
                     'string': [{
                         left: '0.0',
@@ -400,17 +408,23 @@ describe('PHP Engine loose equality/inequality comparison operators integration'
                         left: '0',
                         right: 'new stdClass',
                         expectedResult: false,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n'
                     }, {
                         left: '1',
                         right: 'new stdClass',
                         expectedResult: true,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n'
                     }, {
                         left: '2',
                         right: 'new stdClass',
                         expectedResult: false,
-                        expectedResultType: 'boolean'
+                        expectedResultType: 'boolean',
+                        expectedStderr: 'PHP Notice:  Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n',
+                        expectedStdout: '\nNotice: Object of class stdClass could not be converted to int in /path/to/my_module.php on line 1\n'
                     }],
                     'string': [{
                         left: '1',

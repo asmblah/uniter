@@ -14,15 +14,15 @@
   "config": {
     "publishtest": false
   },
-  "homepage": "http://asmblah.github.com/uniter/",
-  "author": "Daniel Phillimore <dan@ovms.co> (http://ovms.co)",
+  "homepage": "https://asmblah.github.io/uniter/",
+  "author": "Daniel Phillimore <dan@ovms.co>",
   "repository": {
     "type": "git",
     "url": "https://github.com/asmblah/uniter"
   },
   "bugs": {
     "email": "dan@ovms.co",
-    "url": "http://github.com/asmblah/uniter/issues"
+    "url": "https://github.com/asmblah/uniter/issues"
   },
   "main": "index",
   "bin": "bin/uniter",
@@ -34,29 +34,29 @@
     "test": "npm run jshint && npm run mocha"
   },
   "dependencies": {
-    "dotphp": "^3.7.1",
+    "dotphp": "^3.8.1",
     "microdash": "^1.4.2",
-    "phpcommon": "^2.0.0",
-    "phpruntime": "^7.2.0",
-    "phptoast": "^8.0.0",
-    "phptojs": "^8.1.0"
+    "phpcommon": "^2.0.2",
+    "phpruntime": "^9.0.1",
+    "phptoast": "^9.1.1",
+    "phptojs": "^10.0.1"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
-    "chai": "^4.3.1",
+    "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "express": "^4.17.1",
-    "glob": "^7.1.6",
-    "jshint": "^2.12.0",
-    "mocha": "^8.3.0",
-    "mocha-bootstrap": "^1.0.1",
-    "nowdoc": "^1.0.0",
-    "sinon": "^9.0.2",
-    "sinon-chai": "^3.5.0",
-    "uglify-js": "^3.13.0"
+    "express": "^4.18.2",
+    "glob": "^9.2.1",
+    "jshint": "^2.13.6",
+    "mocha": "^10.2.0",
+    "mocha-bootstrap": "^1.0.4",
+    "nowdoc": "^1.0.1",
+    "sinon": "^15.0.1",
+    "sinon-chai": "^3.7.0",
+    "uglify-js": "^3.17.4"
   },
   "engines": {
-    "node": ">=0.6"
+    "node": ">=8"
   },
   "license": "MIT"
 }
