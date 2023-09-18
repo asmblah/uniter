@@ -15,6 +15,7 @@ Demos
 -----
 - [jQuery + PHP + Browserify (with PHPUnit)](https://uniter.github.io/uniter-jquery)
 - [Interactive demo (above)](https://asmblah.github.io/uniter/demo/interactive.html)
+- [Simple REPL](https://codepen.io/jcubic/pen/VGYBVj?editors=0010)
 
 Packages
 --------
