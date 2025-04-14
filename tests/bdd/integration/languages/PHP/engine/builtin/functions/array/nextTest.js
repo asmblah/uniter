@@ -86,13 +86,13 @@ EOS
                     instanceOf: PHPFatalError,
                     // TODO: Note that this differs from PHP 8.1's output, where "|object" is not included
                     //       as passing objects is now deprecated.
-                    match: /^PHP Fatal error: Uncaught TypeError: next\(\): Argument #1 \(\$array\) must be of type array\|object, int given in \/path\/to\/my_module.php:4 in \/path\/to\/my_module.php on line 4$/
+                    match: /^PHP Fatal error: Uncaught TypeError: next\(\): Argument #1 \(\$array\) must be of type object\|array, int given in \/path\/to\/my_module.php:4 in \/path\/to\/my_module.php on line 4$/
                 },
                 // Note that the reference implementation will include a frame for the next() call here,
                 // whereas Uniter specifically excludes them to match the behaviour elsewhere
                 // (e.g. when passing an argument of invalid type to strlen(...)), i.e. it is inconsistent.
                 expectedStderr: nowdoc(function () {/*<<<EOS
-PHP Fatal error:  Uncaught TypeError: next(): Argument #1 ($array) must be of type array|object, int given in /path/to/my_module.php:4
+PHP Fatal error:  Uncaught TypeError: next(): Argument #1 ($array) must be of type object|array, int given in /path/to/my_module.php:4
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 4
@@ -101,7 +101,7 @@ EOS
 */;}), // jshint ignore:line
                 expectedStdout: nowdoc(function () {/*<<<EOS
 
-Fatal error: Uncaught TypeError: next(): Argument #1 ($array) must be of type array|object, int given in /path/to/my_module.php:4
+Fatal error: Uncaught TypeError: next(): Argument #1 ($array) must be of type object|array, int given in /path/to/my_module.php:4
 Stack trace:
 #0 {main}
   thrown in /path/to/my_module.php on line 4

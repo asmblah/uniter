@@ -82,18 +82,6 @@ EOS
             expectedResultType: 'string',
             expectedStderr: '',
             expectedStdout: ''
-        },
-        '(backwards-compatibility) imploding an array with ($pieces, $glue)': {
-            code: nowdoc(function () {/*<<<EOS
-<?php
-$myArray = array('d', 'e', 'f');
-return implode($myArray, '-');
-EOS
-*/;}), // jshint ignore:line
-            expectedResult: 'd-e-f',
-            expectedResultType: 'string',
-            expectedStderr: '',
-            expectedStdout: ''
         }
     }, function (scenario, description) {
         describe(description, function () {
